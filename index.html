@@ -4,6 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Our Kobe Trip & Memory</title>
+
+  <!-- PWA & 모바일 홈 화면 바로가기 설정 -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="고베여행❤️" />
+  <meta name="theme-color" content="#ff758c" />
+  
+  <link rel="apple-touch-icon" href="https://api.iconify.design/twemoji:sparkling-heart.svg" />
+  <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/twemoji:sparkling-heart.svg" />
+
   <!-- FontAwesome & Google Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,6 +24,9 @@
   <!-- Firebase v9 SDK (Compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <!-- Tesseract.js (클라이언트 OCR 문자 자동인식 라이브러리) -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 
   <style>
     :root {
@@ -276,6 +290,23 @@
       flex-shrink: 0;
     }
 
+    /* OCR Loading Banner */
+    .ocr-loader {
+      display: none;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      color: #4338ca;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 10px;
+      margin-top: 6px;
+      align-items: center;
+      gap: 8px;
+    }
+    .ocr-loader.active { display: flex; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.7; } }
+
     /* Floating & Nav */
     .fab {
       position: fixed;
@@ -370,7 +401,6 @@
       box-shadow: 0 12px 30px rgba(0,0,0,0.3);
       position: relative;
     }
-    /* 우측 상단 X 닫기 버튼 */
     .gift-modal-close-btn {
       position: absolute;
       top: -12px;
@@ -411,7 +441,6 @@
 </head>
 <body>
 
-  <!-- 상단 헤더 -->
   <header class="app-header">
     <div class="header-top">
       <div>
@@ -440,7 +469,6 @@
         <button class="sub-tab-btn" onclick="switchDay(4, this)">Day 4 (9/02)</button>
       </div>
 
-      <!-- 첫 화면 여행 메모 -->
       <div class="memo-card">
         <div class="memo-header">
           <div class="memo-title">
@@ -453,7 +481,6 @@
         <textarea class="memo-edit-area" id="memoInput"></textarea>
       </div>
 
-      <!-- 타임라인 리스트 -->
       <div id="timelineContainer"></div>
     </div>
 
@@ -480,12 +507,10 @@
 
   </div>
 
-  <!-- 추가 FAB 버튼 -->
   <button class="fab" onclick="openAddModal()">
     <i class="fa-solid fa-plus"></i>
   </button>
 
-  <!-- 하단 네비게이션 바 -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchNav('travel', this)">
       <i class="fa-solid fa-plane-departure"></i>
@@ -532,13 +557,16 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <label id="nameLabel">이름 / 장소명</label>
-        <input type="text" class="form-control" id="itemName" placeholder="예: 고베 타다">
-      </div>
-
-      <!-- 기프티콘 필드 -->
+      <!-- 기프티콘 전용 사진 업로드 (OCR 감지) -->
       <div id="gifticonFields" style="display:none;">
+        <div class="form-group">
+          <label>바코드/쿠폰 사진 등록 <span style="font-size:0.75rem; color:var(--primary); font-weight:normal;">(사진 올리면 유효기간 자동인식 ✨)</span></label>
+          <input type="file" class="form-control" id="giftImage" accept="image/*" onchange="handleImageOCR(this)">
+          <div class="ocr-loader" id="ocrLoader">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span id="ocrText">사진에서 유효기간 & 브랜드 자동 분석 중...</span>
+          </div>
+        </div>
         <div class="form-group">
           <label>브랜드</label>
           <input type="text" class="form-control" id="giftBrand" placeholder="예: 스타벅스">
@@ -547,15 +575,16 @@
           <label>유효기간</label>
           <input type="date" class="form-control" id="giftDueDate">
         </div>
-        <div class="form-group">
-          <label>바코드/쿠폰 사진 등록</label>
-          <input type="file" class="form-control" id="giftImage" accept="image/*">
-        </div>
+      </div>
+
+      <div class="form-group">
+        <label id="nameLabel">이름 / 장소명</label>
+        <input type="text" class="form-control" id="itemName" placeholder="예: 고베 타다">
       </div>
 
       <div class="form-group">
         <label>메모 & 설명</label>
-        <textarea class="form-control" id="itemMemo" rows="2" placeholder="메뉴, 탑승장소, 예약정보 등"></textarea>
+        <textarea class="form-control" id="itemMemo" rows="2" placeholder="메뉴, 탑승장소, 바코드 번호 등"></textarea>
       </div>
 
       <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -565,7 +594,7 @@
     </div>
   </div>
 
-  <!-- 이미지 바코드 최적화 팝업 모달 (우측 상단 X 닫기 버튼 추가) -->
+  <!-- 이미지 바코드 확대 팝업 모달 -->
   <div class="modal-overlay" id="imgViewModal" onclick="closeImgModal()">
     <div class="gift-view-card" onclick="event.stopPropagation()">
       <button class="gift-modal-close-btn" onclick="closeImgModal()">
@@ -630,7 +659,6 @@
     const syncDot = document.getElementById('syncDot');
     const syncText = document.getElementById('syncStatusText');
 
-    // Firestore 실시간 리스너 연결
     db.collection("couple_space").doc("shared_data").onSnapshot({
       includeMetadataChanges: true
     }, (doc) => {
@@ -675,7 +703,6 @@
       if (activeNav === 'coupons') renderGifticons();
     }
 
-    // 메모 수정
     function renderQuickMemo() {
       document.getElementById('memoDisplay').innerText = appData.quickMemo || '메모를 입력해보세요.';
       document.getElementById('memoInput').value = appData.quickMemo || '';
@@ -703,7 +730,6 @@
       }
     }
 
-    // D-Day 계산
     function calculateDDay() {
       const tripDate = new Date('2026-08-30');
       const today = new Date();
@@ -852,7 +878,7 @@
           <div style="grid-column: 1 / -1; text-align:center; padding: 40px 10px; color:#a4b0be;">
             <i class="fa-solid fa-gift" style="font-size:2.5rem; margin-bottom:12px; color:#ffd1dc;"></i>
             <p style="font-size:0.9rem; font-weight:600;">등록된 기프티콘이 없습니다.</p>
-            <p style="font-size:0.8rem; margin-top:4px;">우측 하단의 <b>+</b> 버튼을 눌러 추가해보세요!</p>
+            <p style="font-size:0.8rem; margin-top:4px;">우측 하단의 <b>+</b> 버튼을 눌러 사진을 올려보세요!</p>
           </div>
         `;
         return;
@@ -892,7 +918,6 @@
       }
     }
 
-    // 모달 이미지 보기
     function viewImage(src) {
       document.getElementById('enlargedImg').src = src;
       document.getElementById('imgViewModal').classList.add('active');
@@ -911,6 +936,10 @@
       document.getElementById('addModal').classList.remove('active');
       document.getElementById('itemName').value = '';
       document.getElementById('itemMemo').value = '';
+      document.getElementById('giftBrand').value = '';
+      document.getElementById('giftDueDate').value = '';
+      document.getElementById('giftImage').value = '';
+      document.getElementById('ocrLoader').classList.remove('active');
     }
 
     function toggleFormFields() {
@@ -920,7 +949,59 @@
       document.getElementById('nameLabel').innerText = type === 'gifticon' ? '쿠폰명' : '이름 / 장소명';
     }
 
-    // 이미지 압축 리사이징
+    // ----------------------------------------------------
+    // AI OCR 문자 자동 인식 기능 (유효기간 & 브랜드 자동 추출)
+    // ----------------------------------------------------
+    function handleImageOCR(input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+
+      const loader = document.getElementById('ocrLoader');
+      loader.classList.add('active');
+
+      Tesseract.recognize(file, 'kor+eng', {
+        logger: m => {
+          if (m.status === 'recognizing text') {
+            document.getElementById('ocrText').innerText = `AI 텍스트 분석 중... (${Math.round(m.progress * 100)}%)`;
+          }
+        }
+      }).then(({ data: { text } }) => {
+        loader.classList.remove('active');
+        extractGifticonInfo(text);
+      }).catch(err => {
+        console.warn("OCR Error:", err);
+        loader.classList.remove('active');
+      });
+    }
+
+    function extractGifticonInfo(text) {
+      // 1. 유효기간 날짜 탐색 정규식 (YYYY.MM.DD / YYYY-MM-DD / YYYY년 MM월 DD일)
+      const dateRegex = /(202[0-9])[\.\-\/\s년]\s*([0-1]?[0-9])[\.\-\/\s월]\s*([0-3]?[0-9])/;
+      const match = text.match(dateRegex);
+
+      if (match) {
+        const year = match[1];
+        const month = match[2].padStart(2, '0');
+        const day = match[3].padStart(2, '0');
+        document.getElementById('giftDueDate').value = `${year}-${month}-${day}`;
+      }
+
+      // 2. 주요 브랜드 자동 감지
+      const brands = [
+        '스타벅스', 'Starbucks', '투썸', '메가커피', '컴포즈', '배스킨라빈스', '베스킨라빈스',
+        'BHC', 'BBQ', '교촌', '맘스터치', '올리브영', 'CU', 'GS25', '세븐일레븐',
+        '버거킹', '맥도날드', '도미노피자', '이디야', '파리바게뜨', '뚜레쥬르'
+      ];
+
+      for (let brand of brands) {
+        if (text.includes(brand)) {
+          document.getElementById('giftBrand').value = brand.replace('베스킨라빈스', '배스킨라빈스');
+          break;
+        }
+      }
+    }
+
+    // 이미지 압축
     function compressAndSaveImage(file, callback) {
       const reader = new FileReader();
       reader.onload = function(e) {
