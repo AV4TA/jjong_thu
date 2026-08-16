@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Our Kobe Trip & Memory</title>
+  <title>뚜❣️쫑</title>
 
   <!-- PWA & 모바일 홈 화면 바로가기 설정 -->
   <meta name="mobile-web-app-capable" content="yes" />
@@ -123,7 +123,7 @@
       border: 1px solid rgba(0,0,0,0.02);
     }
 
-    /* 여행 준비 메모 카드 (독립형) */
+    /* 여행 준비 메모 카드 */
     .memo-card {
       background: #ffffff;
       border: 1px solid #ffd1d8;
@@ -214,102 +214,6 @@
       text-decoration: none;
     }
 
-    /* Gifticon Section */
-    .gift-header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-    .sort-control select {
-      padding: 6px 10px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      font-size: 0.78rem;
-      color: #57606f;
-      background: white;
-      outline: none;
-    }
-
-    .gift-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .gift-card {
-      background: white;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-    .gift-card.used { opacity: 0.55; filter: grayscale(80%); }
-    .gift-img-wrap {
-      height: 130px;
-      background: #f8f9fc;
-      position: relative;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      padding: 6px;
-    }
-    .gift-img-wrap img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
-    .gift-dday-badge {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      background: rgba(0, 0, 0, 0.65);
-      color: white;
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 8px;
-      backdrop-filter: blur(4px);
-    }
-    .gift-dday-badge.urgent { background: #ff4757; }
-
-    .gift-quick-actions {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      display: flex;
-      gap: 4px;
-      z-index: 2;
-    }
-    .gift-action-btn {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid rgba(0,0,0,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.7rem;
-      cursor: pointer;
-      color: #57606f;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .gift-action-btn:hover { background: white; }
-    .gift-action-btn.del { color: #ff4757; }
-
-    .gift-body { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-    .gift-brand { font-size: 0.75rem; color: var(--text-sub); font-weight: 600; }
-    .gift-name { font-size: 0.88rem; font-weight: 700; color: #2d3436; margin: 2px 0 8px; line-height: 1.3; }
-    .gift-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
-    .btn-toggle-use {
-      background: #f1f2f6;
-      border: none;
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 5px 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      color: #57606f;
-    }
-    .btn-toggle-use.is-used { background: #2ed573; color: white; }
-
     /* Places */
     .place-card {
       display: flex;
@@ -334,6 +238,77 @@
       font-size: 1.2rem;
       flex-shrink: 0;
     }
+
+    /* Weather Section Styles */
+    .weather-hero {
+      background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+      color: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 24px rgba(9, 132, 227, 0.25);
+    }
+    .weather-hero-top { display: flex; justify-content: space-between; align-items: center; }
+    .weather-city-name { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .weather-main-temp { font-size: 2.8rem; font-weight: 800; line-height: 1; margin: 12px 0 6px; }
+    .weather-condition { font-size: 0.95rem; font-weight: 600; opacity: 0.95; }
+    .weather-extra-info {
+      display: flex;
+      gap: 14px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.25);
+      font-size: 0.8rem;
+    }
+    .weather-forecast-row {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 16px;
+    }
+    .forecast-card {
+      background: white;
+      border-radius: 14px;
+      padding: 12px 10px;
+      min-width: 74px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .forecast-day { font-size: 0.75rem; font-weight: 700; color: #636e72; margin-bottom: 4px; }
+    .forecast-icon { font-size: 1.3rem; margin: 4px 0; }
+    .forecast-temp { font-size: 0.78rem; font-weight: 700; color: #2d3436; }
+    .cloth-tip-box {
+      background: #fff8e7;
+      border: 1px solid #ffeaa7;
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 0.84rem;
+      color: #634a00;
+      line-height: 1.5;
+    }
+
+    /* Gifticon Section */
+    .gift-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .sort-control select { padding: 6px 10px; border-radius: 10px; border: 1px solid var(--border); font-size: 0.78rem; color: #57606f; background: white; outline: none; }
+    .gift-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .gift-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); display: flex; flex-direction: column; position: relative; }
+    .gift-card.used { opacity: 0.55; filter: grayscale(80%); }
+    .gift-img-wrap { height: 130px; background: #f8f9fc; position: relative; cursor: pointer; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 6px; }
+    .gift-img-wrap img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
+    .gift-dday-badge { position: absolute; top: 8px; left: 8px; background: rgba(0, 0, 0, 0.65); color: white; font-size: 0.72rem; font-weight: 700; padding: 4px 8px; border-radius: 8px; backdrop-filter: blur(4px); }
+    .gift-dday-badge.urgent { background: #ff4757; }
+    .gift-quick-actions { position: absolute; top: 6px; right: 6px; display: flex; gap: 4px; z-index: 2; }
+    .gift-action-btn { width: 26px; height: 26px; border-radius: 50%; background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; cursor: pointer; color: #57606f; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .gift-action-btn.del { color: #ff4757; }
+    .gift-body { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .gift-brand { font-size: 0.75rem; color: var(--text-sub); font-weight: 600; }
+    .gift-name { font-size: 0.88rem; font-weight: 700; color: #2d3436; margin: 2px 0 8px; line-height: 1.3; }
+    .gift-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+    .btn-toggle-use { background: #f1f2f6; border: none; font-size: 0.72rem; font-weight: 700; padding: 5px 8px; border-radius: 6px; cursor: pointer; color: #57606f; }
+    .btn-toggle-use.is-used { background: #2ed573; color: white; }
 
     /* Floating & Nav */
     .fab {
@@ -373,25 +348,25 @@
       flex-direction: column;
       align-items: center;
       color: #a4b0be;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 600;
       cursor: pointer;
       gap: 4px;
       border: none;
       background: none;
-      width: 33%;
+      width: 25%;
     }
-    .nav-item i { font-size: 1.3rem; }
+    .nav-item i { font-size: 1.25rem; }
     .nav-item.active { color: var(--primary); }
 
-    /* Modal Overlay */
+    /* Modals */
     .modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,0.6);
       backdrop-filter: blur(5px);
-      z-index: -1;
+      z-index: 999;
       opacity: 0;
       pointer-events: none;
       align-items: center;
@@ -432,7 +407,6 @@
     .ocr-loader.active { display: flex; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.7; } }
 
-    /* 이미지 확대 모달 */
     .gift-view-card {
       background: white;
       border-radius: 20px;
@@ -536,7 +510,39 @@
       <div id="placesContainer"></div>
     </div>
 
-    <!-- 3. 기프티콘 보관함 탭 -->
+    <!-- 3. 현지 날씨 탭 (3번째 위치) -->
+    <div id="view-weather" class="tab-view">
+      <div class="sub-tabs">
+        <button class="sub-tab-btn active" onclick="switchWeatherCity('kobe', this)">🏙️ 고베 시내</button>
+        <button class="sub-tab-btn" onclick="switchWeatherCity('arima', this)">♨️ 아리마 온천</button>
+      </div>
+
+      <div class="weather-hero" id="weatherHeroBox">
+        <div class="weather-hero-top">
+          <div class="weather-city-name" id="weatherCityName">
+            <i class="fa-solid fa-location-dot"></i> 고베 시내 (산노미야)
+          </div>
+          <div style="font-size:0.75rem; opacity:0.85;" id="weatherUpdateTime">실시간 기준</div>
+        </div>
+        <div class="weather-main-temp" id="weatherCurrentTemp">--°</div>
+        <div class="weather-condition" id="weatherConditionText">날씨 정보를 불러오는 중...</div>
+        <div class="weather-extra-info">
+          <div><i class="fa-solid fa-droplet"></i> 습도 <span id="weatherHumidity">--%</span></div>
+          <div><i class="fa-solid fa-wind"></i> 풍속 <span id="weatherWind">--m/s</span></div>
+          <div><i class="fa-solid fa-umbrella"></i> 강수확률 <span id="weatherRainProb">--%</span></div>
+        </div>
+      </div>
+
+      <h4 style="font-size: 0.92rem; margin: 16px 0 10px; color: #2d3436;">📅 주간 일기예보</h4>
+      <div class="weather-forecast-row" id="weatherForecastContainer"></div>
+
+      <div class="cloth-tip-box" id="clothTipBox">
+        <b>💡 여행 옷차림 & 챙김 팁:</b><br>
+        날씨 정보를 분석하여 최적의 옷차림 팁을 준비 중입니다.
+      </div>
+    </div>
+
+    <!-- 4. 기프티콘 보관함 탭 -->
     <div id="view-coupons" class="tab-view">
       <div class="gift-header-row">
         <div class="sub-tabs" style="margin-bottom:0;">
@@ -558,11 +564,11 @@
 
   </div>
 
-  <button class="fab" onclick="openAddModal()">
+  <button class="fab" id="mainFab" onclick="openAddModal()">
     <i class="fa-solid fa-plus"></i>
   </button>
 
-  <!-- 하단 네비게이션 바 (3개 탭 유지) -->
+  <!-- 하단 네비게이션 바 (3번째 위치: 날씨 탭) -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchNav('travel', this)">
       <i class="fa-solid fa-plane-departure"></i>
@@ -571,6 +577,10 @@
     <button class="nav-item" onclick="switchNav('places', this)">
       <i class="fa-solid fa-utensils"></i>
       <span>맛집/가볼곳</span>
+    </button>
+    <button class="nav-item" onclick="switchNav('weather', this)">
+      <i class="fa-solid fa-cloud-sun"></i>
+      <span>날씨</span>
     </button>
     <button class="nav-item" onclick="switchNav('coupons', this)">
       <i class="fa-solid fa-ticket"></i>
@@ -610,7 +620,7 @@
         </div>
       </div>
 
-      <!-- 기프티콘 전용 사진 업로드 -->
+      <!-- 기프티콘 필드 -->
       <div id="gifticonFields" style="display:none;">
         <div class="form-group">
           <label>바코드/쿠폰 사진 등록 <span style="font-size:0.75rem; color:var(--primary); font-weight:normal;">(사진 올리면 유효기간 자동분석 ✨)</span></label>
@@ -707,6 +717,7 @@
     let activeNav = 'travel';
     let currentPlaceFilter = 'all';
     let currentGiftFilter = 'available';
+    let currentWeatherCity = 'kobe';
     let editingGifticonExistingImg = null;
 
     const syncDot = document.getElementById('syncDot');
@@ -759,6 +770,7 @@
       renderQuickMemo();
       if (activeNav === 'travel') renderTravelView();
       if (activeNav === 'places') renderPlaces();
+      if (activeNav === 'weather') loadWeatherData();
       if (activeNav === 'coupons') renderGifticons();
     }
 
@@ -810,6 +822,11 @@
       
       document.getElementById(`view-${nav}`).classList.add('active');
       if (btn) btn.classList.add('active');
+
+      const fab = document.getElementById('mainFab');
+      if (nav === 'weather') fab.style.display = 'none';
+      else fab.style.display = 'flex';
+
       renderAll();
     }
 
@@ -922,7 +939,99 @@
       `).join('');
     }
 
-    // 기프티콘 렌더링 & 정렬
+    // ----------------------------------------------------
+    // 실시간 날씨 위젯 기능 (Open-Meteo 무료 API)
+    // ----------------------------------------------------
+    const CITY_COORDS = {
+      kobe: { name: '고베 시내 (산노미야)', lat: 34.6901, lon: 135.1955, icon: '🏙️' },
+      arima: { name: '아리마 온천 (온천마을)', lat: 34.7978, lon: 135.2475, icon: '♨️' }
+    };
+
+    function switchWeatherCity(city, btn) {
+      currentWeatherCity = city;
+      document.querySelectorAll('#view-weather .sub-tab-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      loadWeatherData();
+    }
+
+    function getWeatherConditionInfo(code) {
+      if (code === 0) return { text: '맑음 ☀️', icon: '☀️' };
+      if (code === 1 || code === 2) return { text: '대체로 맑음 🌤️', icon: '🌤️' };
+      if (code === 3) return { text: '흐림 ☁️', icon: '☁️' };
+      if ([45, 48].includes(code)) return { text: '안개 🌫️', icon: '🌫️' };
+      if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) return { text: '비 내림 🌧️', icon: '🌧️' };
+      if ([71, 73, 75, 85, 86].includes(code)) return { text: '눈 ❄️', icon: '❄️' };
+      if ([95, 96, 99].includes(code)) return { text: '뇌우 ⛈️', icon: '⛈️' };
+      return { text: '구름 조금 ⛅', icon: '⛅' };
+    }
+
+    async function loadWeatherData() {
+      const city = CITY_COORDS[currentWeatherCity];
+      document.getElementById('weatherCityName').innerHTML = `<i class="fa-solid fa-location-dot"></i> ${city.name}`;
+      
+      try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        // 1. 현재 날씨 세팅
+        const currentTemp = Math.round(data.current.temperature_2m);
+        const cond = getWeatherConditionInfo(data.current.weather_code);
+        document.getElementById('weatherCurrentTemp').innerText = `${currentTemp}°C`;
+        document.getElementById('weatherConditionText').innerText = cond.text;
+        document.getElementById('weatherHumidity').innerText = `${data.current.relative_humidity_2m}%`;
+        document.getElementById('weatherWind').innerText = `${Math.round(data.current.wind_speed_10m)}m/s`;
+        
+        const todayRainProb = data.daily.precipitation_probability_max[0] || 0;
+        document.getElementById('weatherRainProb').innerText = `${todayRainProb}%`;
+
+        // 2. 주간 예보 세팅
+        const forecastContainer = document.getElementById('weatherForecastContainer');
+        const days = ['일', '월', '화', '수', '목', '금', '토'];
+        
+        forecastContainer.innerHTML = data.daily.time.map((t, idx) => {
+          const dateObj = new Date(t);
+          const dayName = idx === 0 ? '오늘' : `${days[dateObj.getDay()]} (${dateObj.getMonth()+1}/${dateObj.getDate()})`;
+          const maxTemp = Math.round(data.daily.temperature_2m_max[idx]);
+          const minTemp = Math.round(data.daily.temperature_2m_min[idx]);
+          const dayCond = getWeatherConditionInfo(data.daily.weather_code[idx]);
+
+          return `
+            <div class="forecast-card">
+              <div class="forecast-day">${dayName}</div>
+              <div class="forecast-icon">${dayCond.icon}</div>
+              <div class="forecast-temp">${maxTemp}° / <span style="color:#8395a7; font-weight:normal;">${minTemp}°</span></div>
+            </div>
+          `;
+        }).join('');
+
+        // 3. 옷차림 팁 계산
+        let tipText = '';
+        if (currentTemp >= 28) {
+          tipText = '<b>☀️ 한여름 무더위 날씨:</b> 시원한 반팔/민소매와 자외선 차단용 양산, 선글라스를 꼭 챙기세요. 실내 에어컨에 대비해 얇은 린넨 셔츠가 유용합니다.';
+        } else if (currentTemp >= 22) {
+          tipText = '<b>🌿 쾌적하고 따뜻한 날씨:</b> 반팔에 얇은 가디건이나 셔츠를 걸치기 좋은 완벽한 여행 날씨입니다.';
+        } else if (currentTemp >= 16) {
+          tipText = '<b>🍂 선선한 간절기 날씨:</b> 낮에는 가볍게 입어도 좋지만 아침/저녁 온천 지대나 야경 산책 시 쌀쌀하니 자켓이나 외투를 준비하세요.';
+        } else {
+          tipText = '<b>🧥 쌀쌀한 날씨:</b> 따뜻한 니트, 코트와 함께 목을 보호할 수 있는 스카프나 핫팩을 챙기시는 것을 추천합니다.';
+        }
+
+        if (todayRainProb >= 50) {
+          tipText += '<br><br>☔ <b>비 소식이 있습니다:</b> 가벼운 3단 접이식 우산을 가방에 챙겨두세요!';
+        }
+
+        document.getElementById('clothTipBox').innerHTML = `<b>💡 ${city.name} 옷차림 & 챙김 팁:</b><br>${tipText}`;
+
+      } catch (err) {
+        console.error("Weather fetch error:", err);
+        document.getElementById('weatherConditionText').innerText = '날씨를 불러오지 못했습니다.';
+      }
+    }
+
+    // ----------------------------------------------------
+    // 기프티콘 & 모달 관련 기능
+    // ----------------------------------------------------
     function filterGifticons(type, btn) {
       currentGiftFilter = type;
       document.querySelectorAll('#view-coupons .sub-tab-btn').forEach(b => b.classList.remove('active'));
@@ -1093,7 +1202,6 @@
       document.getElementById('nameLabel').innerText = type === 'gifticon' ? '상품명 (이름)' : (type === 'place' ? '맛집/장소명' : '일정 제목/장소');
     }
 
-    // AI OCR
     function handleImageOCR(input) {
       if (!input.files || !input.files[0]) return;
       const file = input.files[0];
