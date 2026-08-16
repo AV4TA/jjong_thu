@@ -1,7 +1,8 @@
 {
   "name": "뚜❣️쫑",
   "short_name": "뚜❣️쫑",
-  "start_url": "index.html",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ff758c",
