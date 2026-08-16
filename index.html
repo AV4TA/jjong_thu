@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Couple Space</title>
+  <style>
+    :root {
+      --primary: #ff758c;
+      --secondary: #ff7eb3;
+      --bg: #fff5f7;
+      --card-bg: #ffffff;
+      --text: #333333;
+      --subtext: #777777;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 40px; }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      text-align: center;
+      padding: 30px 20px;
+      border-radius: 0 0 24px 24px;
+      box-shadow: 0 4px 12px rgba(255, 117, 140, 0.2);
+    }
+    header h1 { font-size: 1.6rem; margin-bottom: 6px; }
+    header p { font-size: 0.9rem; opacity: 0.9; }
+
+    .nav-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 20px 16px 12px;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      background: white;
+      border: 1px solid #ffd1dc;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: var(--primary);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .container { max-width: 600px; margin: 0 auto; padding: 0 16px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      border: 1px solid #fae1e6;
+    }
+    .card h3 { font-size: 1.05rem; margin-bottom: 8px; color: #ff5277; }
+    .item-list { list-style: none; }
+    .item-list li {
+      padding: 10px 0;
+      border-bottom: 1px dashed #f0f0f0;
+      font-size: 0.92rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .item-list li:last-child { border-bottom: none; }
+    .badge {
+      font-size: 0.75rem;
+      background: #ffe3e8;
+      color: var(--primary);
+      padding: 3px 8px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Our Story & Plan</h1>
+    <p>우리의 소중한 추억과 계획</p>
+  </header>
+
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showTab('travel')">✈️ 여행 일정</button>
+    <button class="tab-btn" onclick="showTab('places')">🍽️ 맛집/가볼곳</button>
+    <button class="tab-btn" onclick="showTab('coupons')">🎁 기프티콘</button>
+    <button class="tab-btn" onclick="showTab('memo')">📝 메모장</button>
+  </div>
+
+  <div class="container">
+    <!-- 1. 여행 일정 -->
+    <div id="travel" class="tab-content active">
+      <div class="card">
+        <h3>고베 여행 계획</h3>
+        <p style="font-size:0.85rem; color:var(--subtext); margin-bottom:10px;">📅 08.30 ~ 09.02</p>
+        <ul class="item-list">
+          <li><span>Day 1: 간사이 공항 도착 & 숙소 체크인</span><span class="badge">이동</span></li>
+          <li><span>Day 2: 기타노 이진칸 & 고베규 점심</span><span class="badge">관광</span></li>
+          <li><span>Day 3: 하버랜드 야경 & 쇼핑</span><span class="badge">데이트</span></li>
+          <li><span>Day 4: 기념품 구매 & 귀국</span><span class="badge">마무리</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 2. 맛집/가볼곳 -->
+    <div id="places" class="tab-content">
+      <div class="card">
+        <h3>가보고 싶은 맛집 리스트</h3>
+        <ul class="item-list">
+          <li><span>고베 모리야 스테이크</span><span class="badge">고베</span></li>
+          <li><span>스타벅스 기타노이진칸점</span><span class="badge">카페</span></li>
+          <li><span>가츠동 요시베</span><span class="badge">일식</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 3. 기프티콘 -->
+    <div id="coupons" class="tab-content">
+      <div class="card">
+        <h3>보유 중인 기프티콘</h3>
+        <ul class="item-list">
+          <li><span>스타벅스 아메리카노 2잔 + 케이크</span><span class="badge">~12/31</span></li>
+          <li><span>BHC 뿌링클 + 콜라 세트</span><span class="badge">~10/15</span></li>
+          <li><span>배스킨라빈스 파인트</span><span class="badge">~11/20</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 4. 메모장 -->
+    <div id="memo" class="tab-content">
+      <div class="card">
+        <h3>준비물 & 꿀팁</h3>
+        <ul class="item-list">
+          <li><span>여권, 이심(eSIM) 미리 등록하기</span></li>
+          <li><span>돼지코 어댑터 챙기기</span></li>
+          <li><span>간단한 일본어 회화 표현 연습하기</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>
