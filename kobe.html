@@ -5,532 +5,102 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>고베 & 아리마 온천 여행 🇯🇵</title>
 
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="theme-color" content="#ff758c" />
-  
-  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Pink%20Heart.png" />
-  <link rel="icon" href="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Pink%20Heart.png" />
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
   <style>
-    :root {
-      --primary: #ff5e7e;
-      --primary-soft: #ffe8ee;
-      --bg: #f8f9fe;
-      --card: #ffffff;
-      --text: #2d3436;
-      --text-sub: #8395a7;
-      --border: #f1f2f6;
-      --radius: 18px;
-      --shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
-
-    /* Header */
-    .app-header {
-      background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
-      color: white;
-      padding: 20px 18px;
-      border-radius: 0 0 28px 28px;
-      box-shadow: 0 6px 20px rgba(255, 117, 140, 0.3);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    .header-top { display: flex; justify-content: space-between; align-items: center; }
-    .header-left { display: flex; align-items: center; gap: 12px; }
-    .btn-home {
-      color: white;
-      text-decoration: none;
-      font-size: 1.1rem;
-      background: rgba(255, 255, 255, 0.25);
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(4px);
-    }
-    .header-title { font-size: 1.25rem; font-weight: 700; }
-    .d-day-pill {
-      background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(8px);
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .container { max-width: 540px; margin: 0 auto; padding: 16px; position: relative; z-index: 1; }
-
-    .sync-status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.75rem;
-      color: var(--text-sub);
-      margin-bottom: 12px;
-      justify-content: flex-end;
-    }
-    .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #a4b0be; transition: background 0.3s; }
-    .sync-dot.online { background: #2ed573; box-shadow: 0 0 8px #2ed573; }
-    .sync-dot.syncing { background: #ffa502; }
-
-    .tab-view { display: none; }
-    .tab-view.active { display: block; animation: fadeIn 0.25s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
+    :root { --primary: #ff5e7e; --bg: #f8f9fe; --text: #2d3436; --text-sub: #8395a7; --border: #f1f2f6; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
+    body { background-color: var(--bg); padding-bottom: 90px; }
+    
+    .app-header { background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%); color: white; padding: 20px; border-radius: 0 0 28px 28px; position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 15px; }
+    .btn-home { color: white; text-decoration: none; font-size: 1.2rem; }
+    .container { max-width: 540px; margin: 0 auto; padding: 16px; }
+    
+    .tab-view { display: none; } .tab-view.active { display: block; }
     .sub-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
-    .sub-tab-btn {
-      background: white;
-      border: 1px solid var(--border);
-      color: var(--text-sub);
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s;
-    }
-    .sub-tab-btn.active {
-      background: var(--primary);
-      color: white;
-      border-color: var(--primary);
-      box-shadow: 0 4px 10px rgba(255, 94, 126, 0.3);
-    }
-
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 14px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(0,0,0,0.02);
-    }
-
-    /* 체크리스트 */
-    .checklist-card {
-      background: white;
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(255, 117, 140, 0.15);
-    }
-    .person-switch-row { display: flex; background: #f1f2f6; padding: 4px; border-radius: 14px; margin-bottom: 16px; gap: 4px; }
-    .person-btn {
-      flex: 1;
-      border: none;
-      padding: 10px;
-      border-radius: 10px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: #636e72;
-      background: transparent;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .person-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-
-    .progress-wrap { margin-bottom: 16px; }
-    .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.85rem; font-weight: 700; color: #2d3436; }
-    .progress-bar-bg { height: 10px; background: #f1f2f6; border-radius: 8px; overflow: hidden; }
-    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #ff758c, #ff5e7e); width: 0%; transition: width 0.3s ease; border-radius: 8px; }
-
-    .check-add-box { display: flex; gap: 8px; margin-bottom: 16px; }
-    .check-input { flex: 1; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 0.88rem; outline: none; }
-    .btn-add-item { background: var(--primary); color: white; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
-
-    .checklist-items { display: flex; flex-direction: column; gap: 8px; }
-    .check-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #fdfdfd;
-      border: 1px solid #f1f2f6;
-      padding: 12px 14px;
-      border-radius: 14px;
-      transition: all 0.2s;
-      cursor: pointer;
-    }
-    .check-row.checked { background: #f8f9fa; border-color: #e9ecef; opacity: 0.6; }
-    .check-left { display: flex; align-items: center; gap: 12px; flex: 1; }
-    .custom-checkbox {
-      width: 22px;
-      height: 22px;
-      border-radius: 6px;
-      border: 2px solid #dcdde1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 0.75rem;
-    }
-    .check-row.checked .custom-checkbox { background: var(--primary); border-color: var(--primary); }
-    .check-text { font-size: 0.92rem; font-weight: 600; color: #2d3436; }
-    .check-row.checked .check-text { text-decoration: line-through; color: #a4b0be; }
-    .btn-del-check { background: none; border: none; color: #ff7675; font-size: 0.85rem; cursor: pointer; padding: 4px 6px; }
-
-    /* 타임라인 */
-    .timeline-item { display: flex; gap: 14px; position: relative; padding-bottom: 20px; }
-    .timeline-item:last-child { padding-bottom: 0; }
-    .timeline-item::before { content: ''; position: absolute; left: 19px; top: 36px; bottom: 0; width: 2px; background: #f0f0f5; }
-    .timeline-item:last-child::before { display: none; }
-    .timeline-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--primary-soft);
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      flex-shrink: 0;
-      z-index: 1;
-    }
-    .timeline-content { flex: 1; }
-    .timeline-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
-    .timeline-time { font-size: 0.78rem; font-weight: 700; color: var(--primary); }
-    .timeline-title { font-size: 1.02rem; font-weight: 700; color: #222; margin-bottom: 4px; }
-    .timeline-memo { font-size: 0.85rem; color: #636e72; line-height: 1.45; }
-
-    .map-preview-box { border-radius: 12px; overflow: hidden; margin: 10px 0; border: 1px solid var(--border); height: 160px; background: #eef1f6; }
-    .map-preview-box iframe { width: 100%; height: 100%; border: 0; }
-    .btn-maps { display: inline-flex; align-items: center; gap: 6px; background: #eef2ff; color: #4f46e5; font-size: 0.78rem; font-weight: 600; padding: 6px 12px; border-radius: 8px; text-decoration: none; }
-
-    /* Places */
-    .place-card { display: flex; gap: 14px; align-items: center; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; box-shadow: var(--shadow); border: 1px solid var(--border); }
-    .place-category-icon { width: 46px; height: 46px; border-radius: 14px; background: #fff0f3; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
-
-    /* Weather */
-    .weather-hero { background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); color: white; border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 8px 24px rgba(9, 132, 227, 0.25); }
-    .weather-hero-top { display: flex; justify-content: space-between; align-items: center; }
-    .weather-city-name { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-    .weather-main-temp { font-size: 2.8rem; font-weight: 800; line-height: 1; margin: 12px 0 6px; }
-    .weather-condition { font-size: 0.95rem; font-weight: 600; }
-    .weather-extra-info { display: flex; gap: 14px; margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.25); font-size: 0.8rem; }
-    .weather-forecast-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 16px; }
-    .forecast-card { background: white; border-radius: 14px; padding: 12px 10px; min-width: 74px; text-align: center; box-shadow: var(--shadow); border: 1px solid var(--border); flex-shrink: 0; }
-    .forecast-day { font-size: 0.75rem; font-weight: 700; color: #636e72; margin-bottom: 4px; }
-    .forecast-icon { font-size: 1.3rem; margin: 4px 0; }
-    .forecast-temp { font-size: 0.78rem; font-weight: 700; color: #2d3436; }
-    .cloth-tip-box { background: #fff8e7; border: 1px solid #ffeaa7; border-radius: 16px; padding: 16px; font-size: 0.84rem; color: #634a00; line-height: 1.5; }
-
-    /* Nav & FAB */
-    .fab { position: fixed; right: 20px; bottom: 86px; width: 52px; height: 52px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 8px 20px rgba(255, 94, 126, 0.4); cursor: pointer; border: none; z-index: 50; }
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background: white; box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05); display: flex; justify-content: space-around; align-items: center; z-index: 50; border-radius: 20px 20px 0 0; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; color: #a4b0be; font-size: 0.72rem; font-weight: 600; cursor: pointer; gap: 4px; border: none; background: none; width: 33%; }
-    .nav-item i { font-size: 1.25rem; }
+    .sub-tab-btn { background: white; border: 1px solid var(--border); color: var(--text-sub); padding: 8px 16px; border-radius: 12px; font-weight: 600; cursor: pointer; }
+    .sub-tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+    
+    .card { background: white; border-radius: 18px; padding: 16px; margin-bottom: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+    .fab { position: fixed; right: 20px; bottom: 86px; width: 52px; height: 52px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; z-index: 50; border: none; }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background: white; box-shadow: 0 -4px 16px rgba(0,0,0,0.05); display: flex; z-index: 50; border-radius: 20px 20px 0 0; }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #a4b0be; font-size: 0.7rem; cursor: pointer; border: none; background: none; }
     .nav-item.active { color: var(--primary); }
-
-    /* Modal */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 999; opacity: 0; pointer-events: none; align-items: center; justify-content: center; padding: 16px; transition: opacity 0.2s ease; }
-    .modal-overlay.active { display: flex; z-index: 999; opacity: 1; pointer-events: auto; }
-    .modal-content { background: white; border-radius: 24px; width: 100%; max-width: 440px; padding: 24px; max-height: 90vh; overflow-y: auto; }
-    .form-group { margin-bottom: 14px; }
-    .form-group label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 6px; color: #555; }
-    .form-control { width: 100%; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 0.9rem; outline: none; }
-    .btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-secondary { background: #f1f2f6; color: #57606f; }
+    
+    .sync-status { font-size: 0.7rem; color: var(--text-sub); text-align: right; margin-bottom: 10px; }
   </style>
 </head>
 <body>
 
   <header class="app-header">
-    <div class="header-top">
-      <div class="header-left">
-        <a href="index.html" class="btn-home" title="홈으로"><i class="fa-solid fa-house"></i></a>
-        <div>
-          <div class="header-title">고베 & 아리마 온천 🇯🇵</div>
-          <p style="font-size: 0.78rem; opacity: 0.9; margin-top: 2px;">2026.08.30 (일) ~ 09.02 (수)</p>
-        </div>
-      </div>
-      <div class="d-day-pill">
-        <i class="fa-solid fa-heart"></i>
-        <span id="ddayText">D-Day</span>
-      </div>
-    </div>
+    <a href="index.html" class="btn-home"><i class="fa-solid fa-house"></i></a>
+    <div class="header-title">고베 & 아리마 온천 🇯🇵</div>
   </header>
 
   <div class="container">
-    <div class="sync-status">
-      <div class="sync-dot" id="syncDot"></div>
-      <span id="syncStatusText">서버 연결 중...</span>
-    </div>
+    <div class="sync-status" id="syncStatus">서버 연결 중...</div>
 
-    <!-- 1. 여행일정 탭 -->
     <div id="view-travel" class="tab-view active">
-      <div class="sub-tabs" id="dayTabs">
-        <button class="sub-tab-btn active" onclick="switchDay('ready', this)">🧳 여행준비</button>
-        <button class="sub-tab-btn" onclick="switchDay(1, this)">Day 1 (8/30)</button>
-        <button class="sub-tab-btn" onclick="switchDay(2, this)">Day 2 (8/31)</button>
-        <button class="sub-tab-btn" onclick="switchDay(3, this)">Day 3 (9/01)</button>
-        <button class="sub-tab-btn" onclick="switchDay(4, this)">Day 4 (9/02)</button>
-      </div>
-
-      <div id="readyChecklistSection" class="checklist-card">
-        <div class="person-switch-row">
-          <button class="person-btn active" id="btnPersonThu" onclick="switchPerson('thu')">👸 뚜가 챙길 거</button>
-          <button class="person-btn" id="btnPersonJjong" onclick="switchPerson('jjong')">🤴 쫑이 챙길 거</button>
-        </div>
-        <div class="progress-wrap">
-          <div class="progress-header">
-            <span id="progressTitle">🎒 뚜의 짐 챙기기</span>
-            <span id="progressText">0% 완료 (0/0)</span>
-          </div>
-          <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBarFill"></div></div>
-        </div>
-        <div class="check-add-box">
-          <input type="text" id="newCheckInput" class="check-input" placeholder="새 준비물 입력" onkeypress="if(event.key==='Enter') addCheckItem()">
-          <button class="btn-add-item" onclick="addCheckItem()">추가</button>
-        </div>
-        <div class="checklist-items" id="checklistContainer"></div>
-      </div>
-      <div id="timelineContainer" style="display:none;"></div>
+      <div id="checklistContainer"></div>
     </div>
-
-    <!-- 2. 맛집/가볼곳 탭 -->
-    <div id="view-places" class="tab-view">
-      <div class="sub-tabs">
-        <button class="sub-tab-btn active" onclick="filterPlaces('all', this)">전체보기</button>
-        <button class="sub-tab-btn" onclick="filterPlaces('고베', this)">🥩 고베</button>
-        <button class="sub-tab-btn" onclick="filterPlaces('아리마', this)">♨️ 아리마온천</button>
-        <button class="sub-tab-btn" onclick="filterPlaces('카페', this)">☕ 카페</button>
-      </div>
-      <div id="placesContainer"></div>
-    </div>
-
-    <!-- 3. 날씨 탭 -->
-    <div id="view-weather" class="tab-view">
-      <div class="sub-tabs">
-        <button class="sub-tab-btn active" onclick="switchWeatherCity('kobe', this)">🏙️ 고베 시내</button>
-        <button class="sub-tab-btn" onclick="switchWeatherCity('arima', this)">♨️ 아리마 온천</button>
-      </div>
-      <div class="weather-hero" id="weatherHeroBox">
-        <div class="weather-hero-top">
-          <div class="weather-city-name" id="weatherCityName"><i class="fa-solid fa-location-dot"></i> 고베 시내 (산노미야)</div>
-          <div style="font-size:0.75rem; opacity:0.85;">실시간 기준</div>
-        </div>
-        <div class="weather-main-temp" id="weatherCurrentTemp">--°</div>
-        <div class="weather-condition" id="weatherConditionText">날씨 정보를 불러오는 중...</div>
-        <div class="weather-extra-info">
-          <div><i class="fa-solid fa-droplet"></i> 습도 <span id="weatherHumidity">--%</span></div>
-          <div><i class="fa-solid fa-wind"></i> 풍속 <span id="weatherWind">--m/s</span></div>
-          <div><i class="fa-solid fa-umbrella"></i> 강수확률 <span id="weatherRainProb">--%</span></div>
-        </div>
-      </div>
-      <h4 style="font-size: 0.92rem; margin: 16px 0 10px; color: #2d3436;">📅 주간 일기예보</h4>
-      <div class="weather-forecast-row" id="weatherForecastContainer"></div>
-      <div class="cloth-tip-box" id="clothTipBox"><b>💡 여행 옷차림 & 챙김 팁:</b><br>날씨 정보를 분석하여 최적의 옷차림 팁을 준비 중입니다.</div>
-    </div>
+    <div id="view-places" class="tab-view">맛집 목록</div>
+    <div id="view-weather" class="tab-view">날씨 정보</div>
   </div>
 
-  <button class="fab" id="mainFab" onclick="openAddModal()"><i class="fa-solid fa-plus"></i></button>
+  <button class="fab" onclick="alert('추가')"><i class="fa-solid fa-plus"></i></button>
 
   <nav class="bottom-nav">
-    <button class="nav-item active" onclick="switchNav('travel', this)"><i class="fa-solid fa-plane-departure"></i><span>여행일정</span></button>
-    <button class="nav-item" onclick="switchNav('places', this)"><i class="fa-solid fa-utensils"></i><span>맛집/가볼곳</span></button>
-    <button class="nav-item" onclick="switchNav('weather', this)"><i class="fa-solid fa-cloud-sun"></i><span>날씨</span></button>
+    <button class="nav-item active" onclick="switchTab('travel', this)"><i class="fa-solid fa-plane"></i><span>일정</span></button>
+    <button class="nav-item" onclick="switchTab('places', this)"><i class="fa-solid fa-utensils"></i><span>맛집</span></button>
+    <button class="nav-item" onclick="switchTab('weather', this)"><i class="fa-solid fa-cloud-sun"></i><span>날씨</span></button>
   </nav>
 
-  <!-- 항목 추가/수정 모달 -->
-  <div class="modal-overlay" id="addModal">
-    <div class="modal-content" onclick="event.stopPropagation()">
-      <h3 style="font-size: 1.15rem; margin-bottom: 16px;">새 일정 / 장소 추가</h3>
-      <div class="form-group">
-        <label>구분</label>
-        <select class="form-control" id="itemType" onchange="toggleFormFields()">
-          <option value="travel">✈️ 여행 일정</option>
-          <option value="place">🍽️ 맛집 / 가볼 곳</option>
-        </select>
-      </div>
-      <div id="travelFields">
-        <div class="form-group">
-          <label>일자 (Day)</label>
-          <select class="form-control" id="travelDay">
-            <option value="1">Day 1 (8/30)</option>
-            <option value="2">Day 2 (8/31)</option>
-            <option value="3">Day 3 (9/01)</option>
-            <option value="4">Day 4 (9/02)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>시간 (예: 14:00)</label>
-          <input type="text" class="form-control" id="travelTime" placeholder="예: 14:00">
-        </div>
-      </div>
-      <div class="form-group">
-        <label id="nameLabel">일정 제목/장소</label>
-        <input type="text" class="form-control" id="itemName" placeholder="예: 고베 타다">
-      </div>
-      <div class="form-group">
-        <label>메모 & 설명</label>
-        <textarea class="form-control" id="itemMemo" rows="2" placeholder="메뉴, 탑승장소, 예약정보 등"></textarea>
-      </div>
-      <div style="display: flex; gap: 10px; margin-top: 20px;">
-        <button class="btn btn-secondary" onclick="closeModal()">취소</button>
-        <button class="btn btn-primary" onclick="saveItem()">저장하기</button>
-      </div>
-    </div>
-  </div>
-
   <script>
-    const firebaseConfig = { apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys", authDomain: "kobe-couple-app.firebaseapp.com", projectId: "kobe-couple-app", storageBucket: "kobe-couple-app.firebasestorage.app", messagingSenderId: "755701956140", appId: "1:755701956140:web:ea39d7d1e00bd83ade1b89" };
+    const firebaseConfig = {
+      apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
+      authDomain: "kobe-couple-app.firebaseapp.com",
+      projectId: "kobe-couple-app",
+      storageBucket: "kobe-couple-app.firebasestorage.app",
+      messagingSenderId: "755701956140",
+      appId: "1:755701956140:web:ea39d7d1e00bd83ade1b89"
+    };
+
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    const initialChecklistThu = [{id: 1, text: "여권 및 신분증 챙기기", checked: false}, {id: 2, text: "고데기 / 헤어롤", checked: false}, {id: 3, text: "화장품 & 클렌징 세트", checked: false}, {id: 4, text: "보조배터리 & 충전선", checked: false}, {id: 5, text: "상비약 (인공눈물, 진통제)", checked: false}, {id: 6, text: "예쁜 옷 & 온천용 잠옷", checked: false}];
-    const initialChecklistJjong = [{id: 101, text: "여권 및 항공권 확인", checked: false}, {id: 102, text: "일본 e-SIM / 포켓와이파이", checked: false}, {id: 103, text: "110V 돼지코 어댑터 2개", checked: false}, {id: 104, text: "엔화 현금 환전 및 지갑", checked: false}, {id: 105, text: "트래블로그 / 카드 챙기기", checked: false}, {id: 106, text: "숙소 / 고속버스 예약 바우처", checked: false}];
+    // 데이터 초기화
+    let appData = { checklistThu: [], checklistJjong: [], travel: [], places: [] };
+    const syncStatus = document.getElementById('syncStatus');
 
-    const initialKobeData = {
-      checklistThu: initialChecklistThu,
-      checklistJjong: initialChecklistJjong,
-      travel: [{id: 101, day: 1, icon: 'fa-plane-departure', time: '13:20', title: '인천공항 출발 🛫', memo: '인천공항 탑승 수속 & 면세점 구경', showMap: false}, {id: 102, day: 1, icon: 'fa-plane-arrival', time: '15:00', title: '고베공항 도착 🛬', memo: '입국 수속 및 포트라이너 타고 산노미야역으로 이동', showMap: true}],
-      places: [{id: 1, category: '고베', title: '고베 타다', desc: '1일차 저녁 예정 맛집'}, {id: 2, category: '카페', title: '스타벅스 기타노이진칸점', desc: '등록유형문화재 서양식 주택 카페'}]
-    };
-
-    let appData = initialKobeData;
-    let currentDay = 'ready';
-    let activeNav = 'travel';
-    let currentPlaceFilter = 'all';
-    let currentPerson = 'thu';
-
+    // DB 연결
     db.collection("couple_space").doc("shared_data").onSnapshot(doc => {
-      if (doc.exists) { appData = doc.data(); renderAll(); }
+      if (doc.exists) {
+        appData = doc.data();
+        syncStatus.innerText = "동기화 완료";
+        renderAll();
+      } else {
+        syncStatus.innerText = "데이터 없음 (초기화 필요)";
+      }
+    }, err => {
+      console.error(err);
+      syncStatus.innerText = "연결 오류: " + err.message;
     });
 
     function renderAll() {
-      if (activeNav === 'travel') renderTravelView();
-      if (activeNav === 'places') renderPlaces();
-      if (activeNav === 'weather') loadWeatherData();
+      // 렌더링 로직
+      console.log("데이터 로드됨:", appData);
     }
 
-    function switchPerson(p) { currentPerson = p; document.getElementById('btnPersonThu').classList.toggle('active', p === 'thu'); document.getElementById('btnPersonJjong').classList.toggle('active', p === 'jjong'); renderChecklist(); }
-    
-    function renderChecklist() {
-      const container = document.getElementById('checklistContainer');
-      const list = currentPerson === 'thu' ? (appData.checklistThu || []) : (appData.checklistJjong || []);
-      const total = list.length;
-      const checked = list.filter(i => i.checked).length;
-      const pct = total === 0 ? 0 : Math.round((checked / total) * 100);
-      document.getElementById('progressText').innerText = `${pct}% 완료 (${checked}/${total})`;
-      document.getElementById('progressBarFill').style.width = `${pct}%`;
-      container.innerHTML = list.map(item => `
-        <div class="check-row ${item.checked ? 'checked' : ''}" onclick="toggleCheckItem(${item.id})">
-          <div class="check-left"><div class="custom-checkbox">${item.checked ? '<i class="fa-solid fa-check"></i>' : ''}</div><span class="check-text">${item.text}</span></div>
-          <button class="btn-del-check" onclick="event.stopPropagation(); deleteCheckItem(${item.id})"><i class="fa-solid fa-trash-can"></i></button>
-        </div>
-      `).join('');
-    }
-
-    function toggleCheckItem(id) {
-      const list = currentPerson === 'thu' ? appData.checklistThu : appData.checklistJjong;
-      const item = list.find(i => i.id === id);
-      if(item) { item.checked = !item.checked; saveData(); renderChecklist(); }
-    }
-
-    function addCheckItem() {
-      const input = document.getElementById('newCheckInput');
-      if(!input.value.trim()) return;
-      const newItem = { id: Date.now(), text: input.value.trim(), checked: false };
-      if(currentPerson === 'thu') appData.checklistThu.push(newItem); else appData.checklistJjong.push(newItem);
-      input.value = ''; saveData(); renderChecklist();
-    }
-
-    function deleteCheckItem(id) {
-      if(currentPerson === 'thu') appData.checklistThu = appData.checklistThu.filter(i => i.id !== id);
-      else appData.checklistJjong = appData.checklistJjong.filter(i => i.id !== id);
-      saveData(); renderChecklist();
-    }
-
-    function saveData() { db.collection("couple_space").doc("shared_data").set(appData, {merge: true}); }
-
-    function switchDay(day, btn) {
-      currentDay = day;
-      document.querySelectorAll('#dayTabs .sub-tab-btn').forEach(b => b.classList.remove('active'));
-      if(btn) btn.classList.add('active');
-      renderTravelView();
-    }
-
-    function renderTravelView() {
-      document.getElementById('readyChecklistSection').style.display = (currentDay === 'ready') ? 'block' : 'none';
-      document.getElementById('timelineContainer').style.display = (currentDay === 'ready') ? 'none' : 'block';
-      if(currentDay === 'ready') renderChecklist();
-      else {
-        const items = (appData.travel || []).filter(i => i.day === parseInt(currentDay));
-        document.getElementById('timelineContainer').innerHTML = items.map(item => `
-          <div class="card timeline-item">
-            <div class="timeline-icon"><i class="fa-solid ${item.icon || 'fa-location-dot'}"></i></div>
-            <div class="timeline-content">
-              <div class="timeline-header"><span class="timeline-time">${item.time || '시간 미정'}</span></div>
-              <div class="timeline-title">${item.title}</div>
-              <div class="timeline-memo">${item.memo || ''}</div>
-            </div>
-          </div>
-        `).join('');
-      }
-    }
-
-    function filterPlaces(cat, btn) {
-      currentPlaceFilter = cat;
-      document.querySelectorAll('#view-places .sub-tab-btn').forEach(b => b.classList.remove('active'));
-      if(btn) btn.classList.add('active');
-      renderPlaces();
-    }
-
-    function renderPlaces() {
-      const filtered = currentPlaceFilter === 'all' ? (appData.places || []) : (appData.places || []).filter(p => p.category === currentPlaceFilter);
-      document.getElementById('placesContainer').innerHTML = filtered.map(p => `
-        <div class="place-card">
-          <div class="place-category-icon"><i class="fa-solid fa-utensils"></i></div>
-          <div><div style="font-weight:700;">${p.title}</div><div style="font-size:0.8rem;color:var(--text-sub);">${p.desc}</div></div>
-        </div>
-      `).join('');
-    }
-
-    function openAddModal() { document.getElementById('addModal').classList.add('active'); }
-    function closeModal() { document.getElementById('addModal').classList.remove('active'); }
-    function toggleFormFields() {
-      const type = document.getElementById('itemType').value;
-      document.getElementById('travelFields').style.display = (type === 'travel') ? 'block' : 'none';
-    }
-
-    function saveItem() {
-      const type = document.getElementById('itemType').value;
-      const name = document.getElementById('itemName').value.trim();
-      if(!name) return alert('입력해주세요!');
-      if(type === 'travel') appData.travel.push({id: Date.now(), day: parseInt(document.getElementById('travelDay').value), title: name});
-      else appData.places.push({id: Date.now(), category: '고베', title: name, desc: document.getElementById('itemMemo').value});
-      saveData(); closeModal();
-    }
-
-    function switchNav(nav, btn) {
-      activeNav = nav;
+    function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
-      document.getElementById('view-' + nav).classList.add('active');
+      document.getElementById('view-' + tabId).classList.add('active');
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       btn.classList.add('active');
-      renderAll();
     }
-
-    renderAll();
   </script>
 </body>
 </html>
