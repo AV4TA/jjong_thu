@@ -70,7 +70,9 @@
       margin-bottom: 12px;
       justify-content: flex-end;
     }
-    .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #2ed573; }
+    .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #a4b0be; transition: background 0.3s; }
+    .sync-dot.online { background: #2ed573; box-shadow: 0 0 8px #2ed573; }
+    .sync-dot.syncing { background: #ffa502; }
 
     /* Tabs */
     .tab-view { display: none; }
@@ -210,16 +212,17 @@
     }
     .gift-card.used { opacity: 0.5; filter: grayscale(85%); }
     .gift-img-wrap {
-      height: 120px;
-      background: #f1f3f9;
+      height: 130px;
+      background: #f8f9fc;
       position: relative;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      padding: 6px;
     }
-    .gift-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .gift-img-wrap img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
     .gift-dday-badge {
       position: absolute;
       top: 8px;
@@ -327,8 +330,8 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(4px);
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(5px);
       z-index: -1;
       opacity: 0;
       pointer-events: none;
@@ -353,6 +356,57 @@
     .btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
     .btn-primary { background: var(--primary); color: white; }
     .btn-secondary { background: #f1f2f6; color: #57606f; }
+
+    /* 기프티콘 이미지 확대 팝업 모달 */
+    .gift-view-card {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      width: 100%;
+      max-width: 340px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    /* 우측 상단 X 닫기 버튼 */
+    .gift-modal-close-btn {
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      width: 32px;
+      height: 32px;
+      background: #2d3436;
+      color: white;
+      border: 2px solid white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      z-index: 1000;
+      transition: transform 0.2s;
+    }
+    .gift-modal-close-btn:active { transform: scale(0.9); }
+    .gift-view-img-box {
+      width: 100%;
+      max-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 12px;
+      background: #fafafa;
+    }
+    .gift-view-img-box img {
+      max-width: 100%;
+      max-height: 380px;
+      object-fit: contain;
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -373,8 +427,8 @@
 
   <div class="container">
     <div class="sync-status">
-      <div class="sync-dot"></div>
-      <span id="syncStatusText">실시간 동기화 연결됨</span>
+      <div class="sync-dot" id="syncDot"></div>
+      <span id="syncStatusText">서버 연결 중...</span>
     </div>
     
     <!-- 1. 여행 일정 탭 -->
@@ -511,15 +565,20 @@
     </div>
   </div>
 
-  <!-- 이미지 확대 모달 -->
+  <!-- 이미지 바코드 최적화 팝업 모달 (우측 상단 X 닫기 버튼 추가) -->
   <div class="modal-overlay" id="imgViewModal" onclick="closeImgModal()">
-    <div style="max-width: 90%; max-height: 80vh;" onclick="event.stopPropagation()">
-      <img id="enlargedImg" src="" style="width: 100%; height: auto; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+    <div class="gift-view-card" onclick="event.stopPropagation()">
+      <button class="gift-modal-close-btn" onclick="closeImgModal()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="gift-view-img-box">
+        <img id="enlargedImg" src="" alt="기프티콘 바코드">
+      </div>
     </div>
   </div>
 
   <script>
-    // 전달해주신 Firebase 설정 정보 적용
+    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
       authDomain: "kobe-couple-app.firebaseapp.com",
@@ -529,7 +588,9 @@
       appId: "1:755701956140:web:ea39d7d1e00bd83ade1b89"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
     const db = firebase.firestore();
 
     const initialKobeData = {
@@ -566,21 +627,45 @@
     let currentPlaceFilter = 'all';
     let currentGiftFilter = 'available';
 
-    // Firestore 실시간 리스너 연동
-    db.collection("couple_space").doc("kobe_app_data").onSnapshot((doc) => {
+    const syncDot = document.getElementById('syncDot');
+    const syncText = document.getElementById('syncStatusText');
+
+    // Firestore 실시간 리스너 연결
+    db.collection("couple_space").doc("shared_data").onSnapshot({
+      includeMetadataChanges: true
+    }, (doc) => {
       if (doc.exists) {
         appData = doc.data();
+        syncDot.className = 'sync-dot online';
+        syncText.innerText = '실시간 동기화 완료';
         renderAll();
       } else {
-        db.collection("couple_space").doc("kobe_app_data").set(initialKobeData);
+        syncDot.className = 'sync-dot syncing';
+        syncText.innerText = '초기 데이터 세팅 중...';
+        db.collection("couple_space").doc("shared_data").set(initialKobeData).then(() => {
+          syncDot.className = 'sync-dot online';
+          syncText.innerText = '실시간 동기화 완료';
+        });
       }
     }, (error) => {
       console.error("Firestore sync error:", error);
+      syncDot.className = 'sync-dot';
+      syncText.innerText = '연결 오류 (규칙 확인 필요)';
     });
 
     function saveData() {
-      db.collection("couple_space").doc("kobe_app_data").set(appData)
-        .catch(err => console.error("Firestore Save Error:", err));
+      syncDot.className = 'sync-dot syncing';
+      syncText.innerText = '저장 중...';
+      db.collection("couple_space").doc("shared_data").set(appData)
+        .then(() => {
+          syncDot.className = 'sync-dot online';
+          syncText.innerText = '실시간 동기화 완료';
+        })
+        .catch(err => {
+          console.error("Firestore Save Error:", err);
+          syncDot.className = 'sync-dot';
+          syncText.innerText = '저장 실패';
+        });
     }
 
     function renderAll() {
@@ -633,7 +718,6 @@
       else el.innerText = `고베 여행 추억 💖`;
     }
 
-    // 네비게이션 전환
     function switchNav(nav, btn) {
       activeNav = nav;
       document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
@@ -701,7 +785,7 @@
 
     function deleteTravel(id) {
       if (confirm('이 일정을 삭제할까요?')) {
-        appData.travel = appData.travel.filter(t => t.id !== id);
+        appData.travel = (appData.travel || []).filter(t => t.id !== id);
         saveData();
         renderTravel();
       }
@@ -808,6 +892,7 @@
       }
     }
 
+    // 모달 이미지 보기
     function viewImage(src) {
       document.getElementById('enlargedImg').src = src;
       document.getElementById('imgViewModal').classList.add('active');
@@ -835,6 +920,36 @@
       document.getElementById('nameLabel').innerText = type === 'gifticon' ? '쿠폰명' : '이름 / 장소명';
     }
 
+    // 이미지 압축 리사이징
+    function compressAndSaveImage(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 800;
+
+          if (width > height && width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          callback(canvas.toDataURL('image/jpeg', 0.8));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
     function saveItem() {
       const type = document.getElementById('itemType').value;
       const name = document.getElementById('itemName').value.trim();
@@ -855,17 +970,19 @@
         });
         saveData();
         renderTravel();
+        closeModal();
       } else if (type === 'place') {
         if (!appData.places) appData.places = [];
         appData.places.push({
           id: Date.now(),
-          category: '맛집',
+          category: '고베',
           title: name,
           desc: memo,
           query: name
         });
         saveData();
         renderPlaces();
+        closeModal();
       } else if (type === 'gifticon') {
         if (!appData.gifticons) appData.gifticons = [];
         const fileInput = document.getElementById('giftImage');
@@ -873,20 +990,19 @@
         const dueDate = document.getElementById('giftDueDate').value;
 
         if (fileInput.files && fileInput.files[0]) {
-          const reader = new FileReader();
-          reader.onload = function(e) {
+          compressAndSaveImage(fileInput.files[0], function(compressedBase64) {
             appData.gifticons.push({
               id: Date.now(),
               brand: brand,
               name: name,
               dueDate: dueDate,
               isUsed: false,
-              img: e.target.result
+              img: compressedBase64
             });
             saveData();
             renderGifticons();
-          };
-          reader.readAsDataURL(fileInput.files[0]);
+            closeModal();
+          });
         } else {
           appData.gifticons.push({
             id: Date.now(),
@@ -898,10 +1014,9 @@
           });
           saveData();
           renderGifticons();
+          closeModal();
         }
       }
-
-      closeModal();
     }
 
     calculateDDay();
