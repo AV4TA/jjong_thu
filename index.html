@@ -4,633 +4,98 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Our Kobe Trip & Memory</title>
-
-  <!-- PWA & 모바일 홈 화면 바로가기 설정 -->
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="고베여행❤️" />
   <meta name="theme-color" content="#ff758c" />
-  
-  <link rel="apple-touch-icon" href="https://api.iconify.design/twemoji:sparkling-heart.svg" />
-  <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/twemoji:sparkling-heart.svg" />
-
-  <!-- FontAwesome & Google Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Firebase v9 SDK (Compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-  <!-- Tesseract.js (클라이언트 OCR 문자 자동인식 라이브러리) -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 
   <style>
-    :root {
-      --primary: #ff5e7e;
-      --primary-soft: #ffe8ee;
-      --primary-dark: #e04565;
-      --accent: #6c5ce7;
-      --bg: #f8f9fe;
-      --card: #ffffff;
-      --text: #2d3436;
-      --text-sub: #8395a7;
-      --border: #f1f2f6;
-      --radius: 18px;
-      --shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+    :root { --primary: #ff5e7e; --bg: #f8f9fe; --card: #ffffff; --text: #2d3436; --text-sub: #8395a7; --border: #f1f2f6; --radius: 18px; --shadow: 0 8px 20px rgba(0, 0, 0, 0.04); }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
-
-    /* Header */
-    .app-header {
-      background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
-      color: white;
-      padding: 26px 20px 20px;
-      border-radius: 0 0 28px 28px;
-      box-shadow: 0 6px 20px rgba(255, 117, 140, 0.3);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    .header-top { display: flex; justify-content: space-between; align-items: center; }
-    .header-title { font-size: 1.35rem; font-weight: 700; }
-    .d-day-pill {
-      background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(8px);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* Container */
-    .container { max-width: 540px; margin: 0 auto; padding: 16px; position: relative; z-index: 1; }
-
-    /* Sync Indicator */
-    .sync-status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.75rem;
-      color: var(--text-sub);
-      margin-bottom: 12px;
-      justify-content: flex-end;
-    }
-    .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #a4b0be; transition: background 0.3s; }
-    .sync-dot.online { background: #2ed573; box-shadow: 0 0 8px #2ed573; }
-    .sync-dot.syncing { background: #ffa502; }
-
-    /* Tabs */
-    .tab-view { display: none; }
-    .tab-view.active { display: block; animation: fadeIn 0.25s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
+    
+    .app-header { background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%); color: white; padding: 26px 20px 20px; border-radius: 0 0 28px 28px; position: sticky; top: 0; z-index: 10; }
+    .container { max-width: 540px; margin: 0 auto; padding: 16px; }
+    .card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.02); }
+    
     .sub-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
-    .sub-tab-btn {
-      background: white;
-      border: 1px solid var(--border);
-      color: var(--text-sub);
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s;
-    }
-    .sub-tab-btn.active {
-      background: var(--primary);
-      color: white;
-      border-color: var(--primary);
-      box-shadow: 0 4px 10px rgba(255, 94, 126, 0.3);
-    }
+    .sub-tab-btn { background: white; border: 1px solid var(--border); color: var(--text-sub); padding: 8px 16px; border-radius: 12px; font-weight: 600; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
+    .sub-tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+    
+    .sort-control { display: flex; gap: 8px; margin-bottom: 12px; font-size: 0.8rem; justify-content: flex-end; }
+    .sort-control select { padding: 4px 8px; border-radius: 8px; border: 1px solid var(--border); color: var(--text-sub); }
 
-    /* Cards & Timeline */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 14px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(0,0,0,0.02);
-    }
-
-    /* Quick Memo Card */
-    .memo-card {
-      background: #fff8f8;
-      border: 1px solid #ffd1d8;
-      margin-bottom: 16px;
-      border-radius: var(--radius);
-      padding: 16px;
-      box-shadow: var(--shadow);
-    }
-    .memo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .memo-title { font-size: 0.88rem; font-weight: 700; color: #e84393; display: flex; align-items: center; gap: 6px; }
-    .memo-btn {
-      background: white;
-      border: 1px solid #ffccd5;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--primary);
-      padding: 4px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .memo-body { font-size: 0.82rem; color: #555; line-height: 1.5; white-space: pre-wrap; }
-    .memo-edit-area {
-      width: 100%;
-      height: 90px;
-      border-radius: 10px;
-      border: 1px solid #ffccd5;
-      padding: 10px;
-      font-size: 0.82rem;
-      resize: none;
-      outline: none;
-      display: none;
-      font-family: inherit;
-    }
-
-    .timeline-item { display: flex; gap: 14px; position: relative; padding-bottom: 20px; }
-    .timeline-item:last-child { padding-bottom: 0; }
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: 19px;
-      top: 36px;
-      bottom: 0;
-      width: 2px;
-      background: #f0f0f5;
-    }
-    .timeline-item:last-child::before { display: none; }
-    .timeline-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--primary-soft);
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      flex-shrink: 0;
-      z-index: 1;
-    }
-    .timeline-content { flex: 1; }
-    .timeline-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
-    .timeline-time { font-size: 0.78rem; font-weight: 700; color: var(--primary); }
-    .timeline-title { font-size: 1.02rem; font-weight: 700; color: #222; margin-bottom: 4px; }
-    .timeline-memo { font-size: 0.85rem; color: #636e72; line-height: 1.45; }
-
-    /* Map Box */
-    .map-preview-box {
-      border-radius: 12px;
-      overflow: hidden;
-      margin: 10px 0;
-      border: 1px solid var(--border);
-      height: 160px;
-      background: #eef1f6;
-    }
-    .map-preview-box iframe { width: 100%; height: 100%; border: 0; }
-
-    .btn-maps {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #eef2ff;
-      color: #4f46e5;
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 6px 12px;
-      border-radius: 8px;
-      text-decoration: none;
-    }
-
-    /* Gifticon & Places */
     .gift-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .gift-card {
-      background: white;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-    .gift-card.used { opacity: 0.55; filter: grayscale(80%); }
-    .gift-img-wrap {
-      height: 130px;
-      background: #f8f9fc;
-      position: relative;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      padding: 6px;
-    }
-    .gift-img-wrap img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
-    .gift-dday-badge {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      background: rgba(0, 0, 0, 0.65);
-      color: white;
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 8px;
-      backdrop-filter: blur(4px);
-    }
+    .gift-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); position: relative; display: flex; flex-direction: column; }
+    .gift-card.used { opacity: 0.5; filter: grayscale(85%); }
+    .gift-img-wrap { height: 130px; background: #f8f9fc; position: relative; cursor: pointer; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .gift-img-wrap img { width: 100%; height: 100%; object-fit: contain; }
+    .gift-dday-badge { position: absolute; top: 8px; left: 8px; background: rgba(0, 0, 0, 0.65); color: white; font-size: 0.72rem; padding: 4px 8px; border-radius: 8px; }
     .gift-dday-badge.urgent { background: #ff4757; }
-
-    .gift-quick-actions {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      display: flex;
-      gap: 4px;
-      z-index: 2;
-    }
-    .gift-action-btn {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(0,0,0,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.7rem;
-      cursor: pointer;
-      color: #57606f;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .gift-action-btn:hover { background: white; }
-    .gift-action-btn.del { color: #ff4757; }
-
-    .gift-body { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-    .gift-brand { font-size: 0.75rem; color: var(--text-sub); font-weight: 600; }
-    .gift-name { font-size: 0.88rem; font-weight: 700; color: #2d3436; margin: 2px 0 8px; line-height: 1.3; }
-    .gift-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
-    .btn-toggle-use {
-      background: #f1f2f6;
-      border: none;
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 5px 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      color: #57606f;
-    }
+    
+    .gift-quick-actions { position: absolute; top: 6px; right: 6px; display: flex; gap: 4px; z-index: 2; }
+    .gift-action-btn { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.9); border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; cursor: pointer; }
+    
+    .gift-body { padding: 12px; flex: 1; }
+    .gift-brand { font-size: 0.7rem; color: var(--primary); font-weight: 700; }
+    .gift-name { font-size: 0.85rem; font-weight: 700; margin: 4px 0; }
+    .btn-toggle-use { width: 100%; padding: 6px; border: none; border-radius: 8px; font-size: 0.75rem; font-weight: 700; background: #f1f2f6; color: #57606f; cursor: pointer; }
     .btn-toggle-use.is-used { background: #2ed573; color: white; }
 
-    .place-card {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      background: white;
-      padding: 14px;
-      border-radius: 16px;
-      margin-bottom: 10px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-    }
-    .place-category-icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
-      background: #fff0f3;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      flex-shrink: 0;
-    }
-
-    /* OCR Loading Banner */
-    .ocr-loader {
-      display: none;
-      background: #eef2ff;
-      border: 1px solid #c7d2fe;
-      color: #4338ca;
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 8px 12px;
-      border-radius: 10px;
-      margin-top: 6px;
-      align-items: center;
-      gap: 8px;
-    }
-    .ocr-loader.active { display: flex; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.7; } }
-
-    /* Floating & Nav */
-    .fab {
-      position: fixed;
-      right: 20px;
-      bottom: 86px;
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: var(--primary);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      box-shadow: 0 8px 20px rgba(255, 94, 126, 0.4);
-      cursor: pointer;
-      border: none;
-      z-index: 50;
-    }
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 70px;
-      background: white;
-      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 50;
-      border-radius: 20px 20px 0 0;
-    }
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #a4b0be;
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      gap: 4px;
-      border: none;
-      background: none;
-      width: 33%;
-    }
-    .nav-item i { font-size: 1.3rem; }
-    .nav-item.active { color: var(--primary); }
-
-    /* Modal Overlay */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(5px);
-      z-index: -1;
-      opacity: 0;
-      pointer-events: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      transition: opacity 0.2s ease;
-    }
-    .modal-overlay.active { display: flex; z-index: 999; opacity: 1; pointer-events: auto; }
-    .modal-content {
-      background: white;
-      border-radius: 24px;
-      width: 100%;
-      max-width: 440px;
-      padding: 24px;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .form-group { margin-bottom: 14px; }
-    .form-group label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 6px; color: #555; }
-    .form-control { width: 100%; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 0.9rem; outline: none; }
-    .btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 999; align-items: center; justify-content: center; padding: 16px; }
+    .modal-overlay.active { display: flex; }
+    .modal-content { background: white; border-radius: 24px; width: 100%; max-width: 400px; padding: 24px; max-height: 90vh; overflow-y: auto; }
+    .form-control { width: 100%; padding: 10px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 10px; }
+    .btn { padding: 12px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; width: 100%; margin-top: 5px; }
     .btn-primary { background: var(--primary); color: white; }
-    .btn-secondary { background: #f1f2f6; color: #57606f; }
-
-    /* 기프티콘 이미지 확대 팝업 모달 */
-    .gift-view-card {
-      background: white;
-      border-radius: 20px;
-      padding: 16px;
-      width: 100%;
-      max-width: 340px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
-      position: relative;
-    }
-    .gift-modal-close-btn {
-      position: absolute;
-      top: -12px;
-      right: -12px;
-      width: 32px;
-      height: 32px;
-      background: #2d3436;
-      color: white;
-      border: 2px solid white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      z-index: 1000;
-      transition: transform 0.2s;
-    }
-    .gift-modal-close-btn:active { transform: scale(0.9); }
-    .gift-view-img-box {
-      width: 100%;
-      max-height: 400px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      border-radius: 12px;
-      background: #fafafa;
-    }
-    .gift-view-img-box img {
-      max-width: 100%;
-      max-height: 380px;
-      object-fit: contain;
-      display: block;
-    }
+    .ocr-loader { padding: 10px; background: #ffe8ee; color: var(--primary); font-size: 0.8rem; border-radius: 8px; margin-bottom: 10px; display: none; text-align: center; }
   </style>
 </head>
 <body>
 
   <header class="app-header">
     <div class="header-top">
-      <div>
-        <div class="header-title">고베 & 아리마 온천 여행 🇯🇵</div>
-        <p style="font-size: 0.8rem; opacity: 0.9; margin-top: 2px;">2026.08.30 (일) ~ 09.02 (수)</p>
-      </div>
-      <div class="d-day-pill">
-        <i class="fa-solid fa-heart"></i>
-        <span id="ddayText">D-Day 계산중</span>
-      </div>
+      <div><div class="header-title">고베 & 아리마 온천 여행 🇯🇵</div></div>
     </div>
   </header>
 
   <div class="container">
-    <div class="sync-status">
-      <div class="sync-dot" id="syncDot"></div>
-      <span id="syncStatusText">서버 연결 중...</span>
-    </div>
-    
-    <!-- 1. 여행 일정 탭 -->
-    <div id="view-travel" class="tab-view active">
-      <div class="sub-tabs" id="dayTabs">
-        <button class="sub-tab-btn active" onclick="switchDay(1, this)">Day 1 (8/30)</button>
-        <button class="sub-tab-btn" onclick="switchDay(2, this)">Day 2 (8/31)</button>
-        <button class="sub-tab-btn" onclick="switchDay(3, this)">Day 3 (9/01)</button>
-        <button class="sub-tab-btn" onclick="switchDay(4, this)">Day 4 (9/02)</button>
-      </div>
-
-      <div class="memo-card">
-        <div class="memo-header">
-          <div class="memo-title">
-            <i class="fa-solid fa-clipboard-check"></i>
-            <span>여행 메모 & 체크포인트</span>
-          </div>
-          <button class="memo-btn" id="memoActionBtn" onclick="toggleMemoEdit()">✏️ 수정</button>
-        </div>
-        <div class="memo-body" id="memoDisplay"></div>
-        <textarea class="memo-edit-area" id="memoInput"></textarea>
-      </div>
-
-      <div id="timelineContainer"></div>
-    </div>
-
-    <!-- 2. 맛집 / 가볼 곳 탭 -->
-    <div id="view-places" class="tab-view">
-      <div class="sub-tabs">
-        <button class="sub-tab-btn active" onclick="filterPlaces('all', this)">전체보기</button>
-        <button class="sub-tab-btn" onclick="filterPlaces('고베', this)">🥩 고베</button>
-        <button class="sub-tab-btn" onclick="filterPlaces('아리마', this)">♨️ 아리마온천</button>
-        <button class="sub-tab-btn" onclick="filterPlaces('카페', this)">☕ 카페</button>
-      </div>
-      <div id="placesContainer"></div>
-    </div>
-
-    <!-- 3. 기프티콘 보관함 탭 -->
-    <div id="view-coupons" class="tab-view">
-      <div class="sub-tabs">
-        <button class="sub-tab-btn active" onclick="filterGifticons('available', this)">사용 가능</button>
-        <button class="sub-tab-btn" onclick="filterGifticons('all', this)">전체보기</button>
-        <button class="sub-tab-btn" onclick="filterGifticons('used', this)">사용 완료</button>
+    <div id="view-coupons" class="tab-view active">
+      <div class="sort-control">
+        <select id="sortSelect" onchange="renderGifticons()">
+          <option value="dday">기한 임박순</option>
+          <option value="name">이름순</option>
+          <option value="recent">최신 등록순</option>
+        </select>
       </div>
       <div class="gift-grid" id="gifticonContainer"></div>
     </div>
-
   </div>
 
-  <button class="fab" onclick="openAddModal()">
-    <i class="fa-solid fa-plus"></i>
-  </button>
-
-  <nav class="bottom-nav">
-    <button class="nav-item active" onclick="switchNav('travel', this)">
-      <i class="fa-solid fa-plane-departure"></i>
-      <span>여행일정</span>
-    </button>
-    <button class="nav-item" onclick="switchNav('places', this)">
-      <i class="fa-solid fa-utensils"></i>
-      <span>맛집/가볼곳</span>
-    </button>
-    <button class="nav-item" onclick="switchNav('coupons', this)">
-      <i class="fa-solid fa-ticket"></i>
-      <span>기프티콘</span>
-    </button>
-  </nav>
+  <button class="fab" onclick="openAddModal()"><i class="fa-solid fa-plus"></i></button>
 
   <!-- 항목 추가/수정 모달 -->
   <div class="modal-overlay" id="addModal">
-    <div class="modal-content" onclick="event.stopPropagation()">
-      <h3 style="font-size: 1.15rem; margin-bottom: 16px;" id="modalTitle">새 항목 추가</h3>
-      <input type="hidden" id="editItemId" value="">
+    <div class="modal-content">
+      <h3 id="modalTitle" style="margin-bottom:15px;">기프티콘 추가</h3>
+      <input type="hidden" id="editItemId">
       
-      <div class="form-group" id="itemTypeGroup">
-        <label>구분</label>
-        <select class="form-control" id="itemType" onchange="toggleFormFields()">
-          <option value="travel">✈️ 여행 일정</option>
-          <option value="place">🍽️ 맛집 / 가볼 곳</option>
-          <option value="gifticon">🎁 기프티콘</option>
-        </select>
-      </div>
-
-      <!-- 여행 일정 필드 -->
-      <div id="travelFields">
-        <div class="form-group">
-          <label>일자 (Day)</label>
-          <select class="form-control" id="travelDay">
-            <option value="1">Day 1 (8/30)</option>
-            <option value="2">Day 2 (8/31)</option>
-            <option value="3">Day 3 (9/01)</option>
-            <option value="4">Day 4 (9/02)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>시간 (예: 12:30)</label>
-          <input type="text" class="form-control" id="travelTime" placeholder="예: 14:00">
-        </div>
-      </div>
-
-      <!-- 기프티콘 전용 사진 업로드 (OCR 감지) -->
-      <div id="gifticonFields" style="display:none;">
-        <div class="form-group">
-          <label>바코드/쿠폰 사진 등록 <span style="font-size:0.75rem; color:var(--primary); font-weight:normal;">(사진 올리면 이름/유효기간 자동완성 ✨)</span></label>
-          <input type="file" class="form-control" id="giftImage" accept="image/*" onchange="handleImageOCR(this)">
-          <div class="ocr-loader" id="ocrLoader">
-            <i class="fa-solid fa-wand-magic-sparkles"></i>
-            <span id="ocrText">AI가 사진 속 상품명과 유효기간을 분석 중...</span>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>브랜드</label>
-          <input type="text" class="form-control" id="giftBrand" placeholder="예: 스타벅스">
-        </div>
-        <div class="form-group">
-          <label>유효기간</label>
-          <input type="date" class="form-control" id="giftDueDate">
-        </div>
-      </div>
-
       <div class="form-group">
-        <label id="nameLabel">이름 / 장소명</label>
-        <input type="text" class="form-control" id="itemName" placeholder="예: 아이스 아메리카노 T 2잔">
+        <label>쿠폰 사진 (자동인식)</label>
+        <input type="file" class="form-control" id="giftImage" accept="image/*" onchange="handleImageOCR(this)">
+        <div id="ocrLoader" class="ocr-loader">🔍 AI 분석 중... 기다려주세요</div>
       </div>
-
-      <div class="form-group">
-        <label>메모 & 설명</label>
-        <textarea class="form-control" id="itemMemo" rows="2" placeholder="메뉴, 탑승장소, 바코드 번호 등"></textarea>
-      </div>
-
-      <div style="display: flex; gap: 10px; margin-top: 20px;">
-        <button class="btn btn-secondary" onclick="closeModal()">취소</button>
-        <button class="btn btn-primary" onclick="saveItem()">저장하기</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 이미지 바코드 확대 팝업 모달 -->
-  <div class="modal-overlay" id="imgViewModal" onclick="closeImgModal()">
-    <div class="gift-view-card" onclick="event.stopPropagation()">
-      <button class="gift-modal-close-btn" onclick="closeImgModal()">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-      <div class="gift-view-img-box">
-        <img id="enlargedImg" src="" alt="기프티콘 바코드">
-      </div>
+      <input type="text" class="form-control" id="giftBrand" placeholder="브랜드명">
+      <input type="text" class="form-control" id="itemName" placeholder="상품명">
+      <input type="date" class="form-control" id="giftDueDate">
+      <textarea class="form-control" id="itemMemo" rows="2" placeholder="메모"></textarea>
+      
+      <button class="btn btn-primary" onclick="saveItem()">저장하기</button>
+      <button class="btn" style="background:#f1f2f6;" onclick="closeModal()">취소</button>
     </div>
   </div>
 
@@ -644,595 +109,111 @@
       appId: "1:755701956140:web:ea39d7d1e00bd83ade1b89"
     };
 
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
+    firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    const initialKobeData = {
-      quickMemo: "✔️ 여권 유효기간 & 일본 e-SIM 등록 확인\n✔️ 110V 돼지코 어댑터 챙기기\n✔️ 산노미야 ↔ 아리마온천 버스 시간 확인\n✔️ 토요코인 산노미야 에키마에 체크인 바우처",
-      travel: [
-        { id: 101, day: 1, icon: 'fa-plane-departure', time: '13:20', title: '인천공항 출발 🛫', memo: '인천공항 탑승 수속 & 면세점 구경', query: 'Incheon International Airport', showMap: false },
-        { id: 102, day: 1, icon: 'fa-plane-arrival', time: '15:00', title: '고베공항 도착 🛬', memo: '입국 수속 및 포트라이너(Port Liner) 타고 산노미야역으로 이동', query: 'Kobe Airport', showMap: true },
-        { id: 103, day: 1, icon: 'fa-hotel', time: '16:30', title: '숙소 체크인 (토요코인 고베 산노미야 에키마에)', memo: '東横INN神戸三宮駅前 | 짐 풀고 가볍게 외출 준비 ✨', query: 'Toyoko Inn Kobe Sannomiya Ekimae', showMap: true },
-        { id: 104, day: 1, icon: 'fa-utensils', time: '17:00', title: '저녁 식사 (고베 타다)', memo: '맛있는 고베 로컬 맛집에서 저녁 식사 🥩', query: 'Kobe Tada Restaurant', showMap: true },
-        { id: 105, day: 1, icon: 'fa-street-view', time: '18:00', title: '기타노이진칸 구경 & 산책', memo: '이국적인 서양식 거리 구경 & 스타벅스 기타노이진칸점 ☕', query: 'Kitano Ijinkan Kobe', showMap: true },
-        { id: 106, day: 1, icon: 'fa-cable-car', time: '19:00', title: '누노비키 허브원 / 로프웨이', memo: '로프웨이 타고 올라가 고베 야경 내려다보기 🌿✨', query: 'Kobe Nunobiki Herb Gardens Ropeway', showMap: true },
-        { id: 201, day: 2, icon: 'fa-bus', time: '10:15', title: '산노미야 버스 터미널 출발 🚌', memo: '산노미야역 앞 버스터미널에서 아리마온천행 직행 버스 탑승', query: 'Sannomiya Bus Terminal', showMap: true },
-        { id: 202, day: 2, icon: 'fa-hot-tub-person', time: '10:45', title: '아리마 온천 마을 도착 ♨️', memo: '킨노유/긴노유 족욕 & 아리마 전통 먹거리 탄산센베 탐방', query: 'Arima Onsen Kobe', showMap: true },
-        { id: 203, day: 2, icon: 'fa-moon', time: '18:00', title: '온천 료칸 휴식 & 저녁 식사', memo: '따뜻한 온천욕과 함께 힐링 데이트 💖', query: 'Arima Onsen', showMap: false },
-        { id: 301, day: 3, icon: 'fa-van-shuttle', time: '11:00', title: '산노미야로 이동 🏙️', memo: '체크아웃 후 산노미야 중심가 복귀 & 쇼핑', query: 'Sannomiya Station Kobe', showMap: true },
-        { id: 302, day: 3, icon: 'fa-ferris-wheel', time: '16:00', title: '고베 하버랜드 모자이크', memo: '포트타워 야경 보며 낭만적인 밤 산책 🎡', query: 'Kobe Harborland MOSAIC', showMap: true },
-        { id: 401, day: 4, icon: 'fa-bag-shopping', time: '12:00', title: '마지막 쇼핑 & 점심 식사', memo: '기념품(푸딩, 과자 등) 구매 & 고베공항 이동', query: 'Sannomiya Center Gai Shopping Street', showMap: false },
-        { id: 402, day: 4, icon: 'fa-plane-departure', time: '16:00', title: '고베공항 출발 🛫', memo: '출국 수속 및 면세점 구경', query: 'Kobe Airport', showMap: false },
-        { id: 403, day: 4, icon: 'fa-plane-arrival', time: '18:00', title: '인천공항 도착 🛬', memo: '즐거웠던 고베 & 아리마 여행 마무리 💖', query: 'Incheon International Airport', showMap: false }
-      ],
-      places: [
-        { id: 1, category: '고베', title: '고베 타다', desc: '1일차 저녁 예정 맛집', query: 'Kobe Tada' },
-        { id: 2, category: '고베', title: '토요코인 고베 산노미야 에키마에', desc: '역 앞 편리한 숙소 (東横INN神戸三宮駅前)', query: 'Toyoko Inn Kobe Sannomiya Ekimae' },
-        { id: 3, category: '아리마', title: '아리마 온천 킨노유', desc: '적갈색 철분 천연 온천수 족욕장', query: 'Arima Onsen Kin no Yu' },
-        { id: 4, category: '카페', title: '스타벅스 기타노이진칸점', desc: '등록유형문화재 서양식 주택 카페', query: 'Starbucks Coffee Kobe Kitano Ijinkan' }
-      ],
-      gifticons: []
-    };
+    let appData = { gifticons: [] };
 
-    let appData = initialKobeData;
-    let isEditingMemo = false;
-    let currentDay = 1;
-    let activeNav = 'travel';
-    let currentPlaceFilter = 'all';
-    let currentGiftFilter = 'available';
-    let editingGifticonExistingImg = null;
-
-    const syncDot = document.getElementById('syncDot');
-    const syncText = document.getElementById('syncStatusText');
-
-    db.collection("couple_space").doc("shared_data").onSnapshot({
-      includeMetadataChanges: true
-    }, (doc) => {
-      if (doc.exists) {
-        appData = doc.data();
-        syncDot.className = 'sync-dot online';
-        syncText.innerText = '실시간 동기화 완료';
-        renderAll();
-      } else {
-        syncDot.className = 'sync-dot syncing';
-        syncText.innerText = '초기 데이터 세팅 중...';
-        db.collection("couple_space").doc("shared_data").set(initialKobeData).then(() => {
-          syncDot.className = 'sync-dot online';
-          syncText.innerText = '실시간 동기화 완료';
-        });
-      }
-    }, (error) => {
-      console.error("Firestore sync error:", error);
-      syncDot.className = 'sync-dot';
-      syncText.innerText = '연결 오류 (규칙 확인 필요)';
+    db.collection("couple_space").doc("shared_data").onSnapshot(doc => {
+      if (doc.exists) { appData = doc.data(); renderGifticons(); }
     });
 
-    function saveData() {
-      syncDot.className = 'sync-dot syncing';
-      syncText.innerText = '저장 중...';
-      db.collection("couple_space").doc("shared_data").set(appData)
-        .then(() => {
-          syncDot.className = 'sync-dot online';
-          syncText.innerText = '실시간 동기화 완료';
-        })
-        .catch(err => {
-          console.error("Firestore Save Error:", err);
-          syncDot.className = 'sync-dot';
-          syncText.innerText = '저장 실패';
-        });
+    function saveData() { db.collection("couple_space").doc("shared_data").set(appData); }
+
+    // 1. OCR (이미지 자동 인식)
+    function handleImageOCR(input) {
+      if (!input.files || !input.files[0]) return;
+      document.getElementById('ocrLoader').style.display = 'block';
+      Tesseract.recognize(input.files[0], 'kor+eng').then(({ data: { text } }) => {
+        document.getElementById('ocrLoader').style.display = 'none';
+        
+        // 날짜 파싱 (년.월.일 혹은 년-월-일)
+        const dateRegex = /(202[0-9])[\.\-\/\s년]\s*([0-1]?[0-9])[\.\-\/\s월]\s*([0-3]?[0-9])/;
+        const match = text.match(dateRegex);
+        if (match) document.getElementById('giftDueDate').value = `${match[1]}-${match[2].padStart(2, '0')}-${match[3].padStart(2, '0')}`;
+        
+        // 브랜드/상품명 추출 간단 로직
+        const lines = text.split('\n');
+        if(lines[0]) document.getElementById('giftBrand').value = lines[0].substring(0, 10);
+        if(lines[1]) document.getElementById('itemName').value = lines[1].substring(0, 15);
+      });
     }
 
-    function renderAll() {
-      renderQuickMemo();
-      if (activeNav === 'travel') renderTravel();
-      if (activeNav === 'places') renderPlaces();
-      if (activeNav === 'coupons') renderGifticons();
-    }
-
-    function renderQuickMemo() {
-      document.getElementById('memoDisplay').innerText = appData.quickMemo || '메모를 입력해보세요.';
-      document.getElementById('memoInput').value = appData.quickMemo || '';
-    }
-
-    function toggleMemoEdit() {
-      const displayEl = document.getElementById('memoDisplay');
-      const inputEl = document.getElementById('memoInput');
-      const btnEl = document.getElementById('memoActionBtn');
-
-      if (!isEditingMemo) {
-        isEditingMemo = true;
-        displayEl.style.display = 'none';
-        inputEl.style.display = 'block';
-        inputEl.focus();
-        btnEl.innerText = '💾 저장';
-      } else {
-        isEditingMemo = false;
-        appData.quickMemo = inputEl.value;
-        saveData();
-        displayEl.innerText = appData.quickMemo;
-        displayEl.style.display = 'block';
-        inputEl.style.display = 'none';
-        btnEl.innerText = '✏️ 수정';
-      }
-    }
-
-    function calculateDDay() {
-      const tripDate = new Date('2026-08-30');
-      const today = new Date();
-      tripDate.setHours(0,0,0,0);
-      today.setHours(0,0,0,0);
-      const diff = Math.ceil((tripDate - today) / (1000 * 60 * 60 * 24));
-      
-      const el = document.getElementById('ddayText');
-      if (diff > 0) el.innerText = `고베 D-${diff}`;
-      else if (diff === 0) el.innerText = `고베 D-Day 오늘 출발! 🛫`;
-      else if (diff >= -3) el.innerText = `고베 여행 중 (${Math.abs(diff)+1}일차) 🇯🇵`;
-      else el.innerText = `고베 여행 추억 💖`;
-    }
-
-    function switchNav(nav, btn) {
-      activeNav = nav;
-      document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-      
-      document.getElementById(`view-${nav}`).classList.add('active');
-      if (btn) btn.classList.add('active');
-      renderAll();
-    }
-
-    function switchDay(day, btn) {
-      currentDay = day;
-      document.querySelectorAll('#dayTabs .sub-tab-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      renderTravel();
-    }
-
-    function renderTravel() {
-      const container = document.getElementById('timelineContainer');
-      const items = (appData.travel || []).filter(i => i.day === currentDay);
-
-      if (items.length === 0) {
-        container.innerHTML = '<div style="text-align:center; color:#a4b0be; padding:30px;">등록된 일정이 없습니다. + 버튼을 눌러 추가해보세요!</div>';
-        return;
-      }
-
-      container.innerHTML = items.map(item => `
-        <div class="card timeline-item">
-          <div class="timeline-icon"><i class="fa-solid ${item.icon || 'fa-location-dot'}"></i></div>
-          <div class="timeline-content">
-            <div class="timeline-header">
-              <span class="timeline-time">${item.time || '시간 미정'}</span>
-              <button onclick="deleteTravel(${item.id})" style="border:none; background:none; color:#ff7675; cursor:pointer; font-size:0.8rem;"><i class="fa-solid fa-trash-can"></i></button>
-            </div>
-            <div class="timeline-title">${item.title}</div>
-            <div class="timeline-memo">${item.memo || ''}</div>
-            
-            ${item.showMap ? `
-              <div class="map-preview-box">
-                <iframe src="https://maps.google.com/maps?q=${encodeURIComponent(item.query || item.title)}&t=&z=15&ie=UTF8&iwloc=&output=embed" loading="lazy"></iframe>
-              </div>
-            ` : ''}
-
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
-              <a class="btn-maps" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.query || item.title)}" target="_blank">
-                <i class="fa-brands fa-google"></i> 구글 지도에서 보기
-              </a>
-              <button onclick="toggleMiniMap(${item.id})" style="border:none; background:none; color:#636e72; font-size:0.75rem; cursor:pointer;">
-                ${item.showMap ? '🗺️ 미니맵 접기' : '🗺️ 미니맵 보기'}
-              </button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function toggleMiniMap(id) {
-      const item = (appData.travel || []).find(t => t.id === id);
-      if (item) {
-        item.showMap = !item.showMap;
-        saveData();
-        renderTravel();
-      }
-    }
-
-    function deleteTravel(id) {
-      if (confirm('이 일정을 삭제할까요?')) {
-        appData.travel = (appData.travel || []).filter(t => t.id !== id);
-        saveData();
-        renderTravel();
-      }
-    }
-
-    function filterPlaces(cat, btn) {
-      currentPlaceFilter = cat;
-      document.querySelectorAll('#view-places .sub-tab-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      renderPlaces();
-    }
-
-    function renderPlaces() {
-      const container = document.getElementById('placesContainer');
-      const filtered = currentPlaceFilter === 'all' 
-        ? (appData.places || []) 
-        : (appData.places || []).filter(p => p.category === currentPlaceFilter);
-
-      container.innerHTML = filtered.map(p => `
-        <div class="place-card">
-          <div class="place-category-icon">
-            <i class="fa-solid ${p.category === '카페' ? 'fa-mug-hot' : (p.category === '아리마' ? 'fa-hot-tub-person' : 'fa-utensils')}"></i>
-          </div>
-          <div style="flex:1;">
-            <span style="font-size:0.72rem; color:var(--primary); font-weight:700;">#${p.category}</span>
-            <div style="font-size:0.98rem; font-weight:700; margin:2px 0;">${p.title}</div>
-            <div style="font-size:0.8rem; color:var(--text-sub); line-height:1.3;">${p.desc}</div>
-          </div>
-          <a class="btn-maps" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.query || p.title)}" target="_blank">
-            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-          </a>
-        </div>
-      `).join('');
-    }
-
-    function filterGifticons(type, btn) {
-      currentGiftFilter = type;
-      document.querySelectorAll('#view-coupons .sub-tab-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      renderGifticons();
-    }
-
-    function getGiftDDay(dateStr) {
-      if (!dateStr) return { text: '기한없음', urgent: false };
-      const today = new Date();
-      today.setHours(0,0,0,0);
-      const due = new Date(dateStr);
-      due.setHours(0,0,0,0);
-      const diff = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
-      
-      if (diff < 0) return { text: '만료됨', urgent: true };
-      if (diff === 0) return { text: '오늘 마감!', urgent: true };
-      return { text: `D-${diff}`, urgent: diff <= 7 };
-    }
-
+    // 2. 정렬 로직
     function renderGifticons() {
       const container = document.getElementById('gifticonContainer');
-      let list = appData.gifticons || [];
-      if (currentGiftFilter === 'available') list = list.filter(g => !g.isUsed);
-      if (currentGiftFilter === 'used') list = list.filter(g => g.isUsed);
+      let list = [...(appData.gifticons || [])];
+      const sortType = document.getElementById('sortSelect').value;
 
-      if (list.length === 0) {
-        container.innerHTML = `
-          <div style="grid-column: 1 / -1; text-align:center; padding: 40px 10px; color:#a4b0be;">
-            <i class="fa-solid fa-gift" style="font-size:2.5rem; margin-bottom:12px; color:#ffd1dc;"></i>
-            <p style="font-size:0.9rem; font-weight:600;">등록된 기프티콘이 없습니다.</p>
-            <p style="font-size:0.8rem; margin-top:4px;">우측 하단의 <b>+</b> 버튼을 눌러 사진을 올려보세요!</p>
-          </div>
-        `;
-        return;
-      }
+      if (sortType === 'dday') list.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+      else if (sortType === 'name') list.sort((a, b) => a.name.localeCompare(b.name));
+      else list.sort((a, b) => b.id - a.id);
 
-      container.innerHTML = list.map(g => {
-        const dday = getGiftDDay(g.dueDate);
-        return `
-          <div class="gift-card ${g.isUsed ? 'used' : ''}">
-            <div class="gift-quick-actions">
-              <button class="gift-action-btn" title="수정" onclick="editGifticon(${g.id})">
-                <i class="fa-solid fa-pen"></i>
-              </button>
-              <button class="gift-action-btn del" title="삭제" onclick="deleteGifticon(${g.id})">
-                <i class="fa-solid fa-trash-can"></i>
-              </button>
-            </div>
-            <div class="gift-img-wrap" onclick="viewImage('${g.img || 'https://via.placeholder.com/300x200?text=Gifticon'}')">
-              <img src="${g.img || 'https://via.placeholder.com/300x200?text=Gifticon'}" alt="쿠폰">
-              <div class="gift-dday-badge ${dday.urgent ? 'urgent' : ''}">${g.isUsed ? '사용완료' : dday.text}</div>
-            </div>
-            <div class="gift-body">
-              <div>
-                <div class="gift-brand">${g.brand}</div>
-                <div class="gift-name">${g.name}</div>
-              </div>
-              <div class="gift-footer">
-                <span style="font-size:0.72rem; color:#a4b0be;">~${g.dueDate || '무기한'}</span>
-                <button class="btn-toggle-use ${g.isUsed ? 'is-used' : ''}" onclick="toggleGiftUse(${g.id})">
-                  ${g.isUsed ? '취소' : '사용'}
-                </button>
-              </div>
-            </div>
+      container.innerHTML = list.map(g => `
+        <div class="gift-card ${g.isUsed ? 'used' : ''}">
+          <div class="gift-quick-actions">
+            <button class="gift-action-btn" onclick="editGifticon(${g.id})"><i class="fa-solid fa-pen"></i></button>
+            <button class="gift-action-btn" onclick="deleteGifticon(${g.id})"><i class="fa-solid fa-trash-can"></i></button>
           </div>
-        `;
-      }).join('');
+          <div class="gift-img-wrap" onclick="alert('바코드 클릭시 전체화면 기능은 나중에 추가 가능합니다')">
+            <img src="${g.img}" alt="쿠폰">
+            <div class="gift-dday-badge ${getGiftDDay(g.dueDate).urgent ? 'urgent' : ''}">${g.isUsed ? '사용완료' : getGiftDDay(g.dueDate).text}</div>
+          </div>
+          <div class="gift-body">
+            <div class="gift-brand">${g.brand}</div>
+            <div class="gift-name">${g.name}</div>
+            <button class="btn-toggle-use ${g.isUsed ? 'is-used' : ''}" onclick="toggleGiftUse(${g.id})">${g.isUsed ? '사용 취소' : '사용하기'}</button>
+          </div>
+        </div>
+      `).join('');
     }
 
     function toggleGiftUse(id) {
-      const g = (appData.gifticons || []).find(item => item.id === id);
-      if (g) {
-        g.isUsed = !g.isUsed;
-        saveData();
-        renderGifticons();
-      }
+      const g = appData.gifticons.find(i => i.id === id);
+      if(g) { g.isUsed = !g.isUsed; saveData(); }
     }
-
+    
     function deleteGifticon(id) {
-      if (confirm('이 기프티콘을 삭제할까요?')) {
-        appData.gifticons = (appData.gifticons || []).filter(g => g.id !== id);
+      if(confirm('삭제할까요?')) {
+        appData.gifticons = appData.gifticons.filter(i => i.id !== id);
         saveData();
-        renderGifticons();
       }
     }
 
     function editGifticon(id) {
-      const g = (appData.gifticons || []).find(item => item.id === id);
-      if (!g) return;
-
-      document.getElementById('modalTitle').innerText = '기프티콘 수정';
+      const g = appData.gifticons.find(i => i.id === id);
       document.getElementById('editItemId').value = g.id;
-      document.getElementById('itemType').value = 'gifticon';
-      document.getElementById('itemTypeGroup').style.display = 'none'; // 수정 중 타입 변경 방지
-      toggleFormFields();
-
-      document.getElementById('giftBrand').value = g.brand || '';
-      document.getElementById('giftDueDate').value = g.dueDate || '';
-      document.getElementById('itemName').value = g.name || '';
-      document.getElementById('itemMemo').value = g.memo || '';
-      editingGifticonExistingImg = g.img || null;
-
+      document.getElementById('giftBrand').value = g.brand;
+      document.getElementById('itemName').value = g.name;
+      document.getElementById('giftDueDate').value = g.dueDate;
       document.getElementById('addModal').classList.add('active');
-    }
-
-    function viewImage(src) {
-      document.getElementById('enlargedImg').src = src;
-      document.getElementById('imgViewModal').classList.add('active');
-    }
-    function closeImgModal() {
-      document.getElementById('imgViewModal').classList.remove('active');
-    }
-
-    function openAddModal() {
-      document.getElementById('modalTitle').innerText = '새 항목 추가';
-      document.getElementById('editItemId').value = '';
-      document.getElementById('itemTypeGroup').style.display = 'block';
-      document.getElementById('itemType').value = activeNav === 'coupons' ? 'gifticon' : (activeNav === 'places' ? 'place' : 'travel');
-      editingGifticonExistingImg = null;
-      toggleFormFields();
-      document.getElementById('addModal').classList.add('active');
-    }
-
-    function closeModal() {
-      document.getElementById('addModal').classList.remove('active');
-      document.getElementById('itemName').value = '';
-      document.getElementById('itemMemo').value = '';
-      document.getElementById('giftBrand').value = '';
-      document.getElementById('giftDueDate').value = '';
-      document.getElementById('giftImage').value = '';
-      document.getElementById('editItemId').value = '';
-      document.getElementById('ocrLoader').classList.remove('active');
-      editingGifticonExistingImg = null;
-    }
-
-    function toggleFormFields() {
-      const type = document.getElementById('itemType').value;
-      document.getElementById('travelFields').style.display = type === 'travel' ? 'block' : 'none';
-      document.getElementById('gifticonFields').style.display = type === 'gifticon' ? 'block' : 'none';
-      document.getElementById('nameLabel').innerText = type === 'gifticon' ? '상품명 (이름)' : '이름 / 장소명';
-    }
-
-    // ----------------------------------------------------
-    // AI OCR 문자 자동 인식 (상품명 & 유효기간 자동 추출 고도화)
-    // ----------------------------------------------------
-    function handleImageOCR(input) {
-      if (!input.files || !input.files[0]) return;
-      const file = input.files[0];
-
-      const loader = document.getElementById('ocrLoader');
-      loader.classList.add('active');
-      document.getElementById('ocrText').innerText = 'AI가 사진 속 상품명과 유효기간을 분석 중...';
-
-      Tesseract.recognize(file, 'kor+eng', {
-        logger: m => {
-          if (m.status === 'recognizing text') {
-            document.getElementById('ocrText').innerText = `텍스트 분석 중... (${Math.round(m.progress * 100)}%)`;
-          }
-        }
-      }).then(({ data: { text } }) => {
-        loader.classList.remove('active');
-        extractGifticonInfo(text);
-      }).catch(err => {
-        console.warn("OCR Error:", err);
-        loader.classList.remove('active');
-      });
-    }
-
-    function extractGifticonInfo(rawText) {
-      const text = rawText.replace(/\r/g, '');
-      const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-
-      // 1. 유효기간 날짜 탐색 정규식
-      const dateRegex = /(202[0-9])[\.\-\/\s년]\s*([0-1]?[0-9])[\.\-\/\s월]\s*([0-3]?[0-9])/;
-      const match = text.match(dateRegex);
-
-      if (match) {
-        const year = match[1];
-        const month = match[2].padStart(2, '0');
-        const day = match[3].padStart(2, '0');
-        document.getElementById('giftDueDate').value = `${year}-${month}-${day}`;
-      }
-
-      // 2. 주요 브랜드 자동 감지
-      const brands = [
-        '스타벅스', 'Starbucks', '투썸플레이스', '투썸', '메가커피', '컴포즈커피', '컴포즈',
-        '배스킨라빈스', '베스킨라빈스', 'BHC', 'BBQ', '교촌치킨', '교촌', '맘스터치',
-        '올리브영', 'CU', 'GS25', '세븐일레븐', '버거킹', '맥도날드', '도미노피자',
-        '이디야', '파리바게뜨', '파리바게트', '뚜레쥬르', '배달의민족', '카카오톡', '요기요'
-      ];
-
-      let detectedBrand = '';
-      for (let brand of brands) {
-        if (text.includes(brand)) {
-          detectedBrand = brand.replace('베스킨라빈스', '배스킨라빈스').replace('파리바게트', '파리바게뜨');
-          document.getElementById('giftBrand').value = detectedBrand;
-          break;
-        }
-      }
-
-      // 3. 상품명(이름) 후보 지능적 자동 추출
-      const ignoreWords = ['교환권', '모바일', '쿠폰', '바코드', '유효기간', '주문번호', '발행처', '사용처', '금액권', '사용불가', '원', 'No.', 'kakao', 'gift'];
-      let candidateTitle = '';
-
-      for (let line of lines) {
-        // 날짜/숫자만 가득한 줄 또는 안내 문구 건너뛰기
-        if (dateRegex.test(line)) continue;
-        if (/^\d+$/.test(line.replace(/[-\s]/g, ''))) continue;
-        if (line.length < 2 || line.length > 35) continue;
-        
-        let hasIgnore = ignoreWords.some(w => line.includes(w));
-        if (!hasIgnore) {
-          // 브랜드명이 포함되어 있거나 일반 상품명 패턴인 경우
-          candidateTitle = line.replace(/[^\w\sㄱ-ㅎㅏ-ㅣ가-힣+()]/g, '').trim();
-          if (candidateTitle.length >= 2) break;
-        }
-      }
-
-      if (candidateTitle && !document.getElementById('itemName').value) {
-        document.getElementById('itemName').value = candidateTitle;
-      }
-    }
-
-    // 이미지 압축
-    function compressAndSaveImage(file, callback) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-          const maxDim = 800;
-
-          if (width > height && width > maxDim) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          } else if (height > maxDim) {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          callback(canvas.toDataURL('image/jpeg', 0.8));
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
     }
 
     function saveItem() {
-      const editId = document.getElementById('editItemId').value;
-      const type = document.getElementById('itemType').value;
-      const name = document.getElementById('itemName').value.trim();
-      const memo = document.getElementById('itemMemo').value.trim();
-      if (!name) return alert('이름을 입력해주세요!');
-
-      if (type === 'travel') {
-        if (!appData.travel) appData.travel = [];
-        appData.travel.push({
-          id: Date.now(),
-          day: parseInt(document.getElementById('travelDay').value),
-          time: document.getElementById('travelTime').value.trim() || '시간 미정',
-          title: name,
-          memo: memo,
-          query: name,
-          icon: 'fa-location-dot',
-          showMap: true
-        });
-        saveData();
-        renderTravel();
-        closeModal();
-      } else if (type === 'place') {
-        if (!appData.places) appData.places = [];
-        appData.places.push({
-          id: Date.now(),
-          category: '고베',
-          title: name,
-          desc: memo,
-          query: name
-        });
-        saveData();
-        renderPlaces();
-        closeModal();
-      } else if (type === 'gifticon') {
-        if (!appData.gifticons) appData.gifticons = [];
-        const fileInput = document.getElementById('giftImage');
-        const brand = document.getElementById('giftBrand').value.trim() || '기타';
-        const dueDate = document.getElementById('giftDueDate').value;
-
-        // 수정 모드인 경우
-        if (editId) {
-          const targetIndex = appData.gifticons.findIndex(g => g.id === parseInt(editId));
-          if (targetIndex > -1) {
-            if (fileInput.files && fileInput.files[0]) {
-              compressAndSaveImage(fileInput.files[0], function(compressedBase64) {
-                appData.gifticons[targetIndex].brand = brand;
-                appData.gifticons[targetIndex].name = name;
-                appData.gifticons[targetIndex].dueDate = dueDate;
-                appData.gifticons[targetIndex].memo = memo;
-                appData.gifticons[targetIndex].img = compressedBase64;
-                saveData();
-                renderGifticons();
-                closeModal();
-              });
-              return;
-            } else {
-              appData.gifticons[targetIndex].brand = brand;
-              appData.gifticons[targetIndex].name = name;
-              appData.gifticons[targetIndex].dueDate = dueDate;
-              appData.gifticons[targetIndex].memo = memo;
-              saveData();
-              renderGifticons();
-              closeModal();
-              return;
-            }
-          }
-        }
-
-        // 신규 추가인 경우
-        if (fileInput.files && fileInput.files[0]) {
-          compressAndSaveImage(fileInput.files[0], function(compressedBase64) {
-            appData.gifticons.push({
-              id: Date.now(),
-              brand: brand,
-              name: name,
-              dueDate: dueDate,
-              memo: memo,
-              isUsed: false,
-              img: compressedBase64
-            });
-            saveData();
-            renderGifticons();
-            closeModal();
-          });
-        } else {
-          appData.gifticons.push({
-            id: Date.now(),
-            brand: brand,
-            name: name,
-            dueDate: dueDate,
-            memo: memo,
-            isUsed: false,
-            img: editingGifticonExistingImg || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400'
-          });
-          saveData();
-          renderGifticons();
-          closeModal();
-        }
+      const id = parseInt(document.getElementById('editItemId').value);
+      const brand = document.getElementById('giftBrand').value;
+      const name = document.getElementById('itemName').value;
+      const dueDate = document.getElementById('giftDueDate').value;
+      
+      if(id) {
+        const idx = appData.gifticons.findIndex(i => i.id === id);
+        appData.gifticons[idx] = { ...appData.gifticons[idx], brand, name, dueDate };
+      } else {
+        appData.gifticons.push({ id: Date.now(), brand, name, dueDate, isUsed: false, img: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400' });
       }
+      saveData();
+      closeModal();
     }
 
-    calculateDDay();
-    renderAll();
+    function closeModal() { document.getElementById('addModal').classList.remove('active'); }
+    function openAddModal() { document.getElementById('addModal').classList.add('active'); }
+    function getGiftDDay(dateStr) {
+        if (!dateStr) return { text: '기한없음', urgent: false };
+        const d = new Date(dateStr);
+        const today = new Date();
+        const diff = Math.ceil((d - today) / (1000*60*60*24));
+        return { text: diff < 0 ? '만료' : `D-${diff}`, urgent: diff <= 7 };
+    }
   </script>
 </body>
 </html>
