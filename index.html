@@ -210,7 +210,11 @@
     </div>
   </div>
 
-  <script>
+<script>
+    // 서비스 워커 등록 (PWA 앱 설치 활성화)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
     // D-Day 계산
     const tripDate = new Date('2026-08-30');
     const today = new Date();
