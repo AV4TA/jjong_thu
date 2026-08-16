@@ -124,7 +124,7 @@
     }
 
     /* ====================================================
-       체크리스트 전용 컴포넌트 스타일
+       체크리스트 뚜 vs 쫑 탭 & 카드 스타일
        ==================================================== */
     .checklist-card {
       background: white;
@@ -133,9 +133,34 @@
       box-shadow: var(--shadow);
       border: 1px solid rgba(255, 117, 140, 0.15);
     }
-    .progress-wrap {
-      margin-bottom: 18px;
+
+    .person-switch-row {
+      display: flex;
+      background: #f1f2f6;
+      padding: 4px;
+      border-radius: 14px;
+      margin-bottom: 16px;
+      gap: 4px;
     }
+    .person-btn {
+      flex: 1;
+      border: none;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #636e72;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .person-btn.active {
+      background: white;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .progress-wrap { margin-bottom: 16px; }
     .progress-header {
       display: flex;
       justify-content: space-between;
@@ -553,12 +578,18 @@
         <button class="sub-tab-btn" onclick="switchDay(4, this)">Day 4 (9/02)</button>
       </div>
 
-      <!-- 인터랙티브 체크리스트 섹션 -->
+      <!-- 뚜 vs 쫑 분리형 체크리스트 섹션 -->
       <div id="readyChecklistSection" class="checklist-card">
+        <!-- 뚜 vs 쫑 토글 탭 -->
+        <div class="person-switch-row">
+          <button class="person-btn active" id="btnPersonThu" onclick="switchPerson('thu')">👸 뚜가 챙길 거</button>
+          <button class="person-btn" id="btnPersonJjong" onclick="switchPerson('jjong')">🤴 쫑이 챙길 거</button>
+        </div>
+
         <!-- 달성률 프로그레스 바 -->
         <div class="progress-wrap">
           <div class="progress-header">
-            <span>🎒 준비물 챙기기</span>
+            <span id="progressTitle">🎒 뚜의 짐 챙기기</span>
             <span id="progressText">0% 완료 (0/0)</span>
           </div>
           <div class="progress-bar-bg">
@@ -568,7 +599,7 @@
 
         <!-- 새 준비물 빠른 추가 -->
         <div class="check-add-box">
-          <input type="text" id="newCheckInput" class="check-input" placeholder="새 준비물 입력 (예: 고데기, 삼각대)" onkeypress="if(event.key==='Enter') addCheckItem()">
+          <input type="text" id="newCheckInput" class="check-input" placeholder="새 준비물 입력" onkeypress="if(event.key==='Enter') addCheckItem()">
           <button class="btn-add-item" onclick="addCheckItem()">추가</button>
         </div>
 
@@ -765,21 +796,27 @@
     }
     const db = firebase.firestore();
 
-    const initialChecklist = [
-      { id: 1, text: "여권 및 사본 챙기기", checked: false },
-      { id: 2, text: "일본 e-SIM / 유심 등록 확인", checked: false },
-      { id: 3, text: "110V 돼지코 어댑터 챙기기", checked: false },
-      { id: 4, text: "트래블로그 / 트래블월렛 카드", checked: false },
-      { id: 5, text: "엔화 현금 환전 및 지갑", checked: false },
-      { id: 6, text: "1, 3일차 숙소 바우처 확인", checked: false },
-      { id: 7, text: "산노미야 ↔ 아리마온천 버스 예약", checked: false },
-      { id: 8, text: "비상약 (소화제, 두통약, 밴드)", checked: false },
-      { id: 9, text: "보조배터리 & 충전선", checked: false },
-      { id: 10, text: "접이식 3단 우산", checked: false }
+    const initialChecklistThu = [
+      { id: 1, text: "여권 및 신분증 챙기기", checked: false },
+      { id: 2, text: "고데기 / 헤어롤", checked: false },
+      { id: 3, text: "화장품 & 클렌징 세트", checked: false },
+      { id: 4, text: "보조배터리 & 충전선", checked: false },
+      { id: 5, text: "상비약 (인공눈물, 진통제)", checked: false },
+      { id: 6, text: "예쁜 옷 & 온천용 잠옷", checked: false }
+    ];
+
+    const initialChecklistJjong = [
+      { id: 101, text: "여권 및 항공권 확인", checked: false },
+      { id: 102, text: "일본 e-SIM / 포켓와이파이", checked: false },
+      { id: 103, text: "110V 돼지코 어댑터 2개", checked: false },
+      { id: 104, text: "엔화 현금 환전 및 지갑", checked: false },
+      { id: 105, text: "트래블로그 / 카드 챙기기", checked: false },
+      { id: 106, text: "숙소 / 고속버스 예약 바우처", checked: false }
     ];
 
     const initialKobeData = {
-      checklist: initialChecklist,
+      checklistThu: initialChecklistThu,
+      checklistJjong: initialChecklistJjong,
       travel: [
         { id: 101, day: 1, icon: 'fa-plane-departure', time: '13:20', title: '인천공항 출발 🛫', memo: '인천공항 탑승 수속 & 면세점 구경', query: 'Incheon International Airport', showMap: false },
         { id: 102, day: 1, icon: 'fa-plane-arrival', time: '15:00', title: '고베공항 도착 🛬', memo: '입국 수속 및 포트라이너(Port Liner) 타고 산노미야역으로 이동', query: 'Kobe Airport', showMap: true },
@@ -811,6 +848,7 @@
     let currentPlaceFilter = 'all';
     let currentGiftFilter = 'available';
     let currentWeatherCity = 'kobe';
+    let currentPerson = 'thu'; // 'thu' 또는 'jjong'
     let editingGifticonExistingImg = null;
 
     const syncDot = document.getElementById('syncDot');
@@ -822,7 +860,8 @@
       if (doc.exists) {
         const remoteData = doc.data();
         appData = {
-          checklist: remoteData.checklist || initialChecklist,
+          checklistThu: remoteData.checklistThu || initialChecklistThu,
+          checklistJjong: remoteData.checklistJjong || initialChecklistJjong,
           travel: (remoteData.travel && remoteData.travel.length > 0) ? remoteData.travel : initialKobeData.travel,
           places: (remoteData.places && remoteData.places.length > 0) ? remoteData.places : initialKobeData.places,
           gifticons: remoteData.gifticons || []
@@ -867,13 +906,27 @@
     }
 
     // ----------------------------------------------------
-    // 체크리스트 관리 함수
+    // 뚜 vs 쫑 체크리스트 관리 함수
     // ----------------------------------------------------
+    function switchPerson(person) {
+      currentPerson = person;
+      document.getElementById('btnPersonThu').classList.toggle('active', person === 'thu');
+      document.getElementById('btnPersonJjong').classList.toggle('active', person === 'jjong');
+      renderChecklist();
+    }
+
+    function getActiveChecklist() {
+      return currentPerson === 'thu' ? (appData.checklistThu || []) : (appData.checklistJjong || []);
+    }
+
     function renderChecklist() {
       const container = document.getElementById('checklistContainer');
-      const list = appData.checklist || [];
+      const list = getActiveChecklist();
+      const personName = currentPerson === 'thu' ? '뚜' : '쫑';
 
-      // 프로그레스 바 계산
+      document.getElementById('progressTitle').innerText = `🎒 ${personName}의 짐 챙기기`;
+      document.getElementById('newCheckInput').placeholder = `${personName}가 챙길 준비물 입력 (예: ${currentPerson === 'thu' ? '고데기, 화장품' : '돼지코, 보조배터리'})`;
+
       const total = list.length;
       const checkedCount = list.filter(i => i.checked).length;
       const percent = total === 0 ? 0 : Math.round((checkedCount / total) * 100);
@@ -882,7 +935,7 @@
       document.getElementById('progressBarFill').style.width = `${percent}%`;
 
       if (list.length === 0) {
-        container.innerHTML = '<div style="text-align:center; color:#a4b0be; padding:20px;">준비물 항목이 없습니다. 추가해보세요!</div>';
+        container.innerHTML = `<div style="text-align:center; color:#a4b0be; padding:25px;">${personName}의 준비물 목록이 비어있습니다.</div>`;
         return;
       }
 
@@ -902,7 +955,8 @@
     }
 
     function toggleCheckItem(id) {
-      const item = (appData.checklist || []).find(i => i.id === id);
+      const list = getActiveChecklist();
+      const item = list.find(i => i.id === id);
       if (item) {
         item.checked = !item.checked;
         saveData();
@@ -915,12 +969,14 @@
       const text = input.value.trim();
       if (!text) return;
 
-      if (!appData.checklist) appData.checklist = [];
-      appData.checklist.push({
-        id: Date.now(),
-        text: text,
-        checked: false
-      });
+      const newItem = { id: Date.now(), text: text, checked: false };
+      if (currentPerson === 'thu') {
+        if (!appData.checklistThu) appData.checklistThu = [];
+        appData.checklistThu.push(newItem);
+      } else {
+        if (!appData.checklistJjong) appData.checklistJjong = [];
+        appData.checklistJjong.push(newItem);
+      }
 
       input.value = '';
       saveData();
@@ -928,7 +984,11 @@
     }
 
     function deleteCheckItem(id) {
-      appData.checklist = (appData.checklist || []).filter(i => i.id !== id);
+      if (currentPerson === 'thu') {
+        appData.checklistThu = (appData.checklistThu || []).filter(i => i.id !== id);
+      } else {
+        appData.checklistJjong = (appData.checklistJjong || []).filter(i => i.id !== id);
+      }
       saveData();
       renderChecklist();
     }
