@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Our Love Planner & Storage</title>
+  <title>Our Kobe Trip & Memory</title>
   <!-- FontAwesome & Google Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,7 +37,7 @@
       box-shadow: 0 6px 20px rgba(255, 117, 140, 0.3);
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 10;
     }
     .header-top { display: flex; justify-content: space-between; align-items: center; }
     .header-title { font-size: 1.35rem; font-weight: 700; }
@@ -54,7 +54,7 @@
     }
 
     /* Container */
-    .container { max-width: 540px; margin: 0 auto; padding: 16px; }
+    .container { max-width: 540px; margin: 0 auto; padding: 16px; position: relative; z-index: 1; }
 
     /* Tabs */
     .tab-view { display: none; }
@@ -91,7 +91,7 @@
       border: 1px solid rgba(0,0,0,0.02);
     }
 
-    /* Editable Travel Quick Memo */
+    /* Quick Memo Card */
     .memo-card {
       background: #fff8f8;
       border: 1px solid #ffd1d8;
@@ -296,7 +296,7 @@
       box-shadow: 0 8px 20px rgba(255, 94, 126, 0.4);
       cursor: pointer;
       border: none;
-      z-index: 99;
+      z-index: 50;
     }
     .bottom-nav {
       position: fixed;
@@ -309,7 +309,7 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
-      z-index: 100;
+      z-index: 50;
       border-radius: 20px 20px 0 0;
     }
     .nav-item {
@@ -323,23 +323,32 @@
       gap: 4px;
       border: none;
       background: none;
+      width: 33%;
     }
     .nav-item i { font-size: 1.3rem; }
     .nav-item.active { color: var(--primary); }
 
-    /* Modal */
+    /* Modal Overlay */
     .modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,0.5);
       backdrop-filter: blur(4px);
-      z-index: 999;
+      z-index: -1;
+      opacity: 0;
+      pointer-events: none;
       align-items: center;
       justify-content: center;
       padding: 16px;
+      transition: opacity 0.2s ease;
     }
-    .modal-overlay.active { display: flex; }
+    .modal-overlay.active {
+      display: flex;
+      z-index: 999;
+      opacity: 1;
+      pointer-events: auto;
+    }
     .modal-content {
       background: white;
       border-radius: 24px;
@@ -363,7 +372,7 @@
   <header class="app-header">
     <div class="header-top">
       <div>
-        <div class="header-title">고베 여행 & 커플 공간 🇯🇵</div>
+        <div class="header-title">고베 & 아리마 온천 여행 🇯🇵</div>
         <p style="font-size: 0.8rem; opacity: 0.9; margin-top: 2px;">2026.08.30 (일) ~ 09.02 (수)</p>
       </div>
       <div class="d-day-pill">
@@ -378,13 +387,13 @@
     <!-- 1. 여행 일정 탭 -->
     <div id="view-travel" class="tab-view active">
       <div class="sub-tabs" id="dayTabs">
-        <button class="sub-tab-btn active" onclick="switchDay(1)">Day 1 (8/30)</button>
-        <button class="sub-tab-btn" onclick="switchDay(2)">Day 2 (8/31)</button>
-        <button class="sub-tab-btn" onclick="switchDay(3)">Day 3 (9/01)</button>
-        <button class="sub-tab-btn" onclick="switchDay(4)">Day 4 (9/02)</button>
+        <button class="sub-tab-btn active" onclick="switchDay(1, this)">Day 1 (8/30)</button>
+        <button class="sub-tab-btn" onclick="switchDay(2, this)">Day 2 (8/31)</button>
+        <button class="sub-tab-btn" onclick="switchDay(3, this)">Day 3 (9/01)</button>
+        <button class="sub-tab-btn" onclick="switchDay(4, this)">Day 4 (9/02)</button>
       </div>
 
-      <!-- 첫 화면 직접 수정 가능한 여행 메모/체크리스트 -->
+      <!-- 첫 화면 여행 메모/체크포인트 -->
       <div class="memo-card">
         <div class="memo-header">
           <div class="memo-title">
@@ -405,14 +414,14 @@
     <div id="view-places" class="tab-view">
       <div class="sub-tabs">
         <button class="sub-tab-btn active" onclick="filterPlaces('all', this)">전체보기</button>
-        <button class="sub-tab-btn" onclick="filterPlaces('맛집', this)">🥩 맛집</button>
+        <button class="sub-tab-btn" onclick="filterPlaces('고베', this)">🥩 고베</button>
+        <button class="sub-tab-btn" onclick="filterPlaces('아리마', this)">♨️ 아리마온천</button>
         <button class="sub-tab-btn" onclick="filterPlaces('카페', this)">☕ 카페</button>
-        <button class="sub-tab-btn" onclick="filterPlaces('명소', this)">🎡 명소</button>
       </div>
       <div id="placesContainer"></div>
     </div>
 
-    <!-- 3. 기프티콘 보관함 탭 -->
+    <!-- 3. 기프티콘 보관함 탭 (사용자 직접 추가) -->
     <div id="view-coupons" class="tab-view">
       <div class="sub-tabs">
         <button class="sub-tab-btn active" onclick="filterGifticons('available', this)">사용 가능</button>
@@ -433,7 +442,7 @@
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchNav('travel', this)">
       <i class="fa-solid fa-plane-departure"></i>
-      <span>고베일정</span>
+      <span>여행일정</span>
     </button>
     <button class="nav-item" onclick="switchNav('places', this)">
       <i class="fa-solid fa-utensils"></i>
@@ -447,7 +456,7 @@
 
   <!-- 항목 추가 모달 -->
   <div class="modal-overlay" id="addModal">
-    <div class="modal-content">
+    <div class="modal-content" onclick="event.stopPropagation()">
       <h3 style="font-size: 1.15rem; margin-bottom: 16px;">새 항목 추가</h3>
       
       <div class="form-group">
@@ -478,14 +487,14 @@
 
       <div class="form-group">
         <label id="nameLabel">이름 / 장소명</label>
-        <input type="text" class="form-control" id="itemName" placeholder="예: 고베 모리야 본점">
+        <input type="text" class="form-control" id="itemName" placeholder="예: 고베 타다">
       </div>
 
       <!-- 기프티콘 필드 -->
       <div id="gifticonFields" style="display:none;">
         <div class="form-group">
           <label>브랜드</label>
-          <input type="text" class="form-control" id="giftBrand" placeholder="예: 스타벅스">
+          <input type="text" class="form-control" id="giftBrand" placeholder="예: 스타벅스, 올리브영">
         </div>
         <div class="form-group">
           <label>유효기간</label>
@@ -499,7 +508,7 @@
 
       <div class="form-group">
         <label>메모 & 설명</label>
-        <textarea class="form-control" id="itemMemo" rows="2" placeholder="메뉴, 예약정보, 준비사항 등"></textarea>
+        <textarea class="form-control" id="itemMemo" rows="2" placeholder="메뉴, 탑승장소, 예약정보 등"></textarea>
       </div>
 
       <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -511,44 +520,49 @@
 
   <!-- 이미지 확대 모달 -->
   <div class="modal-overlay" id="imgViewModal" onclick="closeImgModal()">
-    <div style="max-width: 90%; max-height: 80vh;">
+    <div style="max-width: 90%; max-height: 80vh;" onclick="event.stopPropagation()">
       <img id="enlargedImg" src="" style="width: 100%; height: auto; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
     </div>
   </div>
 
   <script>
-    // 기본 여행 데이터 및 첫 화면 메모
+    // 전달해주신 실제 스케줄 데이터 반영
     const initialKobeData = {
-      quickMemo: "✔️ 여권 유효기간 & 일본 e-SIM 등록 확인\n✔️ 110V 돼지코 어댑터 챙기기\n✔️ 메리켄 파크 오리엔탈 호텔 체크인 정보 확인",
+      quickMemo: "✔️ 여권 유효기간 & 일본 e-SIM 등록 확인\n✔️ 110V 돼지코 어댑터 챙기기\n✔️ 산노미야 ↔ 아리마온천 버스 시간 확인\n✔️ 토요코인 산노미야 에키마에 체크인 바우처",
       travel: [
-        { id: 101, day: 1, icon: 'fa-plane-arrival', time: '11:30', title: '간사이 국제공항 도착', memo: '입국 수속 및 베이셔틀(고속 페리) 탑승 후 고베 공항으로 이동 ⛴️', query: 'Kansai International Airport', showMap: false },
-        { id: 102, day: 1, icon: 'fa-hotel', time: '15:00', title: '고베 메리켄 파크 오리엔탈 호텔', memo: '호텔 체크인 & 바다 전망 객실에서 짐 풀고 잠시 휴식 🌊', query: 'Kobe Meriken Park Oriental Hotel', showMap: true },
-        { id: 103, day: 1, icon: 'fa-utensils', time: '17:30', title: '가츠동 요시베 (산노미야 본점)', memo: '현지인들이 극찬하는 바삭하고 촉촉한 원조 돈가스 덮밥 🍱', query: 'Katsudon Yoshibe Sannomiya', showMap: true },
-        { id: 104, day: 1, icon: 'fa-moon', time: '19:30', title: '고베 포트타워 & 메리켄 파크 산책', memo: '호텔 앞 메리켄 파크 야경 감상 & 포트타워 포토존 📸', query: 'Kobe Port Tower', showMap: false },
-        { id: 201, day: 2, icon: 'fa-drumstick-bite', time: '12:00', title: '고베 모리야 본점 (고베규 런치)', memo: '최고급 A5 철판 고베규 스테이크 코스 예약 🥩', query: 'Mouriya Honten Kobe', showMap: true },
-        { id: 202, day: 2, icon: 'fa-mug-hot', time: '14:30', title: '기타노 이진칸 & 스타벅스 기타노이진칸점', memo: '등록유형문화재 서양식 주택 카페에서 티타임 ☕', query: 'Starbucks Coffee Kobe Kitano Ijinkan', showMap: true },
-        { id: 203, day: 2, icon: 'fa-cable-car', time: '17:00', title: '누노비키 허브원 & 로프웨이', memo: '로프웨이 타고 고베 전경 내려다보기 🌿', query: 'Kobe Nunobiki Herb Gardens', showMap: false },
-        { id: 301, day: 3, icon: 'fa-train-subway', time: '10:30', title: '산노미야 센터가 쇼핑', memo: '돈키호테 쇼핑 및 길거리 간식 탐방 🛍️', query: 'Sannomiya Center Gai Shopping Street', showMap: false },
-        { id: 302, day: 3, icon: 'fa-ferris-wheel', time: '16:00', title: '고베 하버랜드 모자이크 & umie', memo: '바다가 보이는 테라스 쇼핑몰 & 노을 감상 🎡', query: 'Kobe Harborland umie', showMap: true },
-        { id: 303, day: 3, icon: 'fa-sparkles', time: '19:00', title: '하버랜드 모자이크 대관람차 & 야경', memo: '포트타워 조명과 함께 낭만적인 밤 산책 ✨', query: 'Mosaic Big Ferris Wheel', showMap: false },
-        { id: 401, day: 4, icon: 'fa-check', time: '10:00', title: '체크아웃 & 기념품 구매', memo: '프랑츠 마법의 항아리 푸딩 등 면세 쇼핑 🎁', query: 'Kobe Meriken Park Oriental Hotel', showMap: false },
-        { id: 402, day: 4, icon: 'fa-plane-departure', time: '14:00', title: '간사이 국제공항 이동 & 귀국', memo: '고속페리 타고 공항 이동 후 한국 귀국 ✈️', query: 'Kansai International Airport', showMap: false }
+        // Day 1 (8/30 일)
+        { id: 101, day: 1, icon: 'fa-plane-departure', time: '13:20', title: '인천공항 출발 🛫', memo: '인천공항 탑승 수속 & 면세점 구경', query: 'Incheon International Airport', showMap: false },
+        { id: 102, day: 1, icon: 'fa-plane-arrival', time: '15:00', title: '고베공항 도착 🛬', memo: '입국 수속 및 포트라이너(Port Liner) 타고 산노미야역으로 이동', query: 'Kobe Airport', showMap: true },
+        { id: 103, day: 1, icon: 'fa-hotel', time: '16:30', title: '숙소 체크인 (토요코인 고베 산노미야 에키마에)', memo: '東横INN神戸三宮駅前 | 짐 풀고 가볍게 외출 준비 ✨', query: 'Toyoko Inn Kobe Sannomiya Ekimae', showMap: true },
+        { id: 104, day: 1, icon: 'fa-utensils', time: '17:00', title: '저녁 식사 (고베 타다)', memo: '맛있는 고베 로컬 맛집에서 저녁 식사 🥩', query: 'Kobe Tada Restaurant', showMap: true },
+        { id: 105, day: 1, icon: 'fa-street-view', time: '18:00', title: '기타노이진칸 구경 & 산책', memo: '이국적인 서양식 거리 구경 & 스타벅스 기타노이진칸점 ☕', query: 'Kitano Ijinkan Kobe', showMap: true },
+        { id: 106, day: 1, icon: 'fa-cable-car', time: '19:00', title: '누노비키 허브원 / 로프웨이', memo: '로프웨이 타고 올라가 고베 야경 내려다보기 🌿✨', query: 'Kobe Nunobiki Herb Gardens Ropeway', showMap: true },
+
+        // Day 2 (8/31 월)
+        { id: 201, day: 2, icon: 'fa-bus', time: '10:15', title: '산노미야 버스 터미널 출발 🚌', memo: '산노미야역 앞 버스터미널에서 아리마온천행 직행 버스 탑승', query: 'Sannomiya Bus Terminal', showMap: true },
+        { id: 202, day: 2, icon: 'fa-hot-tub-person', time: '10:45', title: '아리마 온천 마을 도착 ♨️', memo: '킨노유(금탕) / 긴노유(은탕) 족욕 & 아리마 온천거리 전통 먹거리(탄산센베) 탐방', query: 'Arima Onsen Kobe', showMap: true },
+        { id: 203, day: 2, icon: 'fa-moon', time: '18:00', title: '온천 료칸 휴식 & 저녁 식사', memo: '따뜻한 온천욕과 함께 힐링 데이트 💖', query: 'Arima Onsen', showMap: false },
+
+        // Day 3 (9/01 화)
+        { id: 301, day: 3, icon: 'fa-van-shuttle', time: '11:00', title: '산노미야로 이동 🏙️', memo: '온천마을 체크아웃 후 산노미야 중심가로 복귀 & 쇼핑 및 카페 투어', query: 'Sannomiya Station Kobe', showMap: true },
+        { id: 302, day: 3, icon: 'fa-ferris-wheel', time: '16:00', title: '고베 하버랜드 모자이크', memo: '쇼핑몰 구경 & 포트타워 야경 보며 낭만적인 밤 산책 🎡', query: 'Kobe Harborland MOSAIC', showMap: true },
+
+        // Day 4 (9/02 수)
+        { id: 401, day: 4, icon: 'fa-bag-shopping', time: '12:00', title: '마지막 쇼핑 & 점심 식사', memo: '기념품(푸딩, 과자 등) 구매 & 여유롭게 고베공항 이동', query: 'Sannomiya Center Gai Shopping Street', showMap: false },
+        { id: 402, day: 4, icon: 'fa-plane-departure', time: '16:00', title: '고베공항 출발 🛫', memo: '출국 수속 및 면세점 구경', query: 'Kobe Airport', showMap: false },
+        { id: 403, day: 4, icon: 'fa-plane-arrival', time: '18:00', title: '인천공항 도착 🛬', memo: '즐거웠던 고베 & 아리마 온천 여행 마무리 💖', query: 'Incheon International Airport', showMap: false }
       ],
       places: [
-        { id: 1, category: '맛집', title: '고베 모리야 본점', desc: '140년 전통의 최고급 정통 고베규 철판 스테이크', query: 'Mouriya Kobe Honten' },
-        { id: 2, category: '맛집', title: '가츠동 요시베 본점', desc: '산노미야 지하상가 1등 계란 돈가스 덮밥', query: 'Katsudon Yoshibe Kobe' },
-        { id: 3, category: '카페', title: '스타벅스 기타노이진칸점', desc: '1907년 지어진 미국식 서양 주택을 개조한 이색 매장', query: 'Starbucks Coffee Kobe Kitano Ijinkan' },
-        { id: 4, category: '명소', title: '메리켄 파크 & 포트타워', desc: 'BE KOBE 조형물 포토존 및 고베의 대표 해변 랜드마크', query: 'BE KOBE Monument' },
-        { id: 5, category: '명소', title: '하버랜드 모자이크', desc: '바다 전망 쇼핑몰과 대관람차, 야경 데이트 명소', query: 'Kobe Harborland MOSAIC' }
+        { id: 1, category: '고베', title: '고베 타다', desc: '1일차 저녁 예정 맛집', query: 'Kobe Tada' },
+        { id: 2, category: '고베', title: '토요코인 고베 산노미야 에키마에', desc: '역 앞 깔끔하고 편리한 숙소 (東横INN神戸三宮駅前)', query: 'Toyoko Inn Kobe Sannomiya Ekimae' },
+        { id: 3, category: '아리마', title: '아리마 온천 킨노유 (금탕)', desc: '적갈색 철분 천연 온천수 족욕 및 온천탕', query: 'Arima Onsen Kin no Yu' },
+        { id: 4, category: '카페', title: '스타벅스 기타노이진칸점', desc: '등록유형문화재 서양식 주택 카페', query: 'Starbucks Coffee Kobe Kitano Ijinkan' },
+        { id: 5, category: '고베', title: '누노비키 허브원', desc: '로프웨이와 꽃, 고베 야경을 한눈에 보는 곳', query: 'Kobe Nunobiki Herb Gardens' }
       ],
-      gifticons: [
-        { id: 1, brand: '스타벅스', name: '아메리카노 T 2잔 + 생크림 카스텔라', dueDate: '2026-10-31', isUsed: false, img: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400' },
-        { id: 2, brand: 'BHC', name: '뿌링클 + 콜라 1.25L 세트', dueDate: '2026-09-15', isUsed: false, img: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=400' },
-        { id: 3, brand: '배스킨라빈스', name: '파인트 아이스크림', dueDate: '2026-08-28', isUsed: false, img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' }
-      ]
+      gifticons: [] // 예시 모두 제거 완료 (직접 추가 가능)
     };
 
-    let appData = JSON.parse(localStorage.getItem('kobe_couple_app_v3')) || initialKobeData;
+    let appData = JSON.parse(localStorage.getItem('kobe_couple_app_final_v1')) || initialKobeData;
     let isEditingMemo = false;
     let currentDay = 1;
     let activeNav = 'travel';
@@ -556,10 +570,10 @@
     let currentGiftFilter = 'available';
 
     function saveData() {
-      localStorage.setItem('kobe_couple_app_v3', JSON.stringify(appData));
+      localStorage.setItem('kobe_couple_app_final_v1', JSON.stringify(appData));
     }
 
-    // 첫 화면 메모 렌더링 & 토글 편집
+    // 메모 수정 기능
     function renderQuickMemo() {
       document.getElementById('memoDisplay').innerText = appData.quickMemo || '메모를 입력해보세요.';
       document.getElementById('memoInput').value = appData.quickMemo || '';
@@ -571,14 +585,12 @@
       const btnEl = document.getElementById('memoActionBtn');
 
       if (!isEditingMemo) {
-        // 수정 모드 진입
         isEditingMemo = true;
         displayEl.style.display = 'none';
         inputEl.style.display = 'block';
         inputEl.focus();
         btnEl.innerText = '💾 저장';
       } else {
-        // 저장 처리
         isEditingMemo = false;
         appData.quickMemo = inputEl.value;
         saveData();
@@ -589,7 +601,7 @@
       }
     }
 
-    // D-Day 계산
+    // D-Day 계산 (2026-08-30)
     function calculateDDay() {
       const tripDate = new Date('2026-08-30');
       const today = new Date();
@@ -599,31 +611,30 @@
       
       const el = document.getElementById('ddayText');
       if (diff > 0) el.innerText = `고베 D-${diff}`;
-      else if (diff === 0) el.innerText = `고베 D-Day 오늘 출발! ✈️`;
+      else if (diff === 0) el.innerText = `고베 D-Day 오늘 출발! 🛫`;
       else if (diff >= -3) el.innerText = `고베 여행 중 (${Math.abs(diff)+1}일차) 🇯🇵`;
       else el.innerText = `고베 여행 추억 💖`;
     }
 
-    // 네비게이션 전환
+    // 하단 탭 전환
     function switchNav(nav, btn) {
       activeNav = nav;
       document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       
       document.getElementById(`view-${nav}`).classList.add('active');
-      btn.classList.add('active');
+      if (btn) btn.classList.add('active');
 
       if (nav === 'travel') renderTravel();
       if (nav === 'places') renderPlaces();
       if (nav === 'coupons') renderGifticons();
     }
 
-    // 여행 Day 탭 전환
-    function switchDay(day) {
+    // 여행 Day 버튼 전환
+    function switchDay(day, btn) {
       currentDay = day;
-      document.querySelectorAll('#dayTabs .sub-tab-btn').forEach((b, idx) => {
-        b.classList.toggle('active', idx + 1 === day);
-      });
+      document.querySelectorAll('#dayTabs .sub-tab-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
       renderTravel();
     }
 
@@ -684,11 +695,11 @@
       }
     }
 
-    // 맛집 렌더링
+    // 맛집 탭 렌더링
     function filterPlaces(cat, btn) {
       currentPlaceFilter = cat;
       document.querySelectorAll('#view-places .sub-tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      if (btn) btn.classList.add('active');
       renderPlaces();
     }
 
@@ -701,7 +712,7 @@
       container.innerHTML = filtered.map(p => `
         <div class="place-card">
           <div class="place-category-icon">
-            <i class="fa-solid ${p.category === '카페' ? 'fa-mug-hot' : (p.category === '명소' ? 'fa-camera-retro' : 'fa-utensils')}"></i>
+            <i class="fa-solid ${p.category === '카페' ? 'fa-mug-hot' : (p.category === '아리마' ? 'fa-hot-tub-person' : 'fa-utensils')}"></i>
           </div>
           <div style="flex:1;">
             <span style="font-size:0.72rem; color:var(--primary); font-weight:700;">#${p.category}</span>
@@ -715,11 +726,11 @@
       `).join('');
     }
 
-    // 기프티콘 렌더링
+    // 기프티콘 렌더링 (비어있는 경우 추가 안내 문구 표시)
     function filterGifticons(type, btn) {
       currentGiftFilter = type;
       document.querySelectorAll('#view-coupons .sub-tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      if (btn) btn.classList.add('active');
       renderGifticons();
     }
 
@@ -741,6 +752,17 @@
       let list = appData.gifticons;
       if (currentGiftFilter === 'available') list = list.filter(g => !g.isUsed);
       if (currentGiftFilter === 'used') list = list.filter(g => g.isUsed);
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align:center; padding: 40px 10px; color:#a4b0be;">
+            <i class="fa-solid fa-gift" style="font-size:2.5rem; margin-bottom:12px; color:#ffd1dc;"></i>
+            <p style="font-size:0.9rem; font-weight:600;">등록된 기프티콘이 없습니다.</p>
+            <p style="font-size:0.8rem; margin-top:4px;">우측 하단의 <b>+</b> 버튼을 눌러 사진과 함께 추가해보세요!</p>
+          </div>
+        `;
+        return;
+      }
 
       container.innerHTML = list.map(g => {
         const dday = getGiftDDay(g.dueDate);
@@ -784,7 +806,7 @@
       document.getElementById('imgViewModal').classList.remove('active');
     }
 
-    // 모달 및 추가 기능
+    // 모달 제어
     function openAddModal() {
       document.getElementById('itemType').value = activeNav === 'coupons' ? 'gifticon' : (activeNav === 'places' ? 'place' : 'travel');
       toggleFormFields();
@@ -869,7 +891,7 @@
       closeModal();
     }
 
-    // 초기 실행
+    // 앱 초기화 실행
     calculateDDay();
     renderQuickMemo();
     renderTravel();
