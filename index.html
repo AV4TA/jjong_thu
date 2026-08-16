@@ -223,8 +223,9 @@
       border: 1px solid var(--border);
       display: flex;
       flex-direction: column;
+      position: relative;
     }
-    .gift-card.used { opacity: 0.5; filter: grayscale(85%); }
+    .gift-card.used { opacity: 0.55; filter: grayscale(80%); }
     .gift-img-wrap {
       height: 130px;
       background: #f8f9fc;
@@ -240,7 +241,7 @@
     .gift-dday-badge {
       position: absolute;
       top: 8px;
-      right: 8px;
+      left: 8px;
       background: rgba(0, 0, 0, 0.65);
       color: white;
       font-size: 0.72rem;
@@ -250,9 +251,35 @@
       backdrop-filter: blur(4px);
     }
     .gift-dday-badge.urgent { background: #ff4757; }
+
+    .gift-quick-actions {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      display: flex;
+      gap: 4px;
+      z-index: 2;
+    }
+    .gift-action-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      cursor: pointer;
+      color: #57606f;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .gift-action-btn:hover { background: white; }
+    .gift-action-btn.del { color: #ff4757; }
+
     .gift-body { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
     .gift-brand { font-size: 0.75rem; color: var(--text-sub); font-weight: 600; }
-    .gift-name { font-size: 0.88rem; font-weight: 700; color: #2d3436; margin: 2px 0 8px; }
+    .gift-name { font-size: 0.88rem; font-weight: 700; color: #2d3436; margin: 2px 0 8px; line-height: 1.3; }
     .gift-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
     .btn-toggle-use {
       background: #f1f2f6;
@@ -526,12 +553,13 @@
     </button>
   </nav>
 
-  <!-- 항목 추가 모달 -->
+  <!-- 항목 추가/수정 모달 -->
   <div class="modal-overlay" id="addModal">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <h3 style="font-size: 1.15rem; margin-bottom: 16px;">새 항목 추가</h3>
+      <h3 style="font-size: 1.15rem; margin-bottom: 16px;" id="modalTitle">새 항목 추가</h3>
+      <input type="hidden" id="editItemId" value="">
       
-      <div class="form-group">
+      <div class="form-group" id="itemTypeGroup">
         <label>구분</label>
         <select class="form-control" id="itemType" onchange="toggleFormFields()">
           <option value="travel">✈️ 여행 일정</option>
@@ -560,11 +588,11 @@
       <!-- 기프티콘 전용 사진 업로드 (OCR 감지) -->
       <div id="gifticonFields" style="display:none;">
         <div class="form-group">
-          <label>바코드/쿠폰 사진 등록 <span style="font-size:0.75rem; color:var(--primary); font-weight:normal;">(사진 올리면 유효기간 자동인식 ✨)</span></label>
+          <label>바코드/쿠폰 사진 등록 <span style="font-size:0.75rem; color:var(--primary); font-weight:normal;">(사진 올리면 이름/유효기간 자동완성 ✨)</span></label>
           <input type="file" class="form-control" id="giftImage" accept="image/*" onchange="handleImageOCR(this)">
           <div class="ocr-loader" id="ocrLoader">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
-            <span id="ocrText">사진에서 유효기간 & 브랜드 자동 분석 중...</span>
+            <span id="ocrText">AI가 사진 속 상품명과 유효기간을 분석 중...</span>
           </div>
         </div>
         <div class="form-group">
@@ -579,7 +607,7 @@
 
       <div class="form-group">
         <label id="nameLabel">이름 / 장소명</label>
-        <input type="text" class="form-control" id="itemName" placeholder="예: 고베 타다">
+        <input type="text" class="form-control" id="itemName" placeholder="예: 아이스 아메리카노 T 2잔">
       </div>
 
       <div class="form-group">
@@ -607,7 +635,6 @@
   </div>
 
   <script>
-    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
       authDomain: "kobe-couple-app.firebaseapp.com",
@@ -655,6 +682,7 @@
     let activeNav = 'travel';
     let currentPlaceFilter = 'all';
     let currentGiftFilter = 'available';
+    let editingGifticonExistingImg = null;
 
     const syncDot = document.getElementById('syncDot');
     const syncText = document.getElementById('syncStatusText');
@@ -888,6 +916,14 @@
         const dday = getGiftDDay(g.dueDate);
         return `
           <div class="gift-card ${g.isUsed ? 'used' : ''}">
+            <div class="gift-quick-actions">
+              <button class="gift-action-btn" title="수정" onclick="editGifticon(${g.id})">
+                <i class="fa-solid fa-pen"></i>
+              </button>
+              <button class="gift-action-btn del" title="삭제" onclick="deleteGifticon(${g.id})">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
             <div class="gift-img-wrap" onclick="viewImage('${g.img || 'https://via.placeholder.com/300x200?text=Gifticon'}')">
               <img src="${g.img || 'https://via.placeholder.com/300x200?text=Gifticon'}" alt="쿠폰">
               <div class="gift-dday-badge ${dday.urgent ? 'urgent' : ''}">${g.isUsed ? '사용완료' : dday.text}</div>
@@ -918,6 +954,33 @@
       }
     }
 
+    function deleteGifticon(id) {
+      if (confirm('이 기프티콘을 삭제할까요?')) {
+        appData.gifticons = (appData.gifticons || []).filter(g => g.id !== id);
+        saveData();
+        renderGifticons();
+      }
+    }
+
+    function editGifticon(id) {
+      const g = (appData.gifticons || []).find(item => item.id === id);
+      if (!g) return;
+
+      document.getElementById('modalTitle').innerText = '기프티콘 수정';
+      document.getElementById('editItemId').value = g.id;
+      document.getElementById('itemType').value = 'gifticon';
+      document.getElementById('itemTypeGroup').style.display = 'none'; // 수정 중 타입 변경 방지
+      toggleFormFields();
+
+      document.getElementById('giftBrand').value = g.brand || '';
+      document.getElementById('giftDueDate').value = g.dueDate || '';
+      document.getElementById('itemName').value = g.name || '';
+      document.getElementById('itemMemo').value = g.memo || '';
+      editingGifticonExistingImg = g.img || null;
+
+      document.getElementById('addModal').classList.add('active');
+    }
+
     function viewImage(src) {
       document.getElementById('enlargedImg').src = src;
       document.getElementById('imgViewModal').classList.add('active');
@@ -927,7 +990,11 @@
     }
 
     function openAddModal() {
+      document.getElementById('modalTitle').innerText = '새 항목 추가';
+      document.getElementById('editItemId').value = '';
+      document.getElementById('itemTypeGroup').style.display = 'block';
       document.getElementById('itemType').value = activeNav === 'coupons' ? 'gifticon' : (activeNav === 'places' ? 'place' : 'travel');
+      editingGifticonExistingImg = null;
       toggleFormFields();
       document.getElementById('addModal').classList.add('active');
     }
@@ -939,18 +1006,20 @@
       document.getElementById('giftBrand').value = '';
       document.getElementById('giftDueDate').value = '';
       document.getElementById('giftImage').value = '';
+      document.getElementById('editItemId').value = '';
       document.getElementById('ocrLoader').classList.remove('active');
+      editingGifticonExistingImg = null;
     }
 
     function toggleFormFields() {
       const type = document.getElementById('itemType').value;
       document.getElementById('travelFields').style.display = type === 'travel' ? 'block' : 'none';
       document.getElementById('gifticonFields').style.display = type === 'gifticon' ? 'block' : 'none';
-      document.getElementById('nameLabel').innerText = type === 'gifticon' ? '쿠폰명' : '이름 / 장소명';
+      document.getElementById('nameLabel').innerText = type === 'gifticon' ? '상품명 (이름)' : '이름 / 장소명';
     }
 
     // ----------------------------------------------------
-    // AI OCR 문자 자동 인식 기능 (유효기간 & 브랜드 자동 추출)
+    // AI OCR 문자 자동 인식 (상품명 & 유효기간 자동 추출 고도화)
     // ----------------------------------------------------
     function handleImageOCR(input) {
       if (!input.files || !input.files[0]) return;
@@ -958,11 +1027,12 @@
 
       const loader = document.getElementById('ocrLoader');
       loader.classList.add('active');
+      document.getElementById('ocrText').innerText = 'AI가 사진 속 상품명과 유효기간을 분석 중...';
 
       Tesseract.recognize(file, 'kor+eng', {
         logger: m => {
           if (m.status === 'recognizing text') {
-            document.getElementById('ocrText').innerText = `AI 텍스트 분석 중... (${Math.round(m.progress * 100)}%)`;
+            document.getElementById('ocrText').innerText = `텍스트 분석 중... (${Math.round(m.progress * 100)}%)`;
           }
         }
       }).then(({ data: { text } }) => {
@@ -974,8 +1044,11 @@
       });
     }
 
-    function extractGifticonInfo(text) {
-      // 1. 유효기간 날짜 탐색 정규식 (YYYY.MM.DD / YYYY-MM-DD / YYYY년 MM월 DD일)
+    function extractGifticonInfo(rawText) {
+      const text = rawText.replace(/\r/g, '');
+      const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+
+      // 1. 유효기간 날짜 탐색 정규식
       const dateRegex = /(202[0-9])[\.\-\/\s년]\s*([0-1]?[0-9])[\.\-\/\s월]\s*([0-3]?[0-9])/;
       const match = text.match(dateRegex);
 
@@ -988,16 +1061,41 @@
 
       // 2. 주요 브랜드 자동 감지
       const brands = [
-        '스타벅스', 'Starbucks', '투썸', '메가커피', '컴포즈', '배스킨라빈스', '베스킨라빈스',
-        'BHC', 'BBQ', '교촌', '맘스터치', '올리브영', 'CU', 'GS25', '세븐일레븐',
-        '버거킹', '맥도날드', '도미노피자', '이디야', '파리바게뜨', '뚜레쥬르'
+        '스타벅스', 'Starbucks', '투썸플레이스', '투썸', '메가커피', '컴포즈커피', '컴포즈',
+        '배스킨라빈스', '베스킨라빈스', 'BHC', 'BBQ', '교촌치킨', '교촌', '맘스터치',
+        '올리브영', 'CU', 'GS25', '세븐일레븐', '버거킹', '맥도날드', '도미노피자',
+        '이디야', '파리바게뜨', '파리바게트', '뚜레쥬르', '배달의민족', '카카오톡', '요기요'
       ];
 
+      let detectedBrand = '';
       for (let brand of brands) {
         if (text.includes(brand)) {
-          document.getElementById('giftBrand').value = brand.replace('베스킨라빈스', '배스킨라빈스');
+          detectedBrand = brand.replace('베스킨라빈스', '배스킨라빈스').replace('파리바게트', '파리바게뜨');
+          document.getElementById('giftBrand').value = detectedBrand;
           break;
         }
+      }
+
+      // 3. 상품명(이름) 후보 지능적 자동 추출
+      const ignoreWords = ['교환권', '모바일', '쿠폰', '바코드', '유효기간', '주문번호', '발행처', '사용처', '금액권', '사용불가', '원', 'No.', 'kakao', 'gift'];
+      let candidateTitle = '';
+
+      for (let line of lines) {
+        // 날짜/숫자만 가득한 줄 또는 안내 문구 건너뛰기
+        if (dateRegex.test(line)) continue;
+        if (/^\d+$/.test(line.replace(/[-\s]/g, ''))) continue;
+        if (line.length < 2 || line.length > 35) continue;
+        
+        let hasIgnore = ignoreWords.some(w => line.includes(w));
+        if (!hasIgnore) {
+          // 브랜드명이 포함되어 있거나 일반 상품명 패턴인 경우
+          candidateTitle = line.replace(/[^\w\sㄱ-ㅎㅏ-ㅣ가-힣+()]/g, '').trim();
+          if (candidateTitle.length >= 2) break;
+        }
+      }
+
+      if (candidateTitle && !document.getElementById('itemName').value) {
+        document.getElementById('itemName').value = candidateTitle;
       }
     }
 
@@ -1032,6 +1130,7 @@
     }
 
     function saveItem() {
+      const editId = document.getElementById('editItemId').value;
       const type = document.getElementById('itemType').value;
       const name = document.getElementById('itemName').value.trim();
       const memo = document.getElementById('itemMemo').value.trim();
@@ -1070,6 +1169,36 @@
         const brand = document.getElementById('giftBrand').value.trim() || '기타';
         const dueDate = document.getElementById('giftDueDate').value;
 
+        // 수정 모드인 경우
+        if (editId) {
+          const targetIndex = appData.gifticons.findIndex(g => g.id === parseInt(editId));
+          if (targetIndex > -1) {
+            if (fileInput.files && fileInput.files[0]) {
+              compressAndSaveImage(fileInput.files[0], function(compressedBase64) {
+                appData.gifticons[targetIndex].brand = brand;
+                appData.gifticons[targetIndex].name = name;
+                appData.gifticons[targetIndex].dueDate = dueDate;
+                appData.gifticons[targetIndex].memo = memo;
+                appData.gifticons[targetIndex].img = compressedBase64;
+                saveData();
+                renderGifticons();
+                closeModal();
+              });
+              return;
+            } else {
+              appData.gifticons[targetIndex].brand = brand;
+              appData.gifticons[targetIndex].name = name;
+              appData.gifticons[targetIndex].dueDate = dueDate;
+              appData.gifticons[targetIndex].memo = memo;
+              saveData();
+              renderGifticons();
+              closeModal();
+              return;
+            }
+          }
+        }
+
+        // 신규 추가인 경우
         if (fileInput.files && fileInput.files[0]) {
           compressAndSaveImage(fileInput.files[0], function(compressedBase64) {
             appData.gifticons.push({
@@ -1077,6 +1206,7 @@
               brand: brand,
               name: name,
               dueDate: dueDate,
+              memo: memo,
               isUsed: false,
               img: compressedBase64
             });
@@ -1090,8 +1220,9 @@
             brand: brand,
             name: name,
             dueDate: dueDate,
+            memo: memo,
             isUsed: false,
-            img: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400'
+            img: editingGifticonExistingImg || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400'
           });
           saveData();
           renderGifticons();
