@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>기프티콘 보관함 🎁</title>
+
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#6c5ce7" />
+  
+  <link rel="apple-touch-icon" href="https://api.iconify.design/twemoji:sparkling-heart.svg" />
+  <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/twemoji:sparkling-heart.svg" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Firebase v9 SDK (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <!-- Tesseract.js (클라이언트 OCR) -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #6c5ce7;
+      --primary-soft: #f0edff;
+      --bg: #f8f9fe;
+      --card: #ffffff;
+      --text: #2d3436;
+      --text-sub: #8395a7;
+      --border: #f1f2f6;
+      --radius: 18px;
+      --shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
+
+    /* Header */
+    .app-header {
+      background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+      color: white;
+      padding: 20px 18px;
+      border-radius: 0 0 28px 28px;
+      box-shadow: 0 6px 20px rgba(108, 92, 231, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .header-top { display: flex; justify-content: space-between; align-items: center; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .btn-home {
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      background: rgba(255, 255, 255, 0.25);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .header-title { font-size: 1.25rem; font-weight: 700; }
+
+    .container { max-width: 540px; margin: 0 auto; padding: 16px; }
+
+    .sync-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+      justify-content: flex-end;
+    }
+    .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #a4b0be; }
+    .sync-dot.online { background: #2ed573; box-shadow: 0 0 8px #2ed573; }
+    .sync-dot.syncing { background: #ffa502; }
+
+    /* Filters */
+    .gift-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .sub-tabs { display: flex; gap: 6px; }
+    .sub-tab-btn {
+      background: white;
+      border: 1px solid var(--border);
+      color: var(--text-sub);
+      padding: 7px 14px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+    .sub-tab-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
+    }
+    .sort-control select {
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: #57606f;
+      background: white;
+      outline: none;
+    }
+
+    /* Grid */
+    .gift-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .gift-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .gift-card.used { opacity: 0.55; filter: grayscale(80%); }
+    .gift-img-wrap {
+      height: 130px;
+      background: #f8f9fc;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 6px;
+    }
+    .gift-img-wrap img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
+    .gift-dday-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(0, 0, 0, 0.65);
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 8px;
+      backdrop-filter: blur(4px);
+    }
+    .gift-dday-badge.urgent { background: #ff4757; }
+    .gift-quick-actions { position: absolute; top: 6px; right: 6px; display: flex; gap: 4px; z-index: 2; }
+    .gift-action-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      cursor: pointer;
+      color: #57606f;
+    }
+    .gift-action-btn.del { color: #ff4757; }
+
+    .gift-body { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .gift-brand { font-size: 0.75rem; color: var(--text-sub); font-weight: 600; }
+    .gift-name { font-size: 0.88rem; font-weight: 700; color: #2d3436; margin: 2px 0 8px; line-height: 1.3; }
+    .gift-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+    .btn-toggle-use {
+      background: #f1f2f6;
+      border: none;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 5px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #57606f;
+    }
+    .btn-toggle-use.is-used { background: #2ed573; color: white; }
+
+    /* FAB */
+    .fab {
+      position: fixed;
+      right: 20px;
+      bottom: 24px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 8px 20px rgba(108, 92, 231, 0.4);
+      cursor: pointer;
+      border: none;
+      z-index: 50;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(5px);
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.active { display: flex; z-index: 999; opacity: 1; pointer-events: auto; }
+    .modal-content { background: white; border-radius: 24px; width: 100%; max-width: 440px; padding: 24px; max-height: 90vh; overflow-y: auto; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 6px; color: #555; }
+    .form-control { width: 100%; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 0.9rem; outline: none; }
+    .btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: #f1f2f6; color: #57606f; }
+
+    .ocr-loader {
+      display: none;
+      background: #f0edff;
+      border: 1px solid #c7d2fe;
+      color: #4338ca;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 10px;
+      margin-top: 6px;
+      align-items: center;
+      gap: 8px;
+    }
+    .ocr-loader.active { display: flex; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.7; } }
+
+    /* 이미지 확대 모달 */
+    .gift-view-card {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      width: 100%;
+      max-width: 360px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .gift-modal-close-btn {
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      width: 32px;
+      height: 32px;
+      background: #2d3436;
+      color: white;
+      border: 2px solid white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    .gift-view-img-box {
+      width: 100%;
+      max-height: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: #fafafa;
+    }
+    .gift-view-img-box img { max-width: 100%; max-height: 460px; object-fit: contain; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-top">
+      <div class="header-left">
+        <a href="index.html" class="btn-home" title="홈으로"><i class="fa-solid fa-house"></i></a>
+        <div>
+          <div class="header-title">기프티콘 보관함 🎁</div>
+          <p style="font-size: 0.78rem; opacity: 0.9; margin-top: 2px;">둘만의 모바일 쿠폰 공유함</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="sync-status">
+      <div class="sync-dot" id="syncDot"></div>
+      <span id="syncStatusText">서버 연결 중...</span>
+    </div>
+
+    <div class="gift-header-row">
+      <div class="sub-tabs">
+        <button class="sub-tab-btn active" onclick="filterGifticons('available', this)">사용 가능</button>
+        <button class="sub-tab-btn" onclick="filterGifticons('all', this)">전체</button>
+        <button class="sub-tab-btn" onclick="filterGifticons('used', this)">사용 완료</button>
+      </div>
+      <div class="sort-control">
+        <select id="sortSelect" onchange="renderGifticons()">
+          <option value="dday">⏰ 유효기간 임박순</option>
+          <option value="dday_desc">⏳ 유효기간 여유순</option>
+          <option value="name">🔤 이름 가나다순</option>
+          <option value="recent">🆕 최신 등록순</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="gift-grid" id="gifticonContainer"></div>
+  </div>
+
+  <button class="fab" onclick="openAddModal()"><i class="fa-solid fa-plus"></i></button>
+
+  <!-- 기프티콘 추가/수정 모달 -->
+  <div class="modal-overlay" id="addModal">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h3 style="font-size: 1.15rem; margin-bottom: 16px;" id="modalTitle">새 기프티콘 등록</h3>
+      <input type="hidden" id="editItemId" value="">
+
+      <div class="form-group">
+        <label>바코드/쿠폰 사진 <span style="font-size:0.75rem; color:var(--primary); font-weight:normal;">(사진 올리면 유효기간 자동분석 ✨)</span></label>
+        <input type="file" class="form-control" id="giftImage" accept="image/*" onchange="handleImageOCR(this)">
+        <div class="ocr-loader" id="ocrLoader">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span id="ocrText">AI가 상품명과 유효기간을 분석 중...</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>브랜드</label>
+        <input type="text" class="form-control" id="giftBrand" placeholder="예: 스타벅스">
+      </div>
+      <div class="form-group">
+        <label>상품명 (이름)</label>
+        <input type="text" class="form-control" id="itemName" placeholder="예: 아메리카노 T 2잔">
+      </div>
+      <div class="form-group">
+        <label>유효기간</label>
+        <input type="date" class="form-control" id="giftDueDate">
+      </div>
+      <div class="form-group">
+        <label>메모</label>
+        <textarea class="form-control" id="itemMemo" rows="2" placeholder="사용처, 주의사항 등"></textarea>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button class="btn btn-secondary" onclick="closeModal()">취소</button>
+        <button class="btn btn-primary" onclick="saveItem()">저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 이미지 확대 모달 -->
+  <div class="modal-overlay" id="imgViewModal" onclick="closeImgModal()">
+    <div class="gift-view-card" onclick="event.stopPropagation()">
+      <button class="gift-modal-close-btn" onclick="closeImgModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div class="gift-view-img-box">
+        <img id="enlargedImg" src="" alt="바코드 확대">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
+      authDomain: "kobe-couple-app.firebaseapp.com",
+      projectId: "kobe-couple-app",
+      storageBucket: "kobe-couple-app.firebasestorage.app",
+      messagingSenderId: "755701956140",
+      appId: "1:755701956140:web:ea39d7d1e00bd83ade1b89"
+    };
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let gifticons = [];
+    let currentFilter = 'available';
+    let editingExistingImg = null;
+
+    const syncDot = document.getElementById('syncDot');
+    const syncText = document.getElementById('syncStatusText');
+
+    db.collection("couple_space").doc("shared_data").onSnapshot({ includeMetadataChanges: true }, (doc) => {
+      if (doc.exists) {
+        gifticons = doc.data().gifticons || [];
+        syncDot.className = 'sync-dot online';
+        syncText.innerText = '실시간 동기화 완료';
+        renderGifticons();
+      }
+    });
+
+    function saveGifticons() {
+      syncDot.className = 'sync-dot syncing';
+      syncText.innerText = '저장 중...';
+      db.collection("couple_space").doc("shared_data").set({ gifticons: gifticons }, { merge: true })
+        .then(() => { syncDot.className = 'sync-dot online'; syncText.innerText = '실시간 동기화 완료'; });
+    }
+
+    function filterGifticons(type, btn) {
+      currentFilter = type;
+      document.querySelectorAll('.sub-tabs .sub-tab-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderGifticons();
+    }
+
+    function getGiftDDay(dateStr) {
+      if (!dateStr) return { text: '기한없음', urgent: false };
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const due = new Date(dateStr);
+      due.setHours(0,0,0,0);
+      const diff = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+      if (diff < 0) return { text: '만료됨', urgent: true };
+      if (diff === 0) return { text: '오늘 마감!', urgent: true };
+      return { text: `D-${diff}`, urgent: diff <= 7 };
+    }
+
+    function renderGifticons() {
+      const container = document.getElementById('gifticonContainer');
+      let list = [...gifticons];
+
+      if (currentFilter === 'available') list = list.filter(g => !g.isUsed);
+      if (currentFilter === 'used') list = list.filter(g => g.isUsed);
+
+      const sortType = document.getElementById('sortSelect').value;
+      if (sortType === 'dday') {
+        list.sort((a, b) => (!a.dueDate ? 1 : (!b.dueDate ? -1 : new Date(a.dueDate) - new Date(b.dueDate))));
+      } else if (sortType === 'dday_desc') {
+        list.sort((a, b) => (!a.dueDate ? 1 : (!b.dueDate ? -1 : new Date(b.dueDate) - new Date(a.dueDate))));
+      } else if (sortType === 'name') {
+        list.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+      } else if (sortType === 'recent') {
+        list.sort((a, b) => (b.id || 0) - (a.id || 0));
+      }
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align:center; padding: 50px 10px; color:#a4b0be;">
+            <i class="fa-solid fa-gift" style="font-size:2.8rem; margin-bottom:12px; color:#c7d2fe;"></i>
+            <p style="font-size:0.95rem; font-weight:600;">등록된 기프티콘이 없습니다.</p>
+            <p style="font-size:0.8rem; margin-top:4px;">우측 하단의 <b>+</b> 버튼을 눌러 사진을 올려보세요!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = list.map(g => {
+        const dday = getGiftDDay(g.dueDate);
+        return `
+          <div class="gift-card ${g.isUsed ? 'used' : ''}">
+            <div class="gift-quick-actions">
+              <button class="gift-action-btn" title="수정" onclick="editGifticon(${g.id})"><i class="fa-solid fa-pen"></i></button>
+              <button class="gift-action-btn del" title="삭제" onclick="deleteGifticon(${g.id})"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+            <div class="gift-img-wrap" onclick="viewImageById(${g.id})">
+              <img src="${g.img || 'https://via.placeholder.com/300x200?text=Gifticon'}" alt="쿠폰">
+              <div class="gift-dday-badge ${dday.urgent ? 'urgent' : ''}">${g.isUsed ? '사용완료' : dday.text}</div>
+            </div>
+            <div class="gift-body">
+              <div>
+                <div class="gift-brand">${g.brand || '기타'}</div>
+                <div class="gift-name">${g.name || '이름 없음'}</div>
+              </div>
+              <div class="gift-footer">
+                <span style="font-size:0.72rem; color:#a4b0be;">~${g.dueDate || '무기한'}</span>
+                <button class="btn-toggle-use ${g.isUsed ? 'is-used' : ''}" onclick="toggleGiftUse(${g.id})">
+                  ${g.isUsed ? '취소' : '사용'}
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleGiftUse(id) {
+      const g = gifticons.find(item => item.id === id);
+      if (g) { g.isUsed = !g.isUsed; saveGifticons(); }
+    }
+
+    function deleteGifticon(id) {
+      if (confirm('이 기프티콘을 삭제할까요?')) {
+        gifticons = gifticons.filter(g => g.id !== id);
+        saveGifticons();
+      }
+    }
+
+    function editGifticon(id) {
+      const g = gifticons.find(item => item.id === id);
+      if (!g) return;
+      document.getElementById('modalTitle').innerText = '기프티콘 수정';
+      document.getElementById('editItemId').value = g.id;
+      document.getElementById('giftBrand').value = g.brand || '';
+      document.getElementById('giftDueDate').value = g.dueDate || '';
+      document.getElementById('itemName').value = g.name || '';
+      document.getElementById('itemMemo').value = g.memo || '';
+      editingExistingImg = g.img || null;
+      document.getElementById('addModal').classList.add('active');
+    }
+
+    function viewImageById(id) {
+      const target = gifticons.find(i => i.id === id);
+      if (target && target.img) {
+        document.getElementById('enlargedImg').src = target.img;
+        document.getElementById('imgViewModal').classList.add('active');
+      }
+    }
+    function closeImgModal() { document.getElementById('imgViewModal').classList.remove('active'); }
+
+    function openAddModal() {
+      document.getElementById('modalTitle').innerText = '새 기프티콘 등록';
+      document.getElementById('editItemId').value = '';
+      editingExistingImg = null;
+      document.getElementById('addModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('addModal').classList.remove('active');
+      document.getElementById('itemName').value = '';
+      document.getElementById('itemMemo').value = '';
+      document.getElementById('giftBrand').value = '';
+      document.getElementById('giftDueDate').value = '';
+      document.getElementById('giftImage').value = '';
+      document.getElementById('editItemId').value = '';
+      document.getElementById('ocrLoader').classList.remove('active');
+      editingExistingImg = null;
+    }
+
+    function handleImageOCR(input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+      const loader = document.getElementById('ocrLoader');
+      loader.classList.add('active');
+      document.getElementById('ocrText').innerText = 'AI가 상품명과 유효기간을 분석 중...';
+
+      Tesseract.recognize(file, 'kor+eng', {
+        logger: m => {
+          if (m.status === 'recognizing text') {
+            document.getElementById('ocrText').innerText = `텍스트 분석 중... (${Math.round(m.progress * 100)}%)`;
+          }
+        }
+      }).then(({ data: { text } }) => {
+        loader.classList.remove('active');
+        extractGifticonInfo(text);
+      }).catch(err => {
+        loader.classList.remove('active');
+      });
+    }
+
+    function extractGifticonInfo(rawText) {
+      const text = rawText.replace(/\r/g, '');
+      const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+
+      const globalDateRegex = /(202[0-9])[\.\-\/\s년]\s*([0-1]?[0-9])[\.\-\/\s월]\s*([0-3]?[0-9])/g;
+      const allDates = [...text.matchAll(globalDateRegex)];
+      if (allDates.length > 0) {
+        const lastMatch = allDates[allDates.length - 1];
+        const year = lastMatch[1];
+        const month = lastMatch[2].padStart(2, '0');
+        const day = lastMatch[3].padStart(2, '0');
+        document.getElementById('giftDueDate').value = `${year}-${month}-${day}`;
+      }
+
+      const brands = ['스타벅스', 'Starbucks', '투썸플레이스', '투썸', '메가커피', '컴포즈', '배스킨라빈스', 'BHC', 'BBQ', '교촌', '올리브영', 'CU', 'GS25', '버거킹', '맥도날드', '도미노피자', '이디야', '파리바게뜨'];
+      for (let b of brands) {
+        if (text.includes(b)) { document.getElementById('giftBrand').value = b; break; }
+      }
+
+      const ignoreWords = ['교환권', '모바일', '쿠폰', '바코드', '유효기간', '주문번호', '발행처', '원', 'kakao'];
+      for (let line of lines) {
+        if (/(202[0-9])/.test(line) || /^\d+$/.test(line.replace(/[-\s]/g, '')) || line.length < 2 || line.length > 35) continue;
+        if (!ignoreWords.some(w => line.includes(w))) {
+          const cand = line.replace(/[^\w\sㄱ-ㅎㅏ-ㅣ가-힣+()]/g, '').trim();
+          if (cand.length >= 2 && !document.getElementById('itemName').value) {
+            document.getElementById('itemName').value = cand;
+            break;
+          }
+        }
+      }
+    }
+
+    function compressAndSaveImage(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 800;
+          if (width > height && width > maxDim) { height = Math.round((height * maxDim) / width); width = maxDim; }
+          else if (height > maxDim) { width = Math.round((width * maxDim) / height); height = maxDim; }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          callback(canvas.toDataURL('image/jpeg', 0.8));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function saveItem() {
+      const editId = document.getElementById('editItemId').value;
+      const name = document.getElementById('itemName').value.trim();
+      const memo = document.getElementById('itemMemo').value.trim();
+      const brand = document.getElementById('giftBrand').value.trim() || '기타';
+      const dueDate = document.getElementById('giftDueDate').value;
+      const fileInput = document.getElementById('giftImage');
+
+      if (!name) return alert('상품명을 입력해주세요!');
+
+      if (editId) {
+        const targetIndex = gifticons.findIndex(g => g.id === parseInt(editId));
+        if (targetIndex > -1) {
+          if (fileInput.files && fileInput.files[0]) {
+            compressAndSaveImage(fileInput.files[0], function(base64) {
+              gifticons[targetIndex] = { ...gifticons[targetIndex], brand, name, dueDate, memo, img: base64 };
+              saveGifticons();
+              closeModal();
+            });
+            return;
+          } else {
+            gifticons[targetIndex] = { ...gifticons[targetIndex], brand, name, dueDate, memo };
+            saveGifticons();
+            closeModal();
+            return;
+          }
+        }
+      }
+
+      if (fileInput.files && fileInput.files[0]) {
+        compressAndSaveImage(fileInput.files[0], function(base64) {
+          gifticons.push({ id: Date.now(), brand, name, dueDate, memo, isUsed: false, img: base64 });
+          saveGifticons();
+          closeModal();
+        });
+      } else {
+        gifticons.push({ id: Date.now(), brand, name, dueDate, memo, isUsed: false, img: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400' });
+        saveGifticons();
+        closeModal();
+      }
+    }
+  </script>
+</body>
+</html>
