@@ -518,7 +518,35 @@
 
   <script>
     // 기본 여행 데이터 및 첫 화면 메모
-  
+    const initialKobeData = {
+      quickMemo: "✔️ 여권 유효기간 & 일본 e-SIM 등록 확인\n✔️ 110V 돼지코 어댑터 챙기기\n✔️ 메리켄 파크 오리엔탈 호텔 체크인 정보 확인",
+      travel: [
+        { id: 101, day: 1, icon: 'fa-plane-arrival', time: '11:30', title: '간사이 국제공항 도착', memo: '입국 수속 및 베이셔틀(고속 페리) 탑승 후 고베 공항으로 이동 ⛴️', query: 'Kansai International Airport', showMap: false },
+        { id: 102, day: 1, icon: 'fa-hotel', time: '15:00', title: '고베 메리켄 파크 오리엔탈 호텔', memo: '호텔 체크인 & 바다 전망 객실에서 짐 풀고 잠시 휴식 🌊', query: 'Kobe Meriken Park Oriental Hotel', showMap: true },
+        { id: 103, day: 1, icon: 'fa-utensils', time: '17:30', title: '가츠동 요시베 (산노미야 본점)', memo: '현지인들이 극찬하는 바삭하고 촉촉한 원조 돈가스 덮밥 🍱', query: 'Katsudon Yoshibe Sannomiya', showMap: true },
+        { id: 104, day: 1, icon: 'fa-moon', time: '19:30', title: '고베 포트타워 & 메리켄 파크 산책', memo: '호텔 앞 메리켄 파크 야경 감상 & 포트타워 포토존 📸', query: 'Kobe Port Tower', showMap: false },
+        { id: 201, day: 2, icon: 'fa-drumstick-bite', time: '12:00', title: '고베 모리야 본점 (고베규 런치)', memo: '최고급 A5 철판 고베규 스테이크 코스 예약 🥩', query: 'Mouriya Honten Kobe', showMap: true },
+        { id: 202, day: 2, icon: 'fa-mug-hot', time: '14:30', title: '기타노 이진칸 & 스타벅스 기타노이진칸점', memo: '등록유형문화재 서양식 주택 카페에서 티타임 ☕', query: 'Starbucks Coffee Kobe Kitano Ijinkan', showMap: true },
+        { id: 203, day: 2, icon: 'fa-cable-car', time: '17:00', title: '누노비키 허브원 & 로프웨이', memo: '로프웨이 타고 고베 전경 내려다보기 🌿', query: 'Kobe Nunobiki Herb Gardens', showMap: false },
+        { id: 301, day: 3, icon: 'fa-train-subway', time: '10:30', title: '산노미야 센터가 쇼핑', memo: '돈키호테 쇼핑 및 길거리 간식 탐방 🛍️', query: 'Sannomiya Center Gai Shopping Street', showMap: false },
+        { id: 302, day: 3, icon: 'fa-ferris-wheel', time: '16:00', title: '고베 하버랜드 모자이크 & umie', memo: '바다가 보이는 테라스 쇼핑몰 & 노을 감상 🎡', query: 'Kobe Harborland umie', showMap: true },
+        { id: 303, day: 3, icon: 'fa-sparkles', time: '19:00', title: '하버랜드 모자이크 대관람차 & 야경', memo: '포트타워 조명과 함께 낭만적인 밤 산책 ✨', query: 'Mosaic Big Ferris Wheel', showMap: false },
+        { id: 401, day: 4, icon: 'fa-check', time: '10:00', title: '체크아웃 & 기념품 구매', memo: '프랑츠 마법의 항아리 푸딩 등 면세 쇼핑 🎁', query: 'Kobe Meriken Park Oriental Hotel', showMap: false },
+        { id: 402, day: 4, icon: 'fa-plane-departure', time: '14:00', title: '간사이 국제공항 이동 & 귀국', memo: '고속페리 타고 공항 이동 후 한국 귀국 ✈️', query: 'Kansai International Airport', showMap: false }
+      ],
+      places: [
+        { id: 1, category: '맛집', title: '고베 모리야 본점', desc: '140년 전통의 최고급 정통 고베규 철판 스테이크', query: 'Mouriya Kobe Honten' },
+        { id: 2, category: '맛집', title: '가츠동 요시베 본점', desc: '산노미야 지하상가 1등 계란 돈가스 덮밥', query: 'Katsudon Yoshibe Kobe' },
+        { id: 3, category: '카페', title: '스타벅스 기타노이진칸점', desc: '1907년 지어진 미국식 서양 주택을 개조한 이색 매장', query: 'Starbucks Coffee Kobe Kitano Ijinkan' },
+        { id: 4, category: '명소', title: '메리켄 파크 & 포트타워', desc: 'BE KOBE 조형물 포토존 및 고베의 대표 해변 랜드마크', query: 'BE KOBE Monument' },
+        { id: 5, category: '명소', title: '하버랜드 모자이크', desc: '바다 전망 쇼핑몰과 대관람차, 야경 데이트 명소', query: 'Kobe Harborland MOSAIC' }
+      ],
+      gifticons: [
+        { id: 1, brand: '스타벅스', name: '아메리카노 T 2잔 + 생크림 카스텔라', dueDate: '2026-10-31', isUsed: false, img: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400' },
+        { id: 2, brand: 'BHC', name: '뿌링클 + 콜라 1.25L 세트', dueDate: '2026-09-15', isUsed: false, img: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=400' },
+        { id: 3, brand: '배스킨라빈스', name: '파인트 아이스크림', dueDate: '2026-08-28', isUsed: false, img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400' }
+      ]
+    };
 
     let appData = JSON.parse(localStorage.getItem('kobe_couple_app_v3')) || initialKobeData;
     let isEditingMemo = false;
