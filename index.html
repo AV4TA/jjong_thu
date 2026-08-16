@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>뚜❣️쫑</title>
+  <title>Our Kobe Trip & Memory</title>
 
   <!-- PWA & 모바일 홈 화면 바로가기 설정 -->
   <meta name="mobile-web-app-capable" content="yes" />
@@ -24,6 +24,9 @@
   <!-- Firebase v9 SDK (Compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <!-- Tesseract.js (클라이언트 OCR) -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 
   <style>
     :root {
@@ -211,6 +214,102 @@
       text-decoration: none;
     }
 
+    /* Gifticon Section */
+    .gift-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .sort-control select {
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: #57606f;
+      background: white;
+      outline: none;
+    }
+
+    .gift-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .gift-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .gift-card.used { opacity: 0.55; filter: grayscale(80%); }
+    .gift-img-wrap {
+      height: 130px;
+      background: #f8f9fc;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 6px;
+    }
+    .gift-img-wrap img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
+    .gift-dday-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(0, 0, 0, 0.65);
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 8px;
+      backdrop-filter: blur(4px);
+    }
+    .gift-dday-badge.urgent { background: #ff4757; }
+
+    .gift-quick-actions {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      display: flex;
+      gap: 4px;
+      z-index: 2;
+    }
+    .gift-action-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      cursor: pointer;
+      color: #57606f;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .gift-action-btn:hover { background: white; }
+    .gift-action-btn.del { color: #ff4757; }
+
+    .gift-body { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .gift-brand { font-size: 0.75rem; color: var(--text-sub); font-weight: 600; }
+    .gift-name { font-size: 0.88rem; font-weight: 700; color: #2d3436; margin: 2px 0 8px; line-height: 1.3; }
+    .gift-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+    .btn-toggle-use {
+      background: #f1f2f6;
+      border: none;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 5px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #57606f;
+    }
+    .btn-toggle-use.is-used { background: #2ed573; color: white; }
+
     /* Places */
     .place-card {
       display: flex;
@@ -280,7 +379,7 @@
       gap: 4px;
       border: none;
       background: none;
-      width: 50%;
+      width: 33%;
     }
     .nav-item i { font-size: 1.3rem; }
     .nav-item.active { color: var(--primary); }
@@ -292,12 +391,15 @@
       inset: 0;
       background: rgba(0,0,0,0.6);
       backdrop-filter: blur(5px);
-      z-index: 999;
+      z-index: -1;
+      opacity: 0;
+      pointer-events: none;
       align-items: center;
       justify-content: center;
       padding: 16px;
+      transition: opacity 0.2s ease;
     }
-    .modal-overlay.active { display: flex; }
+    .modal-overlay.active { display: flex; z-index: 999; opacity: 1; pointer-events: auto; }
     .modal-content {
       background: white;
       border-radius: 24px;
@@ -313,6 +415,65 @@
     .btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
     .btn-primary { background: var(--primary); color: white; }
     .btn-secondary { background: #f1f2f6; color: #57606f; }
+
+    .ocr-loader {
+      display: none;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      color: #4338ca;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 10px;
+      margin-top: 6px;
+      align-items: center;
+      gap: 8px;
+    }
+    .ocr-loader.active { display: flex; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.7; } }
+
+    /* 이미지 확대 모달 */
+    .gift-view-card {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      width: 100%;
+      max-width: 360px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .gift-modal-close-btn {
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      width: 32px;
+      height: 32px;
+      background: #2d3436;
+      color: white;
+      border: 2px solid white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+    .gift-view-img-box {
+      width: 100%;
+      max-height: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 12px;
+      background: #fafafa;
+    }
+    .gift-view-img-box img { max-width: 100%; max-height: 460px; object-fit: contain; display: block; }
   </style>
 </head>
 <body>
@@ -339,7 +500,6 @@
     
     <!-- 1. 여행 일정 탭 -->
     <div id="view-travel" class="tab-view active">
-      <!-- 🧳 여행준비 탭 추가 -->
       <div class="sub-tabs" id="dayTabs">
         <button class="sub-tab-btn active" onclick="switchDay('ready', this)">🧳 여행준비</button>
         <button class="sub-tab-btn" onclick="switchDay(1, this)">Day 1 (8/30)</button>
@@ -348,7 +508,7 @@
         <button class="sub-tab-btn" onclick="switchDay(4, this)">Day 4 (9/02)</button>
       </div>
 
-      <!-- 여행준비 전용 메모 박스 (여행준비 탭에서만 표출) -->
+      <!-- 여행준비 전용 메모 박스 -->
       <div id="readyMemoSection" class="memo-card">
         <div class="memo-header">
           <div class="memo-title">
@@ -361,7 +521,7 @@
         <textarea class="memo-edit-area" id="memoInput"></textarea>
       </div>
 
-      <!-- Day 1~4 타임라인 리스트 (일자별 탭에서 표출) -->
+      <!-- 타임라인 리스트 (Day 1~4) -->
       <div id="timelineContainer" style="display:none;"></div>
     </div>
 
@@ -376,14 +536,33 @@
       <div id="placesContainer"></div>
     </div>
 
+    <!-- 3. 기프티콘 보관함 탭 -->
+    <div id="view-coupons" class="tab-view">
+      <div class="gift-header-row">
+        <div class="sub-tabs" style="margin-bottom:0;">
+          <button class="sub-tab-btn active" onclick="filterGifticons('available', this)">사용 가능</button>
+          <button class="sub-tab-btn" onclick="filterGifticons('all', this)">전체</button>
+          <button class="sub-tab-btn" onclick="filterGifticons('used', this)">사용 완료</button>
+        </div>
+        <div class="sort-control">
+          <select id="sortSelect" onchange="renderGifticons()">
+            <option value="dday">⏰ 유효기간 임박순</option>
+            <option value="dday_desc">⏳ 유효기간 여유순</option>
+            <option value="name">🔤 이름 가나다순</option>
+            <option value="recent">🆕 최신 등록순</option>
+          </select>
+        </div>
+      </div>
+      <div class="gift-grid" id="gifticonContainer"></div>
+    </div>
+
   </div>
 
-  <!-- 일정/장소 추가 FAB 버튼 -->
   <button class="fab" onclick="openAddModal()">
     <i class="fa-solid fa-plus"></i>
   </button>
 
-  <!-- 하단 네비게이션 바 -->
+  <!-- 하단 네비게이션 바 (3개 탭 유지) -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchNav('travel', this)">
       <i class="fa-solid fa-plane-departure"></i>
@@ -393,18 +572,24 @@
       <i class="fa-solid fa-utensils"></i>
       <span>맛집/가볼곳</span>
     </button>
+    <button class="nav-item" onclick="switchNav('coupons', this)">
+      <i class="fa-solid fa-ticket"></i>
+      <span>기프티콘</span>
+    </button>
   </nav>
 
-  <!-- 항목 추가 모달 -->
+  <!-- 항목 추가/수정 모달 -->
   <div class="modal-overlay" id="addModal">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <h3 style="font-size: 1.15rem; margin-bottom: 16px;">새 항목 추가</h3>
+      <h3 style="font-size: 1.15rem; margin-bottom: 16px;" id="modalTitle">새 항목 추가</h3>
+      <input type="hidden" id="editItemId" value="">
       
-      <div class="form-group">
+      <div class="form-group" id="itemTypeGroup">
         <label>구분</label>
         <select class="form-control" id="itemType" onchange="toggleFormFields()">
           <option value="travel">✈️ 여행 일정</option>
           <option value="place">🍽️ 맛집 / 가볼 곳</option>
+          <option value="gifticon">🎁 기프티콘</option>
         </select>
       </div>
 
@@ -425,6 +610,26 @@
         </div>
       </div>
 
+      <!-- 기프티콘 전용 사진 업로드 -->
+      <div id="gifticonFields" style="display:none;">
+        <div class="form-group">
+          <label>바코드/쿠폰 사진 등록 <span style="font-size:0.75rem; color:var(--primary); font-weight:normal;">(사진 올리면 유효기간 자동분석 ✨)</span></label>
+          <input type="file" class="form-control" id="giftImage" accept="image/*" onchange="handleImageOCR(this)">
+          <div class="ocr-loader" id="ocrLoader">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span id="ocrText">AI가 상품명과 유효기간을 분석 중...</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>브랜드</label>
+          <input type="text" class="form-control" id="giftBrand" placeholder="예: 스타벅스">
+        </div>
+        <div class="form-group">
+          <label>유효기간</label>
+          <input type="date" class="form-control" id="giftDueDate">
+        </div>
+      </div>
+
       <div class="form-group">
         <label id="nameLabel">이름 / 장소명</label>
         <input type="text" class="form-control" id="itemName" placeholder="예: 고베 타다">
@@ -438,6 +643,18 @@
       <div style="display: flex; gap: 10px; margin-top: 20px;">
         <button class="btn btn-secondary" onclick="closeModal()">취소</button>
         <button class="btn btn-primary" onclick="saveItem()">저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 이미지 확대 모달 -->
+  <div class="modal-overlay" id="imgViewModal" onclick="closeImgModal()">
+    <div class="gift-view-card" onclick="event.stopPropagation()">
+      <button class="gift-modal-close-btn" onclick="closeImgModal()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="gift-view-img-box">
+        <img id="enlargedImg" src="" alt="기프티콘 바코드">
       </div>
     </div>
   </div>
@@ -480,14 +697,17 @@
         { id: 2, category: '고베', title: '토요코인 고베 산노미야 에키마에', desc: '역 앞 편리한 숙소 (東横INN神戸三宮駅前)', query: 'Toyoko Inn Kobe Sannomiya Ekimae' },
         { id: 3, category: '아리마', title: '아리마 온천 킨노유', desc: '적갈색 철분 천연 온천수 족욕장', query: 'Arima Onsen Kin no Yu' },
         { id: 4, category: '카페', title: '스타벅스 기타노이진칸점', desc: '등록유형문화재 서양식 주택 카페', query: 'Starbucks Coffee Kobe Kitano Ijinkan' }
-      ]
+      ],
+      gifticons: []
     };
 
     let appData = initialKobeData;
     let isEditingMemo = false;
-    let currentDay = 'ready'; // 기본 선택: 여행준비
+    let currentDay = 'ready';
     let activeNav = 'travel';
     let currentPlaceFilter = 'all';
+    let currentGiftFilter = 'available';
+    let editingGifticonExistingImg = null;
 
     const syncDot = document.getElementById('syncDot');
     const syncText = document.getElementById('syncStatusText');
@@ -500,7 +720,8 @@
         appData = {
           quickMemo: remoteData.quickMemo || initialKobeData.quickMemo,
           travel: (remoteData.travel && remoteData.travel.length > 0) ? remoteData.travel : initialKobeData.travel,
-          places: (remoteData.places && remoteData.places.length > 0) ? remoteData.places : initialKobeData.places
+          places: (remoteData.places && remoteData.places.length > 0) ? remoteData.places : initialKobeData.places,
+          gifticons: remoteData.gifticons || []
         };
         syncDot.className = 'sync-dot online';
         syncText.innerText = '실시간 동기화 완료';
@@ -538,6 +759,7 @@
       renderQuickMemo();
       if (activeNav === 'travel') renderTravelView();
       if (activeNav === 'places') renderPlaces();
+      if (activeNav === 'coupons') renderGifticons();
     }
 
     function renderQuickMemo() {
@@ -591,7 +813,6 @@
       renderAll();
     }
 
-    // 🧳 여행준비 vs Day 1~4 전환 처리
     function switchDay(day, btn) {
       currentDay = day;
       document.querySelectorAll('#dayTabs .sub-tab-btn').forEach(b => b.classList.remove('active'));
@@ -701,8 +922,153 @@
       `).join('');
     }
 
+    // 기프티콘 렌더링 & 정렬
+    function filterGifticons(type, btn) {
+      currentGiftFilter = type;
+      document.querySelectorAll('#view-coupons .sub-tab-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderGifticons();
+    }
+
+    function getGiftDDay(dateStr) {
+      if (!dateStr) return { text: '기한없음', urgent: false };
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const due = new Date(dateStr);
+      due.setHours(0,0,0,0);
+      const diff = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+      
+      if (diff < 0) return { text: '만료됨', urgent: true };
+      if (diff === 0) return { text: '오늘 마감!', urgent: true };
+      return { text: `D-${diff}`, urgent: diff <= 7 };
+    }
+
+    function renderGifticons() {
+      const container = document.getElementById('gifticonContainer');
+      let list = [...(appData.gifticons || [])];
+      
+      if (currentGiftFilter === 'available') list = list.filter(g => !g.isUsed);
+      if (currentGiftFilter === 'used') list = list.filter(g => g.isUsed);
+
+      const sortSelect = document.getElementById('sortSelect');
+      const sortType = sortSelect ? sortSelect.value : 'dday';
+
+      if (sortType === 'dday') {
+        list.sort((a, b) => {
+          if (!a.dueDate) return 1;
+          if (!b.dueDate) return -1;
+          return new Date(a.dueDate) - new Date(b.dueDate);
+        });
+      } else if (sortType === 'dday_desc') {
+        list.sort((a, b) => {
+          if (!a.dueDate) return 1;
+          if (!b.dueDate) return -1;
+          return new Date(b.dueDate) - new Date(a.dueDate);
+        });
+      } else if (sortType === 'name') {
+        list.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+      } else if (sortType === 'recent') {
+        list.sort((a, b) => (b.id || 0) - (a.id || 0));
+      }
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align:center; padding: 40px 10px; color:#a4b0be;">
+            <i class="fa-solid fa-gift" style="font-size:2.5rem; margin-bottom:12px; color:#ffd1dc;"></i>
+            <p style="font-size:0.9rem; font-weight:600;">등록된 기프티콘이 없습니다.</p>
+            <p style="font-size:0.8rem; margin-top:4px;">우측 하단의 <b>+</b> 버튼을 눌러 사진을 올려보세요!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = list.map(g => {
+        const dday = getGiftDDay(g.dueDate);
+        return `
+          <div class="gift-card ${g.isUsed ? 'used' : ''}">
+            <div class="gift-quick-actions">
+              <button class="gift-action-btn" title="수정" onclick="editGifticon(${g.id})">
+                <i class="fa-solid fa-pen"></i>
+              </button>
+              <button class="gift-action-btn del" title="삭제" onclick="deleteGifticon(${g.id})">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+            <div class="gift-img-wrap" onclick="viewImageById(${g.id})">
+              <img src="${g.img || 'https://via.placeholder.com/300x200?text=Gifticon'}" alt="쿠폰">
+              <div class="gift-dday-badge ${dday.urgent ? 'urgent' : ''}">${g.isUsed ? '사용완료' : dday.text}</div>
+            </div>
+            <div class="gift-body">
+              <div>
+                <div class="gift-brand">${g.brand || '기타'}</div>
+                <div class="gift-name">${g.name || '이름 없음'}</div>
+              </div>
+              <div class="gift-footer">
+                <span style="font-size:0.72rem; color:#a4b0be;">~${g.dueDate || '무기한'}</span>
+                <button class="btn-toggle-use ${g.isUsed ? 'is-used' : ''}" onclick="toggleGiftUse(${g.id})">
+                  ${g.isUsed ? '취소' : '사용'}
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleGiftUse(id) {
+      const g = (appData.gifticons || []).find(item => item.id === id);
+      if (g) {
+        g.isUsed = !g.isUsed;
+        saveData();
+        renderGifticons();
+      }
+    }
+
+    function deleteGifticon(id) {
+      if (confirm('이 기프티콘을 삭제할까요?')) {
+        appData.gifticons = (appData.gifticons || []).filter(g => g.id !== id);
+        saveData();
+        renderGifticons();
+      }
+    }
+
+    function editGifticon(id) {
+      const g = (appData.gifticons || []).find(item => item.id === id);
+      if (!g) return;
+
+      document.getElementById('modalTitle').innerText = '기프티콘 수정';
+      document.getElementById('editItemId').value = g.id;
+      document.getElementById('itemType').value = 'gifticon';
+      document.getElementById('itemTypeGroup').style.display = 'none';
+      toggleFormFields();
+
+      document.getElementById('giftBrand').value = g.brand || '';
+      document.getElementById('giftDueDate').value = g.dueDate || '';
+      document.getElementById('itemName').value = g.name || '';
+      document.getElementById('itemMemo').value = g.memo || '';
+      editingGifticonExistingImg = g.img || null;
+
+      document.getElementById('addModal').classList.add('active');
+    }
+
+    function viewImageById(id) {
+      const target = (appData.gifticons || []).find(i => i.id === id);
+      if (target && target.img) {
+        document.getElementById('enlargedImg').src = target.img;
+        document.getElementById('imgViewModal').classList.add('active');
+      }
+    }
+
+    function closeImgModal() {
+      document.getElementById('imgViewModal').classList.remove('active');
+    }
+
     function openAddModal() {
-      document.getElementById('itemType').value = activeNav === 'places' ? 'place' : 'travel';
+      document.getElementById('modalTitle').innerText = '새 항목 추가';
+      document.getElementById('editItemId').value = '';
+      document.getElementById('itemTypeGroup').style.display = 'block';
+      document.getElementById('itemType').value = activeNav === 'coupons' ? 'gifticon' : (activeNav === 'places' ? 'place' : 'travel');
+      editingGifticonExistingImg = null;
       toggleFormFields();
       document.getElementById('addModal').classList.add('active');
     }
@@ -711,16 +1077,126 @@
       document.getElementById('addModal').classList.remove('active');
       document.getElementById('itemName').value = '';
       document.getElementById('itemMemo').value = '';
+      document.getElementById('giftBrand').value = '';
+      document.getElementById('giftDueDate').value = '';
+      document.getElementById('giftImage').value = '';
       document.getElementById('travelTime').value = '';
+      document.getElementById('editItemId').value = '';
+      document.getElementById('ocrLoader').classList.remove('active');
+      editingGifticonExistingImg = null;
     }
 
     function toggleFormFields() {
       const type = document.getElementById('itemType').value;
       document.getElementById('travelFields').style.display = type === 'travel' ? 'block' : 'none';
-      document.getElementById('nameLabel').innerText = type === 'place' ? '맛집/장소명' : '일정 제목/장소';
+      document.getElementById('gifticonFields').style.display = type === 'gifticon' ? 'block' : 'none';
+      document.getElementById('nameLabel').innerText = type === 'gifticon' ? '상품명 (이름)' : (type === 'place' ? '맛집/장소명' : '일정 제목/장소');
+    }
+
+    // AI OCR
+    function handleImageOCR(input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+
+      const loader = document.getElementById('ocrLoader');
+      loader.classList.add('active');
+      document.getElementById('ocrText').innerText = 'AI가 상품명과 유효기간을 분석 중...';
+
+      Tesseract.recognize(file, 'kor+eng', {
+        logger: m => {
+          if (m.status === 'recognizing text') {
+            document.getElementById('ocrText').innerText = `텍스트 분석 중... (${Math.round(m.progress * 100)}%)`;
+          }
+        }
+      }).then(({ data: { text } }) => {
+        loader.classList.remove('active');
+        extractGifticonInfo(text);
+      }).catch(err => {
+        console.warn("OCR Error:", err);
+        loader.classList.remove('active');
+      });
+    }
+
+    function extractGifticonInfo(rawText) {
+      const text = rawText.replace(/\r/g, '');
+      const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+
+      const globalDateRegex = /(202[0-9])[\.\-\/\s년]\s*([0-1]?[0-9])[\.\-\/\s월]\s*([0-3]?[0-9])/g;
+      const allDates = [...text.matchAll(globalDateRegex)];
+
+      if (allDates.length > 0) {
+        const lastMatch = allDates[allDates.length - 1];
+        const year = lastMatch[1];
+        const month = lastMatch[2].padStart(2, '0');
+        const day = lastMatch[3].padStart(2, '0');
+        document.getElementById('giftDueDate').value = `${year}-${month}-${day}`;
+      }
+
+      const brands = [
+        '스타벅스', 'Starbucks', '투썸플레이스', '투썸', '메가커피', '컴포즈커피', '컴포즈',
+        '배스킨라빈스', '베스킨라빈스', 'BHC', 'BBQ', '교촌치킨', '교촌', '맘스터치',
+        '올리브영', 'CU', 'GS25', '세븐일레븐', '버거킹', '맥도날드', '도미노피자',
+        '이디야', '파리바게뜨', '파리바게트', '뚜레쥬르', '배달의민족', '카카오톡', '요기요'
+      ];
+
+      for (let brand of brands) {
+        if (text.includes(brand)) {
+          document.getElementById('giftBrand').value = brand.replace('베스킨라빈스', '배스킨라빈스').replace('파리바게트', '파리바게뜨');
+          break;
+        }
+      }
+
+      const ignoreWords = ['교환권', '모바일', '쿠폰', '바코드', '유효기간', '주문번호', '발행처', '사용처', '금액권', '사용불가', '원', 'No.', 'kakao', 'gift'];
+      let candidateTitle = '';
+
+      for (let line of lines) {
+        if (/(202[0-9])/.test(line)) continue;
+        if (/^\d+$/.test(line.replace(/[-\s]/g, ''))) continue;
+        if (line.length < 2 || line.length > 35) continue;
+        
+        let hasIgnore = ignoreWords.some(w => line.includes(w));
+        if (!hasIgnore) {
+          candidateTitle = line.replace(/[^\w\sㄱ-ㅎㅏ-ㅣ가-힣+()]/g, '').trim();
+          if (candidateTitle.length >= 2) break;
+        }
+      }
+
+      if (candidateTitle && !document.getElementById('itemName').value) {
+        document.getElementById('itemName').value = candidateTitle;
+      }
+    }
+
+    function compressAndSaveImage(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 800;
+
+          if (width > height && width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          callback(canvas.toDataURL('image/jpeg', 0.8));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
     }
 
     function saveItem() {
+      const editId = document.getElementById('editItemId').value;
       const type = document.getElementById('itemType').value;
       const name = document.getElementById('itemName').value.trim();
       const memo = document.getElementById('itemMemo').value.trim();
@@ -740,7 +1216,6 @@
           showMap: true
         });
         saveData();
-        // 만약 여행준비 탭에 있었다면 해당 Day 탭으로 이동해서 보여주기
         if (currentDay === 'ready' || currentDay !== chosenDay) {
           const targetTabBtn = document.querySelectorAll('#dayTabs .sub-tab-btn')[chosenDay];
           switchDay(chosenDay, targetTabBtn);
@@ -760,6 +1235,69 @@
         saveData();
         renderPlaces();
         closeModal();
+      } else if (type === 'gifticon') {
+        if (!appData.gifticons) appData.gifticons = [];
+        const fileInput = document.getElementById('giftImage');
+        const brand = document.getElementById('giftBrand').value.trim() || '기타';
+        const dueDate = document.getElementById('giftDueDate').value;
+
+        if (editId) {
+          const targetIndex = appData.gifticons.findIndex(g => g.id === parseInt(editId));
+          if (targetIndex > -1) {
+            if (fileInput.files && fileInput.files[0]) {
+              compressAndSaveImage(fileInput.files[0], function(compressedBase64) {
+                appData.gifticons[targetIndex].brand = brand;
+                appData.gifticons[targetIndex].name = name;
+                appData.gifticons[targetIndex].dueDate = dueDate;
+                appData.gifticons[targetIndex].memo = memo;
+                appData.gifticons[targetIndex].img = compressedBase64;
+                saveData();
+                renderGifticons();
+                closeModal();
+              });
+              return;
+            } else {
+              appData.gifticons[targetIndex].brand = brand;
+              appData.gifticons[targetIndex].name = name;
+              appData.gifticons[targetIndex].dueDate = dueDate;
+              appData.gifticons[targetIndex].memo = memo;
+              saveData();
+              renderGifticons();
+              closeModal();
+              return;
+            }
+          }
+        }
+
+        if (fileInput.files && fileInput.files[0]) {
+          compressAndSaveImage(fileInput.files[0], function(compressedBase64) {
+            appData.gifticons.push({
+              id: Date.now(),
+              brand: brand,
+              name: name,
+              dueDate: dueDate,
+              memo: memo,
+              isUsed: false,
+              img: compressedBase64
+            });
+            saveData();
+            renderGifticons();
+            closeModal();
+          });
+        } else {
+          appData.gifticons.push({
+            id: Date.now(),
+            brand: brand,
+            name: name,
+            dueDate: dueDate,
+            memo: memo,
+            isUsed: false,
+            img: editingGifticonExistingImg || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400'
+          });
+          saveData();
+          renderGifticons();
+          closeModal();
+        }
       }
     }
 
