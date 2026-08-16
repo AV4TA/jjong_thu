@@ -123,42 +123,113 @@
       border: 1px solid rgba(0,0,0,0.02);
     }
 
-    /* 여행 준비 메모 카드 */
-    .memo-card {
-      background: #ffffff;
-      border: 1px solid #ffd1d8;
-      border-radius: var(--radius);
+    /* ====================================================
+       체크리스트 전용 컴포넌트 스타일
+       ==================================================== */
+    .checklist-card {
+      background: white;
+      border-radius: 20px;
       padding: 20px;
       box-shadow: var(--shadow);
-      min-height: 280px;
+      border: 1px solid rgba(255, 117, 140, 0.15);
     }
-    .memo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px dashed #ffd1d8; }
-    .memo-title { font-size: 1rem; font-weight: 700; color: #e84393; display: flex; align-items: center; gap: 8px; }
-    .memo-btn {
-      background: #fff0f3;
-      border: 1px solid #ffccd5;
-      font-size: 0.82rem;
+    .progress-wrap {
+      margin-bottom: 18px;
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
       font-weight: 700;
-      color: var(--primary);
-      padding: 6px 14px;
-      border-radius: 10px;
-      cursor: pointer;
+      color: #2d3436;
     }
-    .memo-body { font-size: 0.9rem; color: #444; line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
-    .memo-edit-area {
-      width: 100%;
-      height: 260px;
-      border-radius: 12px;
-      border: 1px solid #ffccd5;
-      padding: 14px;
-      font-size: 0.9rem;
-      line-height: 1.6;
-      resize: vertical;
-      outline: none;
-      display: none;
-      font-family: inherit;
+    .progress-bar-bg {
+      height: 10px;
+      background: #f1f2f6;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff758c, #ff5e7e);
+      width: 0%;
+      transition: width 0.3s ease;
+      border-radius: 8px;
     }
 
+    .check-add-box {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .check-input {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 0.88rem;
+      outline: none;
+    }
+    .check-input:focus { border-color: var(--primary); }
+    .btn-add-item {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .checklist-items { display: flex; flex-direction: column; gap: 8px; }
+    .check-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fdfdfd;
+      border: 1px solid #f1f2f6;
+      padding: 12px 14px;
+      border-radius: 14px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .check-row.checked {
+      background: #f8f9fa;
+      border-color: #e9ecef;
+      opacity: 0.6;
+    }
+    .check-left { display: flex; align-items: center; gap: 12px; flex: 1; }
+    .custom-checkbox {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid #dcdde1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.75rem;
+      transition: all 0.2s;
+    }
+    .check-row.checked .custom-checkbox {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .check-text { font-size: 0.92rem; font-weight: 600; color: #2d3436; }
+    .check-row.checked .check-text { text-decoration: line-through; color: #a4b0be; }
+    .btn-del-check {
+      background: none;
+      border: none;
+      color: #ff7675;
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 4px 6px;
+    }
+
+    /* 타임라인 */
     .timeline-item { display: flex; gap: 14px; position: relative; padding-bottom: 20px; }
     .timeline-item:last-child { padding-bottom: 0; }
     .timeline-item::before {
@@ -239,7 +310,7 @@
       flex-shrink: 0;
     }
 
-    /* Weather Section Styles */
+    /* Weather */
     .weather-hero {
       background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
       color: white;
@@ -482,17 +553,27 @@
         <button class="sub-tab-btn" onclick="switchDay(4, this)">Day 4 (9/02)</button>
       </div>
 
-      <!-- 여행준비 전용 메모 박스 -->
-      <div id="readyMemoSection" class="memo-card">
-        <div class="memo-header">
-          <div class="memo-title">
-            <i class="fa-solid fa-clipboard-check"></i>
-            <span>여행 메모 & 체크포인트</span>
+      <!-- 인터랙티브 체크리스트 섹션 -->
+      <div id="readyChecklistSection" class="checklist-card">
+        <!-- 달성률 프로그레스 바 -->
+        <div class="progress-wrap">
+          <div class="progress-header">
+            <span>🎒 준비물 챙기기</span>
+            <span id="progressText">0% 완료 (0/0)</span>
           </div>
-          <button class="memo-btn" id="memoActionBtn" onclick="toggleMemoEdit()">✏️ 수정</button>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressBarFill"></div>
+          </div>
         </div>
-        <div class="memo-body" id="memoDisplay"></div>
-        <textarea class="memo-edit-area" id="memoInput"></textarea>
+
+        <!-- 새 준비물 빠른 추가 -->
+        <div class="check-add-box">
+          <input type="text" id="newCheckInput" class="check-input" placeholder="새 준비물 입력 (예: 고데기, 삼각대)" onkeypress="if(event.key==='Enter') addCheckItem()">
+          <button class="btn-add-item" onclick="addCheckItem()">추가</button>
+        </div>
+
+        <!-- 체크리스트 목록 -->
+        <div class="checklist-items" id="checklistContainer"></div>
       </div>
 
       <!-- 타임라인 리스트 (Day 1~4) -->
@@ -510,7 +591,7 @@
       <div id="placesContainer"></div>
     </div>
 
-    <!-- 3. 현지 날씨 탭 (3번째 위치) -->
+    <!-- 3. 현지 날씨 탭 -->
     <div id="view-weather" class="tab-view">
       <div class="sub-tabs">
         <button class="sub-tab-btn active" onclick="switchWeatherCity('kobe', this)">🏙️ 고베 시내</button>
@@ -568,7 +649,7 @@
     <i class="fa-solid fa-plus"></i>
   </button>
 
-  <!-- 하단 네비게이션 바 (3번째 위치: 날씨 탭) -->
+  <!-- 하단 네비게이션 바 -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchNav('travel', this)">
       <i class="fa-solid fa-plane-departure"></i>
@@ -684,8 +765,21 @@
     }
     const db = firebase.firestore();
 
+    const initialChecklist = [
+      { id: 1, text: "여권 및 사본 챙기기", checked: false },
+      { id: 2, text: "일본 e-SIM / 유심 등록 확인", checked: false },
+      { id: 3, text: "110V 돼지코 어댑터 챙기기", checked: false },
+      { id: 4, text: "트래블로그 / 트래블월렛 카드", checked: false },
+      { id: 5, text: "엔화 현금 환전 및 지갑", checked: false },
+      { id: 6, text: "1, 3일차 숙소 바우처 확인", checked: false },
+      { id: 7, text: "산노미야 ↔ 아리마온천 버스 예약", checked: false },
+      { id: 8, text: "비상약 (소화제, 두통약, 밴드)", checked: false },
+      { id: 9, text: "보조배터리 & 충전선", checked: false },
+      { id: 10, text: "접이식 3단 우산", checked: false }
+    ];
+
     const initialKobeData = {
-      quickMemo: "✔️ 여권 유효기간 & 일본 e-SIM 등록 확인\n✔️ 110V 돼지코 어댑터 챙기기\n✔️ 산노미야 ↔ 아리마온천 버스 시간 확인\n✔️ 토요코인 산노미야 에키마에 체크인 바우처",
+      checklist: initialChecklist,
       travel: [
         { id: 101, day: 1, icon: 'fa-plane-departure', time: '13:20', title: '인천공항 출발 🛫', memo: '인천공항 탑승 수속 & 면세점 구경', query: 'Incheon International Airport', showMap: false },
         { id: 102, day: 1, icon: 'fa-plane-arrival', time: '15:00', title: '고베공항 도착 🛬', memo: '입국 수속 및 포트라이너(Port Liner) 타고 산노미야역으로 이동', query: 'Kobe Airport', showMap: true },
@@ -712,7 +806,6 @@
     };
 
     let appData = initialKobeData;
-    let isEditingMemo = false;
     let currentDay = 'ready';
     let activeNav = 'travel';
     let currentPlaceFilter = 'all';
@@ -729,7 +822,7 @@
       if (doc.exists) {
         const remoteData = doc.data();
         appData = {
-          quickMemo: remoteData.quickMemo || initialKobeData.quickMemo,
+          checklist: remoteData.checklist || initialChecklist,
           travel: (remoteData.travel && remoteData.travel.length > 0) ? remoteData.travel : initialKobeData.travel,
           places: (remoteData.places && remoteData.places.length > 0) ? remoteData.places : initialKobeData.places,
           gifticons: remoteData.gifticons || []
@@ -767,40 +860,80 @@
     }
 
     function renderAll() {
-      renderQuickMemo();
       if (activeNav === 'travel') renderTravelView();
       if (activeNav === 'places') renderPlaces();
       if (activeNav === 'weather') loadWeatherData();
       if (activeNav === 'coupons') renderGifticons();
     }
 
-    function renderQuickMemo() {
-      document.getElementById('memoDisplay').innerText = appData.quickMemo || '메모를 입력해보세요.';
-      document.getElementById('memoInput').value = appData.quickMemo || '';
+    // ----------------------------------------------------
+    // 체크리스트 관리 함수
+    // ----------------------------------------------------
+    function renderChecklist() {
+      const container = document.getElementById('checklistContainer');
+      const list = appData.checklist || [];
+
+      // 프로그레스 바 계산
+      const total = list.length;
+      const checkedCount = list.filter(i => i.checked).length;
+      const percent = total === 0 ? 0 : Math.round((checkedCount / total) * 100);
+
+      document.getElementById('progressText').innerText = `${percent}% 완료 (${checkedCount}/${total})`;
+      document.getElementById('progressBarFill').style.width = `${percent}%`;
+
+      if (list.length === 0) {
+        container.innerHTML = '<div style="text-align:center; color:#a4b0be; padding:20px;">준비물 항목이 없습니다. 추가해보세요!</div>';
+        return;
+      }
+
+      container.innerHTML = list.map(item => `
+        <div class="check-row ${item.checked ? 'checked' : ''}" onclick="toggleCheckItem(${item.id})">
+          <div class="check-left">
+            <div class="custom-checkbox">
+              ${item.checked ? '<i class="fa-solid fa-check"></i>' : ''}
+            </div>
+            <span class="check-text">${item.text}</span>
+          </div>
+          <button class="btn-del-check" onclick="event.stopPropagation(); deleteCheckItem(${item.id})">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
+      `).join('');
     }
 
-    function toggleMemoEdit() {
-      const displayEl = document.getElementById('memoDisplay');
-      const inputEl = document.getElementById('memoInput');
-      const btnEl = document.getElementById('memoActionBtn');
-
-      if (!isEditingMemo) {
-        isEditingMemo = true;
-        displayEl.style.display = 'none';
-        inputEl.style.display = 'block';
-        inputEl.focus();
-        btnEl.innerText = '💾 저장';
-      } else {
-        isEditingMemo = false;
-        appData.quickMemo = inputEl.value;
+    function toggleCheckItem(id) {
+      const item = (appData.checklist || []).find(i => i.id === id);
+      if (item) {
+        item.checked = !item.checked;
         saveData();
-        displayEl.innerText = appData.quickMemo;
-        displayEl.style.display = 'block';
-        inputEl.style.display = 'none';
-        btnEl.innerText = '✏️ 수정';
+        renderChecklist();
       }
     }
 
+    function addCheckItem() {
+      const input = document.getElementById('newCheckInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      if (!appData.checklist) appData.checklist = [];
+      appData.checklist.push({
+        id: Date.now(),
+        text: text,
+        checked: false
+      });
+
+      input.value = '';
+      saveData();
+      renderChecklist();
+    }
+
+    function deleteCheckItem(id) {
+      appData.checklist = (appData.checklist || []).filter(i => i.id !== id);
+      saveData();
+      renderChecklist();
+    }
+
+    // D-Day 계산
     function calculateDDay() {
       const tripDate = new Date('2026-08-30');
       const today = new Date();
@@ -838,15 +971,15 @@
     }
 
     function renderTravelView() {
-      const memoSec = document.getElementById('readyMemoSection');
+      const checkSec = document.getElementById('readyChecklistSection');
       const timelineSec = document.getElementById('timelineContainer');
 
       if (currentDay === 'ready') {
-        memoSec.style.display = 'block';
+        checkSec.style.display = 'block';
         timelineSec.style.display = 'none';
-        renderQuickMemo();
+        renderChecklist();
       } else {
-        memoSec.style.display = 'none';
+        checkSec.style.display = 'none';
         timelineSec.style.display = 'block';
         renderTimeline();
       }
@@ -939,12 +1072,10 @@
       `).join('');
     }
 
-    // ----------------------------------------------------
-    // 실시간 날씨 위젯 기능 (Open-Meteo 무료 API)
-    // ----------------------------------------------------
+    // 날씨
     const CITY_COORDS = {
-      kobe: { name: '고베 시내 (산노미야)', lat: 34.6901, lon: 135.1955, icon: '🏙️' },
-      arima: { name: '아리마 온천 (온천마을)', lat: 34.7978, lon: 135.2475, icon: '♨️' }
+      kobe: { name: '고베 시내 (산노미야)', lat: 34.6901, lon: 135.1955 },
+      arima: { name: '아리마 온천 (온천마을)', lat: 34.7978, lon: 135.2475 }
     };
 
     function switchWeatherCity(city, btn) {
@@ -974,7 +1105,6 @@
         const res = await fetch(url);
         const data = await res.json();
 
-        // 1. 현재 날씨 세팅
         const currentTemp = Math.round(data.current.temperature_2m);
         const cond = getWeatherConditionInfo(data.current.weather_code);
         document.getElementById('weatherCurrentTemp').innerText = `${currentTemp}°C`;
@@ -985,7 +1115,6 @@
         const todayRainProb = data.daily.precipitation_probability_max[0] || 0;
         document.getElementById('weatherRainProb').innerText = `${todayRainProb}%`;
 
-        // 2. 주간 예보 세팅
         const forecastContainer = document.getElementById('weatherForecastContainer');
         const days = ['일', '월', '화', '수', '목', '금', '토'];
         
@@ -1005,7 +1134,6 @@
           `;
         }).join('');
 
-        // 3. 옷차림 팁 계산
         let tipText = '';
         if (currentTemp >= 28) {
           tipText = '<b>☀️ 한여름 무더위 날씨:</b> 시원한 반팔/민소매와 자외선 차단용 양산, 선글라스를 꼭 챙기세요. 실내 에어컨에 대비해 얇은 린넨 셔츠가 유용합니다.';
@@ -1029,9 +1157,7 @@
       }
     }
 
-    // ----------------------------------------------------
-    // 기프티콘 & 모달 관련 기능
-    // ----------------------------------------------------
+    // 기프티콘
     function filterGifticons(type, btn) {
       currentGiftFilter = type;
       document.querySelectorAll('#view-coupons .sub-tab-btn').forEach(b => b.classList.remove('active'));
