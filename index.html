@@ -386,87 +386,6 @@
       line-height: 1.5;
     }
 
-    /* ====================================================
-       우리 커플 여행 지도 탭 스타일
-       ==================================================== */
-    .korea-map-card {
-      background: white;
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      text-align: center;
-    }
-    .map-header-badge {
-      display: inline-block;
-      background: #fff0f3;
-      color: var(--primary);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      margin-bottom: 14px;
-    }
-    .map-svg-wrap {
-      width: 100%;
-      max-width: 320px;
-      margin: 0 auto 16px;
-      background: #fdfdfd;
-      border-radius: 16px;
-      border: 1px solid #f1f2f6;
-      padding: 8px;
-    }
-    .region-btn {
-      fill: #f1f2f6;
-      stroke: #dcdde1;
-      stroke-width: 1.5;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-    .region-btn:hover { fill: #ffe8ee; }
-    .region-btn.visited {
-      fill: #ff5e7e !important;
-      stroke: #ffffff !important;
-      stroke-width: 2 !important;
-      filter: drop-shadow(0 2px 4px rgba(255, 94, 126, 0.4));
-    }
-    .region-label {
-      font-size: 9.5px;
-      font-weight: 700;
-      fill: #57606f;
-      pointer-events: none;
-      text-anchor: middle;
-      dominant-baseline: central;
-    }
-    .region-btn.visited + .region-label,
-    .region-label.visited-text {
-      fill: #ffffff !important;
-      font-weight: 800;
-    }
-    .region-chips-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      justify-content: center;
-      margin-top: 14px;
-    }
-    .region-chip {
-      padding: 6px 12px;
-      border-radius: 12px;
-      background: #f1f2f6;
-      color: #57606f;
-      font-size: 0.78rem;
-      font-weight: 600;
-      border: 1px solid transparent;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .region-chip.active {
-      background: var(--primary);
-      color: white;
-      box-shadow: 0 2px 8px rgba(255, 94, 126, 0.3);
-    }
-
     /* Gifticon Section */
     .gift-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .sort-control select { padding: 6px 10px; border-radius: 10px; border: 1px solid var(--border); font-size: 0.78rem; color: #57606f; background: white; outline: none; }
@@ -487,7 +406,7 @@
     .btn-toggle-use { background: #f1f2f6; border: none; font-size: 0.72rem; font-weight: 700; padding: 5px 8px; border-radius: 6px; cursor: pointer; color: #57606f; }
     .btn-toggle-use.is-used { background: #2ed573; color: white; }
 
-    /* Floating & Nav (5개 탭) */
+    /* Floating & Nav */
     .fab {
       position: fixed;
       right: 20px;
@@ -525,15 +444,15 @@
       flex-direction: column;
       align-items: center;
       color: #a4b0be;
-      font-size: 0.68rem;
+      font-size: 0.72rem;
       font-weight: 600;
       cursor: pointer;
-      gap: 3px;
+      gap: 4px;
       border: none;
       background: none;
-      width: 20%;
+      width: 25%;
     }
-    .nav-item i { font-size: 1.2rem; }
+    .nav-item i { font-size: 1.25rem; }
     .nav-item.active { color: var(--primary); }
 
     /* Modals */
@@ -684,6 +603,7 @@
         <div class="checklist-items" id="checklistContainer"></div>
       </div>
 
+      <!-- 타임라인 리스트 (Day 1~4) -->
       <div id="timelineContainer" style="display:none;"></div>
     </div>
 
@@ -730,81 +650,7 @@
       </div>
     </div>
 
-    <!-- 4. 우리 지도 탭 (날씨 다음 4번째 위치) -->
-    <div id="view-map" class="tab-view">
-      <div class="korea-map-card">
-        <div class="map-header-badge" id="mapBadgeText">🗺️ 대한민국 17개 지역 중 0곳 정복!</div>
-        <p style="font-size:0.82rem; color:var(--text-sub); margin-bottom:14px;">지도나 아래 버튼을 터치해 둘이 다녀온 지역을 핑크색으로 채워보세요 ❤️</p>
-        
-        <div class="map-svg-wrap">
-          <svg viewBox="0 0 300 420" width="100%" height="auto">
-            <!-- 1. 서울/인천/경기 -->
-            <rect id="reg-seoul" class="region-btn" x="80" y="55" width="46" height="32" rx="8" onclick="toggleRegion('seoul')"/>
-            <text x="103" y="71" class="region-label">서울</text>
-
-            <rect id="reg-incheon" class="region-btn" x="24" y="55" width="48" height="32" rx="8" onclick="toggleRegion('incheon')"/>
-            <text x="48" y="71" class="region-label">인천</text>
-
-            <rect id="reg-gyeonggi" class="region-btn" x="38" y="94" width="86" height="36" rx="8" onclick="toggleRegion('gyeonggi')"/>
-            <text x="81" y="112" class="region-label">경기</text>
-
-            <!-- 2. 강원도 -->
-            <rect id="reg-gangwon" class="region-btn" x="140" y="55" width="134" height="75" rx="10" onclick="toggleRegion('gangwon')"/>
-            <text x="207" y="92" class="region-label">강원</text>
-
-            <!-- 3. 충청도/세종/대전 -->
-            <rect id="reg-chungbuk" class="region-btn" x="136" y="138" width="60" height="60" rx="8" onclick="toggleRegion('chungbuk')"/>
-            <text x="166" y="168" class="region-label">충북</text>
-
-            <rect id="reg-chungnam" class="region-btn" x="34" y="138" width="58" height="60" rx="8" onclick="toggleRegion('chungnam')"/>
-            <text x="63" y="168" class="region-label">충남</text>
-
-            <rect id="reg-sejong" class="region-btn" x="98" y="138" width="34" height="28" rx="6" onclick="toggleRegion('sejong')"/>
-            <text x="115" y="152" class="region-label" style="font-size:8px;">세종</text>
-
-            <rect id="reg-daejeon" class="region-btn" x="98" y="170" width="34" height="28" rx="6" onclick="toggleRegion('daejeon')"/>
-            <text x="115" y="184" class="region-label" style="font-size:8px;">대전</text>
-
-            <!-- 4. 경상도/대구/울산/부산 -->
-            <rect id="reg-gyeongbuk" class="region-btn" x="204" y="138" width="70" height="72" rx="8" onclick="toggleRegion('gyeongbuk')"/>
-            <text x="239" y="174" class="region-label">경북</text>
-
-            <rect id="reg-daegu" class="region-btn" x="194" y="218" width="40" height="34" rx="6" onclick="toggleRegion('daegu')"/>
-            <text x="214" y="235" class="region-label" style="font-size:8.5px;">대구</text>
-
-            <rect id="reg-ulsan" class="region-btn" x="240" y="218" width="36" height="34" rx="6" onclick="toggleRegion('ulsan')"/>
-            <text x="258" y="235" class="region-label" style="font-size:8.5px;">울산</text>
-
-            <rect id="reg-gyeongnam" class="region-btn" x="146" y="260" width="74" height="52" rx="8" onclick="toggleRegion('gyeongnam')"/>
-            <text x="183" y="286" class="region-label">경남</text>
-
-            <rect id="reg-busan" class="region-btn" x="228" y="260" width="48" height="52" rx="8" onclick="toggleRegion('busan')"/>
-            <text x="252" y="286" class="region-label">부산</text>
-
-            <!-- 5. 전라도/광주 -->
-            <rect id="reg-jeonbuk" class="region-btn" x="42" y="206" width="90" height="46" rx="8" onclick="toggleRegion('jeonbuk')"/>
-            <text x="87" y="229" class="region-label">전북</text>
-
-            <rect id="reg-gwangju" class="region-btn" x="38" y="260" width="38" height="42" rx="6" onclick="toggleRegion('gwangju')"/>
-            <text x="57" y="281" class="region-label" style="font-size:8.5px;">광주</text>
-
-            <rect id="reg-jeonnam" class="region-btn" x="82" y="260" width="58" height="52" rx="8" onclick="toggleRegion('jeonnam')"/>
-            <text x="111" y="286" class="region-label">전남</text>
-
-            <!-- 6. 제주도 & 독도 -->
-            <rect id="reg-jeju" class="region-btn" x="78" y="335" width="144" height="48" rx="12" onclick="toggleRegion('jeju')"/>
-            <text x="150" y="359" class="region-label">제주도 🌴</text>
-
-            <circle id="reg-dokdo" class="region-btn" cx="282" cy="115" r="10" onclick="toggleRegion('dokdo')"/>
-            <text x="282" y="115" class="region-label" style="font-size:7px;">독도</text>
-          </svg>
-        </div>
-
-        <div class="region-chips-wrap" id="regionChipsContainer"></div>
-      </div>
-    </div>
-
-    <!-- 5. 기프티콘 보관함 탭 -->
+    <!-- 4. 기프티콘 보관함 탭 -->
     <div id="view-coupons" class="tab-view">
       <div class="gift-header-row">
         <div class="sub-tabs" style="margin-bottom:0;">
@@ -830,7 +676,7 @@
     <i class="fa-solid fa-plus"></i>
   </button>
 
-  <!-- 하단 네비게이션 바 (총 5개 탭) -->
+  <!-- 하단 네비게이션 바 -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchNav('travel', this)">
       <i class="fa-solid fa-plane-departure"></i>
@@ -843,10 +689,6 @@
     <button class="nav-item" onclick="switchNav('weather', this)">
       <i class="fa-solid fa-cloud-sun"></i>
       <span>날씨</span>
-    </button>
-    <button class="nav-item" onclick="switchNav('map', this)">
-      <i class="fa-solid fa-map-location-dot"></i>
-      <span>우리 지도</span>
     </button>
     <button class="nav-item" onclick="switchNav('coupons', this)">
       <i class="fa-solid fa-ticket"></i>
@@ -968,31 +810,9 @@
       { id: 106, text: "숙소 / 고속버스 예약 바우처", checked: false }
     ];
 
-    const ALL_REGIONS = [
-      { id: 'seoul', name: '서울' },
-      { id: 'incheon', name: '인천' },
-      { id: 'gyeonggi', name: '경기' },
-      { id: 'gangwon', name: '강원' },
-      { id: 'chungbuk', name: '충북' },
-      { id: 'chungnam', name: '충남' },
-      { id: 'sejong', name: '세종' },
-      { id: 'daejeon', name: '대전' },
-      { id: 'gyeongbuk', name: '경북' },
-      { id: 'daegu', name: '대구' },
-      { id: 'ulsan', name: '울산' },
-      { id: 'gyeongnam', name: '경남' },
-      { id: 'busan', name: '부산' },
-      { id: 'jeonbuk', name: '전북' },
-      { id: 'gwangju', name: '광주' },
-      { id: 'jeonnam', name: '전남' },
-      { id: 'jeju', name: '제주도' },
-      { id: 'dokdo', name: '독도' }
-    ];
-
     const initialKobeData = {
       checklistThu: initialChecklistThu,
       checklistJjong: initialChecklistJjong,
-      visitedRegions: ['seoul', 'gyeonggi'],
       travel: [
         { id: 101, day: 1, icon: 'fa-plane-departure', time: '13:20', title: '인천공항 출발 🛫', memo: '인천공항 탑승 수속 & 면세점 구경', query: 'Incheon International Airport', showMap: false },
         { id: 102, day: 1, icon: 'fa-plane-arrival', time: '15:00', title: '고베공항 도착 🛬', memo: '입국 수속 및 포트라이너(Port Liner) 타고 산노미야역으로 이동', query: 'Kobe Airport', showMap: true },
@@ -1038,7 +858,6 @@
         appData = {
           checklistThu: remoteData.checklistThu || initialChecklistThu,
           checklistJjong: remoteData.checklistJjong || initialChecklistJjong,
-          visitedRegions: remoteData.visitedRegions || ['seoul', 'gyeonggi'],
           travel: (remoteData.travel && remoteData.travel.length > 0) ? remoteData.travel : initialKobeData.travel,
           places: (remoteData.places && remoteData.places.length > 0) ? remoteData.places : initialKobeData.places,
           gifticons: remoteData.gifticons || []
@@ -1079,7 +898,6 @@
       if (activeNav === 'travel') renderTravelView();
       if (activeNav === 'places') renderPlaces();
       if (activeNav === 'weather') loadWeatherData();
-      if (activeNav === 'map') renderKoreaMap();
       if (activeNav === 'coupons') renderGifticons();
     }
 
@@ -1171,48 +989,6 @@
       renderChecklist();
     }
 
-    // ----------------------------------------------------
-    // 대한민국 여행 지도 기능
-    // ----------------------------------------------------
-    function toggleRegion(regionId) {
-      if (!appData.visitedRegions) appData.visitedRegions = [];
-      const index = appData.visitedRegions.indexOf(regionId);
-      if (index > -1) {
-        appData.visitedRegions.splice(index, 1);
-      } else {
-        appData.visitedRegions.push(regionId);
-      }
-      saveData();
-      renderKoreaMap();
-    }
-
-    function renderKoreaMap() {
-      const visited = appData.visitedRegions || [];
-      const count = visited.length;
-      
-      const badge = document.getElementById('mapBadgeText');
-      if (badge) badge.innerText = `🗺️ 대한민국 17개 지역 중 ${count}곳 정복! ❤️`;
-
-      // SVG 지도 요소 클래스 업데이트
-      ALL_REGIONS.forEach(reg => {
-        const svgEl = document.getElementById(`reg-${reg.id}`);
-        if (svgEl) {
-          if (visited.includes(reg.id)) svgEl.classList.add('visited');
-          else svgEl.classList.remove('visited');
-        }
-      });
-
-      // 하단 칩 목록 렌더링
-      const chipsContainer = document.getElementById('regionChipsContainer');
-      if (chipsContainer) {
-        chipsContainer.innerHTML = ALL_REGIONS.map(reg => `
-          <button class="region-chip ${visited.includes(reg.id) ? 'active' : ''}" onclick="toggleRegion('${reg.id}')">
-            ${visited.includes(reg.id) ? '❤️ ' : ''}${reg.name}
-          </button>
-        `).join('');
-      }
-    }
-
     // D-Day 계산
     function calculateDDay() {
       const tripDate = new Date('2026-08-30');
@@ -1237,7 +1013,7 @@
       if (btn) btn.classList.add('active');
 
       const fab = document.getElementById('mainFab');
-      if (nav === 'weather' || nav === 'map') fab.style.display = 'none';
+      if (nav === 'weather') fab.style.display = 'none';
       else fab.style.display = 'flex';
 
       renderAll();
