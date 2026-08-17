@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -64,7 +64,7 @@
       justify-content: center;
       backdrop-filter: blur(4px);
     }
-    .header-title { font-size: 1.25rem; font-weight: 700; }
+    .header-title { font-size: 1.25rem; font-weight: 800; }
     .d-day-pill {
       background: rgba(255, 255, 255, 0.25);
       backdrop-filter: blur(8px);
@@ -97,13 +97,14 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
     .sub-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
+    .sub-tabs::-webkit-scrollbar { display: none; }
     .sub-tab-btn {
       background: white;
       border: 1px solid var(--border);
       color: var(--text-sub);
       padding: 8px 16px;
       border-radius: 12px;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.85rem;
       cursor: pointer;
       white-space: nowrap;
@@ -215,6 +216,8 @@
 
     .place-card { display: flex; gap: 14px; align-items: center; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; box-shadow: var(--shadow); border: 1px solid var(--border); }
     .place-category-icon { width: 46px; height: 46px; border-radius: 14px; background: #fff0f3; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .place-actions { display: flex; align-items: center; gap: 8px; }
+    .btn-place-del { background: none; border: none; color: #ff7675; font-size: 0.9rem; cursor: pointer; padding: 6px; }
 
     .weather-hero { background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); color: white; border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 8px 24px rgba(9, 132, 227, 0.25); }
     .weather-hero-top { display: flex; justify-content: space-between; align-items: center; }
@@ -223,13 +226,15 @@
     .weather-condition { font-size: 0.95rem; font-weight: 600; }
     .weather-extra-info { display: flex; gap: 14px; margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.25); font-size: 0.8rem; }
     .weather-forecast-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 16px; }
+    .weather-forecast-row::-webkit-scrollbar { display: none; }
     .forecast-card { background: white; border-radius: 14px; padding: 12px 10px; min-width: 74px; text-align: center; box-shadow: var(--shadow); border: 1px solid var(--border); flex-shrink: 0; }
     .forecast-day { font-size: 0.75rem; font-weight: 700; color: #636e72; margin-bottom: 4px; }
     .forecast-icon { font-size: 1.3rem; margin: 4px 0; }
     .forecast-temp { font-size: 0.78rem; font-weight: 700; color: #2d3436; }
     .cloth-tip-box { background: #fff8e7; border: 1px solid #ffeaa7; border-radius: 16px; padding: 16px; font-size: 0.84rem; color: #634a00; line-height: 1.5; }
 
-    .fab { position: fixed; right: 20px; bottom: 86px; width: 52px; height: 52px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 8px 20px rgba(255, 94, 126, 0.4); cursor: pointer; border: none; z-index: 50; }
+    .fab { position: fixed; right: 20px; bottom: 86px; width: 54px; height: 54px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 8px 20px rgba(255, 94, 126, 0.4); cursor: pointer; border: none; z-index: 50; transition: transform 0.2s; }
+    .fab:active { transform: scale(0.92); }
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background: white; box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05); display: flex; justify-content: space-around; align-items: center; z-index: 50; border-radius: 20px 20px 0 0; }
     .nav-item { display: flex; flex-direction: column; align-items: center; color: #a4b0be; font-size: 0.72rem; font-weight: 600; cursor: pointer; gap: 4px; border: none; background: none; width: 33%; }
     .nav-item i { font-size: 1.25rem; }
@@ -239,9 +244,9 @@
     .modal-overlay.active { display: flex; z-index: 999; opacity: 1; pointer-events: auto; }
     .modal-content { background: white; border-radius: 24px; width: 100%; max-width: 440px; padding: 24px; max-height: 90vh; overflow-y: auto; }
     .form-group { margin-bottom: 14px; }
-    .form-group label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 6px; color: #555; }
-    .form-control { width: 100%; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 0.9rem; outline: none; }
-    .btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+    .form-group label { display: block; font-size: 0.88rem; font-weight: 700; margin-bottom: 6px; color: #333; }
+    .form-control { width: 100%; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 0.95rem; outline: none; }
+    .btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-size: 0.95rem; font-weight: 700; cursor: pointer; }
     .btn-primary { background: var(--primary); color: white; }
     .btn-secondary { background: #f1f2f6; color: #57606f; }
   </style>
@@ -308,6 +313,8 @@
         <button class="sub-tab-btn" onclick="filterPlaces('고베', this)">🥩 고베</button>
         <button class="sub-tab-btn" onclick="filterPlaces('아리마', this)">♨️ 아리마온천</button>
         <button class="sub-tab-btn" onclick="filterPlaces('카페', this)">☕ 카페</button>
+        <button class="sub-tab-btn" onclick="filterPlaces('쇼핑', this)">🛍️ 쇼핑</button>
+        <button class="sub-tab-btn" onclick="filterPlaces('맛집', this)">🍣 맛집</button>
       </div>
       <div id="placesContainer"></div>
     </div>
@@ -348,7 +355,7 @@
   <!-- 일정/장소 추가 모달 -->
   <div class="modal-overlay" id="addModal">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <h3 style="font-size: 1.15rem; margin-bottom: 16px;">새 일정 / 장소 추가</h3>
+      <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 16px;">새 일정 / 맛집 추가</h3>
       <div class="form-group">
         <label>구분</label>
         <select class="form-control" id="itemType" onchange="toggleFormFields()">
@@ -356,6 +363,8 @@
           <option value="place">🍽️ 맛집 / 가볼 곳</option>
         </select>
       </div>
+
+      <!-- 여행 일정 전용 필드 -->
       <div id="travelFields">
         <div class="form-group">
           <label>일자 (Day)</label>
@@ -371,13 +380,28 @@
           <input type="text" class="form-control" id="travelTime" placeholder="예: 11:30">
         </div>
       </div>
+
+      <!-- 맛집/가볼곳 전용 카테고리 태그 선택 필드 -->
+      <div id="placeFields" style="display: none;">
+        <div class="form-group">
+          <label>카테고리 태그 🏷️</label>
+          <select class="form-control" id="placeCategory">
+            <option value="고베">🥩 고베</option>
+            <option value="아리마">♨️ 아리마온천</option>
+            <option value="카페">☕ 카페</option>
+            <option value="쇼핑">🛍️ 쇼핑</option>
+            <option value="맛집">🍣 맛집</option>
+          </select>
+        </div>
+      </div>
+
       <div class="form-group">
-        <label id="nameLabel">일정 제목/장소</label>
-        <input type="text" class="form-control" id="itemName" placeholder="예: 양산가게 쇼핑">
+        <label id="nameLabel">일정 제목 / 장소명</label>
+        <input type="text" class="form-control" id="itemName" placeholder="예: 고베 타다 / 양산가게">
       </div>
       <div class="form-group">
         <label>메모 & 설명 (지도 링크 붙여넣기 가능)</label>
-        <textarea class="form-control" id="itemMemo" rows="2" placeholder="메뉴, 탑승장소, 구글지도 링크(https://maps.app.goo.gl/...) 등"></textarea>
+        <textarea class="form-control" id="itemMemo" rows="2" placeholder="메뉴, 예약정보, 구글지도 링크(https://maps.app.goo.gl/...) 등"></textarea>
       </div>
       <div style="display: flex; gap: 10px; margin-top: 20px;">
         <button class="btn btn-secondary" onclick="closeModal()">취소</button>
@@ -598,7 +622,6 @@
       }
     }
 
-    // 시간 오름차순 변환 함수
     function parseTimeToMinutes(timeStr) {
       if (!timeStr) return 9999;
       const clean = timeStr.replace(/[^0-9:]/g, '');
@@ -612,12 +635,10 @@
       return 9999;
     }
 
-    // ★ 텍스트 안에서 구글 지도 링크를 추출하거나, 일본 고베 지역을 자동 지정하는 스마트 헬퍼
     function getSmartMapInfo(item) {
       const rawText = (item.query || '') + ' ' + (item.memo || '') + ' ' + (item.title || '');
       const urlMatch = rawText.match(/(https?:\/\/[^\s]+)/g);
       
-      // 1. 직접 지도 링크가 포함된 경우
       if (urlMatch && urlMatch.length > 0) {
         return {
           directUrl: urlMatch[0],
@@ -625,7 +646,6 @@
         };
       }
 
-      // 2. 검색어인 경우 -> 한국 장소가 검색되지 않도록 일본 고베(Kobe, Japan)를 강제 추가
       let cleanQuery = (item.query || item.title || '').trim();
       if (!cleanQuery.includes('고베') && !cleanQuery.includes('Kobe') && !cleanQuery.includes('아리마') && !cleanQuery.includes('Arima') && !cleanQuery.includes('Japan') && !cleanQuery.includes('인천')) {
         cleanQuery += ', Kobe, Japan';
@@ -647,7 +667,6 @@
         return;
       }
 
-      // 시간 자동 정렬
       items.sort((a, b) => parseTimeToMinutes(a.time) - parseTimeToMinutes(b.time));
 
       container.innerHTML = items.map(item => {
@@ -703,25 +722,58 @@
       renderPlaces();
     }
 
+    function getPlaceCategoryIcon(category) {
+      switch (category) {
+        case '카페': return 'fa-mug-hot';
+        case '아리마': return 'fa-hot-tub-person';
+        case '쇼핑': return 'fa-bag-shopping';
+        case '맛집': return 'fa-bowl-rice';
+        case '고베':
+        default: return 'fa-utensils';
+      }
+    }
+
+    function deletePlace(id) {
+      if (confirm('이 맛집/장소를 목록에서 삭제할까요?')) {
+        appData.places = (appData.places || []).filter(p => p.id !== id);
+        saveData();
+        renderPlaces();
+      }
+    }
+
     function renderPlaces() {
       const container = document.getElementById('placesContainer');
-      const filtered = currentPlaceFilter === 'all' ? (appData.places || []) : (appData.places || []).filter(p => p.category === currentPlaceFilter);
+      const filtered = currentPlaceFilter === 'all' 
+        ? (appData.places || []) 
+        : (appData.places || []).filter(p => p.category === currentPlaceFilter);
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div style="text-align:center; color:#a4b0be; padding:40px 10px;">등록된 맛집/장소가 없습니다. 우측 하단의 <b>+</b> 버튼을 눌러 추가해보세요!</div>';
+        return;
+      }
+
       container.innerHTML = filtered.map(p => {
         let q = p.query || p.title;
         if (!q.includes('Kobe') && !q.includes('고베') && !q.includes('Japan')) q += ', Kobe, Japan';
+        const isUrl = q.startsWith('http');
+        const mapUrl = isUrl ? q : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+
         return `
           <div class="place-card">
             <div class="place-category-icon">
-              <i class="fa-solid ${p.category === '카페' ? 'fa-mug-hot' : (p.category === '아리마' ? 'fa-hot-tub-person' : 'fa-utensils')}"></i>
+              <i class="fa-solid ${getPlaceCategoryIcon(p.category)}"></i>
             </div>
             <div style="flex:1;">
-              <span style="font-size:0.72rem; color:var(--primary); font-weight:700;">#${p.category}</span>
-              <div style="font-size:0.98rem; font-weight:700; margin:2px 0;">${p.title}</div>
-              <div style="font-size:0.8rem; color:var(--text-sub); line-height:1.3;">${p.desc}</div>
+              <span style="font-size:0.75rem; color:var(--primary); font-weight:800;">#${p.category || '고베'}</span>
+              <div style="font-size:1rem; font-weight:800; margin:2px 0;">${p.title}</div>
+              <div style="font-size:0.82rem; color:var(--text-sub); line-height:1.35;">${p.desc || ''}</div>
             </div>
-            <a class="btn-maps" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}" target="_blank">
-              <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
+            <div class="place-actions">
+              <a class="btn-maps" href="${mapUrl}" target="_blank">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </a>
+              <button class="btn-place-del" onclick="deletePlace(${p.id})"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
           </div>
         `;
       }).join('');
@@ -804,10 +856,12 @@
       document.getElementById('itemMemo').value = '';
       document.getElementById('travelTime').value = '';
     }
+
     function toggleFormFields() {
       const type = document.getElementById('itemType').value;
       document.getElementById('travelFields').style.display = (type === 'travel') ? 'block' : 'none';
-      document.getElementById('nameLabel').innerText = (type === 'place') ? '맛집/장소명' : '일정 제목/장소';
+      document.getElementById('placeFields').style.display = (type === 'place') ? 'block' : 'none';
+      document.getElementById('nameLabel').innerText = (type === 'place') ? '맛집 / 장소명' : '일정 제목 / 장소';
     }
 
     function getAutoIcon(text) {
@@ -851,7 +905,14 @@
         }
       } else {
         if (!appData.places) appData.places = [];
-        appData.places.push({ id: Date.now(), category: '고베', title: name, desc: memo, query: name });
+        const chosenCategory = document.getElementById('placeCategory').value || '고베';
+        appData.places.push({
+          id: Date.now(),
+          category: chosenCategory,
+          title: name,
+          desc: memo,
+          query: name
+        });
         saveData();
         renderPlaces();
       }
