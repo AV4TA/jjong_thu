@@ -529,63 +529,58 @@
       document.getElementById('btnSched').className = 'result-btn' + (res === 'scheduled' || res === 'canceled' ? ' active-sched' : '');
     }
 
-    // ★ 1초 초고속 KBO 데이터 패치 엔진
+    // 초고속 KBO 경기 데이터 조회
     async function fetchGameAuto(dateStr) {
       if (!dateStr) return;
       const statusText = document.getElementById('statusText');
       const statusIcon = document.getElementById('statusIcon');
       statusIcon.className = 'fa-solid fa-circle-notch fa-spin';
-      statusText.innerText = `${dateStr} 경기 정보 조회 중...`;
+      statusText.innerText = `${dateStr} 경기 정보 분석 중...`;
 
-      const cleanDate = dateStr.replace(/-/g, '');
       const teamMap = {
         'LG': 'LG 트윈스', 'SSG': 'SSG 랜더스', '두산': '두산 베어스', 'KIA': 'KIA 타이거즈',
         '삼성': '삼성 라이온즈', '롯데': '롯데 자이언츠', '한화': '한화 이글스', 'NC': 'NC 다이노스', '키움': '키움 히어로즈'
       };
 
-      let fetched = false;
+      try {
+        const targetUrl = `https://api-gw.sports.naver.com/schedule/games?upperCategoryId=kbaseball&fromDate=${dateStr}&toDate=${dateStr}&size=50`;
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
 
-      // 1. JSONP 다음 스포츠 호출 (가장 빠름)
-      const callbackName = 'kbo_jsonp_' + Date.now();
-      const script = document.createElement('script');
-      script.src = `https://score.sports.media.daum.net/plan/do/kbo/schedule_day.json?game_date=${cleanDate}&callback=${callbackName}`;
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
 
-      const finishTimer = setTimeout(() => {
-        if (!fetched) {
-          statusIcon.className = 'fa-solid fa-check';
-          statusText.innerText = `조회 완료! 상대팀과 결과를 확인해주세요.`;
-        }
-      }, 1500);
+        const res = await fetch(proxyUrl, { signal: controller.signal });
+        clearTimeout(timeoutId);
 
-      window[callbackName] = function(daumData) {
-        fetched = true;
-        clearTimeout(finishTimer);
-        statusIcon.className = 'fa-solid fa-bolt';
-        
-        const list = (daumData && daumData.list) ? daumData.list : [];
-        const ktGame = list.find(g => 
-          (g.home_name && g.home_name.includes('KT')) || 
-          (g.away_name && g.away_name.includes('KT')) ||
-          g.home_id === 'KT' || g.away_id === 'KT'
+        if (!res.ok) throw new Error("Fetch failed");
+        const data = await res.json();
+
+        const games = (data && data.result && data.result.games) ? data.result.games : [];
+        const ktGame = games.find(g => 
+          (g.homeTeamName && g.homeTeamName.includes('KT')) || 
+          (g.awayTeamName && g.awayTeamName.includes('KT')) ||
+          g.homeTeamCode === 'KT' || g.awayTeamCode === 'KT'
         );
 
+        statusIcon.className = 'fa-solid fa-bolt';
+
         if (ktGame) {
-          const isHome = (ktGame.home_name && ktGame.home_name.includes('KT')) || ktGame.home_id === 'KT';
-          const oppRaw = isHome ? ktGame.away_name : ktGame.home_name;
-          const oppName = teamMap[oppRaw] || Object.values(teamMap).find(t => t.includes(oppRaw)) || oppRaw;
+          const isHome = (ktGame.homeTeamName && ktGame.homeTeamName.includes('KT')) || ktGame.homeTeamCode === 'KT';
+          const oppRaw = isHome ? ktGame.awayTeamName : ktGame.homeTeamName;
+          const oppName = teamMap[oppRaw] || oppRaw;
           const stadium = ktGame.stadium || (isHome ? '수원 케이티위즈파크' : '원정구장');
           const stadiumText = isHome ? `수원 위즈파크 (홈)` : `${stadium} (원정)`;
 
           selectTeam(oppName);
           document.getElementById('gameStadium').value = stadiumText;
 
-          const ktScore = isHome ? ktGame.home_score : ktGame.away_score;
-          const oppScore = isHome ? ktGame.away_score : ktGame.home_score;
+          const ktScore = isHome ? ktGame.homeTeamScore : ktGame.awayTeamScore;
+          const oppScore = isHome ? ktGame.awayTeamScore : ktGame.homeTeamScore;
 
-          if (ktGame.state && (ktGame.state.includes('취소') || ktGame.state.includes('CANCEL'))) {
+          if (ktGame.status && (ktGame.status.includes('취소') || ktGame.statusCode === 'CANCEL')) {
             selectResult('scheduled');
             document.getElementById('gameScore').value = '취소';
-            statusText.innerText = `🌧️ ${oppName}전 [우천/경기 취소]로 확인되었습니다.`;
+            statusText.innerText = `🌧️ ${oppName}전 [우천/경기 취소]`;
           } else if (ktScore !== undefined && oppScore !== undefined && ktScore !== null && oppScore !== null && ktScore !== '') {
             const scoreStr = `KT ${ktScore} : ${oppScore} ${oppRaw}`;
             document.getElementById('gameScore').value = scoreStr;
@@ -605,13 +600,12 @@
             statusText.innerText = `⚪ ${oppName}전 [직관 예정] 데이터 자동 로드`;
           }
         } else {
-          statusText.innerText = `해당 날짜에는 kt wiz 공식 일정이 없습니다.`;
+          statusText.innerText = `해당 날짜에는 kt wiz 공식 경기 일정이 없습니다.`;
         }
-
-        try { document.body.removeChild(script); delete window[callbackName]; } catch(e){}
-      };
-
-      document.body.appendChild(script);
+      } catch (err) {
+        statusIcon.className = 'fa-solid fa-check';
+        statusText.innerText = `날짜 설정 완료. 상대팀과 결과를 선택해주세요.`;
+      }
     }
 
     function saveGame() {
