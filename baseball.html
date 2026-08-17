@@ -63,10 +63,10 @@
     }
     .header-title { font-size: 1.25rem; font-weight: 900; letter-spacing: -0.5px; }
 
-    /* 상단 2개 탭 */
+    /* 상단 4개 탭 */
     .tab-bar {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       background: white;
       padding: 6px;
       border-radius: 16px;
@@ -79,14 +79,14 @@
       background: transparent;
       padding: 10px 4px;
       border-radius: 12px;
-      font-size: 0.88rem;
+      font-size: 0.82rem;
       font-weight: 800;
       color: var(--text-sub);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 4px;
       transition: all 0.2s;
     }
     .tab-btn.active {
@@ -99,7 +99,7 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* 대시보드 요약 카드 */
+    /* 요약 카드 */
     .dashboard-card {
       background: white;
       border-radius: 20px;
@@ -157,7 +157,7 @@
       text-align: center;
     }
 
-    /* 직관 기록 리스트 카드 */
+    /* 카드 리스트 */
     .game-list { display: flex; flex-direction: column; gap: 12px; }
     .game-card {
       background: white;
@@ -238,6 +238,25 @@
     .player-name { font-weight: 700; color: #2f3542; }
     .player-pos { font-size: 0.7rem; color: var(--text-sub); }
 
+    /* 순위 & 기록 테이블 */
+    .table-card {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .custom-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.82rem; }
+    .custom-table th { padding: 10px 4px; font-weight: 800; color: var(--text-sub); border-bottom: 1.5px solid #eef0f4; }
+    .custom-table td { padding: 11px 4px; font-weight: 700; border-bottom: 1px solid #f8f9fa; color: #2f3542; }
+    .custom-table tr.kt-row { background: #fff0f3; font-weight: 900; color: var(--kt-red); }
+    .custom-table tr.kt-row td { color: var(--kt-red); }
+
+    .sub-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+    .sub-tab-btn { flex: 1; padding: 8px; border: 1px solid var(--border); background: #f8f9fa; border-radius: 10px; font-size: 0.82rem; font-weight: 800; cursor: pointer; color: #57606f; }
+    .sub-tab-btn.active { background: #2f3542; color: white; border-color: #2f3542; }
+
     /* FAB & Modal */
     .fab {
       position: fixed; right: 20px; bottom: 24px; width: 56px; height: 56px; border-radius: 50%;
@@ -263,16 +282,18 @@
         <a href="index.html" class="btn-home" title="홈으로"><i class="fa-solid fa-house"></i></a>
         <div>
           <div class="header-title">위즈파크 직관 일기 ⚾</div>
-          <p style="font-size: 0.78rem; opacity: 0.9; margin-top: 2px;">kt wiz 직관 승률 🔥</p>
+          <p style="font-size: 0.78rem; opacity: 0.9; margin-top: 2px;">뚜쫑 커플의 kt wiz 직관 승률 🔥</p>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- 깔끔한 2개 탭 -->
+  <!-- 4대 메인 탭 -->
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('tab-diary', this)"><i class="fa-solid fa-ticket"></i> 직관 다이어리</button>
-    <button class="tab-btn" onclick="switchTab('tab-today', this)"><i class="fa-solid fa-calendar-day"></i> 오늘 경기 & 라인업</button>
+    <button class="tab-btn active" onclick="switchTab('tab-diary', this)"><i class="fa-solid fa-ticket"></i> 직관기록</button>
+    <button class="tab-btn" onclick="switchTab('tab-today', this)"><i class="fa-solid fa-calendar-day"></i> 오늘경기</button>
+    <button class="tab-btn" onclick="switchTab('tab-rank', this)"><i class="fa-solid fa-ranking-star"></i> 리그순위</button>
+    <button class="tab-btn" onclick="switchTab('tab-player', this)"><i class="fa-solid fa-users"></i> 선수기록</button>
   </div>
 
   <div class="container">
@@ -318,6 +339,54 @@
               경기 1~2시간 전 라인업이 자동 등록됩니다.
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 탭 3: KBO 리그 순위 -->
+    <div id="tab-rank" class="tab-content">
+      <div class="table-card">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>순위</th><th>구단</th><th>경기</th><th>승</th><th>무</th><th>패</th><th>승률</th><th>게임차</th>
+            </tr>
+          </thead>
+          <tbody id="rankingTableBody">
+            <tr><td colspan="8" style="padding:20px 0;">순위 데이터를 불러오는 중...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 탭 4: KT 선수단 기록 -->
+    <div id="tab-player" class="tab-content">
+      <div class="table-card">
+        <div class="sub-tabs">
+          <button class="sub-tab-btn active" id="btnTabHitter" onclick="switchPlayerCategory('hitter')">⚾ 타자 기록</button>
+          <button class="sub-tab-btn" id="btnTabPitcher" onclick="switchPlayerCategory('pitcher')">🔥 투수 기록</button>
+        </div>
+
+        <div id="hitterTableBox">
+          <table class="custom-table">
+            <thead>
+              <tr><th>선수</th><th>타율</th><th>안타</th><th>홈런</th><th>타점</th><th>OPS</th></tr>
+            </thead>
+            <tbody id="hitterTableBody">
+              <tr><td colspan="6" style="padding:20px 0;">타자 기록 로딩 중...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="pitcherTableBox" style="display:none;">
+          <table class="custom-table">
+            <thead>
+              <tr><th>선수</th><th>평자책</th><th>승</th><th>패</th><th>세이브</th><th>탈삼진</th></tr>
+            </thead>
+            <tbody id="pitcherTableBody">
+              <tr><td colspan="6" style="padding:20px 0;">투수 기록 로딩 중...</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -368,12 +437,22 @@
       document.getElementById(tabId).classList.add('active');
     }
 
+    function switchPlayerCategory(type) {
+      const isHitter = type === 'hitter';
+      document.getElementById('btnTabHitter').classList.toggle('active', isHitter);
+      document.getElementById('btnTabPitcher').classList.toggle('active', !isHitter);
+      document.getElementById('hitterTableBox').style.display = isHitter ? 'block' : 'none';
+      document.getElementById('pitcherTableBox').style.display = isHitter ? 'none' : 'block';
+    }
+
     async function loadKboJson() {
       try {
         const res = await fetch('./ktwiz_data.json?t=' + Date.now());
         if (res.ok) {
           serverKboData = await res.json();
           renderTodayMatch(serverKboData.todayMatch, serverKboData.todayLineup);
+          renderRankings(serverKboData.rankings);
+          renderPlayerStats(serverKboData.playerStats);
         }
       } catch(e){ console.warn("JSON 로드 대기"); }
     }
@@ -403,6 +482,51 @@
             </div>
           `).join('');
         }
+      }
+    }
+
+    function renderRankings(rankings) {
+      const tbody = document.getElementById('rankingTableBody');
+      if (!rankings || rankings.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="padding:20px 0;">순위 정보가 없습니다.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = rankings.map(r => `
+        <tr class="${r.teamName && (r.teamName.includes('KT') || r.teamName.includes('kt')) ? 'kt-row' : ''}">
+          <td><b>${r.rank}</b></td>
+          <td>${r.teamName}</td>
+          <td>${r.games}</td>
+          <td>${r.win}</td>
+          <td>${r.draw}</td>
+          <td>${r.lose}</td>
+          <td>${r.wra}</td>
+          <td>${r.gameDiff}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderPlayerStats(stats) {
+      if (!stats) return;
+      const hBody = document.getElementById('hitterTableBody');
+      if (stats.batters && stats.batters.length > 0) {
+        hBody.innerHTML = stats.batters.map(b => `
+          <tr>
+            <td><b>${b.name}</b></td><td>${b.hra}</td><td>${b.hit}</td><td>${b.hr}</td><td>${b.rbi}</td><td>${b.ops}</td>
+          </tr>
+        `).join('');
+      } else {
+        hBody.innerHTML = `<tr><td colspan="6" style="padding:20px 0;">타자 기록이 없습니다.</td></tr>`;
+      }
+
+      const pBody = document.getElementById('pitcherTableBody');
+      if (stats.pitchers && stats.pitchers.length > 0) {
+        pBody.innerHTML = stats.pitchers.map(p => `
+          <tr>
+            <td><b>${p.name}</b></td><td>${p.era}</td><td>${p.win}</td><td>${p.lose}</td><td>${p.save}</td><td>${p.so}</td>
+          </tr>
+        `).join('');
+      } else {
+        pBody.innerHTML = `<tr><td colspan="6" style="padding:20px 0;">투수 기록이 없습니다.</td></tr>`;
       }
     }
 
