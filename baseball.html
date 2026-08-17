@@ -190,10 +190,10 @@
 
     .game-card-body { padding: 16px 14px; display: flex; flex-direction: column; gap: 8px; }
     .matchup-box { display: flex; align-items: center; justify-content: space-around; }
-    .team-col { display: flex; flex-direction: column; align-items: center; gap: 3px; }
-    .team-name { font-size: 1.1rem; font-weight: 900; }
+    .team-col { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 80px; }
+    .team-name { font-size: 1.05rem; font-weight: 900; text-align: center; }
     .team-name.kt { color: var(--kt-red); }
-    .score-text { font-size: 1.4rem; font-weight: 900; color: #2f3542; }
+    .score-text { font-size: 1.25rem; font-weight: 900; color: #2f3542; letter-spacing: 0.5px; }
     .game-stadium-tag { text-align: center; font-size: 0.8rem; color: var(--text-sub); font-weight: 700; }
 
     .game-card-footer {
@@ -414,6 +414,35 @@
   </div>
 
   <script>
+    const teamFullMap = {
+      'LG': 'LG 트윈스', 'SSG': 'SSG 랜더스', '두산': '두산 베어스', 'KIA': 'KIA 타이거즈',
+      '삼성': '삼성 라이온즈', '롯데': '롯데 자이언츠', '한화': '한화 이글스', 'NC': 'NC 다이노스', '키움': '키움 히어로즈', 'KT': 'kt wiz'
+    };
+
+    function normalizeTeam(name) {
+      if (!name) return '상대팀';
+      for (const [k, v] of Object.entries(teamFullMap)) {
+        if (name.includes(k)) return v;
+      }
+      return name;
+    }
+
+    function normalizeScore(score, oppName) {
+      if (!score) return 'VS';
+      if (score.includes('KT') || score.includes('VS') || score.includes('취소')) return score;
+      // '5 : 4' 처럼 숫자만 있는 경우
+      const parts = score.split(':').map(s => s.trim());
+      if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+        return `KT ${parts[0]} : ${parts[1]} ${normalizeTeam(oppName).split(' ')[0]}`;
+      }
+      return score;
+    }
+
+    function normalizeStadium(stadium) {
+      if (!stadium || stadium === '수원') return '수원 위즈파크 (홈)';
+      return stadium;
+    }
+
     const firebaseConfig = {
       apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
       authDomain: "kobe-couple-app.firebaseapp.com",
@@ -467,9 +496,9 @@
         return;
       }
       document.getElementById('todayDateTxt').innerText = `📅 ${todayMatch.date} (${todayMatch.time || '18:30'})`;
-      document.getElementById('todayStadiumTxt').innerText = `📍 ${todayMatch.stadium || '수원 위즈파크'}`;
+      document.getElementById('todayStadiumTxt').innerText = `📍 ${normalizeStadium(todayMatch.stadium)}`;
       document.getElementById('todayScoreOrVs').innerText = todayMatch.score;
-      document.getElementById('todayOpponentTxt').innerText = todayMatch.opponent;
+      document.getElementById('todayOpponentTxt').innerText = normalizeTeam(todayMatch.opponent);
 
       if (todayLineup) {
         document.getElementById('todayPitcherTxt').innerText = `선발: ${todayLineup.pitcher || '미발표'}`;
@@ -488,7 +517,7 @@
     function renderRankings(rankings) {
       const tbody = document.getElementById('rankingTableBody');
       if (!rankings || rankings.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="padding:20px 0;">순위 정보가 없습니다.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="padding:20px 0;">순위 데이터를 불러오는 중...</td></tr>`;
         return;
       }
       tbody.innerHTML = rankings.map(r => `
@@ -497,7 +526,7 @@
           <td>${r.teamName}</td>
           <td>${r.games}</td>
           <td>${r.win}</td>
-          <td>${r.draw}</td>
+          <td>${r.draw || 0}</td>
           <td>${r.lose}</td>
           <td>${r.wra}</td>
           <td>${r.gameDiff}</td>
@@ -583,25 +612,31 @@
       }
 
       const resText = { win: 'WIN 🔴', lose: 'LOSE ⚫', draw: 'DRAW 🟡', scheduled: '직관 예정 ⚪', canceled: '취소 🌧️' };
-      container.innerHTML = list.map(g => `
-        <div class="game-card">
-          <div class="game-card-header">
-            <span class="game-date">📅 ${g.date}</span>
-            <span class="game-result-badge ${g.result || 'scheduled'}">${resText[g.result] || '예정'}</span>
-          </div>
-          <div class="game-card-body">
-            <div class="matchup-box">
-              <div class="team-col"><span class="team-name kt">kt wiz</span></div>
-              <span class="score-text">${g.score || 'VS'}</span>
-              <div class="team-col"><span class="team-name">${g.opponent}</span></div>
+      container.innerHTML = list.map(g => {
+        const fullOpponent = normalizeTeam(g.opponent);
+        const formattedScore = normalizeScore(g.score, fullOpponent);
+        const formattedStadium = normalizeStadium(g.stadium);
+
+        return `
+          <div class="game-card">
+            <div class="game-card-header">
+              <span class="game-date">📅 ${g.date}</span>
+              <span class="game-result-badge ${g.result || 'scheduled'}">${resText[g.result] || '예정'}</span>
             </div>
-            <div class="game-stadium-tag">📍 ${g.stadium}</div>
+            <div class="game-card-body">
+              <div class="matchup-box">
+                <div class="team-col"><span class="team-name kt">kt wiz</span></div>
+                <span class="score-text">${formattedScore}</span>
+                <div class="team-col"><span class="team-name">${fullOpponent}</span></div>
+              </div>
+              <div class="game-stadium-tag">📍 ${formattedStadium}</div>
+            </div>
+            <div class="game-card-footer">
+              <button class="btn-del-game" onclick="deleteGame('${g.id}')"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
           </div>
-          <div class="game-card-footer">
-            <button class="btn-del-game" onclick="deleteGame('${g.id}')"><i class="fa-solid fa-trash-can"></i></button>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     function matchKtGame(dateStr) {
@@ -614,9 +649,9 @@
         document.getElementById('autoStadium').value = gameInfo.stadium;
 
         const resLabels = { win: '🔴 승리', lose: '⚫ 패배', draw: '🟡 무승부', scheduled: '⚪ 직관 예정', canceled: '🌧️ 취소' };
-        document.getElementById('txtOpponent').innerText = `${gameInfo.opponent} (${gameInfo.isHome ? '홈' : '원정'})`;
+        document.getElementById('txtOpponent').innerText = `${normalizeTeam(gameInfo.opponent)} (${gameInfo.isHome ? '홈' : '원정'})`;
         document.getElementById('txtResult').innerText = resLabels[gameInfo.result] || '⚪ 직관 예정';
-        document.getElementById('txtStadium').innerText = gameInfo.stadium;
+        document.getElementById('txtStadium').innerText = normalizeStadium(gameInfo.stadium);
       } else {
         document.getElementById('autoOpponent').value = '';
         document.getElementById('txtOpponent').innerText = '공식 경기 없음';
