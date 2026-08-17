@@ -1,6 +1,1041 @@
 {
-  "updatedAt": "2026-08-17 04:16:25",
+  "updatedAt": "2026-08-17 04:31:08",
   "schedule": {
+    "2026-03-12": {
+      "date": "2026-03-12",
+      "opponent": "롯데 자이언츠",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 3 : 4 롯데",
+      "statusCode": "RESULT"
+    },
+    "2026-03-13": {
+      "date": "2026-03-13",
+      "opponent": "롯데 자이언츠",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "draw",
+      "score": "KT 6 : 6 롯데",
+      "statusCode": "RESULT"
+    },
+    "2026-03-14": {
+      "date": "2026-03-14",
+      "opponent": "KIA 타이거즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "draw",
+      "score": "KT 10 : 10 KIA",
+      "statusCode": "RESULT"
+    },
+    "2026-03-15": {
+      "date": "2026-03-15",
+      "opponent": "KIA 타이거즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 4 : 5 KIA",
+      "statusCode": "RESULT"
+    },
+    "2026-03-16": {
+      "date": "2026-03-16",
+      "opponent": "LG 트윈스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 3 : 5 LG",
+      "statusCode": "RESULT"
+    },
+    "2026-03-17": {
+      "date": "2026-03-17",
+      "opponent": "LG 트윈스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 8 : 5 LG",
+      "statusCode": "RESULT"
+    },
+    "2026-03-19": {
+      "date": "2026-03-19",
+      "opponent": "키움 히어로즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 4 : 11 키움",
+      "statusCode": "RESULT"
+    },
+    "2026-03-20": {
+      "date": "2026-03-20",
+      "opponent": "키움 히어로즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 4 : 1 키움",
+      "statusCode": "RESULT"
+    },
+    "2026-03-21": {
+      "date": "2026-03-21",
+      "opponent": "NC 다이노스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 8 : 2 NC",
+      "statusCode": "RESULT"
+    },
+    "2026-03-22": {
+      "date": "2026-03-22",
+      "opponent": "NC 다이노스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 6 : 2 NC",
+      "statusCode": "RESULT"
+    },
+    "2026-03-23": {
+      "date": "2026-03-23",
+      "opponent": "두산 베어스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 7 : 12 두산",
+      "statusCode": "RESULT"
+    },
+    "2026-03-24": {
+      "date": "2026-03-24",
+      "opponent": "두산 베어스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 7 : 3 두산",
+      "statusCode": "RESULT"
+    },
+    "2026-03-28": {
+      "date": "2026-03-28",
+      "opponent": "LG 트윈스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 11 : 7 LG",
+      "statusCode": "RESULT"
+    },
+    "2026-03-29": {
+      "date": "2026-03-29",
+      "opponent": "LG 트윈스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 6 : 5 LG",
+      "statusCode": "RESULT"
+    },
+    "2026-03-31": {
+      "date": "2026-03-31",
+      "opponent": "한화 이글스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 9 : 4 한화",
+      "statusCode": "RESULT"
+    },
+    "2026-04-01": {
+      "date": "2026-04-01",
+      "opponent": "한화 이글스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 14 : 11 한화",
+      "statusCode": "RESULT"
+    },
+    "2026-04-02": {
+      "date": "2026-04-02",
+      "opponent": "한화 이글스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 13 : 8 한화",
+      "statusCode": "RESULT"
+    },
+    "2026-04-03": {
+      "date": "2026-04-03",
+      "opponent": "삼성 라이온즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 1 : 2 삼성",
+      "statusCode": "RESULT"
+    },
+    "2026-04-04": {
+      "date": "2026-04-04",
+      "opponent": "삼성 라이온즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 6 : 8 삼성",
+      "statusCode": "RESULT"
+    },
+    "2026-04-05": {
+      "date": "2026-04-05",
+      "opponent": "삼성 라이온즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 2 : 0 삼성",
+      "statusCode": "RESULT"
+    },
+    "2026-04-07": {
+      "date": "2026-04-07",
+      "opponent": "롯데 자이언츠",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 7 : 3 롯데",
+      "statusCode": "RESULT"
+    },
+    "2026-04-08": {
+      "date": "2026-04-08",
+      "opponent": "롯데 자이언츠",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 1 : 6 롯데",
+      "statusCode": "RESULT"
+    },
+    "2026-04-09": {
+      "date": "2026-04-09",
+      "opponent": "롯데 자이언츠",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "draw",
+      "score": "KT 0 : 0 롯데",
+      "statusCode": "BEFORE"
+    },
+    "2026-04-10": {
+      "date": "2026-04-10",
+      "opponent": "두산 베어스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 7 : 8 두산",
+      "statusCode": "RESULT"
+    },
+    "2026-04-11": {
+      "date": "2026-04-11",
+      "opponent": "두산 베어스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 6 : 4 두산",
+      "statusCode": "RESULT"
+    },
+    "2026-04-12": {
+      "date": "2026-04-12",
+      "opponent": "두산 베어스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 6 : 1 두산",
+      "statusCode": "RESULT"
+    },
+    "2026-04-14": {
+      "date": "2026-04-14",
+      "opponent": "NC 다이노스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 4 : 7 NC",
+      "statusCode": "RESULT"
+    },
+    "2026-04-15": {
+      "date": "2026-04-15",
+      "opponent": "NC 다이노스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 10 : 2 NC",
+      "statusCode": "RESULT"
+    },
+    "2026-04-16": {
+      "date": "2026-04-16",
+      "opponent": "NC 다이노스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 4 : 3 NC",
+      "statusCode": "RESULT"
+    },
+    "2026-04-17": {
+      "date": "2026-04-17",
+      "opponent": "키움 히어로즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 5 : 0 키움",
+      "statusCode": "RESULT"
+    },
+    "2026-04-18": {
+      "date": "2026-04-18",
+      "opponent": "키움 히어로즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 4 : 2 키움",
+      "statusCode": "RESULT"
+    },
+    "2026-04-19": {
+      "date": "2026-04-19",
+      "opponent": "키움 히어로즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 1 : 3 키움",
+      "statusCode": "RESULT"
+    },
+    "2026-04-21": {
+      "date": "2026-04-21",
+      "opponent": "KIA 타이거즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 6 : 5 KIA",
+      "statusCode": "RESULT"
+    },
+    "2026-04-22": {
+      "date": "2026-04-22",
+      "opponent": "KIA 타이거즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 8 : 3 KIA",
+      "statusCode": "RESULT"
+    },
+    "2026-04-23": {
+      "date": "2026-04-23",
+      "opponent": "KIA 타이거즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 8 : 3 KIA",
+      "statusCode": "RESULT"
+    },
+    "2026-04-24": {
+      "date": "2026-04-24",
+      "opponent": "SSG 랜더스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 0 : 5 SSG",
+      "statusCode": "RESULT"
+    },
+    "2026-04-25": {
+      "date": "2026-04-25",
+      "opponent": "SSG 랜더스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 1 : 3 SSG",
+      "statusCode": "RESULT"
+    },
+    "2026-04-26": {
+      "date": "2026-04-26",
+      "opponent": "SSG 랜더스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 12 : 2 SSG",
+      "statusCode": "RESULT"
+    },
+    "2026-04-28": {
+      "date": "2026-04-28",
+      "opponent": "LG 트윈스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 6 : 5 LG",
+      "statusCode": "RESULT"
+    },
+    "2026-04-29": {
+      "date": "2026-04-29",
+      "opponent": "LG 트윈스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 5 : 4 LG",
+      "statusCode": "RESULT"
+    },
+    "2026-04-30": {
+      "date": "2026-04-30",
+      "opponent": "LG 트윈스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 5 : 6 LG",
+      "statusCode": "RESULT"
+    },
+    "2026-05-01": {
+      "date": "2026-05-01",
+      "opponent": "KIA 타이거즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 4 : 3 KIA",
+      "statusCode": "RESULT"
+    },
+    "2026-05-02": {
+      "date": "2026-05-02",
+      "opponent": "KIA 타이거즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 0 : 6 KIA",
+      "statusCode": "RESULT"
+    },
+    "2026-05-03": {
+      "date": "2026-05-03",
+      "opponent": "KIA 타이거즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 6 : 4 KIA",
+      "statusCode": "RESULT"
+    },
+    "2026-05-05": {
+      "date": "2026-05-05",
+      "opponent": "롯데 자이언츠",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 5 : 4 롯데",
+      "statusCode": "RESULT"
+    },
+    "2026-05-06": {
+      "date": "2026-05-06",
+      "opponent": "롯데 자이언츠",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 1 : 8 롯데",
+      "statusCode": "RESULT"
+    },
+    "2026-05-07": {
+      "date": "2026-05-07",
+      "opponent": "롯데 자이언츠",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "draw",
+      "score": "KT 0 : 0 롯데",
+      "statusCode": "BEFORE"
+    },
+    "2026-05-08": {
+      "date": "2026-05-08",
+      "opponent": "키움 히어로즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 8 : 0 키움",
+      "statusCode": "RESULT"
+    },
+    "2026-05-09": {
+      "date": "2026-05-09",
+      "opponent": "키움 히어로즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "draw",
+      "score": "KT 6 : 6 키움",
+      "statusCode": "RESULT"
+    },
+    "2026-05-10": {
+      "date": "2026-05-10",
+      "opponent": "키움 히어로즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 1 : 5 키움",
+      "statusCode": "RESULT"
+    },
+    "2026-05-12": {
+      "date": "2026-05-12",
+      "opponent": "SSG 랜더스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 1 : 5 SSG",
+      "statusCode": "RESULT"
+    },
+    "2026-05-13": {
+      "date": "2026-05-13",
+      "opponent": "SSG 랜더스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 18 : 4 SSG",
+      "statusCode": "RESULT"
+    },
+    "2026-05-14": {
+      "date": "2026-05-14",
+      "opponent": "SSG 랜더스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 10 : 16 SSG",
+      "statusCode": "RESULT"
+    },
+    "2026-05-15": {
+      "date": "2026-05-15",
+      "opponent": "한화 이글스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 3 : 5 한화",
+      "statusCode": "RESULT"
+    },
+    "2026-05-16": {
+      "date": "2026-05-16",
+      "opponent": "한화 이글스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 5 : 10 한화",
+      "statusCode": "RESULT"
+    },
+    "2026-05-17": {
+      "date": "2026-05-17",
+      "opponent": "한화 이글스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 8 : 7 한화",
+      "statusCode": "RESULT"
+    },
+    "2026-05-19": {
+      "date": "2026-05-19",
+      "opponent": "삼성 라이온즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 2 : 10 삼성",
+      "statusCode": "RESULT"
+    },
+    "2026-05-20": {
+      "date": "2026-05-20",
+      "opponent": "삼성 라이온즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "draw",
+      "score": "KT 0 : 0 삼성",
+      "statusCode": "BEFORE"
+    },
+    "2026-05-21": {
+      "date": "2026-05-21",
+      "opponent": "삼성 라이온즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 5 : 8 삼성",
+      "statusCode": "RESULT"
+    },
+    "2026-05-22": {
+      "date": "2026-05-22",
+      "opponent": "NC 다이노스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 7 : 4 NC",
+      "statusCode": "RESULT"
+    },
+    "2026-05-23": {
+      "date": "2026-05-23",
+      "opponent": "NC 다이노스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 10 : 5 NC",
+      "statusCode": "RESULT"
+    },
+    "2026-05-24": {
+      "date": "2026-05-24",
+      "opponent": "NC 다이노스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 5 : 8 NC",
+      "statusCode": "RESULT"
+    },
+    "2026-05-26": {
+      "date": "2026-05-26",
+      "opponent": "두산 베어스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 6 : 0 두산",
+      "statusCode": "RESULT"
+    },
+    "2026-05-27": {
+      "date": "2026-05-27",
+      "opponent": "두산 베어스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 0 : 5 두산",
+      "statusCode": "RESULT"
+    },
+    "2026-05-28": {
+      "date": "2026-05-28",
+      "opponent": "두산 베어스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 11 : 3 두산",
+      "statusCode": "RESULT"
+    },
+    "2026-05-29": {
+      "date": "2026-05-29",
+      "opponent": "키움 히어로즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 7 : 1 키움",
+      "statusCode": "RESULT"
+    },
+    "2026-05-30": {
+      "date": "2026-05-30",
+      "opponent": "키움 히어로즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 8 : 7 키움",
+      "statusCode": "RESULT"
+    },
+    "2026-05-31": {
+      "date": "2026-05-31",
+      "opponent": "키움 히어로즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 5 : 1 키움",
+      "statusCode": "RESULT"
+    },
+    "2026-06-02": {
+      "date": "2026-06-02",
+      "opponent": "LG 트윈스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 1 : 10 LG",
+      "statusCode": "RESULT"
+    },
+    "2026-06-03": {
+      "date": "2026-06-03",
+      "opponent": "LG 트윈스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 7 : 6 LG",
+      "statusCode": "RESULT"
+    },
+    "2026-06-04": {
+      "date": "2026-06-04",
+      "opponent": "LG 트윈스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 5 : 7 LG",
+      "statusCode": "RESULT"
+    },
+    "2026-06-05": {
+      "date": "2026-06-05",
+      "opponent": "SSG 랜더스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 5 : 6 SSG",
+      "statusCode": "RESULT"
+    },
+    "2026-06-06": {
+      "date": "2026-06-06",
+      "opponent": "SSG 랜더스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 7 : 3 SSG",
+      "statusCode": "RESULT"
+    },
+    "2026-06-07": {
+      "date": "2026-06-07",
+      "opponent": "SSG 랜더스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 0 : 7 SSG",
+      "statusCode": "RESULT"
+    },
+    "2026-06-09": {
+      "date": "2026-06-09",
+      "opponent": "삼성 라이온즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 5 : 2 삼성",
+      "statusCode": "RESULT"
+    },
+    "2026-06-10": {
+      "date": "2026-06-10",
+      "opponent": "삼성 라이온즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 4 : 3 삼성",
+      "statusCode": "RESULT"
+    },
+    "2026-06-11": {
+      "date": "2026-06-11",
+      "opponent": "삼성 라이온즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 1 : 8 삼성",
+      "statusCode": "RESULT"
+    },
+    "2026-06-12": {
+      "date": "2026-06-12",
+      "opponent": "NC 다이노스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 3 : 2 NC",
+      "statusCode": "RESULT"
+    },
+    "2026-06-13": {
+      "date": "2026-06-13",
+      "opponent": "NC 다이노스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 11 : 9 NC",
+      "statusCode": "RESULT"
+    },
+    "2026-06-14": {
+      "date": "2026-06-14",
+      "opponent": "NC 다이노스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "draw",
+      "score": "KT 0 : 0 NC",
+      "statusCode": "BEFORE"
+    },
+    "2026-06-16": {
+      "date": "2026-06-16",
+      "opponent": "두산 베어스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 6 : 2 두산",
+      "statusCode": "RESULT"
+    },
+    "2026-06-17": {
+      "date": "2026-06-17",
+      "opponent": "두산 베어스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 8 : 1 두산",
+      "statusCode": "RESULT"
+    },
+    "2026-06-18": {
+      "date": "2026-06-18",
+      "opponent": "두산 베어스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 1 : 2 두산",
+      "statusCode": "RESULT"
+    },
+    "2026-06-19": {
+      "date": "2026-06-19",
+      "opponent": "KIA 타이거즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 3 : 11 KIA",
+      "statusCode": "RESULT"
+    },
+    "2026-06-20": {
+      "date": "2026-06-20",
+      "opponent": "KIA 타이거즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 10 : 9 KIA",
+      "statusCode": "RESULT"
+    },
+    "2026-06-21": {
+      "date": "2026-06-21",
+      "opponent": "KIA 타이거즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 5 : 11 KIA",
+      "statusCode": "RESULT"
+    },
+    "2026-06-23": {
+      "date": "2026-06-23",
+      "opponent": "SSG 랜더스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 13 : 2 SSG",
+      "statusCode": "RESULT"
+    },
+    "2026-06-24": {
+      "date": "2026-06-24",
+      "opponent": "SSG 랜더스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 4 : 5 SSG",
+      "statusCode": "RESULT"
+    },
+    "2026-06-25": {
+      "date": "2026-06-25",
+      "opponent": "SSG 랜더스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 12 : 7 SSG",
+      "statusCode": "RESULT"
+    },
+    "2026-06-26": {
+      "date": "2026-06-26",
+      "opponent": "삼성 라이온즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 1 : 9 삼성",
+      "statusCode": "RESULT"
+    },
+    "2026-06-27": {
+      "date": "2026-06-27",
+      "opponent": "삼성 라이온즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 3 : 4 삼성",
+      "statusCode": "RESULT"
+    },
+    "2026-06-28": {
+      "date": "2026-06-28",
+      "opponent": "삼성 라이온즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 4 : 7 삼성",
+      "statusCode": "RESULT"
+    },
+    "2026-06-30": {
+      "date": "2026-06-30",
+      "opponent": "한화 이글스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "draw",
+      "score": "KT 0 : 0 한화",
+      "statusCode": "BEFORE"
+    },
+    "2026-07-01": {
+      "date": "2026-07-01",
+      "opponent": "한화 이글스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 7 : 4 한화",
+      "statusCode": "RESULT"
+    },
+    "2026-07-02": {
+      "date": "2026-07-02",
+      "opponent": "한화 이글스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 3 : 14 한화",
+      "statusCode": "RESULT"
+    },
+    "2026-07-03": {
+      "date": "2026-07-03",
+      "opponent": "롯데 자이언츠",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 0 : 4 롯데",
+      "statusCode": "RESULT"
+    },
+    "2026-07-04": {
+      "date": "2026-07-04",
+      "opponent": "롯데 자이언츠",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "lose",
+      "score": "KT 1 : 4 롯데",
+      "statusCode": "RESULT"
+    },
+    "2026-07-05": {
+      "date": "2026-07-05",
+      "opponent": "롯데 자이언츠",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 4 : 2 롯데",
+      "statusCode": "RESULT"
+    },
+    "2026-07-07": {
+      "date": "2026-07-07",
+      "opponent": "키움 히어로즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 3 : 0 키움",
+      "statusCode": "RESULT"
+    },
+    "2026-07-08": {
+      "date": "2026-07-08",
+      "opponent": "키움 히어로즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 7 : 3 키움",
+      "statusCode": "RESULT"
+    },
+    "2026-07-09": {
+      "date": "2026-07-09",
+      "opponent": "키움 히어로즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "draw",
+      "score": "KT 0 : 0 키움",
+      "statusCode": "BEFORE"
+    },
+    "2026-07-16": {
+      "date": "2026-07-16",
+      "opponent": "LG 트윈스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 4 : 3 LG",
+      "statusCode": "RESULT"
+    },
+    "2026-07-17": {
+      "date": "2026-07-17",
+      "opponent": "LG 트윈스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 6 : 1 LG",
+      "statusCode": "RESULT"
+    },
+    "2026-07-18": {
+      "date": "2026-07-18",
+      "opponent": "LG 트윈스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 8 : 2 LG",
+      "statusCode": "RESULT"
+    },
+    "2026-07-19": {
+      "date": "2026-07-19",
+      "opponent": "LG 트윈스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 4 : 1 LG",
+      "statusCode": "RESULT"
+    },
+    "2026-07-21": {
+      "date": "2026-07-21",
+      "opponent": "두산 베어스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "draw",
+      "score": "KT 2 : 2 두산",
+      "statusCode": "RESULT"
+    },
+    "2026-07-22": {
+      "date": "2026-07-22",
+      "opponent": "두산 베어스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "draw",
+      "score": "KT 0 : 0 두산",
+      "statusCode": "BEFORE"
+    },
+    "2026-07-23": {
+      "date": "2026-07-23",
+      "opponent": "두산 베어스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "draw",
+      "score": "KT 0 : 0 두산",
+      "statusCode": "BEFORE"
+    },
+    "2026-07-24": {
+      "date": "2026-07-24",
+      "opponent": "롯데 자이언츠",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 5 : 4 롯데",
+      "statusCode": "RESULT"
+    },
+    "2026-07-25": {
+      "date": "2026-07-25",
+      "opponent": "롯데 자이언츠",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 6 : 1 롯데",
+      "statusCode": "RESULT"
+    },
+    "2026-07-26": {
+      "date": "2026-07-26",
+      "opponent": "롯데 자이언츠",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "lose",
+      "score": "KT 1 : 15 롯데",
+      "statusCode": "RESULT"
+    },
+    "2026-07-28": {
+      "date": "2026-07-28",
+      "opponent": "NC 다이노스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 10 : 0 NC",
+      "statusCode": "RESULT"
+    },
+    "2026-07-29": {
+      "date": "2026-07-29",
+      "opponent": "NC 다이노스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 10 : 3 NC",
+      "statusCode": "RESULT"
+    },
+    "2026-07-30": {
+      "date": "2026-07-30",
+      "opponent": "NC 다이노스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "win",
+      "score": "KT 10 : 2 NC",
+      "statusCode": "RESULT"
+    },
+    "2026-07-31": {
+      "date": "2026-07-31",
+      "opponent": "한화 이글스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "win",
+      "score": "KT 5 : 3 한화",
+      "statusCode": "RESULT"
+    },
     "2026-08-01": {
       "date": "2026-08-01",
       "opponent": "한화 이글스",
@@ -71,222 +1106,6 @@
       "stadium": "수원 위즈파크 (홈)",
       "result": "draw",
       "score": "KT 0 : 0 롯데",
-      "statusCode": "BEFORE"
-    },
-    "2026-08-11": {
-      "date": "2026-08-11",
-      "opponent": "NC 다이노스",
-      "isHome": false,
-      "stadium": "원정구장 (원정)",
-      "result": "win",
-      "score": "KT 7 : 3 NC",
-      "statusCode": "RESULT"
-    },
-    "2026-08-12": {
-      "date": "2026-08-12",
-      "opponent": "NC 다이노스",
-      "isHome": false,
-      "stadium": "원정구장 (원정)",
-      "result": "lose",
-      "score": "KT 0 : 3 NC",
-      "statusCode": "RESULT"
-    },
-    "2026-08-13": {
-      "date": "2026-08-13",
-      "opponent": "NC 다이노스",
-      "isHome": false,
-      "stadium": "원정구장 (원정)",
-      "result": "lose",
-      "score": "KT 5 : 6 NC",
-      "statusCode": "RESULT"
-    },
-    "2026-08-14": {
-      "date": "2026-08-14",
-      "opponent": "키움 히어로즈",
-      "isHome": true,
-      "stadium": "수원 위즈파크 (홈)",
-      "result": "win",
-      "score": "KT 8 : 3 키움",
-      "statusCode": "RESULT"
-    },
-    "2026-08-15": {
-      "date": "2026-08-15",
-      "opponent": "키움 히어로즈",
-      "isHome": true,
-      "stadium": "수원 위즈파크 (홈)",
-      "result": "lose",
-      "score": "KT 5 : 10 키움",
-      "statusCode": "RESULT"
-    },
-    "2026-08-16": {
-      "date": "2026-08-16",
-      "opponent": "키움 히어로즈",
-      "isHome": true,
-      "stadium": "수원 위즈파크 (홈)",
-      "result": "win",
-      "score": "KT 6 : 2 키움",
-      "statusCode": "RESULT"
-    },
-    "2026-08-18": {
-      "date": "2026-08-18",
-      "opponent": "LG 트윈스",
-      "isHome": false,
-      "stadium": "원정구장 (원정)",
-      "result": "draw",
-      "score": "KT 0 : 0 LG",
-      "statusCode": "BEFORE"
-    },
-    "2026-08-19": {
-      "date": "2026-08-19",
-      "opponent": "LG 트윈스",
-      "isHome": false,
-      "stadium": "원정구장 (원정)",
-      "result": "draw",
-      "score": "KT 0 : 0 LG",
-      "statusCode": "BEFORE"
-    },
-    "2026-08-20": {
-      "date": "2026-08-20",
-      "opponent": "LG 트윈스",
-      "isHome": false,
-      "stadium": "원정구장 (원정)",
-      "result": "draw",
-      "score": "KT 0 : 0 LG",
-      "statusCode": "BEFORE"
-    },
-    "2026-08-21": {
-      "date": "2026-08-21",
-      "opponent": "SSG 랜더스",
-      "isHome": false,
-      "stadium": "원정구장 (원정)",
-      "result": "draw",
-      "score": "KT 0 : 0 SSG",
-      "statusCode": "BEFORE"
-    },
-    "2026-08-22": {
-      "date": "2026-08-22",
-      "opponent": "SSG 랜더스",
-      "isHome": false,
-      "stadium": "원정구장 (원정)",
-      "result": "draw",
-      "score": "KT 0 : 0 SSG",
-      "statusCode": "BEFORE"
-    },
-    "2026-08-23": {
-      "date": "2026-08-23",
-      "opponent": "SSG 랜더스",
-      "isHome": false,
-      "stadium": "원정구장 (원정)",
-      "result": "draw",
-      "score": "KT 0 : 0 SSG",
-      "statusCode": "BEFORE"
-    },
-    "2026-08-25": {
-      "date": "2026-08-25",
-      "opponent": "두산 베어스",
-      "isHome": true,
-      "stadium": "수원 위즈파크 (홈)",
-      "result": "draw",
-      "score": "KT 0 : 0 두산",
-      "statusCode": "BEFORE"
-    },
-    "2026-08-26": {
-      "date": "2026-08-26",
-      "opponent": "두산 베어스",
-      "isHome": true,
-      "stadium": "수원 위즈파크 (홈)",
-      "result": "draw",
-      "score": "KT 0 : 0 두산",
-      "statusCode": "BEFORE"
-    },
-    "2026-08-27": {
-      "date": "2026-08-27",
-      "opponent": "두산 베어스",
-      "isHome": true,
-      "stadium": "수원 위즈파크 (홈)",
-      "result": "draw",
-      "score": "KT 0 : 0 두산",
-      "statusCode": "BEFORE"
-    },
-    "2026-08-28": {
-      "date": "2026-08-28",
-      "opponent": "삼성 라이온즈",
-      "isHome": false,
-      "stadium": "원정구장 (원정)",
-      "result": "draw",
-      "score": "KT 0 : 0 삼성",
-      "statusCode": "BEFORE"
-    },
-    "2026-08-29": {
-      "date": "2026-08-29",
-      "opponent": "삼성 라이온즈",
-      "isHome": false,
-      "stadium": "원정구장 (원정)",
-      "result": "draw",
-      "score": "KT 0 : 0 삼성",
-      "statusCode": "BEFORE"
-    },
-    "2026-08-30": {
-      "date": "2026-08-30",
-      "opponent": "삼성 라이온즈",
-      "isHome": false,
-      "stadium": "원정구장 (원정)",
-      "result": "draw",
-      "score": "KT 0 : 0 삼성",
-      "statusCode": "BEFORE"
-    },
-    "2026-09-01": {
-      "date": "2026-09-01",
-      "opponent": "한화 이글스",
-      "isHome": true,
-      "stadium": "수원 위즈파크 (홈)",
-      "result": "draw",
-      "score": "KT 0 : 0 한화",
-      "statusCode": "BEFORE"
-    },
-    "2026-09-02": {
-      "date": "2026-09-02",
-      "opponent": "한화 이글스",
-      "isHome": true,
-      "stadium": "수원 위즈파크 (홈)",
-      "result": "draw",
-      "score": "KT 0 : 0 한화",
-      "statusCode": "BEFORE"
-    },
-    "2026-09-03": {
-      "date": "2026-09-03",
-      "opponent": "한화 이글스",
-      "isHome": true,
-      "stadium": "수원 위즈파크 (홈)",
-      "result": "draw",
-      "score": "KT 0 : 0 한화",
-      "statusCode": "BEFORE"
-    },
-    "2026-09-04": {
-      "date": "2026-09-04",
-      "opponent": "KIA 타이거즈",
-      "isHome": false,
-      "stadium": "원정구장 (원정)",
-      "result": "draw",
-      "score": "KT 0 : 0 KIA",
-      "statusCode": "BEFORE"
-    },
-    "2026-09-05": {
-      "date": "2026-09-05",
-      "opponent": "KIA 타이거즈",
-      "isHome": false,
-      "stadium": "원정구장 (원정)",
-      "result": "draw",
-      "score": "KT 0 : 0 KIA",
-      "statusCode": "BEFORE"
-    },
-    "2026-09-06": {
-      "date": "2026-09-06",
-      "opponent": "KIA 타이거즈",
-      "isHome": false,
-      "stadium": "원정구장 (원정)",
-      "result": "draw",
-      "score": "KT 0 : 0 KIA",
       "statusCode": "BEFORE"
     }
   }
