@@ -5,11 +5,9 @@ import urllib.request
 def fetch_kt_wiz_data():
     today = datetime.datetime.now()
     year = today.year
-    month = today.strftime("%m")
-    today_str = today.strftime("%Y-%m-%d")
 
-    # 네이버 스포츠 KBO 공식 API 호출 (백엔드 실행이므로 차단 없음)
-    url = f"https://api-gw.sports.naver.com/schedule/games?upperCategoryId=kbaseball&fromDate={year}-{month}-01&toDate={year}-12-31&size=500"
+    # 시즌 시작인 3월 1일부터 12월 31일까지 전 경기 한 번에 수집
+    url = f"https://api-gw.sports.naver.com/schedule/games?upperCategoryId=kbaseball&fromDate={year}-03-01&toDate={year}-12-31&size=1000"
     req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
 
     try:
@@ -33,7 +31,7 @@ def fetch_kt_wiz_data():
         home_code = g.get("homeTeamCode", "")
         away_code = g.get("awayTeamCode", "")
 
-        # kt wiz 경기만 선별
+        # kt wiz 경기 필터링
         if "KT" in home or "KT" in away or home_code == "KT" or away_code == "KT":
             game_date = g.get("gameDateTime", "").split("T")[0]
             is_home = ("KT" in home) or (home_code == "KT")
@@ -81,7 +79,7 @@ def fetch_kt_wiz_data():
     with open("ktwiz_data.json", "w", encoding="utf-8") as f:
         json.dump(final_payload, f, ensure_ascii=False, indent=2)
 
-    print("kt wiz 데이터 수집 완료!")
+    print("kt wiz 전체 시즌 데이터 수집 완료!")
 
 if __name__ == "__main__":
     fetch_kt_wiz_data()
