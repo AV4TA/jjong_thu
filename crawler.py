@@ -5,8 +5,9 @@ import urllib.request
 def fetch_kt_wiz_data():
     today = datetime.datetime.now()
     year = today.year
+    today_str = today.strftime("%Y-%m-%d")
 
-    # 시즌 시작인 3월 1일부터 12월 31일까지 전 경기 한 번에 수집
+    # 1. 전체 시즌 일정 수집
     url = f"https://api-gw.sports.naver.com/schedule/games?upperCategoryId=kbaseball&fromDate={year}-03-01&toDate={year}-12-31&size=1000"
     req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
 
@@ -19,6 +20,8 @@ def fetch_kt_wiz_data():
 
     games_list = data.get("result", {}).get("games", [])
     kt_schedule = {}
+    today_game_id = None
+    today_game_info = None
 
     team_map = {
         'LG': 'LG 트윈스', 'SSG': 'SSG 랜더스', '두산': '두산 베어스', 'KIA': 'KIA 타이거즈',
@@ -31,7 +34,6 @@ def fetch_kt_wiz_data():
         home_code = g.get("homeTeamCode", "")
         away_code = g.get("awayTeamCode", "")
 
-        # kt wiz 경기 필터링
         if "KT" in home or "KT" in away or home_code == "KT" or away_code == "KT":
             game_date = g.get("gameDateTime", "").split("T")[0]
             is_home = ("KT" in home) or (home_code == "KT")
@@ -43,6 +45,7 @@ def fetch_kt_wiz_data():
             away_score = g.get("awayTeamScore")
             status = g.get("status", "")
             status_code = g.get("statusCode", "")
+            game_time = g.get("gameDateTime", "").split("T")[1][:5] if "T" in g.get("gameDateTime", "") else "18:30"
 
             res_type = "scheduled"
             score_str = "VS"
@@ -61,8 +64,10 @@ def fetch_kt_wiz_data():
                 else:
                     res_type = "draw"
 
-            kt_schedule[game_date] = {
+            game_obj = {
+                "gameId": g.get("gameId"),
                 "date": game_date,
+                "time": game_time,
                 "opponent": opp_name,
                 "isHome": is_home,
                 "stadium": f"수원 위즈파크 (홈)" if is_home else f"{stadium} (원정)",
@@ -71,15 +76,55 @@ def fetch_kt_wiz_data():
                 "statusCode": status_code
             }
 
+            kt_schedule[game_date] = game_obj
+
+            if game_date == today_str:
+                today_game_id = g.get("gameId")
+                today_game_info = game_obj
+
+    # 2. 오늘 경기 라인업 크롤링 (경기 1~2시간 전 발표됨)
+    today_lineup = {"pitcher": "-", "batters": []}
+    if today_game_id:
+        lineup_url = f"https://api-gw.sports.naver.com/schedule/games/{today_game_id}/relay"
+        try:
+            l_req = urllib.request.Request(lineup_url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(l_req) as l_res:
+                l_data = json.loads(l_res.read().decode('utf-8'))
+                
+                home_team = l_data.get("result", {}).get("gameInfo", {}).get("homeTeamCode", "")
+                is_kt_home = (home_team == "KT")
+                lineup_data = l_data.get("result", {}).get("lineup", {})
+                target_lineup = lineup_data.get("home" if is_kt_home else "away", {})
+
+                pitcher = target_lineup.get("starterPitcher", {}).get("name", "미발표")
+                batters = target_lineup.get("batters", [])
+
+                formatted_batters = []
+                for b in batters:
+                    formatted_batters.append({
+                        "order": b.get("order"),
+                        "name": b.get("name"),
+                        "pos": b.get("pos")
+                    })
+
+                today_lineup = {
+                    "pitcher": pitcher,
+                    "batters": formatted_batters
+                }
+        except Exception as e:
+            print(f"라인업 조회 대기: {e}")
+
     final_payload = {
         "updatedAt": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "todayMatch": today_game_info,
+        "todayLineup": today_lineup,
         "schedule": kt_schedule
     }
 
     with open("ktwiz_data.json", "w", encoding="utf-8") as f:
         json.dump(final_payload, f, ensure_ascii=False, indent=2)
 
-    print("kt wiz 전체 시즌 데이터 수집 완료!")
+    print("kt wiz 일정 및 라인업 수집 완료!")
 
 if __name__ == "__main__":
     fetch_kt_wiz_data()
