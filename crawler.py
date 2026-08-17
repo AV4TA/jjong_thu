@@ -3,12 +3,13 @@ import datetime
 import urllib.request
 
 def fetch_json(url):
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'application/json, text/plain, */*',
-        'Referer': 'https://m.sports.naver.com/'
-    }
-    req = urllib.request.Request(url, headers=headers)
+    req = urllib.request.Request(
+        url,
+        headers={
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Referer': 'https://m.sports.naver.com/'
+        }
+    )
     try:
         with urllib.request.urlopen(req, timeout=15) as res:
             return json.loads(res.read().decode('utf-8'))
@@ -21,7 +22,7 @@ def fetch_kt_wiz_data():
     year = today.year
     today_str = today.strftime("%Y-%m-%d")
 
-    # 1. 2026 정규시즌 전체 일정 (3월 28일 개막전부터)
+    # 1. 2026 정규시즌 KT 경기 일정 (3월 28일 개막전부터)
     sched_url = f"https://api-gw.sports.naver.com/schedule/games?upperCategoryId=kbaseball&fromDate={year}-03-28&toDate={year}-12-31&size=1000"
     s_data = fetch_json(sched_url)
 
@@ -33,10 +34,6 @@ def fetch_kt_wiz_data():
         'LG': 'LG 트윈스', 'SSG': 'SSG 랜더스', '두산': '두산 베어스', 'KIA': 'KIA 타이거즈',
         '삼성': '삼성 라이온즈', '롯데': '롯데 자이언츠', '한화': '한화 이글스', 'NC': 'NC 다이노스', '키움': '키움 히어로즈', 'KT': 'kt wiz'
     }
-
-    # 전체 10개 구단 순위 자동 계산용 딕셔너리
-    all_teams = ['LG', 'SSG', '두산', 'KIA', '삼성', '롯데', '한화', 'NC', '키움', 'KT']
-    standings_calc = {t: {"teamName": team_map[t], "games": 0, "win": 0, "draw": 0, "lose": 0} for t in all_teams}
 
     if s_data and "result" in s_data:
         games_list = s_data.get("result", {}).get("games", [])
@@ -51,39 +48,19 @@ def fetch_kt_wiz_data():
             away = g.get("awayTeamName", "")
             home_code = g.get("homeTeamCode", "")
             away_code = g.get("awayTeamCode", "")
-            home_score = g.get("homeTeamScore")
-            away_score = g.get("awayTeamScore")
-            status = g.get("status", "")
-            status_code = g.get("statusCode", "")
 
-            # [A] 10개 구단 전체 전적 집계 (순위 산출)
-            if home_score is not None and away_score is not None and str(home_score) != "" and str(away_score) != "":
-                h_team = home_code if home_code in standings_calc else next((k for k in all_teams if k in home), None)
-                a_team = away_code if away_code in standings_calc else next((k for k in all_teams if k in away), None)
-                
-                if h_team and a_team:
-                    h_sc = int(home_score)
-                    a_sc = int(away_score)
-                    standings_calc[h_team]["games"] += 1
-                    standings_calc[a_team]["games"] += 1
-
-                    if h_sc > a_sc:
-                        standings_calc[h_team]["win"] += 1
-                        standings_calc[a_team]["lose"] += 1
-                    elif h_sc < a_sc:
-                        standings_calc[a_team]["win"] += 1
-                        standings_calc[h_team]["lose"] += 1
-                    else:
-                        standings_calc[h_team]["draw"] += 1
-                        standings_calc[a_team]["draw"] += 1
-
-            # [B] kt wiz 일정 필터링
+            # kt wiz 경기 필터링
             if "KT" in home or "KT" in away or home_code == "KT" or away_code == "KT":
                 is_home = ("KT" in home) or (home_code == "KT")
                 opp_raw = away if is_home else home
                 opp_name = team_map.get(opp_raw, opp_raw)
                 stadium = g.get("stadium", "수원 케이티위즈파크" if is_home else "원정구장")
                 game_time = raw_dt.split("T")[1][:5] if "T" in raw_dt else "18:30"
+                
+                home_score = g.get("homeTeamScore")
+                away_score = g.get("awayTeamScore")
+                status = g.get("status", "")
+                status_code = g.get("statusCode", "")
 
                 res_type = "scheduled"
                 score_str = "VS"
@@ -91,7 +68,7 @@ def fetch_kt_wiz_data():
                 if "취소" in status or status_code == "CANCEL":
                     res_type = "canceled"
                     score_str = "취소"
-                elif home_score is not None and away_score is not None and str(home_score) != "" and str(away_score) != "":
+                elif status_code in ["RESULT", "END"] or (home_score is not None and away_score is not None and str(home_score) != "" and str(away_score) != ""):
                     kt_score = int(home_score if is_home else away_score)
                     opp_score = int(away_score if is_home else home_score)
                     score_str = f"KT {kt_score} : {opp_score} {opp_raw}"
@@ -118,39 +95,23 @@ def fetch_kt_wiz_data():
                     today_game_id = g.get("gameId")
                     today_game_info = game_obj
 
-    # 2. 정규시즌 공식 순위 계산 (승률순 -> 다승순 정렬)
-    rankings_list = []
-    for team_code, data in standings_calc.items():
-        total_decided = data["win"] + data["lose"]
-        win_rate = (data["win"] / total_decided) if total_decided > 0 else 0.0
-        rankings_list.append({
-            "teamName": data["teamName"],
-            "games": data["games"],
-            "win": data["win"],
-            "draw": data["draw"],
-            "lose": data["lose"],
-            "wra_num": win_rate,
-            "wra": f"{win_rate:.3f}"
-        })
-
-    rankings_list.sort(key=lambda x: (x["wra_num"], x["win"]), reverse=True)
-
+    # 2. 공식 실시간 KBO 순위 API 연동 (실제 경기 수 & 공식 순위 반영)
     final_rankings = []
-    top_w = rankings_list[0]["win"] if rankings_list else 0
-    top_l = rankings_list[0]["lose"] if rankings_list else 0
-
-    for i, r in enumerate(rankings_list):
-        diff = ((top_w - r["win"]) + (r["lose"] - top_l)) / 2.0
-        final_rankings.append({
-            "rank": str(i + 1),
-            "teamName": r["teamName"],
-            "games": r["games"],
-            "win": r["win"],
-            "draw": r["draw"],
-            "lose": r["lose"],
-            "wra": r["wra"],
-            "gameDiff": "0.0" if i == 0 else f"{diff:.1f}"
-        })
+    rank_url = f"https://api-gw.sports.naver.com/baseball/kbo/ranking/team?season={year}"
+    r_data = fetch_json(rank_url)
+    if r_data and "result" in r_data:
+        r_list = r_data.get("result", {}).get("teamRankList", []) or r_data.get("result", {}).get("regularSeason", [])
+        for r in r_list:
+            final_rankings.append({
+                "rank": str(r.get("rank") or r.get("ranking", "-")),
+                "teamName": r.get("teamName") or r.get("name", "-"),
+                "games": r.get("gameCount") or r.get("games", 0),
+                "win": r.get("winCount") or r.get("wins", 0),
+                "draw": r.get("drawCount") or r.get("draws", 0),
+                "lose": r.get("loseCount") or r.get("loses", 0),
+                "wra": str(r.get("wra") or r.get("winRate", "0.000")),
+                "gameDiff": str(r.get("gameDiff") or r.get("diff", "0.0"))
+            })
 
     # 3. 오늘 선발 라인업
     today_lineup = {"pitcher": "-", "batters": []}
@@ -167,10 +128,8 @@ def fetch_kt_wiz_data():
                 "batters": [{"order": b.get("order", "-"), "name": b.get("name", "-"), "pos": b.get("pos", "-")} for b in target_lineup.get("batters", [])]
             }
 
-    # 4. KT Wiz 현재 시즌 실제 선수단 기록 (네이버 최신 API 자동 수집)
+    # 4. KT Wiz 실시간 선수단 공식 기록
     player_stats = {"batters": [], "pitchers": []}
-    
-    # 타자
     b_url = f"https://api-gw.sports.naver.com/baseball/kbo/ranking/player/hitter?season={year}&teamCode=KT"
     b_data = fetch_json(b_url)
     if b_data and "result" in b_data:
@@ -185,7 +144,6 @@ def fetch_kt_wiz_data():
                 "ops": str(b.get("ops", "-"))
             })
 
-    # 투수
     p_url = f"https://api-gw.sports.naver.com/baseball/kbo/ranking/player/pitcher?season={year}&teamCode=KT"
     p_data = fetch_json(p_url)
     if p_data and "result" in p_data:
@@ -200,7 +158,6 @@ def fetch_kt_wiz_data():
                 "so": str(p.get("kk") or p.get("strikeOuts", "-"))
             })
 
-    # 최종 JSON 파일 구성 (rankings 누락 방지)
     final_payload = {
         "updatedAt": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "todayMatch": today_game_info,
@@ -213,7 +170,7 @@ def fetch_kt_wiz_data():
     with open("ktwiz_data.json", "w", encoding="utf-8") as f:
         json.dump(final_payload, f, ensure_ascii=False, indent=2)
 
-    print(f"수집 성공: 일정 {len(kt_schedule)}개, 리그 순위 {len(final_rankings)}팀, 타자 {len(player_stats['batters'])}명, 투수 {len(player_stats['pitchers'])}명")
+    print(f"수집 완료: 일정 {len(kt_schedule)}개, 공식 순위 {len(final_rankings)}팀, 타자 {len(player_stats['batters'])}명, 투수 {len(player_stats['pitchers'])}명")
 
 if __name__ == "__main__":
     fetch_kt_wiz_data()
