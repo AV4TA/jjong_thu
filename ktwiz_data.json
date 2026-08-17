@@ -1,112 +1,11 @@
 {
-  "updatedAt": "2026-08-17 05:23:19",
+  "updatedAt": "2026-08-17 05:26:34",
   "todayMatch": null,
   "todayLineup": {
     "pitcher": "-",
     "batters": []
   },
-  "rankings": [
-    {
-      "rank": "1",
-      "teamName": "kt wiz",
-      "games": 122,
-      "win": 62,
-      "draw": 21,
-      "lose": 39,
-      "wra": "0.614",
-      "gameDiff": "0.0"
-    },
-    {
-      "rank": "2",
-      "teamName": "삼성 라이온즈",
-      "games": 122,
-      "win": 62,
-      "draw": 19,
-      "lose": 41,
-      "wra": "0.602",
-      "gameDiff": "1.0"
-    },
-    {
-      "rank": "3",
-      "teamName": "LG 트윈스",
-      "games": 122,
-      "win": 58,
-      "draw": 16,
-      "lose": 48,
-      "wra": "0.547",
-      "gameDiff": "6.5"
-    },
-    {
-      "rank": "4",
-      "teamName": "KIA 타이거즈",
-      "games": 122,
-      "win": 56,
-      "draw": 18,
-      "lose": 48,
-      "wra": "0.538",
-      "gameDiff": "7.5"
-    },
-    {
-      "rank": "5",
-      "teamName": "두산 베어스",
-      "games": 122,
-      "win": 55,
-      "draw": 19,
-      "lose": 48,
-      "wra": "0.534",
-      "gameDiff": "8.0"
-    },
-    {
-      "rank": "6",
-      "teamName": "한화 이글스",
-      "games": 122,
-      "win": 48,
-      "draw": 21,
-      "lose": 53,
-      "wra": "0.475",
-      "gameDiff": "14.0"
-    },
-    {
-      "rank": "7",
-      "teamName": "NC 다이노스",
-      "games": 122,
-      "win": 46,
-      "draw": 24,
-      "lose": 52,
-      "wra": "0.469",
-      "gameDiff": "14.5"
-    },
-    {
-      "rank": "8",
-      "teamName": "롯데 자이언츠",
-      "games": 122,
-      "win": 46,
-      "draw": 19,
-      "lose": 57,
-      "wra": "0.447",
-      "gameDiff": "17.0"
-    },
-    {
-      "rank": "9",
-      "teamName": "SSG 랜더스",
-      "games": 122,
-      "win": 43,
-      "draw": 17,
-      "lose": 62,
-      "wra": "0.410",
-      "gameDiff": "21.0"
-    },
-    {
-      "rank": "10",
-      "teamName": "키움 히어로즈",
-      "games": 122,
-      "win": 40,
-      "draw": 14,
-      "lose": 68,
-      "wra": "0.370",
-      "gameDiff": "25.5"
-    }
-  ],
+  "rankings": [],
   "playerStats": {
     "batters": [],
     "pitchers": []
