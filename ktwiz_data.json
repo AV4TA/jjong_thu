@@ -1,14 +1,245 @@
 {
-  "updatedAt": "2026-08-17 05:11:04",
+  "updatedAt": "2026-08-17 05:17:28",
   "todayMatch": null,
   "todayLineup": {
     "pitcher": "-",
     "batters": []
   },
-  "rankings": [],
+  "rankings": [
+    {
+      "rank": "1",
+      "teamName": "kt wiz",
+      "games": 123,
+      "win": 64,
+      "draw": 18,
+      "lose": 41,
+      "wra": "0.610",
+      "gameDiff": "0.0"
+    },
+    {
+      "rank": "2",
+      "teamName": "삼성 라이온즈",
+      "games": 123,
+      "win": 65,
+      "draw": 13,
+      "lose": 45,
+      "wra": "0.591",
+      "gameDiff": "1.5"
+    },
+    {
+      "rank": "3",
+      "teamName": "두산 베어스",
+      "games": 123,
+      "win": 59,
+      "draw": 15,
+      "lose": 49,
+      "wra": "0.546",
+      "gameDiff": "6.5"
+    },
+    {
+      "rank": "4",
+      "teamName": "LG 트윈스",
+      "games": 123,
+      "win": 60,
+      "draw": 12,
+      "lose": 51,
+      "wra": "0.541",
+      "gameDiff": "7.0"
+    },
+    {
+      "rank": "5",
+      "teamName": "KIA 타이거즈",
+      "games": 123,
+      "win": 56,
+      "draw": 15,
+      "lose": 52,
+      "wra": "0.519",
+      "gameDiff": "9.5"
+    },
+    {
+      "rank": "6",
+      "teamName": "한화 이글스",
+      "games": 123,
+      "win": 53,
+      "draw": 15,
+      "lose": 55,
+      "wra": "0.491",
+      "gameDiff": "12.5"
+    },
+    {
+      "rank": "7",
+      "teamName": "롯데 자이언츠",
+      "games": 123,
+      "win": 52,
+      "draw": 15,
+      "lose": 56,
+      "wra": "0.481",
+      "gameDiff": "13.5"
+    },
+    {
+      "rank": "8",
+      "teamName": "NC 다이노스",
+      "games": 123,
+      "win": 47,
+      "draw": 19,
+      "lose": 57,
+      "wra": "0.452",
+      "gameDiff": "16.5"
+    },
+    {
+      "rank": "9",
+      "teamName": "SSG 랜더스",
+      "games": 123,
+      "win": 44,
+      "draw": 12,
+      "lose": 67,
+      "wra": "0.396",
+      "gameDiff": "23.0"
+    },
+    {
+      "rank": "10",
+      "teamName": "키움 히어로즈",
+      "games": 123,
+      "win": 43,
+      "draw": 10,
+      "lose": 70,
+      "wra": "0.381",
+      "gameDiff": "25.0"
+    }
+  ],
   "playerStats": {
-    "batters": [],
-    "pitchers": []
+    "batters": [
+      {
+        "name": "강백호",
+        "hra": "0.312",
+        "hit": "138",
+        "hr": "22",
+        "rbi": "89",
+        "ops": "0.915"
+      },
+      {
+        "name": "로하스",
+        "hra": "0.325",
+        "hit": "145",
+        "hr": "28",
+        "rbi": "96",
+        "ops": "0.980"
+      },
+      {
+        "name": "문상철",
+        "hra": "0.285",
+        "hit": "98",
+        "hr": "15",
+        "rbi": "62",
+        "ops": "0.820"
+      },
+      {
+        "name": "황재균",
+        "hra": "0.278",
+        "hit": "112",
+        "hr": "8",
+        "rbi": "54",
+        "ops": "0.760"
+      },
+      {
+        "name": "배정대",
+        "hra": "0.290",
+        "hit": "118",
+        "hr": "7",
+        "rbi": "51",
+        "ops": "0.785"
+      },
+      {
+        "name": "김민혁",
+        "hra": "0.308",
+        "hit": "125",
+        "hr": "1",
+        "rbi": "38",
+        "ops": "0.755"
+      },
+      {
+        "name": "장성우",
+        "hra": "0.268",
+        "hit": "88",
+        "hr": "12",
+        "rbi": "58",
+        "ops": "0.770"
+      },
+      {
+        "name": "심우준",
+        "hra": "0.262",
+        "hit": "82",
+        "hr": "3",
+        "rbi": "32",
+        "ops": "0.680"
+      },
+      {
+        "name": "천성호",
+        "hra": "0.280",
+        "hit": "75",
+        "hr": "2",
+        "rbi": "24",
+        "ops": "0.710"
+      }
+    ],
+    "pitchers": [
+      {
+        "name": "고영표",
+        "era": "3.25",
+        "win": "11",
+        "lose": "6",
+        "save": "0",
+        "so": "118"
+      },
+      {
+        "name": "쿠에바스",
+        "era": "3.42",
+        "win": "10",
+        "lose": "8",
+        "save": "0",
+        "so": "135"
+      },
+      {
+        "name": "벤자민",
+        "era": "3.68",
+        "win": "11",
+        "lose": "7",
+        "save": "0",
+        "so": "126"
+      },
+      {
+        "name": "엄상백",
+        "era": "3.88",
+        "win": "9",
+        "lose": "8",
+        "save": "0",
+        "so": "112"
+      },
+      {
+        "name": "박영현",
+        "era": "2.15",
+        "win": "5",
+        "lose": "2",
+        "save": "24",
+        "so": "72"
+      },
+      {
+        "name": "김민수",
+        "era": "3.10",
+        "win": "4",
+        "lose": "3",
+        "save": "3",
+        "so": "48"
+      },
+      {
+        "name": "손동현",
+        "era": "3.35",
+        "win": "3",
+        "lose": "2",
+        "save": "1",
+        "so": "52"
+      }
+    ]
   },
   "schedule": {
     "2026-03-12": {
