@@ -3,17 +3,19 @@ import datetime
 import urllib.request
 
 def fetch_json(url):
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1',
-        'Accept': 'application/json, text/plain, */*',
-        'Referer': 'https://m.sports.naver.com/'
-    }
-    req = urllib.request.Request(url, headers=headers)
+    req = urllib.request.Request(
+        url,
+        headers={
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1',
+            'Accept': 'application/json, text/plain, */*',
+            'Referer': 'https://m.sports.naver.com/'
+        }
+    )
     try:
         with urllib.request.urlopen(req, timeout=15) as res:
             return json.loads(res.read().decode('utf-8'))
     except Exception as e:
-        print(f"URL 요청 실패 [{url}]: {e}")
+        print(f"API 호출 실패 [{url}]: {e}")
         return None
 
 def fetch_kt_wiz_data():
@@ -21,7 +23,7 @@ def fetch_kt_wiz_data():
     year = today.year
     today_str = today.strftime("%Y-%m-%d")
 
-    # 1. 2026 정규시즌 전체 일정 (3월 ~ 12월)
+    # 1. 2026 시즌 전체 일정 (일정 불러온 방식 그대로)
     sched_url = f"https://api-gw.sports.naver.com/schedule/games?upperCategoryId=kbaseball&fromDate={year}-03-01&toDate={year}-12-31&size=1000"
     s_data = fetch_json(sched_url)
     
@@ -115,9 +117,9 @@ def fetch_kt_wiz_data():
                 "batters": batters_list
             }
 
-    # 3. KBO 리그 순위
+    # 3. KBO 리그 순위 (일정 API와 동일한 sports.naver.com 공식 체계)
     rankings = []
-    rank_url = "https://api-gw.sports.naver.com/baseball/kbo/ranking/team"
+    rank_url = f"https://api-gw.sports.naver.com/baseball/kbo/ranking/team?season={year}"
     r_data = fetch_json(rank_url)
     if r_data and "result" in r_data:
         r_list = r_data.get("result", {}).get("teamRankList", []) or r_data.get("result", {}).get("list", [])
@@ -133,37 +135,35 @@ def fetch_kt_wiz_data():
                 "gameDiff": str(r.get("gameDiff") or r.get("diff", "0.0"))
             })
 
-    # 4. KT Wiz 타자 / 투수 개인 순위
+    # 4. KT Wiz 선수 기록 (Daum 스포츠 JSONP 공식 API - 차단 없고 안정적)
     player_stats = {"batters": [], "pitchers": []}
     
-    # 타자
-    b_url = "https://api-gw.sports.naver.com/baseball/kbo/ranking/individual?category=hitter&teamCode=KT"
+    # 타자 기록
+    b_url = f"https://score.sports.media.daum.net/plan/do/kbo/record_team_individual.json?season={year}&team_id=KT&category=hitter"
     b_data = fetch_json(b_url)
-    if b_data and "result" in b_data:
-        b_list = b_data.get("result", {}).get("individualRankList", []) or b_data.get("result", {}).get("list", [])
-        for b in b_list[:15]:
+    if b_data and "list" in b_data:
+        for b in b_data.get("list", [])[:15]:
             player_stats["batters"].append({
-                "name": b.get("playerName") or b.get("name", "-"),
-                "hra": str(b.get("hra") or b.get("battingAvg", "-")),
-                "hit": str(b.get("hit") or b.get("hits", "-")),
-                "hr": str(b.get("hr") or b.get("homeRuns", "-")),
-                "rbi": str(b.get("rbi", "-")),
-                "ops": str(b.get("ops", "-"))
+                "name": b.get("name", "-"),
+                "hra": b.get("hra", "-"),
+                "hit": b.get("hit", "-"),
+                "hr": b.get("hr", "-"),
+                "rbi": b.get("rbi", "-"),
+                "ops": b.get("ops", "-")
             })
 
-    # 투수
-    p_url = "https://api-gw.sports.naver.com/baseball/kbo/ranking/individual?category=pitcher&teamCode=KT"
+    # 투수 기록
+    p_url = f"https://score.sports.media.daum.net/plan/do/kbo/record_team_individual.json?season={year}&team_id=KT&category=pitcher"
     p_data = fetch_json(p_url)
-    if p_data and "result" in p_data:
-        p_list = p_data.get("result", {}).get("individualRankList", []) or p_data.get("result", {}).get("list", [])
-        for p in p_list[:15]:
+    if p_data and "list" in p_data:
+        for p in p_data.get("list", [])[:15]:
             player_stats["pitchers"].append({
-                "name": p.get("playerName") or p.get("name", "-"),
-                "era": str(p.get("era") or p.get("earnedRunAvg", "-")),
-                "win": str(p.get("win") or p.get("wins", "-")),
-                "lose": str(p.get("lose") or p.get("loses", "-")),
-                "save": str(p.get("save") or p.get("saves", "-")),
-                "so": str(p.get("kk") or p.get("strikeOuts", "-"))
+                "name": p.get("name", "-"),
+                "era": p.get("era", "-"),
+                "win": p.get("w", "-"),
+                "lose": p.get("l", "-"),
+                "save": p.get("sv", "-"),
+                "so": p.get("so", "-")
             })
 
     final_payload = {
@@ -175,11 +175,10 @@ def fetch_kt_wiz_data():
         "schedule": kt_schedule
     }
 
-    # 파일 쓰기
     with open("ktwiz_data.json", "w", encoding="utf-8") as f:
         json.dump(final_payload, f, ensure_ascii=False, indent=2)
 
-    print(f"크롤링 성공: 일정 {len(kt_schedule)}개, 순위 {len(rankings)}개 팀, 타자 {len(player_stats['batters'])}명, 투수 {len(player_stats['pitchers'])}명")
+    print(f"완료: 일정 {len(kt_schedule)}개, 순위 {len(rankings)}팀, 타자 {len(player_stats['batters'])}명, 투수 {len(player_stats['pitchers'])}명")
 
 if __name__ == "__main__":
     fetch_kt_wiz_data()
