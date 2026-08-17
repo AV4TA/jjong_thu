@@ -203,26 +203,12 @@
       padding: 10px 16px;
       border-top: 1px solid #f1f2f6;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
       background: #fafafa;
     }
 
-    .footer-left-actions { display: flex; gap: 6px; }
-    .btn-badge-action {
-      border: 1px solid var(--border);
-      background: white;
-      border-radius: 8px;
-      padding: 4px 8px;
-      font-size: 0.75rem;
-      font-weight: 800;
-      cursor: pointer;
-      color: #57606f;
-    }
-    .btn-badge-action:hover { background: #f1f2f6; }
-
-    .footer-right-actions { display: flex; gap: 6px; }
-    .btn-action-icon {
+    .btn-del-game {
       background: none;
       border: none;
       color: #a4b0be;
@@ -230,70 +216,35 @@
       cursor: pointer;
       padding: 4px 6px;
     }
-    .btn-action-icon:hover { color: #2f3542; }
-    .btn-action-icon.del:hover { color: #ff4757; }
+    .btn-del-game:hover { color: #ff4757; }
 
     /* 모달 UI */
     .status-msg-box {
       background: #eef2ff;
       border: 1px solid #c7d2fe;
       color: #4338ca;
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       font-weight: 700;
-      padding: 10px 12px;
-      border-radius: 12px;
-      margin-bottom: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      margin-bottom: 16px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
-    /* 상대 구단 빠른 선택 그리드 */
-    .team-chip-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin-bottom: 14px;
-    }
-    .team-chip {
-      padding: 10px 4px;
-      border: 1px solid var(--border);
-      background: #f8f9fa;
-      border-radius: 10px;
-      font-size: 0.82rem;
-      font-weight: 800;
-      color: #57606f;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
-    }
-    .team-chip.active {
-      background: var(--kt-dark);
-      color: white;
-      border-color: var(--kt-dark);
-    }
-
-    /* 결과 빠른 선택 */
-    .quick-result-row {
+    .preview-box {
+      background: #f8f9fc;
+      border: 1px dashed #dcdde1;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 20px;
       display: flex;
-      gap: 6px;
-      margin-bottom: 14px;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.9rem;
     }
-    .result-btn {
-      flex: 1;
-      padding: 10px 4px;
-      border: 1px solid var(--border);
-      background: #f8f9fa;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      font-weight: 800;
-      cursor: pointer;
-      color: #57606f;
-    }
-    .result-btn.active-win { background: #ea2027; color: white; border-color: #ea2027; }
-    .result-btn.active-lose { background: #57606f; color: white; border-color: #57606f; }
-    .result-btn.active-draw { background: #ffa502; color: white; border-color: #ffa502; }
-    .result-btn.active-sched { background: #747d8c; color: white; border-color: #747d8c; }
+    .preview-row { display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
 
     /* FAB */
     .fab {
@@ -334,16 +285,14 @@
       background: white;
       border-radius: 24px;
       width: 100%;
-      max-width: 420px;
-      padding: 22px;
-      max-height: 90vh;
-      overflow-y: auto;
+      max-width: 400px;
+      padding: 24px;
     }
     .modal-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 16px; color: #2f3542; }
     .form-group { margin-bottom: 14px; }
-    .form-group label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; color: #333; }
-    .form-control { width: 100%; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 0.95rem; font-weight: 600; outline: none; }
-    .btn { flex: 1; padding: 13px; border-radius: 12px; border: none; font-size: 0.95rem; font-weight: 800; cursor: pointer; }
+    .form-group label { display: block; font-size: 0.88rem; font-weight: 700; margin-bottom: 6px; color: #333; }
+    .form-control { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 1rem; font-weight: 700; outline: none; }
+    .btn { flex: 1; padding: 14px; border-radius: 12px; border: none; font-size: 0.95rem; font-weight: 800; cursor: pointer; }
     .btn-primary { background: var(--kt-red); color: white; }
     .btn-secondary { background: #f1f2f6; color: #57606f; }
   </style>
@@ -361,7 +310,7 @@
       </div>
       <div class="header-badge">
         <i class="fa-solid fa-bolt"></i>
-        <span>KBO 연동</span>
+        <span>KBO 자동</span>
       </div>
     </div>
   </header>
@@ -405,11 +354,10 @@
 
   <button class="fab" id="fabAddBtn" onclick="openAddModal()"><i class="fa-solid fa-plus"></i></button>
 
-  <!-- 직관 경기 등록/수정 모달 -->
+  <!-- 직관 날짜만 선택하는 모달 -->
   <div class="modal-overlay" id="addModal">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <h3 class="modal-title" id="modalTitleText">⚾ 직관 경기 기록</h3>
-      <input type="hidden" id="editGameId" value="">
+      <h3 class="modal-title">⚾ 직관 날짜 선택</h3>
 
       <div class="form-group">
         <label>경기 날짜</label>
@@ -417,52 +365,34 @@
       </div>
 
       <div class="status-msg-box" id="fetchStatusBox">
-        <i class="fa-solid fa-wand-magic-sparkles" id="statusIcon"></i>
-        <span id="statusText">날짜 선택 시 KBO 공식 결과를 자동 분석합니다.</span>
+        <i class="fa-solid fa-circle-notch fa-spin" id="statusIcon"></i>
+        <span id="statusText">경기 정보를 조회하는 중...</span>
       </div>
 
-      <div class="form-group">
-        <label>상대 구단</label>
-        <div class="team-chip-grid">
-          <div class="team-chip" onclick="selectTeam('LG 트윈스')">LG 트윈스</div>
-          <div class="team-chip" onclick="selectTeam('SSG 랜더스')">SSG 랜더스</div>
-          <div class="team-chip" onclick="selectTeam('두산 베어스')">두산 베어스</div>
-          <div class="team-chip" onclick="selectTeam('KIA 타이거즈')">KIA 타이거즈</div>
-          <div class="team-chip" onclick="selectTeam('삼성 라이온즈')">삼성 라이온즈</div>
-          <div class="team-chip" onclick="selectTeam('롯데 자이언츠')">롯데 자이언츠</div>
-          <div class="team-chip" onclick="selectTeam('한화 이글스')">한화 이글스</div>
-          <div class="team-chip" onclick="selectTeam('NC 다이노스')">NC 다이노스</div>
-          <div class="team-chip" onclick="selectTeam('키움 히어로즈')">키움 히어로즈</div>
+      <div class="preview-box">
+        <div class="preview-row">
+          <span style="color:var(--text-sub);">상대팀</span>
+          <span id="txtOpponent" style="color:#2f3542;">-</span>
+        </div>
+        <div class="preview-row">
+          <span style="color:var(--text-sub);">경기 결과</span>
+          <span id="txtResult" style="color:var(--kt-red);">-</span>
+        </div>
+        <div class="preview-row">
+          <span style="color:var(--text-sub);">구장 위치</span>
+          <span id="txtStadium" style="color:#57606f;">-</span>
         </div>
       </div>
 
-      <div class="form-group">
-        <label>경기 결과</label>
-        <div class="quick-result-row">
-          <button type="button" class="result-btn" id="btnWin" onclick="selectResult('win')">🔴 승리</button>
-          <button type="button" class="result-btn" id="btnLose" onclick="selectResult('lose')">⚫ 패배</button>
-          <button type="button" class="result-btn" id="btnDraw" onclick="selectResult('draw')">🟡 무승부</button>
-          <button type="button" class="result-btn" id="btnSched" onclick="selectResult('scheduled')">⚪ 예정</button>
-        </div>
-      </div>
+      <!-- 자동 분석 데이터 저장용 히든 필드 -->
+      <input type="hidden" id="autoOpponent" value="">
+      <input type="hidden" id="autoResult" value="scheduled">
+      <input type="hidden" id="autoScore" value="VS">
+      <input type="hidden" id="autoStadium" value="수원 케이티위즈파크">
 
-      <div class="form-group">
-        <label>최종 스코어</label>
-        <input type="text" class="form-control" id="gameScore" placeholder="예: KT 7 : 4 상대팀">
-      </div>
-
-      <div class="form-group">
-        <label>구장 위치</label>
-        <input type="text" class="form-control" id="gameStadium" placeholder="예: 수원 위즈파크 (홈) 또는 원정구장">
-      </div>
-
-      <!-- 히든 필드 -->
-      <input type="hidden" id="selectedOpponent" value="LG 트윈스">
-      <input type="hidden" id="selectedResult" value="win">
-
-      <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <div style="display: flex; gap: 10px;">
         <button class="btn btn-secondary" onclick="closeModal()">취소</button>
-        <button class="btn btn-primary" id="btnSaveSubmit" onclick="saveGame()">저장하기</button>
+        <button class="btn btn-primary" id="btnSaveSubmit" onclick="saveGame()">직관 기록 추가</button>
       </div>
     </div>
   </div>
@@ -514,28 +444,13 @@
       }
     }
 
-    function selectTeam(teamName) {
-      document.getElementById('selectedOpponent').value = teamName;
-      document.querySelectorAll('.team-chip').forEach(el => {
-        el.classList.toggle('active', el.innerText.trim() === teamName);
-      });
-    }
-
-    function selectResult(res) {
-      document.getElementById('selectedResult').value = res;
-      document.getElementById('btnWin').className = 'result-btn' + (res === 'win' ? ' active-win' : '');
-      document.getElementById('btnLose').className = 'result-btn' + (res === 'lose' ? ' active-lose' : '');
-      document.getElementById('btnDraw').className = 'result-btn' + (res === 'draw' ? ' active-draw' : '');
-      document.getElementById('btnSched').className = 'result-btn' + (res === 'scheduled' || res === 'canceled' ? ' active-sched' : '');
-    }
-
-    // 초고속 KBO 경기 데이터 조회
+    // ★ KBO 공식 경기 데이터 실시간 자동 패치
     async function fetchGameAuto(dateStr) {
       if (!dateStr) return;
       const statusText = document.getElementById('statusText');
       const statusIcon = document.getElementById('statusIcon');
       statusIcon.className = 'fa-solid fa-circle-notch fa-spin';
-      statusText.innerText = `${dateStr} 경기 정보 분석 중...`;
+      statusText.innerText = `${dateStr} 경기 분석 중...`;
 
       const teamMap = {
         'LG': 'LG 트윈스', 'SSG': 'SSG 랜더스', '두산': '두산 베어스', 'KIA': 'KIA 타이거즈',
@@ -546,13 +461,8 @@
         const targetUrl = `https://api-gw.sports.naver.com/schedule/games?upperCategoryId=kbaseball&fromDate=${dateStr}&toDate=${dateStr}&size=50`;
         const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
 
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2500);
-
-        const res = await fetch(proxyUrl, { signal: controller.signal });
-        clearTimeout(timeoutId);
-
-        if (!res.ok) throw new Error("Fetch failed");
+        const res = await fetch(proxyUrl);
+        if (!res.ok) throw new Error();
         const data = await res.json();
 
         const games = (data && data.result && data.result.games) ? data.result.games : [];
@@ -562,7 +472,7 @@
           g.homeTeamCode === 'KT' || g.awayTeamCode === 'KT'
         );
 
-        statusIcon.className = 'fa-solid fa-bolt';
+        statusIcon.className = 'fa-solid fa-check';
 
         if (ktGame) {
           const isHome = (ktGame.homeTeamName && ktGame.homeTeamName.includes('KT')) || ktGame.homeTeamCode === 'KT';
@@ -571,103 +481,110 @@
           const stadium = ktGame.stadium || (isHome ? '수원 케이티위즈파크' : '원정구장');
           const stadiumText = isHome ? `수원 위즈파크 (홈)` : `${stadium} (원정)`;
 
-          selectTeam(oppName);
-          document.getElementById('gameStadium').value = stadiumText;
-
           const ktScore = isHome ? ktGame.homeTeamScore : ktGame.awayTeamScore;
           const oppScore = isHome ? ktGame.awayTeamScore : ktGame.homeTeamScore;
 
+          let resType = 'scheduled';
+          let scoreStr = 'VS';
+          let resLabel = '⚪ 직관 예정';
+
           if (ktGame.status && (ktGame.status.includes('취소') || ktGame.statusCode === 'CANCEL')) {
-            selectResult('scheduled');
-            document.getElementById('gameScore').value = '취소';
-            statusText.innerText = `🌧️ ${oppName}전 [우천/경기 취소]`;
+            resType = 'canceled';
+            scoreStr = '취소';
+            resLabel = '🌧️ 우천/경기 취소';
+            statusText.innerText = `🌧️ ${oppName}전 [취소]`;
           } else if (ktScore !== undefined && oppScore !== undefined && ktScore !== null && oppScore !== null && ktScore !== '') {
-            const scoreStr = `KT ${ktScore} : ${oppScore} ${oppRaw}`;
-            document.getElementById('gameScore').value = scoreStr;
+            scoreStr = `KT ${ktScore} : ${oppScore} ${oppRaw}`;
             if (Number(ktScore) > Number(oppScore)) {
-              selectResult('win');
-              statusText.innerText = `🔴 ${ktScore}:${oppScore} [kt wiz 승리!] 데이터 자동 로드 🎉`;
+              resType = 'win';
+              resLabel = `🔴 승리 (KT ${ktScore}:${oppScore})`;
+              statusText.innerText = `🔴 [kt wiz 승리!] ${ktScore}:${oppScore}`;
             } else if (Number(ktScore) < Number(oppScore)) {
-              selectResult('lose');
-              statusText.innerText = `⚫ ${ktScore}:${oppScore} [kt wiz 패배] 데이터 자동 로드`;
+              resType = 'lose';
+              resLabel = `⚫ 패배 (KT ${ktScore}:${oppScore})`;
+              statusText.innerText = `⚫ [kt wiz 패배] ${ktScore}:${oppScore}`;
             } else {
-              selectResult('draw');
-              statusText.innerText = `🟡 ${ktScore}:${oppScore} [무승부] 데이터 자동 로드`;
+              resType = 'draw';
+              resLabel = `🟡 무승부 (KT ${ktScore}:${oppScore})`;
+              statusText.innerText = `🟡 [무승부] ${ktScore}:${oppScore}`;
             }
           } else {
-            selectResult('scheduled');
-            document.getElementById('gameScore').value = 'VS';
-            statusText.innerText = `⚪ ${oppName}전 [직관 예정] 데이터 자동 로드`;
+            resType = 'scheduled';
+            scoreStr = 'VS';
+            resLabel = '⚪ 직관 예정';
+            statusText.innerText = `⚪ ${oppName}전 [직관 예정]`;
           }
+
+          document.getElementById('autoOpponent').value = oppName;
+          document.getElementById('autoResult').value = resType;
+          document.getElementById('autoScore').value = scoreStr;
+          document.getElementById('autoStadium').value = stadiumText;
+
+          document.getElementById('txtOpponent').innerText = `${oppName} (${isHome ? '홈' : '원정'})`;
+          document.getElementById('txtResult').innerText = resLabel;
+          document.getElementById('txtStadium').innerText = stadiumText;
+
         } else {
-          statusText.innerText = `해당 날짜에는 kt wiz 공식 경기 일정이 없습니다.`;
+          statusText.innerText = `해당 날짜에는 kt wiz 공식 경기가 없습니다.`;
+          document.getElementById('autoOpponent').value = '';
+          document.getElementById('txtOpponent').innerText = '경기 없음';
+          document.getElementById('txtResult').innerText = '-';
+          document.getElementById('txtStadium').innerText = '-';
         }
       } catch (err) {
-        statusIcon.className = 'fa-solid fa-check';
-        statusText.innerText = `날짜 설정 완료. 상대팀과 결과를 선택해주세요.`;
+        statusIcon.className = 'fa-solid fa-xmark';
+        statusText.innerText = `경기 데이터를 가져오지 못했습니다.`;
       }
     }
 
     function saveGame() {
-      const editId = document.getElementById('editGameId').value;
       const date = document.getElementById('gameDate').value;
-      const opponent = document.getElementById('selectedOpponent').value || '상대팀';
-      const result = document.getElementById('selectedResult').value || 'win';
-      const score = document.getElementById('gameScore').value.trim() || 'VS';
-      const stadium = document.getElementById('gameStadium').value.trim() || '수원 위즈파크 (홈)';
+      const opponent = document.getElementById('autoOpponent').value;
+      const result = document.getElementById('autoResult').value;
+      const score = document.getElementById('autoScore').value;
+      const stadium = document.getElementById('autoStadium').value;
       const submitBtn = document.getElementById('btnSaveSubmit');
 
       if (!date) return alert('경기 날짜를 선택해주세요!');
+      if (!opponent || opponent === '경기 없음') return alert('해당 날짜에는 kt wiz 경기 일정이 없습니다.');
 
       submitBtn.disabled = true;
       submitBtn.innerText = '저장 중...';
       setSyncStatus(true);
 
-      const docId = editId || String(Date.now());
+      const docId = String(Date.now());
       const dataObj = {
         date: date,
         opponent: opponent,
         result: result,
         score: score,
         stadium: stadium,
-        updatedAt: Date.now()
+        createdAt: Date.now()
       };
 
       baseballCollection.doc(docId).set(dataObj, { merge: true })
         .then(() => {
           setSyncStatus(false);
           submitBtn.disabled = false;
-          submitBtn.innerText = '저장하기';
+          submitBtn.innerText = '직관 기록 추가';
           closeModal();
         })
         .catch(err => {
           console.error("저장 실패:", err);
           setSyncStatus(false);
           submitBtn.disabled = false;
-          submitBtn.innerText = '저장하기';
+          submitBtn.innerText = '직관 기록 추가';
           alert("저장 중 오류 발생: " + err.message);
         });
     }
 
-    function editGame(id) {
-      const g = gameList.find(item => item.id === id);
-      if (!g) return;
-      document.getElementById('editGameId').value = g.id;
-      document.getElementById('gameDate').value = g.date || '';
-      document.getElementById('gameScore').value = g.score || 'VS';
-      document.getElementById('gameStadium').value = g.stadium || '수원 위즈파크 (홈)';
-      selectTeam(g.opponent || 'LG 트윈스');
-      selectResult(g.result || 'win');
-      document.getElementById('modalTitleText').innerText = '⚾ 직관 경기 수정';
-      document.getElementById('statusText').innerText = '원하는 정보를 수정한 뒤 저장해주세요.';
-      document.getElementById('addModal').classList.add('active');
-    }
-
-    function quickUpdateResult(id, res) {
-      setSyncStatus(true);
-      baseballCollection.doc(id).update({
-        result: res
-      }).then(() => setSyncStatus(false));
+    function deleteGame(id) {
+      if (confirm('이 직관 기록을 삭제할까요?')) {
+        setSyncStatus(true);
+        baseballCollection.doc(id).delete()
+          .then(() => setSyncStatus(false))
+          .catch(err => { console.error(err); setSyncStatus(false); });
+      }
     }
 
     function updateDashboard() {
@@ -746,38 +663,15 @@
             <div class="game-stadium-tag">📍 ${g.stadium || '경기장'}</div>
           </div>
           <div class="game-card-footer">
-            <div class="footer-left-actions">
-              <button class="btn-badge-action" title="승리" onclick="quickUpdateResult('${g.id}', 'win')">🔴 승</button>
-              <button class="btn-badge-action" title="패배" onclick="quickUpdateResult('${g.id}', 'lose')">⚫ 패</button>
-              <button class="btn-badge-action" title="무승부" onclick="quickUpdateResult('${g.id}', 'draw')">🟡 무</button>
-            </div>
-            <div class="footer-right-actions">
-              <button class="btn-action-icon" title="수정" onclick="editGame('${g.id}')"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn-action-icon del" title="삭제" onclick="deleteGame('${g.id}')"><i class="fa-solid fa-trash-can"></i></button>
-            </div>
+            <button class="btn-del-game" title="삭제" onclick="deleteGame('${g.id}')"><i class="fa-solid fa-trash-can"></i></button>
           </div>
         </div>
       `).join('');
     }
 
-    function deleteGame(id) {
-      if (confirm('이 직관 기록을 삭제할까요?')) {
-        setSyncStatus(true);
-        baseballCollection.doc(id).delete()
-          .then(() => setSyncStatus(false))
-          .catch(err => { console.error(err); setSyncStatus(false); });
-      }
-    }
-
     function openAddModal() {
       const todayStr = new Date().toISOString().split('T')[0];
-      document.getElementById('editGameId').value = '';
       document.getElementById('gameDate').value = todayStr;
-      document.getElementById('gameScore').value = '';
-      document.getElementById('gameStadium').value = '수원 위즈파크 (홈)';
-      document.getElementById('modalTitleText').innerText = '⚾ 직관 경기 기록';
-      selectTeam('LG 트윈스');
-      selectResult('win');
       document.getElementById('addModal').classList.add('active');
       fetchGameAuto(todayStr);
     }
