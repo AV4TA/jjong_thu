@@ -38,7 +38,6 @@ def fetch_kbo_rankings():
         'SSG': 'SSG 랜더스', '키움': '키움 히어로즈'
     }
 
-    # 1차: KBO 공식 기록실 정적 테이블 파싱
     html = fetch_html("https://www.koreabaseball.com/Record/TeamRank/TeamRank.aspx")
     rankings = []
     if html:
@@ -63,7 +62,6 @@ def fetch_kbo_rankings():
         if len(rankings) == 10:
             return rankings
 
-    # 2차 백업: 네이버 야구 기록실 내부 데이터
     n_html = fetch_html("https://sports.news.naver.com/kbaseball/record/index?category=kbo")
     if n_html:
         match = re.search(r'jsonTeamRecord\s*=\s*(\{.*?\});', n_html, re.DOTALL)
@@ -90,16 +88,18 @@ def fetch_kbo_rankings():
     return []
 
 def fetch_kt_wiz_data():
-    today = datetime.datetime.now()
-    year = today.year
-    today_str = today.strftime("%Y-%m-%d")
+    # 💡 한국 표준시(KST: UTC + 9시간) 강제 계산
+    kst_tz = datetime.timezone(datetime.timedelta(hours=9))
+    today_kst = datetime.datetime.now(kst_tz)
+    year = today_kst.year
+    today_str = today_kst.strftime("%Y-%m-%d")
 
     team_map = {
         'LG': 'LG 트윈스', 'SSG': 'SSG 랜더스', '두산': '두산 베어스', 'KIA': 'KIA 타이거즈',
         '삼성': '삼성 라이온즈', '롯데': '롯데 자이언츠', '한화': '한화 이글스', 'NC': 'NC 다이노스', '키움': '키움 히어로즈', 'KT': 'kt wiz'
     }
 
-    # 1. 2026 시즌 KT 일정 & 결과
+    # 1. 정규시즌 일정 수집
     sched_url = f"https://api-gw.sports.naver.com/schedule/games?upperCategoryId=kbaseball&fromDate={year}-03-28&toDate={year}-12-31&size=1000"
     s_data = fetch_json(sched_url)
 
@@ -181,11 +181,11 @@ def fetch_kt_wiz_data():
                 "batters": [{"order": b.get("order", "-"), "name": b.get("name", "-"), "pos": b.get("pos", "-")} for b in target_lineup.get("batters", [])]
             }
 
-    # 3. KBO 공식 실시간 순위표 수집
+    # 3. KBO 공식 순위표
     rankings = fetch_kbo_rankings()
 
     final_payload = {
-        "updatedAt": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "updatedAt": today_kst.strftime("%Y-%m-%d %H:%M:%S (KST)"),
         "todayMatch": today_game_info,
         "todayLineup": today_lineup,
         "rankings": rankings,
@@ -195,7 +195,7 @@ def fetch_kt_wiz_data():
     with open("ktwiz_data.json", "w", encoding="utf-8") as f:
         json.dump(final_payload, f, ensure_ascii=False, indent=2)
 
-    print(f"✅ 수집 완료: 일정 {len(kt_schedule)}개 | 공식 순위 {len(rankings)}팀")
+    print(f"✅ 수집 완료 ({today_str} 기준): 오늘 경기 {'있음' if today_game_info else '없음/휴식일'} | 일정 {len(kt_schedule)}개 | 순위 {len(rankings)}팀")
 
 if __name__ == "__main__":
     fetch_kt_wiz_data()
