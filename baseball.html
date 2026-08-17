@@ -304,7 +304,7 @@
         <a href="index.html" class="btn-home" title="홈으로"><i class="fa-solid fa-house"></i></a>
         <div>
           <div class="header-title">위즈파크 직관 일기 ⚾</div>
-          <p style="font-size: 0.8rem; opacity: 0.9; margin-top: 2px;">뚜쫑 커플의 kt wiz 직관 승률 🔥</p>
+          <p style="font-size: 0.8rem; opacity: 0.9; margin-top: 2px;">kt wiz 직관 승률 🔥</p>
         </div>
       </div>
       <div class="header-badge">
@@ -360,12 +360,12 @@
 
       <div class="form-group">
         <label>경기 날짜</label>
-        <input type="date" class="form-control" id="gameDate" onchange="fetchRealKboGame(this.value)">
+        <input type="date" class="form-control" id="gameDate" onchange="matchKtGame(this.value)">
       </div>
 
       <div class="status-msg-box" id="fetchStatusBox">
-        <i class="fa-solid fa-circle-notch fa-spin" id="statusIcon"></i>
-        <span id="statusText">공식 경기 데이터를 조회하는 중...</span>
+        <i class="fa-solid fa-bolt" id="statusIcon"></i>
+        <span id="statusText">공식 일정 데이터 확인 중...</span>
       </div>
 
       <div class="preview-box">
@@ -383,7 +383,7 @@
         </div>
       </div>
 
-      <!-- 자동 분석 데이터 저장용 히든 필드 -->
+      <!-- 내부 저장용 히든 필드 -->
       <input type="hidden" id="autoOpponent" value="">
       <input type="hidden" id="autoResult" value="scheduled">
       <input type="hidden" id="autoScore" value="VS">
@@ -412,9 +412,26 @@
     const baseballCollection = db.collection("couple_space").doc("data").collection("baseball_games");
 
     let gameList = [];
+    let serverKboSchedule = {};
 
     const syncDot = document.getElementById('syncDot');
     const syncText = document.getElementById('syncStatusText');
+
+    // GitHub Actions가 생성한 ktwiz_data.json 0.01초 즉시 로드
+    async function loadOfficialKboData() {
+      try {
+        const res = await fetch('./ktwiz_data.json?v=' + Date.now());
+        if (res.ok) {
+          const data = await res.json();
+          serverKboSchedule = data.schedule || {};
+          const curDate = document.getElementById('gameDate').value;
+          if (curDate) matchKtGame(curDate);
+        }
+      } catch (e) {
+        console.warn("데이터 로드 대기 중...");
+      }
+    }
+    loadOfficialKboData();
 
     baseballCollection.onSnapshot((snapshot) => {
       const list = [];
@@ -442,110 +459,29 @@
       }
     }
 
-    // ★ KBO 공식 실시간 경기 데이터 크롤러 엔진
-    async function fetchRealKboGame(dateStr) {
+    // 날짜 선택 시 내 저장소 JSON에서 0.001초 만에 데이터 매칭
+    function matchKtGame(dateStr) {
       if (!dateStr) return;
       const statusText = document.getElementById('statusText');
-      const statusIcon = document.getElementById('statusIcon');
-      statusIcon.className = 'fa-solid fa-circle-notch fa-spin';
-      statusText.innerText = `${dateStr} 실제 공식 경기 조회 중...`;
+      const gameInfo = serverKboSchedule[dateStr];
 
-      const teamFullNames = {
-        'LG': 'LG 트윈스', 'SSG': 'SSG 랜더스', '두산': '두산 베어스', 'KIA': 'KIA 타이거즈',
-        '삼성': '삼성 라이온즈', '롯데': '롯데 자이언츠', '한화': '한화 이글스', 'NC': 'NC 다이노스', '키움': '키움 히어로즈', 'KT': 'kt wiz'
-      };
+      if (gameInfo) {
+        statusText.innerText = `공식 경기 데이터 로드 완료! ✨`;
+        document.getElementById('autoOpponent').value = gameInfo.opponent;
+        document.getElementById('autoResult').value = gameInfo.result;
+        document.getElementById('autoScore').value = gameInfo.score;
+        document.getElementById('autoStadium').value = gameInfo.stadium;
 
-      try {
-        // 다중 고속 엔드포인트 프록시 순차 시도
-        const rawApiUrl = `https://api-gw.sports.naver.com/schedule/games?upperCategoryId=kbaseball&fromDate=${dateStr}&toDate=${dateStr}&size=50`;
-        const proxyUrls = [
-          `https://api.allorigins.win/raw?url=${encodeURIComponent(rawApiUrl)}`,
-          `https://corsproxy.io/?${encodeURIComponent(rawApiUrl)}`
-        ];
-
-        let data = null;
-        for (let pUrl of proxyUrls) {
-          try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 2000);
-            const res = await fetch(pUrl, { signal: controller.signal });
-            clearTimeout(timeoutId);
-            if (res.ok) {
-              data = await res.json();
-              break;
-            }
-          } catch(e){}
-        }
-
-        const games = (data && data.result && data.result.games) ? data.result.games : [];
-        const ktGame = games.find(g => 
-          (g.homeTeamName && (g.homeTeamName.includes('KT') || g.homeTeamName.includes('kt'))) || 
-          (g.awayTeamName && (g.awayTeamName.includes('KT') || g.awayTeamName.includes('kt'))) ||
-          g.homeTeamCode === 'KT' || g.awayTeamCode === 'KT'
-        );
-
-        statusIcon.className = 'fa-solid fa-check';
-
-        if (ktGame) {
-          const isHome = (ktGame.homeTeamName && (ktGame.homeTeamName.includes('KT') || ktGame.homeTeamName.includes('kt'))) || ktGame.homeTeamCode === 'KT';
-          const oppRaw = isHome ? ktGame.awayTeamName : ktGame.homeTeamName;
-          const oppName = teamFullNames[oppRaw] || Object.values(teamFullNames).find(t => t.includes(oppRaw)) || oppRaw;
-          const stadium = ktGame.stadium || (isHome ? '수원 케이티위즈파크' : '원정구장');
-          const stadiumText = isHome ? `수원 위즈파크 (홈)` : `${stadium} (원정)`;
-
-          const ktScore = isHome ? ktGame.homeTeamScore : ktGame.awayTeamScore;
-          const oppScore = isHome ? ktGame.awayTeamScore : ktGame.homeTeamScore;
-
-          let resType = 'scheduled';
-          let scoreStr = 'VS';
-          let resLabel = '⚪ 직관 예정';
-
-          if (ktGame.status && (ktGame.status.includes('취소') || ktGame.statusCode === 'CANCEL')) {
-            resType = 'canceled';
-            scoreStr = '취소';
-            resLabel = '🌧️ 우천/경기 취소';
-            statusText.innerText = `🌧️ ${oppName}전 [경기 취소]`;
-          } else if (ktScore !== undefined && oppScore !== undefined && ktScore !== null && oppScore !== null && ktScore !== '') {
-            scoreStr = `KT ${ktScore} : ${oppScore} ${oppRaw}`;
-            if (Number(ktScore) > Number(oppScore)) {
-              resType = 'win';
-              resLabel = `🔴 승리 (KT ${ktScore}:${oppScore})`;
-              statusText.innerText = `🔴 [kt wiz 승리!] ${ktScore}:${oppScore}`;
-            } else if (Number(ktScore) < Number(oppScore)) {
-              resType = 'lose';
-              resLabel = `⚫ 패배 (KT ${ktScore}:${oppScore})`;
-              statusText.innerText = `⚫ [kt wiz 패배] ${ktScore}:${oppScore}`;
-            } else {
-              resType = 'draw';
-              resLabel = `🟡 무승부 (KT ${ktScore}:${oppScore})`;
-              statusText.innerText = `🟡 [무승부] ${ktScore}:${oppScore}`;
-            }
-          } else {
-            resType = 'scheduled';
-            scoreStr = 'VS';
-            resLabel = '⚪ 직관 예정';
-            statusText.innerText = `⚪ ${oppName}전 [직관 예정]`;
-          }
-
-          document.getElementById('autoOpponent').value = oppName;
-          document.getElementById('autoResult').value = resType;
-          document.getElementById('autoScore').value = scoreStr;
-          document.getElementById('autoStadium').value = stadiumText;
-
-          document.getElementById('txtOpponent').innerText = `${oppName} (${isHome ? '홈' : '원정'})`;
-          document.getElementById('txtResult').innerText = resLabel;
-          document.getElementById('txtStadium').innerText = stadiumText;
-
-        } else {
-          statusText.innerText = `해당 날짜에는 kt wiz 공식 경기가 없습니다.`;
-          document.getElementById('autoOpponent').value = '';
-          document.getElementById('txtOpponent').innerText = '경기 없음';
-          document.getElementById('txtResult').innerText = '-';
-          document.getElementById('txtStadium').innerText = '-';
-        }
-      } catch (err) {
-        statusIcon.className = 'fa-solid fa-xmark';
-        statusText.innerText = `경기 데이터를 가져오지 못했습니다.`;
+        const resLabels = { win: '🔴 승리', lose: '⚫ 패배', draw: '🟡 무승부', scheduled: '⚪ 직관 예정', canceled: '🌧️ 경기 취소' };
+        document.getElementById('txtOpponent').innerText = `${gameInfo.opponent} (${gameInfo.isHome ? '홈' : '원정'})`;
+        document.getElementById('txtResult').innerText = resLabels[gameInfo.result] || '⚪ 직관 예정';
+        document.getElementById('txtStadium').innerText = gameInfo.stadium;
+      } else {
+        statusText.innerText = `해당 날짜에는 kt wiz 공식 경기가 없습니다.`;
+        document.getElementById('autoOpponent').value = '';
+        document.getElementById('txtOpponent').innerText = '경기 없음';
+        document.getElementById('txtResult').innerText = '-';
+        document.getElementById('txtStadium').innerText = '-';
       }
     }
 
@@ -558,7 +494,7 @@
       const submitBtn = document.getElementById('btnSaveSubmit');
 
       if (!date) return alert('경기 날짜를 선택해주세요!');
-      if (!opponent || opponent === '경기 없음') return alert('해당 날짜에는 kt wiz 경기 일정이 없습니다.');
+      if (!opponent || opponent === '경기 없음') return alert('해당 날짜에는 kt wiz 공식 경기 일정이 없습니다.');
 
       submitBtn.disabled = true;
       submitBtn.innerText = '저장 중...';
@@ -685,7 +621,7 @@
       const todayStr = new Date().toISOString().split('T')[0];
       document.getElementById('gameDate').value = todayStr;
       document.getElementById('addModal').classList.add('active');
-      fetchRealKboGame(todayStr);
+      matchKtGame(todayStr);
     }
 
     function closeModal() {
