@@ -376,8 +376,8 @@
         <input type="text" class="form-control" id="itemName" placeholder="예: 양산가게 쇼핑">
       </div>
       <div class="form-group">
-        <label>메모 & 설명</label>
-        <textarea class="form-control" id="itemMemo" rows="2" placeholder="메뉴, 탑승장소, 예약정보 등"></textarea>
+        <label>메모 & 설명 (지도 링크 붙여넣기 가능)</label>
+        <textarea class="form-control" id="itemMemo" rows="2" placeholder="메뉴, 탑승장소, 구글지도 링크(https://maps.app.goo.gl/...) 등"></textarea>
       </div>
       <div style="display: flex; gap: 10px; margin-top: 20px;">
         <button class="btn btn-secondary" onclick="closeModal()">취소</button>
@@ -422,24 +422,24 @@
       checklistJjong: initialChecklistJjong,
       travel: [
         { id: 101, day: 1, icon: 'fa-plane-departure', time: '13:20', title: '인천공항 출발 🛫', memo: '인천공항 탑승 수속 & 면세점 구경', query: 'Incheon International Airport', showMap: false },
-        { id: 102, day: 1, icon: 'fa-plane-arrival', time: '15:00', title: '고베공항 도착 🛬', memo: '입국 수속 및 포트라이너 타고 산노미야역으로 이동', query: 'Kobe Airport', showMap: true },
-        { id: 103, day: 1, icon: 'fa-hotel', time: '16:30', title: '숙소 체크인 (토요코인 고베 산노미야 에키마에)', memo: '東横INN神戸三宮駅前 | 짐 풀고 가볍게 외출 준비 ✨', query: 'Toyoko Inn Kobe Sannomiya Ekimae', showMap: true },
-        { id: 104, day: 1, icon: 'fa-utensils', time: '17:00', title: '저녁 식사 (고베 타다)', memo: '맛있는 고베 로컬 맛집에서 저녁 식사 🥩', query: 'Kobe Tada Restaurant', showMap: true },
-        { id: 105, day: 1, icon: 'fa-street-view', time: '18:00', title: '기타노이진칸 구경 & 산책', memo: '이국적인 서양식 거리 구경 & 스타벅스 기타노이진칸점 ☕', query: 'Kitano Ijinkan Kobe', showMap: true },
-        { id: 106, day: 1, icon: 'fa-cable-car', time: '19:00', title: '누노비키 허브원 / 로프웨이', memo: '로프웨이 타고 올라가 고베 야경 내려다보기 🌿✨', query: 'Kobe Nunobiki Herb Gardens Ropeway', showMap: true },
-        { id: 201, day: 2, icon: 'fa-bus', time: '10:15', title: '산노미야 버스 터미널 출발 🚌', memo: '산노미야역 앞 버스터미널에서 아리마온천행 직행 버스 탑승', query: 'Sannomiya Bus Terminal', showMap: true },
-        { id: 202, day: 2, icon: 'fa-hot-tub-person', time: '10:45', title: '아리마 온천 마을 도착 ♨️', memo: '킨노유/긴노유 족욕 & 아리마 전통 먹거리 탄산센베 탐방', query: 'Arima Onsen Kobe', showMap: true },
-        { id: 203, day: 2, icon: 'fa-moon', time: '18:00', title: '온천 료칸 휴식 & 저녁 식사', memo: '따뜻한 온천욕과 함께 힐링 데이트 💖', query: 'Arima Onsen', showMap: false },
-        { id: 301, day: 3, icon: 'fa-van-shuttle', time: '11:00', title: '산노미야로 이동 🏙️', memo: '체크아웃 후 산노미야 중심가 복귀 & 쇼핑', query: 'Sannomiya Station Kobe', showMap: true },
-        { id: 302, day: 3, icon: 'fa-ferris-wheel', time: '16:00', title: '고베 하버랜드 모자이크', memo: '포트타워 야경 보며 낭만적인 밤 산책 🎡', query: 'Kobe Harborland MOSAIC', showMap: true },
-        { id: 401, day: 4, icon: 'fa-bag-shopping', time: '12:00', title: '마지막 쇼핑 & 점심 식사', memo: '기념품(푸딩, 과자 등) 구매 & 고베공항 이동', query: 'Sannomiya Center Gai Shopping Street', showMap: false },
-        { id: 402, day: 4, icon: 'fa-plane-departure', time: '16:00', title: '고베공항 출발 🛫', memo: '출국 수속 및 면세점 구경', query: 'Kobe Airport', showMap: false },
+        { id: 102, day: 1, icon: 'fa-plane-arrival', time: '15:00', title: '고베공항 도착 🛬', memo: '입국 수속 및 포트라이너 타고 산노미야역으로 이동', query: 'Kobe Airport, Japan', showMap: true },
+        { id: 103, day: 1, icon: 'fa-hotel', time: '16:30', title: '숙소 체크인 (토요코인 고베 산노미야 에키마에)', memo: '東横INN神戸三宮駅前 | 짐 풀고 가볍게 외출 준비 ✨', query: 'Toyoko Inn Kobe Sannomiya Ekimae, Kobe', showMap: true },
+        { id: 104, day: 1, icon: 'fa-utensils', time: '17:00', title: '저녁 식사 (고베 타다)', memo: '맛있는 고베 로컬 맛집에서 저녁 식사 🥩', query: 'Kobe Tada, Kobe, Japan', showMap: true },
+        { id: 105, day: 1, icon: 'fa-street-view', time: '18:00', title: '기타노이진칸 구경 & 산책', memo: '이국적인 서양식 거리 구경 & 스타벅스 기타노이진칸점 ☕', query: 'Kitano Ijinkan, Kobe, Japan', showMap: true },
+        { id: 106, day: 1, icon: 'fa-cable-car', time: '19:00', title: '누노비키 허브원 / 로프웨이', memo: '로프웨이 타고 올라가 고베 야경 내려다보기 🌿✨', query: 'Kobe Nunobiki Herb Gardens Ropeway, Kobe', showMap: true },
+        { id: 201, day: 2, icon: 'fa-bus', time: '10:15', title: '산노미야 버스 터미널 출발 🚌', memo: '산노미야역 앞 버스터미널에서 아리마온천행 직행 버스 탑승', query: 'Sannomiya Bus Terminal, Kobe', showMap: true },
+        { id: 202, day: 2, icon: 'fa-hot-tub-person', time: '10:45', title: '아리마 온천 마을 도착 ♨️', memo: '킨노유/긴노유 족욕 & 아리마 전통 먹거리 탄산센베 탐방', query: 'Arima Onsen, Kobe, Japan', showMap: true },
+        { id: 203, day: 2, icon: 'fa-moon', time: '18:00', title: '온천 료칸 휴식 & 저녁 식사', memo: '따뜻한 온천욕과 함께 힐링 데이트 💖', query: 'Arima Onsen, Kobe', showMap: false },
+        { id: 301, day: 3, icon: 'fa-van-shuttle', time: '11:00', title: '산노미야로 이동 🏙️', memo: '체크아웃 후 산노미야 중심가 복귀 & 쇼핑', query: 'Sannomiya Station, Kobe, Japan', showMap: true },
+        { id: 302, day: 3, icon: 'fa-ferris-wheel', time: '16:00', title: '고베 하버랜드 모자이크', memo: '포트타워 야경 보며 낭만적인 밤 산책 🎡', query: 'Kobe Harborland MOSAIC, Kobe', showMap: true },
+        { id: 401, day: 4, icon: 'fa-bag-shopping', time: '12:00', title: '마지막 쇼핑 & 점심 식사', memo: '기념품(푸딩, 과자 등) 구매 & 고베공항 이동', query: 'Sannomiya Center Gai, Kobe, Japan', showMap: false },
+        { id: 402, day: 4, icon: 'fa-plane-departure', time: '16:00', title: '고베공항 출발 🛫', memo: '출국 수속 및 면세점 구경', query: 'Kobe Airport, Japan', showMap: false },
         { id: 403, day: 4, icon: 'fa-plane-arrival', time: '18:00', title: '인천공항 도착 🛬', memo: '즐거웠던 고베 & 아리마 여행 마무리 💖', query: 'Incheon International Airport', showMap: false }
       ],
       places: [
-        { id: 1, category: '고베', title: '고베 타다', desc: '1일차 저녁 예정 맛집', query: 'Kobe Tada' },
-        { id: 2, category: '고베', title: '토요코인 고베 산노미야 에키마에', desc: '역 앞 편리한 숙소 (東横INN神戸三宮駅前)', query: 'Toyoko Inn Kobe Sannomiya Ekimae' },
-        { id: 3, category: '아리마', title: '아리마 온천 킨노유', desc: '적갈색 철분 천연 온천수 족욕장', query: 'Arima Onsen Kin no Yu' },
+        { id: 1, category: '고베', title: '고베 타다', desc: '1일차 저녁 예정 맛집', query: 'Kobe Tada, Kobe, Japan' },
+        { id: 2, category: '고베', title: '토요코인 고베 산노미야 에키마에', desc: '역 앞 편리한 숙소 (東横INN神戸三宮駅前)', query: 'Toyoko Inn Kobe Sannomiya Ekimae, Kobe' },
+        { id: 3, category: '아리마', title: '아리마 온천 킨노유', desc: '적갈색 철분 천연 온천수 족욕장', query: 'Arima Onsen Kin no Yu, Kobe' },
         { id: 4, category: '카페', title: '스타벅스 기타노이진칸점', desc: '등록유형문화재 서양식 주택 카페', query: 'Starbucks Coffee Kobe Kitano Ijinkan' }
       ]
     };
@@ -598,7 +598,7 @@
       }
     }
 
-    // ★ 시간(time)을 분 단위 숫자로 변환하여 오름차순 정렬하는 헬퍼 함수
+    // 시간 오름차순 변환 함수
     function parseTimeToMinutes(timeStr) {
       if (!timeStr) return 9999;
       const clean = timeStr.replace(/[^0-9:]/g, '');
@@ -612,6 +612,31 @@
       return 9999;
     }
 
+    // ★ 텍스트 안에서 구글 지도 링크를 추출하거나, 일본 고베 지역을 자동 지정하는 스마트 헬퍼
+    function getSmartMapInfo(item) {
+      const rawText = (item.query || '') + ' ' + (item.memo || '') + ' ' + (item.title || '');
+      const urlMatch = rawText.match(/(https?:\/\/[^\s]+)/g);
+      
+      // 1. 직접 지도 링크가 포함된 경우
+      if (urlMatch && urlMatch.length > 0) {
+        return {
+          directUrl: urlMatch[0],
+          searchQuery: item.title + ', Kobe, Japan'
+        };
+      }
+
+      // 2. 검색어인 경우 -> 한국 장소가 검색되지 않도록 일본 고베(Kobe, Japan)를 강제 추가
+      let cleanQuery = (item.query || item.title || '').trim();
+      if (!cleanQuery.includes('고베') && !cleanQuery.includes('Kobe') && !cleanQuery.includes('아리마') && !cleanQuery.includes('Arima') && !cleanQuery.includes('Japan') && !cleanQuery.includes('인천')) {
+        cleanQuery += ', Kobe, Japan';
+      }
+
+      return {
+        directUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(cleanQuery)}`,
+        searchQuery: cleanQuery
+      };
+    }
+
     function renderTimeline() {
       const container = document.getElementById('timelineContainer');
       const dayNum = parseInt(currentDay);
@@ -622,15 +647,12 @@
         return;
       }
 
-      // ★ 핵심: 시간 순서대로 자동 정렬 (11:00 -> 11:30 -> 16:00)
+      // 시간 자동 정렬
       items.sort((a, b) => parseTimeToMinutes(a.time) - parseTimeToMinutes(b.time));
 
       container.innerHTML = items.map(item => {
         const iconClass = (item.icon && item.icon.trim() !== '') ? item.icon : 'fa-location-dot';
-        const displayQuery = item.query || item.title;
-        const isDirectUrl = displayQuery.startsWith('http');
-        const mapUrl = isDirectUrl ? displayQuery : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(displayQuery)}`;
-        const embedQuery = isDirectUrl ? item.title : displayQuery;
+        const mapInfo = getSmartMapInfo(item);
 
         return `
           <div class="card timeline-item">
@@ -644,11 +666,11 @@
               <div class="timeline-memo">${item.memo || ''}</div>
               ${item.showMap ? `
                 <div class="map-preview-box">
-                  <iframe src="https://maps.google.com/maps?q=${encodeURIComponent(embedQuery)}&t=&z=15&ie=UTF8&iwloc=&output=embed" loading="lazy"></iframe>
+                  <iframe src="https://maps.google.com/maps?q=${encodeURIComponent(mapInfo.searchQuery)}&t=&z=15&ie=UTF8&iwloc=&output=embed" loading="lazy"></iframe>
                 </div>
               ` : ''}
               <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
-                <a class="btn-maps" href="${mapUrl}" target="_blank">
+                <a class="btn-maps" href="${mapInfo.directUrl}" target="_blank">
                   <i class="fa-brands fa-google"></i> 지도 보기
                 </a>
                 <button onclick="toggleMiniMap(${item.id})" style="border:none; background:none; color:#636e72; font-size:0.75rem; cursor:pointer;">
@@ -685,8 +707,8 @@
       const container = document.getElementById('placesContainer');
       const filtered = currentPlaceFilter === 'all' ? (appData.places || []) : (appData.places || []).filter(p => p.category === currentPlaceFilter);
       container.innerHTML = filtered.map(p => {
-        const displayQuery = p.query || p.title;
-        const mapUrl = displayQuery.startsWith('http') ? displayQuery : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(displayQuery)}`;
+        let q = p.query || p.title;
+        if (!q.includes('Kobe') && !q.includes('고베') && !q.includes('Japan')) q += ', Kobe, Japan';
         return `
           <div class="place-card">
             <div class="place-category-icon">
@@ -697,7 +719,7 @@
               <div style="font-size:0.98rem; font-weight:700; margin:2px 0;">${p.title}</div>
               <div style="font-size:0.8rem; color:var(--text-sub); line-height:1.3;">${p.desc}</div>
             </div>
-            <a class="btn-maps" href="${mapUrl}" target="_blank">
+            <a class="btn-maps" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}" target="_blank">
               <i class="fa-solid fa-arrow-up-right-from-square"></i>
             </a>
           </div>
@@ -788,12 +810,11 @@
       document.getElementById('nameLabel').innerText = (type === 'place') ? '맛집/장소명' : '일정 제목/장소';
     }
 
-    // 제목/메모 키워드에 따라 알맞은 아이콘을 자동 추천하는 함수
     function getAutoIcon(text) {
       const t = text.toLowerCase();
-      if (t.includes('식사') || t.includes('밥') || t.includes('맛집') || t.includes('점심') || t.includes('저녁')) return 'fa-utensils';
+      if (t.includes('식사') || t.includes('밥') || t.includes('맛집') || t.includes('점심') || t.includes('저녁') || t.includes('타다')) return 'fa-utensils';
       if (t.includes('카페') || t.includes('커피') || t.includes('스타벅스')) return 'fa-mug-hot';
-      if (t.includes('쇼핑') || t.includes('가게') || t.includes('마트') || t.includes('구매')) return 'fa-bag-shopping';
+      if (t.includes('쇼핑') || t.includes('가게') || t.includes('마트') || t.includes('구매') || t.includes('양산')) return 'fa-bag-shopping';
       if (t.includes('호텔') || t.includes('숙소') || t.includes('체크인') || t.includes('료칸')) return 'fa-hotel';
       if (t.includes('온천') || t.includes('탕') || t.includes('목욕')) return 'fa-hot-tub-person';
       if (t.includes('공항') || t.includes('비행기') || t.includes('출발') || t.includes('도착')) return 'fa-plane';
