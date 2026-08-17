@@ -146,6 +146,87 @@
       text-align: center;
     }
 
+    /* 섹션 타이틀 */
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #2f3542;
+      margin: 22px 0 12px 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 오늘 경기 & 라인업 카드 */
+    .today-card {
+      background: white;
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .today-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #f1f2f6;
+    }
+    .today-date-badge { font-size: 0.82rem; font-weight: 800; color: var(--kt-red); }
+    .today-time-badge { font-size: 0.78rem; font-weight: 700; color: var(--text-sub); }
+
+    .today-matchup {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .today-team { font-size: 1.15rem; font-weight: 900; }
+    .today-team.kt { color: var(--kt-red); }
+    .today-vs { font-size: 1.3rem; font-weight: 900; color: #57606f; }
+
+    .lineup-box {
+      background: #f8f9fa;
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .lineup-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: #57606f;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .pitcher-tag {
+      background: #eef2ff;
+      color: #4338ca;
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+    .lineup-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+    .lineup-item {
+      background: white;
+      border: 1px solid #eef0f4;
+      border-radius: 8px;
+      padding: 6px;
+      font-size: 0.78rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .order-num { font-weight: 900; color: var(--kt-red); }
+    .player-name { font-weight: 700; color: #2f3542; }
+    .player-pos { font-size: 0.7rem; color: var(--text-sub); }
+
     /* 직관 기록 카드 리스트 */
     .game-list { display: flex; flex-direction: column; gap: 14px; }
     .game-card {
@@ -304,7 +385,7 @@
         <a href="index.html" class="btn-home" title="홈으로"><i class="fa-solid fa-house"></i></a>
         <div>
           <div class="header-title">위즈파크 직관 일기 ⚾</div>
-          <p style="font-size: 0.8rem; opacity: 0.9; margin-top: 2px;">kt wiz 직관 승률 🔥</p>
+          <p style="font-size: 0.8rem; opacity: 0.9; margin-top: 2px;">뚜쫑 커플의 kt wiz 직관 승률 🔥</p>
         </div>
       </div>
       <div class="header-badge">
@@ -347,7 +428,42 @@
       <div class="fairy-comment" id="fairyCommentText">직관 날짜를 등록해보세요! 🧙‍♂️⚾</div>
     </div>
 
-    <!-- 직관 다이어리 목록 -->
+    <!-- 1. 오늘 경기 & 선발 라인업 섹션 -->
+    <div class="section-title">
+      <i class="fa-solid fa-calendar-day" style="color:var(--kt-red);"></i>
+      <span>오늘의 kt wiz 경기 & 라인업</span>
+    </div>
+    
+    <div class="today-card" id="todayGameCard">
+      <div class="today-header">
+        <span class="today-date-badge" id="todayDateTxt">📅 경기 일정 확인 중...</span>
+        <span class="today-time-badge" id="todayStadiumTxt">-</span>
+      </div>
+      <div class="today-matchup">
+        <span class="today-team kt">kt wiz</span>
+        <span class="today-vs" id="todayScoreOrVs">VS</span>
+        <span class="today-team" id="todayOpponentTxt">-</span>
+      </div>
+      
+      <!-- 선발 라인업 박스 -->
+      <div class="lineup-box">
+        <div class="lineup-title">
+          <span>📋 선발 타순 (1~9번)</span>
+          <span class="pitcher-tag" id="todayPitcherTxt">선발 투수: -</span>
+        </div>
+        <div class="lineup-grid" id="todayLineupGrid">
+          <div style="grid-column: span 3; text-align: center; color: var(--text-sub); font-size: 0.8rem; padding: 10px 0;">
+            경기 1~2시간 전 라인업이 자동 등록됩니다.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. 직관 기록 섹션 -->
+    <div class="section-title">
+      <i class="fa-solid fa-ticket" style="color:#ffa502;"></i>
+      <span>우리의 직관 다이어리</span>
+    </div>
     <div id="tab-games" class="game-list"></div>
   </div>
 
@@ -417,13 +533,14 @@
     const syncDot = document.getElementById('syncDot');
     const syncText = document.getElementById('syncStatusText');
 
-    // GitHub Actions가 생성한 ktwiz_data.json 0.01초 즉시 로드
+    // JSON 파일 로드 및 오늘 경기/라인업 렌더링
     async function loadOfficialKboData() {
       try {
         const res = await fetch('./ktwiz_data.json?v=' + Date.now());
         if (res.ok) {
           const data = await res.json();
           serverKboSchedule = data.schedule || {};
+          renderTodayMatchAndLineup(data.todayMatch, data.todayLineup);
           const curDate = document.getElementById('gameDate').value;
           if (curDate) matchKtGame(curDate);
         }
@@ -432,6 +549,40 @@
       }
     }
     loadOfficialKboData();
+
+    function renderTodayMatchAndLineup(todayMatch, todayLineup) {
+      if (!todayMatch) {
+        document.getElementById('todayDateTxt').innerText = '📅 오늘은 경기 일정이 없습니다.';
+        document.getElementById('todayStadiumTxt').innerText = '휴식일 🏖️';
+        document.getElementById('todayScoreOrVs').innerText = '-';
+        document.getElementById('todayOpponentTxt').innerText = '-';
+        document.getElementById('todayPitcherTxt').innerText = '선발: -';
+        return;
+      }
+
+      document.getElementById('todayDateTxt').innerText = `📅 ${todayMatch.date} (${todayMatch.time})`;
+      document.getElementById('todayStadiumTxt').innerText = `📍 ${todayMatch.stadium}`;
+      document.getElementById('todayScoreOrVs').innerText = todayMatch.score;
+      document.getElementById('todayOpponentTxt').innerText = todayMatch.opponent;
+
+      if (todayLineup) {
+        document.getElementById('todayPitcherTxt').innerText = `선발투수: ${todayLineup.pitcher || '미발표'}`;
+        const grid = document.getElementById('todayLineupGrid');
+        if (todayLineup.batters && todayLineup.batters.length > 0) {
+          grid.innerHTML = todayLineup.batters.map(b => `
+            <div class="lineup-item">
+              <div>
+                <span class="order-num">${b.order}</span>
+                <span class="player-name">${b.name}</span>
+              </div>
+              <span class="player-pos">${b.pos}</span>
+            </div>
+          `).join('');
+        } else {
+          grid.innerHTML = `<div style="grid-column: span 3; text-align: center; color: var(--text-sub); font-size: 0.8rem; padding: 10px 0;">경기 1~2시간 전 라인업이 자동 등록됩니다.</div>`;
+        }
+      }
+    }
 
     baseballCollection.onSnapshot((snapshot) => {
       const list = [];
@@ -459,7 +610,6 @@
       }
     }
 
-    // 날짜 선택 시 내 저장소 JSON에서 0.001초 만에 데이터 매칭
     function matchKtGame(dateStr) {
       if (!dateStr) return;
       const statusText = document.getElementById('statusText');
@@ -581,10 +731,10 @@
 
       if (list.length === 0) {
         container.innerHTML = `
-          <div style="text-align:center; padding: 50px 10px; color:#a4b0be;">
-            <i class="fa-solid fa-baseball-bat-ball" style="font-size:3rem; margin-bottom:12px; color:#ea2027; opacity:0.4;"></i>
-            <p style="font-size:1rem; font-weight:800; color:#4b5563;">아직 등록된 직관 기록이 없습니다.</p>
-            <p style="font-size:0.85rem; margin-top:4px;">우측 하단의 <b>+</b> 버튼을 눌러 직관 날짜를 등록해보세요!</p>
+          <div style="text-align:center; padding: 30px 10px; color:#a4b0be;">
+            <i class="fa-solid fa-baseball-bat-ball" style="font-size:2.5rem; margin-bottom:10px; color:#ea2027; opacity:0.4;"></i>
+            <p style="font-size:0.95rem; font-weight:800; color:#4b5563;">아직 등록된 직관 기록이 없습니다.</p>
+            <p style="font-size:0.8rem; margin-top:4px;">우측 하단의 <b>+</b> 버튼을 눌러 직관 날짜를 등록해보세요!</p>
           </div>
         `;
         return;
