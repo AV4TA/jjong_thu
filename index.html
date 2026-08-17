@@ -105,6 +105,7 @@
       background: var(--primary);
     }
     .menu-card.coupon-card::before { background: #6c5ce7; }
+    .menu-card.baseball-card::before { background: #ea2027; }
 
     .menu-left { display: flex; align-items: center; gap: 18px; }
     .menu-icon {
@@ -120,6 +121,7 @@
       flex-shrink: 0;
     }
     .coupon-card .menu-icon { background: #f0edff; color: #6c5ce7; }
+    .baseball-card .menu-icon { background: #ffe8ee; color: #ea2027; }
 
     .menu-title { font-size: 1.15rem; font-weight: 700; color: #2d3436; margin-bottom: 4px; }
     .menu-desc { font-size: 0.82rem; color: var(--text-sub); line-height: 1.35; }
@@ -134,6 +136,7 @@
       margin-top: 6px;
     }
     .coupon-card .menu-badge { background: #f0edff; color: #6c5ce7; }
+    .baseball-card .menu-badge { background: #ffe8ee; color: #ea2027; }
 
     .menu-arrow {
       color: #dcdde1;
@@ -196,6 +199,25 @@
           </div>
           <div>
             <div class="menu-title">기프티콘 보관함 🎁</div>
+            <div class="menu-desc">우리 둘만의 쿠폰 보관 & 바코드 확인</div>
+            <div class="menu-badge">모바일 쿠폰함</div>
+          </div>
+        </div>
+        <div class="menu-arrow">
+          <i class="fa-solid fa-chevron-right"></i>
+        </div>
+      </a>
+
+      <!-- 3. 위즈파크 직관 일기 -->
+      <a href="baseball.html" class="menu-card baseball-card">
+        <div class="menu-left">
+          <div class="menu-icon">
+            <i class="fa-solid fa-baseball-bat-ball"></i>
+          </div>
+          <div>
+            <div class="menu-title">위즈파크 직관 일기 ⚾</div>
+            <div class="menu-desc">kt wiz 직관 경기 기록 & 실시간 승률 계산</div>
+            <div class="menu-badge">kt wiz 승리요정 🔥</div>
           </div>
         </div>
         <div class="menu-arrow">
@@ -210,7 +232,7 @@
     </div>
   </div>
 
-<script>
+  <script>
     // 서비스 워커 등록 (PWA 앱 설치 활성화)
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js');
