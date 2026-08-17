@@ -1,68 +1,192 @@
 import json
 import datetime
 import urllib.request
+import os
 
 def fetch_json(url):
-    req = urllib.request.Request(
-        url,
-        headers={'User-Agent': 'Mozilla/5.0', 'Referer': 'https://m.sports.naver.com/'}
-    )
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'application/json, text/plain, */*',
+        'Referer': 'https://sports.news.naver.com/'
+    }
+    req = urllib.request.Request(url, headers=headers)
     try:
-        with urllib.request.urlopen(req, timeout=10) as res:
+        with urllib.request.urlopen(req, timeout=12) as res:
             return json.loads(res.read().decode('utf-8'))
-    except: return None
+    except Exception as e:
+        print(f"[API 호출 실패] {url} -> {e}")
+        return None
 
 def fetch_kt_wiz_data():
-    year = datetime.datetime.now().year
-    today_str = datetime.datetime.now().strftime("%Y-%m-%d")
+    today = datetime.datetime.now()
+    year = today.year
+    today_str = today.strftime("%Y-%m-%d")
 
-    # KT Wiz 일정만 수집
-    url = f"https://api-gw.sports.naver.com/schedule/games?upperCategoryId=kbaseball&fromDate={year}-03-28&toDate={year}-12-31&size=500"
-    data = fetch_json(url)
-    
+    # 기존 정상 데이터 로드 (실패 시 백업으로 사용)
+    prev_data = {}
+    if os.path.exists("ktwiz_data.json"):
+        try:
+            with open("ktwiz_data.json", "r", encoding="utf-8") as f:
+                prev_data = json.load(f)
+        except Exception:
+            prev_data = {}
+
+    # 1. 2026 정규시즌 전체 일정 (3월 28일 개막전부터)
+    sched_url = f"https://api-gw.sports.naver.com/schedule/games?upperCategoryId=kbaseball&fromDate={year}-03-28&toDate={year}-12-31&size=1000"
+    s_data = fetch_json(sched_url)
+
     kt_schedule = {}
-    today_game = None
+    today_game_id = None
+    today_game_info = None
 
-    if data and "result" in data:
-        for g in data["result"].get("games", []):
-            if "KT" in g.get("homeTeamName", "") or "KT" in g.get("awayTeamName", ""):
-                raw_dt = g.get("gameDateTime", "")
-                date = raw_dt.split("T")[0]
-                is_home = ("KT" in g.get("homeTeamName", ""))
-                
-                # 결과 처리
-                status = g.get("statusCode", "")
+    team_map = {
+        'LG': 'LG 트윈스', 'SSG': 'SSG 랜더스', '두산': '두산 베어스', 'KIA': 'KIA 타이거즈',
+        '삼성': '삼성 라이온즈', '롯데': '롯데 자이언츠', '한화': '한화 이글스', 'NC': 'NC 다이노스', '키움': '키움 히어로즈', 'KT': 'kt wiz'
+    }
+
+    if s_data and "result" in s_data:
+        games_list = s_data.get("result", {}).get("games", [])
+        for g in games_list:
+            raw_dt = g.get("gameDateTime", "")
+            game_date = raw_dt.split("T")[0] if "T" in raw_dt else raw_dt[:10]
+
+            if game_date < f"{year}-03-28":
+                continue
+
+            home = g.get("homeTeamName", "")
+            away = g.get("awayTeamName", "")
+            home_code = g.get("homeTeamCode", "")
+            away_code = g.get("awayTeamCode", "")
+
+            if "KT" in home or "KT" in away or home_code == "KT" or away_code == "KT":
+                is_home = ("KT" in home) or (home_code == "KT")
+                opp_raw = away if is_home else home
+                opp_name = team_map.get(opp_raw, opp_raw)
+                stadium = g.get("stadium", "수원 케이티위즈파크" if is_home else "원정구장")
+                game_time = raw_dt.split("T")[1][:5] if "T" in raw_dt else "18:30"
+
+                home_score = g.get("homeTeamScore")
+                away_score = g.get("awayTeamScore")
+                status = g.get("status", "")
+                status_code = g.get("statusCode", "")
+
+                res_type = "scheduled"
                 score_str = "VS"
-                res = "scheduled"
-                
-                if status in ['RESULT', 'END']:
-                    h_sc = g.get("homeTeamScore", 0)
-                    a_sc = g.get("awayTeamScore", 0)
-                    score_str = f"{h_sc} : {a_sc}"
-                    kt_sc = h_sc if is_home else a_sc
-                    op_sc = a_sc if is_home else h_sc
-                    if kt_sc > op_sc: res = "win"
-                    elif kt_sc < op_sc: res = "lose"
-                    else: res = "draw"
-                elif status == 'CANCEL':
-                    res = "canceled"
+
+                if "취소" in status or status_code == "CANCEL":
+                    res_type = "canceled"
                     score_str = "취소"
+                elif status_code in ['RESULT', 'END'] or (home_score is not None and away_score is not None and str(home_score) != "" and str(away_score) != ""):
+                    kt_score = int(home_score if is_home else away_score)
+                    opp_score = int(away_score if is_home else home_score)
+                    score_str = f"KT {kt_score} : {opp_score} {opp_raw}"
+                    if kt_score > opp_score:
+                        res_type = "win"
+                    elif kt_score < opp_score:
+                        res_type = "lose"
+                    else:
+                        res_type = "draw"
 
                 game_obj = {
-                    "date": date,
-                    "opponent": g.get("awayTeamName") if is_home else g.get("homeTeamName"),
-                    "stadium": g.get("stadium", "수원"),
-                    "result": res,
+                    "gameId": g.get("gameId"),
+                    "date": game_date,
+                    "time": game_time,
+                    "opponent": opp_name,
+                    "isHome": is_home,
+                    "stadium": f"수원 위즈파크 (홈)" if is_home else f"{stadium} (원정)",
+                    "result": res_type,
                     "score": score_str
                 }
-                kt_schedule[date] = game_obj
-                
-                if date == today_str:
-                    today_game = game_obj
 
-    final = {"todayMatch": today_game, "schedule": kt_schedule}
+                kt_schedule[game_date] = game_obj
+                if game_date == today_str:
+                    today_game_id = g.get("gameId")
+                    today_game_info = game_obj
+
+    if not kt_schedule and "schedule" in prev_data:
+        kt_schedule = prev_data["schedule"]
+
+    # 2. 오늘 경기 선발 라인업
+    today_lineup = {"pitcher": "-", "batters": []}
+    if today_game_id:
+        l_url = f"https://api-gw.sports.naver.com/schedule/games/{today_game_id}/relay"
+        l_data = fetch_json(l_url)
+        if l_data and "result" in l_data:
+            home_team = l_data.get("result", {}).get("gameInfo", {}).get("homeTeamCode", "")
+            is_kt_home = (home_team == "KT")
+            target_lineup = l_data.get("result", {}).get("lineup", {}).get("home" if is_kt_home else "away", {})
+            pitcher_name = target_lineup.get("starterPitcher", {}).get("name", "미발표")
+            today_lineup = {
+                "pitcher": pitcher_name,
+                "batters": [{"order": b.get("order", "-"), "name": b.get("name", "-"), "pos": b.get("pos", "-")} for b in target_lineup.get("batters", [])]
+            }
+
+    # 3. KBO 리그 공식 실시간 순위 수집
+    rankings = []
+    rank_url = f"https://api-gw.sports.naver.com/baseball/kbo/ranking/team?season={year}"
+    r_data = fetch_json(rank_url)
+    if r_data and "result" in r_data:
+        r_list = r_data.get("result", {}).get("teamRankList", []) or r_data.get("result", {}).get("regularSeason", [])
+        for r in r_list:
+            rankings.append({
+                "rank": str(r.get("rank") or r.get("ranking", "-")),
+                "teamName": r.get("teamName") or r.get("name", "-"),
+                "games": r.get("gameCount") or r.get("games", 0),
+                "win": r.get("winCount") or r.get("wins", 0),
+                "draw": r.get("drawCount") or r.get("draws", 0),
+                "lose": r.get("loseCount") or r.get("loses", 0),
+                "wra": str(r.get("wra") or r.get("winRate", "0.000")),
+                "gameDiff": str(r.get("gameDiff") or r.get("diff", "0.0"))
+            })
+
+    if not rankings and "rankings" in prev_data:
+        rankings = prev_data["rankings"]
+
+    # 4. KT Wiz 현재 시즌 실제 선수단 기록 (Daum & Naver 융합)
+    player_stats = {"batters": [], "pitchers": []}
+    b_url = f"https://score.sports.media.daum.net/plan/do/kbo/record_team_individual.json?season={year}&team_id=KT&category=hitter"
+    b_data = fetch_json(b_url)
+    if b_data and "list" in b_data:
+        for b in b_data["list"][:15]:
+            player_stats["batters"].append({
+                "name": b.get("name", "-"),
+                "hra": str(b.get("hra", "-")),
+                "hit": str(b.get("hit", "-")),
+                "hr": str(b.get("hr", "-")),
+                "rbi": str(b.get("rbi", "-")),
+                "ops": str(b.get("ops", "-"))
+            })
+
+    p_url = f"https://score.sports.media.daum.net/plan/do/kbo/record_team_individual.json?season={year}&team_id=KT&category=pitcher"
+    p_data = fetch_json(p_url)
+    if p_data and "list" in p_data:
+        for p in p_data["list"][:15]:
+            player_stats["pitchers"].append({
+                "name": p.get("name", "-"),
+                "era": str(p.get("era", "-")),
+                "win": str(p.get("w", "-")),
+                "lose": str(p.get("l", "-")),
+                "save": str(p.get("sv", "-")),
+                "so": str(p.get("so", "-"))
+            })
+
+    if (not player_stats["batters"] or not player_stats["pitchers"]) and "playerStats" in prev_data:
+        player_stats = prev_data["playerStats"]
+
+    # 최종 안전 저장
+    final_payload = {
+        "updatedAt": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "todayMatch": today_game_info,
+        "todayLineup": today_lineup,
+        "rankings": rankings,
+        "playerStats": player_stats,
+        "schedule": kt_schedule
+    }
+
     with open("ktwiz_data.json", "w", encoding="utf-8") as f:
-        json.dump(final, f, ensure_ascii=False, indent=2)
+        json.dump(final_payload, f, ensure_ascii=False, indent=2)
+
+    print(f"[데이터 수집 성공] 일정: {len(kt_schedule)}개 | 순위: {len(rankings)}팀 | 타자: {len(player_stats['batters'])}명 | 투수: {len(player_stats['pitchers'])}명")
 
 if __name__ == "__main__":
     fetch_kt_wiz_data()
