@@ -117,7 +117,7 @@
       box-shadow: 0 4px 10px rgba(255, 94, 126, 0.3);
     }
 
-    /* 맛집 2단 서브 필터 전용 */
+    /* 맛집 2단 서브 필터 */
     .region-switch-row {
       display: flex;
       background: #f1f2f6;
@@ -360,7 +360,7 @@
       <div id="timelineContainer" style="display:none;"></div>
     </div>
 
-    <!-- 2. 맛집/가볼곳 탭 (2단 분리: 지역 ➡️ 카테고리) -->
+    <!-- 2. 맛집/가볼곳 탭 -->
     <div id="view-places" class="tab-view">
       <!-- 1단계: 지역 선택 -->
       <div class="region-switch-row">
@@ -368,11 +368,12 @@
         <button class="region-btn" id="btnRegionArima" onclick="switchPlaceRegion('arima')">♨️ 아리마 온천</button>
       </div>
 
-      <!-- 2단계: 세부 카테고리 선택 -->
+      <!-- 2단계: 세부 카테고리 선택 (숙소 추가됨) -->
       <div class="category-sub-tabs" id="placeCategoryTabs">
         <button class="cat-chip-btn active" onclick="filterPlaceCategory('all', this)">전체</button>
         <button class="cat-chip-btn" onclick="filterPlaceCategory('맛집', this)">🍣 맛집</button>
         <button class="cat-chip-btn" onclick="filterPlaceCategory('카페', this)">☕ 카페</button>
+        <button class="cat-chip-btn" onclick="filterPlaceCategory('숙소', this)">🏨 숙소</button>
         <button class="cat-chip-btn" onclick="filterPlaceCategory('쇼핑', this)">🛍️ 쇼핑</button>
         <button class="cat-chip-btn" onclick="filterPlaceCategory('볼거리', this)">🎡 볼거리</button>
       </div>
@@ -442,7 +443,7 @@
         </div>
       </div>
 
-      <!-- 맛집/가볼곳 전용 지역 & 카테고리 태그 선택 필드 -->
+      <!-- 맛집/가볼곳 전용 지역 & 카테고리 태그 선택 필드 (숙소 추가됨) -->
       <div id="placeFields" style="display: none;">
         <div class="form-group">
           <label>지역 선택 📍</label>
@@ -456,6 +457,7 @@
           <select class="form-control" id="placeCategory">
             <option value="맛집">🍣 맛집</option>
             <option value="카페">☕ 카페</option>
+            <option value="숙소">🏨 숙소 / 호텔 / 료칸</option>
             <option value="쇼핑">🛍️ 쇼핑</option>
             <option value="볼거리">🎡 볼거리 / 명소</option>
           </select>
@@ -464,11 +466,11 @@
 
       <div class="form-group">
         <label id="nameLabel">일정 제목 / 장소명</label>
-        <input type="text" class="form-control" id="itemName" placeholder="예: 고베 타다 / 양산가게">
+        <input type="text" class="form-control" id="itemName" placeholder="예: 토요코인 / 고베 타다">
       </div>
       <div class="form-group">
         <label>메모 & 설명 (지도 링크 붙여넣기 가능)</label>
-        <textarea class="form-control" id="itemMemo" rows="2" placeholder="메뉴, 예약정보, 구글지도 링크(https://maps.app.goo.gl/...) 등"></textarea>
+        <textarea class="form-control" id="itemMemo" rows="2" placeholder="체크인/예약정보, 구글지도 링크(https://maps.app.goo.gl/...) 등"></textarea>
       </div>
       <div style="display: flex; gap: 10px; margin-top: 20px;">
         <button class="btn btn-secondary" onclick="closeModal()">취소</button>
@@ -529,7 +531,7 @@
       ],
       places: [
         { id: 1, region: 'kobe', category: '맛집', title: '고베 타다', desc: '1일차 저녁 예정 맛집 🥩', query: 'Kobe Tada, Kobe, Japan' },
-        { id: 2, region: 'kobe', category: '볼거리', title: '토요코인 고베 산노미야 에키마에', desc: '역 앞 편리한 숙소 (東横INN神戸三宮駅前)', query: 'Toyoko Inn Kobe Sannomiya Ekimae, Kobe' },
+        { id: 2, region: 'kobe', category: '숙소', title: '토요코인 고베 산노미야 에키마에', desc: '역 앞 편리한 숙소 (東横INN神戸三宮駅前)', query: 'Toyoko Inn Kobe Sannomiya Ekimae, Kobe' },
         { id: 3, region: 'kobe', category: '카페', title: '스타벅스 기타노이진칸점', desc: '등록유형문화재 서양식 주택 카페', query: 'Starbucks Coffee Kobe Kitano Ijinkan' },
         { id: 4, region: 'arima', category: '볼거리', title: '아리마 온천 킨노유', desc: '적갈색 철분 천연 온천수 족욕장 ♨️', query: 'Arima Onsen Kin no Yu, Kobe' },
         { id: 5, region: 'arima', category: '쇼핑', title: '아리마 탄산센베 본점', desc: '바삭바삭 전통 온천 탄산과자 선물', query: 'Arima Onsen Tansan Senbei' }
@@ -539,8 +541,8 @@
     let appData = initialKobeData;
     let currentDay = 'ready';
     let activeNav = 'travel';
-    let selectedPlaceRegion = 'kobe'; // 'kobe' 또는 'arima'
-    let selectedPlaceCategory = 'all'; // 'all', '맛집', '카페', '쇼핑', '볼거리'
+    let selectedPlaceRegion = 'kobe';
+    let selectedPlaceCategory = 'all';
     let currentWeatherCity = 'kobe';
     let currentPerson = 'thu';
 
@@ -784,7 +786,6 @@
       }
     }
 
-    // ★ 1단계: 맛집 지역 전환 (고베 / 아리마)
     function switchPlaceRegion(region) {
       selectedPlaceRegion = region;
       document.getElementById('btnRegionKobe').classList.toggle('active', region === 'kobe');
@@ -792,7 +793,6 @@
       renderPlaces();
     }
 
-    // ★ 2단계: 카테고리 필터 전환 (전체/맛집/카페/쇼핑/볼거리)
     function filterPlaceCategory(cat, btn) {
       selectedPlaceCategory = cat;
       document.querySelectorAll('#placeCategoryTabs .cat-chip-btn').forEach(b => b.classList.remove('active'));
@@ -803,6 +803,7 @@
     function getPlaceCategoryIcon(category) {
       switch (category) {
         case '카페': return 'fa-mug-hot';
+        case '숙소': return 'fa-hotel';
         case '쇼핑': return 'fa-bag-shopping';
         case '볼거리': return 'fa-ferris-wheel';
         case '맛집':
@@ -822,17 +823,16 @@
       const container = document.getElementById('placesContainer');
       const allList = appData.places || [];
 
-      // 1차 지역 필터 (과거 데이터의 category='고베', category='아리마'도 자동 보정)
       const regionFiltered = allList.filter(p => {
         const r = p.region || (p.category === '아리마' ? 'arima' : 'kobe');
         return r === selectedPlaceRegion;
       });
 
-      // 2차 세부 카테고리 필터
       const finalFiltered = selectedPlaceCategory === 'all'
         ? regionFiltered
         : regionFiltered.filter(p => {
-            const cat = (p.category === '고베' || p.category === '아리마') ? '맛집' : (p.category || '맛집');
+            let cat = p.category;
+            if (cat === '고베' || cat === '아리마') cat = '맛집';
             return cat === selectedPlaceCategory;
           });
 
@@ -963,8 +963,8 @@
       const t = text.toLowerCase();
       if (t.includes('식사') || t.includes('밥') || t.includes('맛집') || t.includes('점심') || t.includes('저녁') || t.includes('타다')) return 'fa-utensils';
       if (t.includes('카페') || t.includes('커피') || t.includes('스타벅스')) return 'fa-mug-hot';
+      if (t.includes('호텔') || t.includes('숙소') || t.includes('체크인') || t.includes('료칸') || t.includes('토요코인')) return 'fa-hotel';
       if (t.includes('쇼핑') || t.includes('가게') || t.includes('마트') || t.includes('구매') || t.includes('양산')) return 'fa-bag-shopping';
-      if (t.includes('호텔') || t.includes('숙소') || t.includes('체크인') || t.includes('료칸')) return 'fa-hotel';
       if (t.includes('온천') || t.includes('탕') || t.includes('목욕')) return 'fa-hot-tub-person';
       if (t.includes('공항') || t.includes('비행기') || t.includes('출발') || t.includes('도착')) return 'fa-plane';
       if (t.includes('버스') || t.includes('터미널') || t.includes('이동')) return 'fa-bus';
