@@ -79,7 +79,7 @@
       background: transparent;
       padding: 10px 4px;
       border-radius: 12px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 800;
       color: var(--text-sub);
       cursor: pointer;
@@ -271,7 +271,7 @@
         <a href="index.html" class="btn-home" title="홈으로"><i class="fa-solid fa-house"></i></a>
         <div>
           <div class="header-title">위즈파크 직관 일기 ⚾</div>
-          <p style="font-size: 0.78rem; opacity: 0.9; margin-top: 2px;">kt wiz 직관 승률 🔥</p>
+          <p style="font-size: 0.78rem; opacity: 0.9; margin-top: 2px;">뚜쫑 커플의 kt wiz 직관 승률 🔥</p>
         </div>
       </div>
     </div>
@@ -279,18 +279,13 @@
 
   <!-- 4개 상단 탭 -->
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('tab-diary')"><i class="fa-solid fa-ticket"></i> 직관기록</button>
-    <button class="tab-btn" onclick="switchTab('tab-today')"><i class="fa-solid fa-calendar-day"></i> 오늘경기</button>
-    <button class="tab-btn" onclick="switchTab('tab-rank')"><i class="fa-solid fa-ranking-star"></i> 리그순위</button>
-    <button class="tab-btn" onclick="switchTab('tab-player')"><i class="fa-solid fa-users"></i> 선수기록</button>
+    <button class="tab-btn active" onclick="switchTab('tab-diary', this)"><i class="fa-solid fa-ticket"></i> 직관기록</button>
+    <button class="tab-btn" onclick="switchTab('tab-today', this)"><i class="fa-solid fa-calendar-day"></i> 오늘경기</button>
+    <button class="tab-btn" onclick="switchTab('tab-rank', this)"><i class="fa-solid fa-ranking-star"></i> 리그순위</button>
+    <button class="tab-btn" onclick="switchTab('tab-player', this)"><i class="fa-solid fa-users"></i> 선수기록</button>
   </div>
 
   <div class="container">
-    <div class="sync-status" style="display:flex; align-items:center; gap:6px; font-size:0.75rem; color:var(--text-sub); justify-content:flex-end; margin-bottom:8px;">
-      <div class="sync-dot" id="syncDot" style="width:8px; height:8px; border-radius:50%; background:#2ed573;"></div>
-      <span id="syncStatusText">동기화 완료</span>
-    </div>
-
     <!-- 탭 1: 직관 다이어리 -->
     <div id="tab-diary" class="tab-content active">
       <div class="dashboard-card">
@@ -424,10 +419,10 @@
     let gameList = [];
     let serverKboData = {};
 
-    function switchTab(tabId) {
+    function switchTab(tabId, el) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      event.currentTarget.classList.add('active');
+      el.classList.add('active');
       document.getElementById(tabId).classList.add('active');
     }
 
@@ -441,7 +436,7 @@
 
     async function loadKboJson() {
       try {
-        const res = await fetch('./ktwiz_data.json?v=' + Date.now());
+        const res = await fetch('./ktwiz_data.json?t=' + Date.now());
         if (res.ok) {
           serverKboData = await res.json();
           renderTodayMatch(serverKboData.todayMatch, serverKboData.todayLineup);
@@ -486,7 +481,7 @@
         return;
       }
       tbody.innerHTML = rankings.map(r => `
-        <tr class="${r.teamName && r.teamName.includes('KT') ? 'kt-row' : ''}">
+        <tr class="${r.teamName && (r.teamName.includes('KT') || r.teamName.includes('kt')) ? 'kt-row' : ''}">
           <td><b>${r.rank}</b></td>
           <td>${r.teamName}</td>
           <td>${r.games}</td>
@@ -508,6 +503,8 @@
             <td><b>${b.name}</b></td><td>${b.hra}</td><td>${b.hit}</td><td>${b.hr}</td><td>${b.rbi}</td><td>${b.ops}</td>
           </tr>
         `).join('');
+      } else {
+        hBody.innerHTML = `<tr><td colspan="6" style="padding:20px 0;">타자 기록이 없습니다.</td></tr>`;
       }
 
       const pBody = document.getElementById('pitcherTableBody');
@@ -517,6 +514,8 @@
             <td><b>${p.name}</b></td><td>${p.era}</td><td>${p.win}</td><td>${p.lose}</td><td>${p.save}</td><td>${p.so}</td>
           </tr>
         `).join('');
+      } else {
+        pBody.innerHTML = `<tr><td colspan="6" style="padding:20px 0;">투수 기록이 없습니다.</td></tr>`;
       }
     }
 
