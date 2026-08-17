@@ -205,9 +205,9 @@
     }
     .timeline-content { flex: 1; }
     .timeline-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
-    .timeline-time { font-size: 0.78rem; font-weight: 700; color: var(--primary); }
-    .timeline-title { font-size: 1.02rem; font-weight: 700; color: #222; margin-bottom: 4px; }
-    .timeline-memo { font-size: 0.85rem; color: #636e72; line-height: 1.45; }
+    .timeline-time { font-size: 0.82rem; font-weight: 800; color: var(--primary); }
+    .timeline-title { font-size: 1.05rem; font-weight: 800; color: #222; margin-bottom: 4px; }
+    .timeline-memo { font-size: 0.85rem; color: #636e72; line-height: 1.45; word-break: break-all; }
 
     .map-preview-box { border-radius: 12px; overflow: hidden; margin: 10px 0; border: 1px solid var(--border); height: 160px; background: #eef1f6; }
     .map-preview-box iframe { width: 100%; height: 100%; border: 0; }
@@ -367,13 +367,13 @@
           </select>
         </div>
         <div class="form-group">
-          <label>시간 (예: 14:00)</label>
-          <input type="text" class="form-control" id="travelTime" placeholder="예: 14:00">
+          <label>시간 (예: 11:30 또는 14:00)</label>
+          <input type="text" class="form-control" id="travelTime" placeholder="예: 11:30">
         </div>
       </div>
       <div class="form-group">
         <label id="nameLabel">일정 제목/장소</label>
-        <input type="text" class="form-control" id="itemName" placeholder="예: 고베 타다">
+        <input type="text" class="form-control" id="itemName" placeholder="예: 양산가게 쇼핑">
       </div>
       <div class="form-group">
         <label>메모 & 설명</label>
@@ -598,42 +598,67 @@
       }
     }
 
+    // ★ 시간(time)을 분 단위 숫자로 변환하여 오름차순 정렬하는 헬퍼 함수
+    function parseTimeToMinutes(timeStr) {
+      if (!timeStr) return 9999;
+      const clean = timeStr.replace(/[^0-9:]/g, '');
+      const parts = clean.split(':').map(Number);
+      if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+        return parts[0] * 60 + parts[1];
+      }
+      if (parts.length === 1 && !isNaN(parts[0])) {
+        return parts[0] * 60;
+      }
+      return 9999;
+    }
+
     function renderTimeline() {
       const container = document.getElementById('timelineContainer');
       const dayNum = parseInt(currentDay);
-      const items = (appData.travel || []).filter(i => i.day === dayNum);
+      let items = (appData.travel || []).filter(i => i.day === dayNum);
 
       if (items.length === 0) {
         container.innerHTML = '<div style="text-align:center; color:#a4b0be; padding:40px 10px;">등록된 일정이 없습니다. 우측 하단의 <b>+</b> 버튼을 눌러 추가해보세요!</div>';
         return;
       }
 
-      container.innerHTML = items.map(item => `
-        <div class="card timeline-item">
-          <div class="timeline-icon"><i class="fa-solid ${item.icon || 'fa-location-dot'}"></i></div>
-          <div class="timeline-content">
-            <div class="timeline-header">
-              <span class="timeline-time">${item.time || '시간 미정'}</span>
-              <button onclick="deleteTravel(${item.id})" style="border:none; background:none; color:#ff7675; cursor:pointer;"><i class="fa-solid fa-trash-can"></i></button>
-            </div>
-            <div class="timeline-title">${item.title}</div>
-            <div class="timeline-memo">${item.memo || ''}</div>
-            ${item.showMap ? `
-              <div class="map-preview-box">
-                <iframe src="https://maps.google.com/maps?q=${encodeURIComponent(item.query || item.title)}&t=&z=15&ie=UTF8&iwloc=&output=embed" loading="lazy"></iframe>
+      // ★ 핵심: 시간 순서대로 자동 정렬 (11:00 -> 11:30 -> 16:00)
+      items.sort((a, b) => parseTimeToMinutes(a.time) - parseTimeToMinutes(b.time));
+
+      container.innerHTML = items.map(item => {
+        const iconClass = (item.icon && item.icon.trim() !== '') ? item.icon : 'fa-location-dot';
+        const displayQuery = item.query || item.title;
+        const isDirectUrl = displayQuery.startsWith('http');
+        const mapUrl = isDirectUrl ? displayQuery : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(displayQuery)}`;
+        const embedQuery = isDirectUrl ? item.title : displayQuery;
+
+        return `
+          <div class="card timeline-item">
+            <div class="timeline-icon"><i class="fa-solid ${iconClass}"></i></div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <span class="timeline-time">${item.time || '시간 미정'}</span>
+                <button onclick="deleteTravel(${item.id})" style="border:none; background:none; color:#ff7675; cursor:pointer;"><i class="fa-solid fa-trash-can"></i></button>
               </div>
-            ` : ''}
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
-              <a class="btn-maps" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.query || item.title)}" target="_blank">
-                <i class="fa-brands fa-google"></i> 지도 보기
-              </a>
-              <button onclick="toggleMiniMap(${item.id})" style="border:none; background:none; color:#636e72; font-size:0.75rem; cursor:pointer;">
-                ${item.showMap ? '🗺️ 미니맵 접기' : '🗺️ 미니맵 보기'}
-              </button>
+              <div class="timeline-title">${item.title}</div>
+              <div class="timeline-memo">${item.memo || ''}</div>
+              ${item.showMap ? `
+                <div class="map-preview-box">
+                  <iframe src="https://maps.google.com/maps?q=${encodeURIComponent(embedQuery)}&t=&z=15&ie=UTF8&iwloc=&output=embed" loading="lazy"></iframe>
+                </div>
+              ` : ''}
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+                <a class="btn-maps" href="${mapUrl}" target="_blank">
+                  <i class="fa-brands fa-google"></i> 지도 보기
+                </a>
+                <button onclick="toggleMiniMap(${item.id})" style="border:none; background:none; color:#636e72; font-size:0.75rem; cursor:pointer;">
+                  ${item.showMap ? '🗺️ 미니맵 접기' : '🗺️ 미니맵 보기'}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     function toggleMiniMap(id) {
@@ -659,21 +684,25 @@
     function renderPlaces() {
       const container = document.getElementById('placesContainer');
       const filtered = currentPlaceFilter === 'all' ? (appData.places || []) : (appData.places || []).filter(p => p.category === currentPlaceFilter);
-      container.innerHTML = filtered.map(p => `
-        <div class="place-card">
-          <div class="place-category-icon">
-            <i class="fa-solid ${p.category === '카페' ? 'fa-mug-hot' : (p.category === '아리마' ? 'fa-hot-tub-person' : 'fa-utensils')}"></i>
+      container.innerHTML = filtered.map(p => {
+        const displayQuery = p.query || p.title;
+        const mapUrl = displayQuery.startsWith('http') ? displayQuery : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(displayQuery)}`;
+        return `
+          <div class="place-card">
+            <div class="place-category-icon">
+              <i class="fa-solid ${p.category === '카페' ? 'fa-mug-hot' : (p.category === '아리마' ? 'fa-hot-tub-person' : 'fa-utensils')}"></i>
+            </div>
+            <div style="flex:1;">
+              <span style="font-size:0.72rem; color:var(--primary); font-weight:700;">#${p.category}</span>
+              <div style="font-size:0.98rem; font-weight:700; margin:2px 0;">${p.title}</div>
+              <div style="font-size:0.8rem; color:var(--text-sub); line-height:1.3;">${p.desc}</div>
+            </div>
+            <a class="btn-maps" href="${mapUrl}" target="_blank">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
           </div>
-          <div style="flex:1;">
-            <span style="font-size:0.72rem; color:var(--primary); font-weight:700;">#${p.category}</span>
-            <div style="font-size:0.98rem; font-weight:700; margin:2px 0;">${p.title}</div>
-            <div style="font-size:0.8rem; color:var(--text-sub); line-height:1.3;">${p.desc}</div>
-          </div>
-          <a class="btn-maps" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.query || p.title)}" target="_blank">
-            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-          </a>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     const CITY_COORDS = {
@@ -759,6 +788,19 @@
       document.getElementById('nameLabel').innerText = (type === 'place') ? '맛집/장소명' : '일정 제목/장소';
     }
 
+    // 제목/메모 키워드에 따라 알맞은 아이콘을 자동 추천하는 함수
+    function getAutoIcon(text) {
+      const t = text.toLowerCase();
+      if (t.includes('식사') || t.includes('밥') || t.includes('맛집') || t.includes('점심') || t.includes('저녁')) return 'fa-utensils';
+      if (t.includes('카페') || t.includes('커피') || t.includes('스타벅스')) return 'fa-mug-hot';
+      if (t.includes('쇼핑') || t.includes('가게') || t.includes('마트') || t.includes('구매')) return 'fa-bag-shopping';
+      if (t.includes('호텔') || t.includes('숙소') || t.includes('체크인') || t.includes('료칸')) return 'fa-hotel';
+      if (t.includes('온천') || t.includes('탕') || t.includes('목욕')) return 'fa-hot-tub-person';
+      if (t.includes('공항') || t.includes('비행기') || t.includes('출발') || t.includes('도착')) return 'fa-plane';
+      if (t.includes('버스') || t.includes('터미널') || t.includes('이동')) return 'fa-bus';
+      return 'fa-location-dot';
+    }
+
     function saveItem() {
       const type = document.getElementById('itemType').value;
       const name = document.getElementById('itemName').value.trim();
@@ -768,14 +810,16 @@
       if (type === 'travel') {
         if (!appData.travel) appData.travel = [];
         const chosenDay = parseInt(document.getElementById('travelDay').value);
+        const timeInput = document.getElementById('travelTime').value.trim() || '시간 미정';
+
         appData.travel.push({
           id: Date.now(),
           day: chosenDay,
-          time: document.getElementById('travelTime').value.trim() || '시간 미정',
+          time: timeInput,
           title: name,
           memo: memo,
           query: name,
-          icon: 'fa-location-dot',
+          icon: getAutoIcon(name + ' ' + memo),
           showMap: true
         });
         saveData();
