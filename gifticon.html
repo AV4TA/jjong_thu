@@ -404,7 +404,7 @@
         <a href="index.html" class="btn-home" title="홈으로"><i class="fa-solid fa-house"></i></a>
         <div>
           <div class="header-title">기프티콘 보관함 🎁</div>
-          <p style="font-size: 0.82rem; opacity: 0.95; margin-top: 2px;">공주네 모바일 쿠폰 공유함</p>
+          <p style="font-size: 0.82rem; opacity: 0.95; margin-top: 2px;">둘만의 모바일 쿠폰 공유함</p>
         </div>
       </div>
     </div>
@@ -512,8 +512,8 @@
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // 개별 문서 무제한 보관 서브컬렉션
-    const giftCollection = db.collection("couple_space").doc("data").collection("gifticons");
+    // ★ 완전히 분리된 전용 컬렉션 경로: couple_space/data/couple_gifticons
+    const giftCollection = db.collection("couple_space").doc("data").collection("couple_gifticons");
 
     let gifticons = [];
     let currentFilter = 'available';
