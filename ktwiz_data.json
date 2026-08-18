@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-18 22:28:06 (KST)",
+  "updatedAt": "2026-08-18 22:39:45 (KST)",
   "todayMatch": {
     "gameId": "20260818KTLG02026",
     "date": "2026-08-18",
@@ -28,12 +28,12 @@
     {
       "rank": "2",
       "teamName": "삼성 라이온즈",
-      "games": "105",
+      "games": "106",
       "win": "62",
-      "lose": "41",
+      "lose": "42",
       "draw": "2",
-      "wra": "0.602",
-      "gameDiff": "0.5"
+      "wra": "0.596",
+      "gameDiff": "1"
     },
     {
       "rank": "3",
@@ -56,14 +56,14 @@
       "gameDiff": "7"
     },
     {
-      "rank": "5",
+      "rank": "4",
       "teamName": "두산 베어스",
-      "games": "107",
-      "win": "55",
+      "games": "108",
+      "win": "56",
       "lose": "48",
       "draw": "4",
-      "wra": "0.534",
-      "gameDiff": "7.5"
+      "wra": "0.538",
+      "gameDiff": "7"
     },
     {
       "rank": "6",
@@ -78,42 +78,42 @@
     {
       "rank": "7",
       "teamName": "NC 다이노스",
-      "games": "100",
+      "games": "101",
       "win": "46",
-      "lose": "52",
+      "lose": "53",
       "draw": "2",
-      "wra": "0.469",
-      "gameDiff": "14"
+      "wra": "0.465",
+      "gameDiff": "14.5"
     },
     {
       "rank": "8",
       "teamName": "롯데 자이언츠",
-      "games": "105",
-      "win": "46",
+      "games": "106",
+      "win": "47",
       "lose": "57",
       "draw": "2",
-      "wra": "0.447",
-      "gameDiff": "16.5"
+      "wra": "0.452",
+      "gameDiff": "16"
     },
     {
       "rank": "9",
       "teamName": "SSG 랜더스",
-      "games": "109",
-      "win": "43",
+      "games": "110",
+      "win": "44",
       "lose": "62",
       "draw": "4",
-      "wra": "0.410",
-      "gameDiff": "20.5"
+      "wra": "0.415",
+      "gameDiff": "20"
     },
     {
       "rank": "10",
       "teamName": "키움 히어로즈",
-      "games": "110",
+      "games": "111",
       "win": "40",
-      "lose": "68",
+      "lose": "69",
       "draw": "2",
-      "wra": "0.370",
-      "gameDiff": "25"
+      "wra": "0.367",
+      "gameDiff": "25.5"
     }
   ],
   "schedule": {
