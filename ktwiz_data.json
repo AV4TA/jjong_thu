@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-08-18 22:39:45 (KST)",
+  "updatedAt": "2026-08-19 06:20:36 (KST)",
   "todayMatch": {
-    "gameId": "20260818KTLG02026",
-    "date": "2026-08-18",
+    "gameId": "20260819KTLG02026",
+    "date": "2026-08-19",
     "time": "19:00",
     "opponent": "LG 트윈스",
     "isHome": false,
     "stadium": "원정구장 (원정)",
-    "result": "lose",
-    "score": "KT 1 : 9 LG"
+    "result": "draw",
+    "score": "KT 0 : 0 LG"
   },
   "todayLineup": {
     "pitcher": "미발표",
@@ -18,32 +18,32 @@
     {
       "rank": "1",
       "teamName": "kt wiz",
-      "games": "104",
+      "games": "103",
       "win": "62",
-      "lose": "40",
+      "lose": "39",
       "draw": "2",
-      "wra": "0.608",
+      "wra": "0.614",
       "gameDiff": "0"
     },
     {
       "rank": "2",
       "teamName": "삼성 라이온즈",
-      "games": "106",
+      "games": "105",
       "win": "62",
-      "lose": "42",
+      "lose": "41",
       "draw": "2",
-      "wra": "0.596",
+      "wra": "0.602",
       "gameDiff": "1"
     },
     {
       "rank": "3",
       "teamName": "LG 트윈스",
-      "games": "108",
-      "win": "59",
+      "games": "107",
+      "win": "58",
       "lose": "48",
       "draw": "1",
-      "wra": "0.551",
-      "gameDiff": "5.5"
+      "wra": "0.547",
+      "gameDiff": "6.5"
     },
     {
       "rank": "4",
@@ -53,17 +53,17 @@
       "lose": "48",
       "draw": "2",
       "wra": "0.538",
-      "gameDiff": "7"
+      "gameDiff": "7.5"
     },
     {
-      "rank": "4",
+      "rank": "5",
       "teamName": "두산 베어스",
-      "games": "108",
-      "win": "56",
+      "games": "107",
+      "win": "55",
       "lose": "48",
       "draw": "4",
-      "wra": "0.538",
-      "gameDiff": "7"
+      "wra": "0.534",
+      "gameDiff": "8"
     },
     {
       "rank": "6",
@@ -73,46 +73,46 @@
       "lose": "53",
       "draw": "3",
       "wra": "0.475",
-      "gameDiff": "13.5"
+      "gameDiff": "14"
     },
     {
       "rank": "7",
       "teamName": "NC 다이노스",
-      "games": "101",
+      "games": "100",
       "win": "46",
-      "lose": "53",
+      "lose": "52",
       "draw": "2",
-      "wra": "0.465",
+      "wra": "0.469",
       "gameDiff": "14.5"
     },
     {
       "rank": "8",
       "teamName": "롯데 자이언츠",
-      "games": "106",
-      "win": "47",
+      "games": "105",
+      "win": "46",
       "lose": "57",
       "draw": "2",
-      "wra": "0.452",
-      "gameDiff": "16"
+      "wra": "0.447",
+      "gameDiff": "17"
     },
     {
       "rank": "9",
       "teamName": "SSG 랜더스",
-      "games": "110",
-      "win": "44",
+      "games": "109",
+      "win": "43",
       "lose": "62",
       "draw": "4",
-      "wra": "0.415",
-      "gameDiff": "20"
+      "wra": "0.410",
+      "gameDiff": "21"
     },
     {
       "rank": "10",
       "teamName": "키움 히어로즈",
-      "games": "111",
+      "games": "110",
       "win": "40",
-      "lose": "69",
+      "lose": "68",
       "draw": "2",
-      "wra": "0.367",
+      "wra": "0.370",
       "gameDiff": "25.5"
     }
   ],
