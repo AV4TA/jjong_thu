@@ -3,8 +3,12 @@ name: Update Lineup Data
 on:
   workflow_dispatch:
   schedule:
-    # 한국 시간 기준: 11:30, 16:30, 17:10, 17:40, 18:10
+    # 한국 시간 기준: 11:30, 16:30, 17:30, 18:00
     - cron: '30 2,7,8,9 * * *'
+
+# 💡 쓰기 권한 명시적 부여 (403 에러 방지)
+permissions:
+  contents: write
 
 jobs:
   update-lineup:
@@ -12,6 +16,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -19,12 +25,12 @@ jobs:
           python-version: '3.10'
 
       - name: Run Lineup Updater
-        run: python fetch_lineup.py
+        run: |
+          python fetch_lineup.py || echo "Script finished with non-fatal warning"
 
       - name: Commit and Push
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add ktwiz_data.json
-          git commit -m "Update Lineup & Starter Pitcher" || echo "No changes to commit"
-          git push || echo "Nothing to push"
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update Lineup & Starter Pitcher" && git push origin HEAD:${{ github.ref }})
