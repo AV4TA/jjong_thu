@@ -456,10 +456,10 @@
         <input type="file" class="form-control" id="giftImage" accept="image/*" onchange="handleImageOCR(this)">
         <div class="ocr-loader" id="ocrLoader">
           <i class="fa-solid fa-wand-magic-sparkles"></i>
-          <span id="ocrText">AI가 텍스트를 정밀 분석 중...</span>
+          <span id="ocrText">정밀 이미지 분석 및 텍스트 추출 중...</span>
         </div>
         <div id="ocrNotice" style="display:none; font-size: 0.78rem; color: #0984e3; margin-top: 6px; font-weight: 600;">
-          💡 AI가 분석한 내용입니다. 글자가 다를 경우 직접 수정해 주세요!
+          💡 AI 분석 완료! 내용이 정확한지 확인 후 저장해주세요.
         </div>
       </div>
       <div class="form-group">
@@ -718,9 +718,9 @@
       document.getElementById('giftDueDate').value = g.dueDate || '';
       document.getElementById('itemName').value = g.name || '';
       document.getElementById('itemMemo').value = g.memo || '';
+      document.getElementById('ocrNotice').style.display = 'none';
       editingExistingImg = g.img || null;
       editingExistingThumb = g.thumbImg || null;
-      document.getElementById('ocrNotice').style.display = 'none';
       document.getElementById('addModal').classList.add('active');
     }
 
@@ -809,7 +809,7 @@
       editingExistingThumb = null;
     }
 
-    // ★ 이미지 전처리(흑백 및 대비 강화) 함수 추가
+    // ★ 한층 더 고도화된 전처리 (이진화 및 임계값 처리 강화)
     function preprocessImageForOCR(file, callback) {
       const reader = new FileReader();
       reader.onload = function(e) {
@@ -819,8 +819,7 @@
           let width = img.width;
           let height = img.height;
           
-          // OCR 인식을 위해 적절한 크기로 리사이징 (최대 1200px)
-          const maxDim = 1200;
+          const maxDim = 1400; // 해상도 조금 더 상향
           if (width > height && width > maxDim) {
             height = Math.round((height * maxDim) / width);
             width = maxDim;
@@ -834,27 +833,26 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
-          // 픽셀 데이터를 가져와 흑백 변환 및 대비(Contrast) 향상 수행
           const imgData = ctx.getImageData(0, 0, width, height);
           const data = imgData.data;
-          const contrast = 1.3; // 대비 계수
-          const intercept = 128 * (1 - contrast);
 
           for (let i = 0; i < data.length; i += 4) {
-            // 그레이스케일(흑백) 변환
-            let avg = 0.3 * data[i] + 0.59 * data[i + 1] + 0.11 * data[i + 2];
-            // 대비 강화
-            let cVal = contrast * avg + intercept;
-            cVal = cVal < 0 ? 0 : (cVal > 255 ? 255 : cVal);
+            let r = data[i];
+            let g = data[i + 1];
+            let b = data[i + 2];
+            
+            // 그레이스케일 변환
+            let v = 0.299 * r + 0.587 * g + 0.114 * b;
+            
+            // 이진화(Thresholding): 배경을 날리고 글씨를 선명하게 돋보이게 함
+            v = v < 140 ? 0 : 255; 
 
-            data[i]     = cVal; // R
-            data[i + 1] = cVal; // G
-            data[i + 2] = cVal; // B
+            data[i] = v;     // R
+            data[i + 1] = v; // G
+            data[i + 2] = v; // B
           }
           ctx.putImageData(imgData, 0, 0);
-
-          // 전처리된 이미지를 DataURL로 변환하여 전달
-          callback(canvas.toDataURL('image/jpeg', 0.9));
+          callback(canvas.toDataURL('image/jpeg', 0.95));
         };
         img.src = e.target.result;
       };
@@ -872,9 +870,8 @@
       
       loader.classList.add('active');
       ocrNotice.style.display = 'none';
-      ocrText.innerText = '이미지 전처리 및 분석 중...';
+      ocrText.innerText = '이미지 최적화 및 텍스트 추출 중...';
 
-      // 1. 전처리 함수 호출 후 Tesseract 실행
       preprocessImageForOCR(file, (processedImgUrl) => {
         if (requestId !== currentOcrRequestId) return;
 
@@ -888,7 +885,7 @@
         }).then(({ data: { text } }) => {
           if (requestId !== currentOcrRequestId) return;
           loader.classList.remove('active');
-          ocrNotice.style.display = 'block'; // AI 분석 완료 안내 문구 표시
+          ocrNotice.style.display = 'block';
           extractGifticonInfo(text);
         }).catch(err => {
           if (requestId === currentOcrRequestId) {
@@ -898,35 +895,75 @@
       });
     }
 
+    // ★ 정규식 및 파싱 로직 대폭 고도화
     function extractGifticonInfo(rawText) {
       const text = rawText.replace(/\r/g, '');
       const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
 
-      const globalDateRegex = /(202[0-9]|203[0-9])[\.\-\/\s년]\s*([0-1]?[0-9])[\.\-\/\s월]\s*([0-3]?[0-9])/g;
-      const allDates = [...text.matchAll(globalDateRegex)];
-      if (allDates.length > 0) {
-        const lastMatch = allDates[allDates.length - 1];
-        const year = lastMatch[1];
-        const month = lastMatch[2].padStart(2, '0');
-        const day = lastMatch[3].padStart(2, '0');
-        document.getElementById('giftDueDate').value = `${year}-${month}-${day}`;
-      }
+      // 1. 유효기간(날짜) 패턴 다변화 탐지 (YYYY.MM.DD, YYYY년 MM월 DD일, YY.MM.DD 등)
+      const dateRegexes = [
+        /(202[0-9]|203[0-9])[\.\-\/\s년]\s*([0-1]?[0-9])[\.\-\/\s월]\s*([0-3]?[0-9])/g,
+        /([2-3][0-9])[\.\-\/\s년]\s*([0-1]?[0-9])[\.\-\/\s월]\s*([0-3]?[0-9])/g // 26.12.31 형태
+      ];
 
-      const brands = ['스타벅스', 'Starbucks', '투썸플레이스', '투썸', '메가커피', '컴포즈', '배스킨라빈스', 'BHC', 'BBQ', '교촌', '올리브영', 'CU', 'GS25', '버거킹', '맥도날드', '도미노피자', '이디야', '파리바게뜨', '설빙', '빽다방', '공차'];
-      for (let b of brands) {
-        if (text.includes(b)) { document.getElementById('giftBrand').value = b; break; }
-      }
-
-      const ignoreWords = ['교환권', '모바일', '쿠폰', '바코드', '유효기간', '주문번호', '발행처', '원', 'kakao'];
-      for (let line of lines) {
-        if (/(202[0-9]|203[0-9])/.test(line) || /^\d+$/.test(line.replace(/[-\s]/g, '')) || line.length < 2 || line.length > 35) continue;
-        if (!ignoreWords.some(w => line.includes(w))) {
-          const cand = line.replace(/[^\w\sㄱ-ㅎㅏ-ㅣ가-힣+()]/g, '').trim();
-          if (cand.length >= 2 && !document.getElementById('itemName').value) {
-            document.getElementById('itemName').value = cand;
-            break;
-          }
+      let foundDateStr = '';
+      for (let reg of dateRegexes) {
+        const matches = [...text.matchAll(reg)];
+        if (matches.length > 0) {
+          const lastMatch = matches[matches.length - 1]; // 보통 유효기간은 하단에 있으므로 마지막 매치 선호
+          let year = lastMatch[1];
+          if (year.length === 2) year = '20' + year; // YY를 YYYY로 변환
+          const month = lastMatch[2].padStart(2, '0');
+          const day = lastMatch[3].padStart(2, '0');
+          foundDateStr = `${year}-${month}-${day}`;
+          break;
         }
+      }
+      if (foundDateStr) {
+        document.getElementById('giftDueDate').value = foundDateStr;
+      }
+
+      // 2. 브랜드 자동 인식 사전 확장
+      const brands = [
+        '스타벅스', 'Starbucks', '투썸플레이스', '투썸', '메가커피', '메가MGC커피', '컴포즈커피', '컴포즈', 
+        '배스킨라빈스', '배라', 'BHC', 'BBQ', '교촌치킨', '교촌', '올리브영', 'CU', 'GS25', '세븐일레븐', 
+        '버거킹', '맥도날드', '롯데리아', '도미노피자', '피자헛', '이디야', '파리바게뜨', '뚜레쥬르', '설빙', '빽다방', '공차'
+      ];
+      for (let b of brands) {
+        if (text.includes(b)) {
+          // '배라'나 '메가' 등 줄임말은 정식 명칭으로 보정 가능
+          let brandName = b;
+          if (b === '배라') brandName = '배스킨라빈스';
+          if (b === '메가') brandName = '메가커피';
+          document.getElementById('giftBrand').value = brandName;
+          break;
+        }
+      }
+
+      // 3. 상품명 지능형 추출 (불필요한 문구 대폭 필터링)
+      const ignoreWords = [
+        '교환권', '모바일', '쿠폰', '바코드', '유효기간', '주문번호', '발행처', '원', 'kakao', '카카오톡', 
+        '사용처', '고객센터', '잔액', '환불', '가능', '주의사항', '포인트', '적립', '증정', '결제', '기간'
+      ];
+
+      let bestCandidate = '';
+      for (let line of lines) {
+        // 날짜, 숫자만 있는 줄, 너무 짧거나 긴 줄 제외
+        if (/(202[0-9]|203[0-9])/.test(line) || /^\d+$/.test(line.replace(/[-\s]/g, '')) || line.length < 2 || line.length > 40) continue;
+        
+        // 제외 단어가 포함된 문장 건너뛰기
+        if (ignoreWords.some(w => line.includes(w))) continue;
+
+        // 특수문자 및 기호 정제
+        const cleaned = line.replace(/[^\w\sㄱ-ㅎㅏ-ㅣ가-힣+()&]/g, '').trim();
+        if (cleaned.length >= 2) {
+          bestCandidate = cleaned;
+          break; // 가장 먼저 조건에 맞는 유효 라인을 상품명으로 선택
+        }
+      }
+
+      if (bestCandidate) {
+        document.getElementById('itemName').value = bestCandidate;
       }
     }
 
