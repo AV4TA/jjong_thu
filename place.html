@@ -19,7 +19,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <!-- 카카오 지도 SDK (JavaScript 키) -->
+  <!-- 카카오 지도 SDK -->
   <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6c0ba463ffa53681db449e24a9a56ef&libraries=services"></script>
 
   <style>
@@ -426,53 +426,59 @@
       else if (currentActiveTab === 'tab-cafe') searchPlaces('cafe');
     }
 
+    // 카카오 SDK 로딩 완료 여부를 감시하고 자동 실행하는 함수
+    function ensureKakaoServices(callback, retryCount = 0) {
+      if (typeof kakao !== 'undefined' && kakao.maps && kakao.maps.services && kakao.maps.services.Places) {
+        callback();
+      } else if (retryCount < 30) {
+        setTimeout(() => ensureKakaoServices(callback, retryCount + 1), 150);
+      } else {
+        const container = document.getElementById(currentActiveTab === 'tab-food' ? 'foodList' : 'cafeList');
+        container.innerHTML = `<div class="state-box">카카오 지도 인증 정보를 불러오지 못했습니다.<br><small style="color:#a4b0be;">(카카오 개발자 사이트에 도메인 등록이 완료되었는지 확인해 주세요)</small><br><button class="btn-refresh-gps" style="margin:12px auto 0;" onclick="getLocation()">다시 시도</button></div>`;
+      }
+    }
+
     function searchPlaces(type) {
       const container = document.getElementById(type === 'food' ? 'foodList' : 'cafeList');
       container.innerHTML = `<div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 주변 장소를 실시간 검색 중...</div>`;
 
-      // SDK 객체 로드 검사
-      if (typeof kakao === 'undefined' || !kakao.maps || !kakao.maps.services) {
-        container.innerHTML = `<div class="state-box">카카오 지도 인증 정보를 확인 중입니다.<br><button class="btn-refresh-gps" style="margin:10px auto 0;" onclick="searchPlaces('${type}')">다시 시도</button></div>`;
-        return;
-      }
+      ensureKakaoServices(() => {
+        const ps = new kakao.maps.services.Places();
+        const loc = new kakao.maps.LatLng(currentLat, currentLng);
+        const searchOptions = {
+          location: loc,
+          radius: 3500,
+          sort: kakao.maps.services.SortBy.DISTANCE,
+          size: 15
+        };
 
-      const ps = new kakao.maps.services.Places();
-      const loc = new kakao.maps.LatLng(currentLat, currentLng);
-      const searchOptions = {
-        location: loc,
-        radius: 3500, // 반경 3.5km
-        sort: kakao.maps.services.SortBy.DISTANCE,
-        size: 15
-      };
+        const callback = (data, status) => {
+          if (status === kakao.maps.services.Status.OK) {
+            renderPlaceCards(data || [], type, container);
+          } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+            container.innerHTML = `<div class="state-box">주변 반경 3.5km 이내에 검색된 매장이 없습니다.</div>`;
+          } else {
+            fallbackKeywordSearch(ps, type, loc, container);
+          }
+        };
 
-      const callback = (data, status) => {
-        if (status === kakao.maps.services.Status.OK) {
-          renderPlaceCards(data || [], type, container);
-        } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-          container.innerHTML = `<div class="state-box">주변 반경 3.5km 이내에 검색된 매장이 없습니다.</div>`;
-        } else {
-          // 키워드로 자동 우회 검색
+        try {
+          if (type === 'food') {
+            if (selectedFoodCategory === '전체') {
+              ps.categorySearch('FD6', callback, searchOptions);
+            } else {
+              ps.keywordSearch(selectedFoodCategory, callback, { ...searchOptions, category_group_code: 'FD6' });
+            }
+          } else if (type === 'cafe') {
+            ps.categorySearch('CE7', callback, searchOptions);
+          }
+        } catch (err) {
+          console.error("검색 실행 오류:", err);
           fallbackKeywordSearch(ps, type, loc, container);
         }
-      };
-
-      try {
-        if (type === 'food') {
-          if (selectedFoodCategory === '전체') {
-            ps.categorySearch('FD6', callback, searchOptions);
-          } else {
-            ps.keywordSearch(selectedFoodCategory, callback, { ...searchOptions, category_group_code: 'FD6' });
-          }
-        } else if (type === 'cafe') {
-          ps.categorySearch('CE7', callback, searchOptions);
-        }
-      } catch (err) {
-        console.error("검색 실행 실패:", err);
-        fallbackKeywordSearch(ps, type, loc, container);
-      }
+      });
     }
 
-    // 보조 검색 (키워드 기반 검색)
     function fallbackKeywordSearch(ps, type, loc, container) {
       const query = (type === 'food') ? (selectedFoodCategory === '전체' ? '맛집' : selectedFoodCategory) : '카페';
       ps.keywordSearch(query, (data, status) => {
