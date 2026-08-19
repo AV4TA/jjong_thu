@@ -339,7 +339,7 @@
       gap: 10px;
       background: #f8f9fa;
       border-radius: 14px;
-      padding: 14px;
+      padding: 14px 10px;
       margin-bottom: 14px;
       border: 1px solid #eef0f4;
     }
@@ -347,7 +347,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
+      gap: 4px;
       text-align: center;
     }
     .pitcher-duel-label {
@@ -362,17 +362,15 @@
     }
     .pitcher-duel-name.kt { color: var(--kt-red); }
     
-    /* 📊 선발투수 세부 성적 뱃지 */
     .pitcher-stat-badge {
-      font-size: 0.73rem;
-      font-weight: 700;
+      font-size: 0.72rem;
+      font-weight: 800;
       color: #57606f;
       background: #ffffff;
-      padding: 3px 8px;
+      padding: 4px 8px;
       border-radius: 8px;
       border: 1px solid #eef0f4;
-      margin-top: 2px;
-      min-height: 22px;
+      min-height: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -700,35 +698,38 @@
           renderTodayMatch(serverKboData.todayMatch, serverKboData.todayLineup, serverKboData.todayH2H);
           renderRankingsAndMagic(serverKboData.rankings);
 
-          // 브라우저에서 투수 상세 성적(ERA / 승패) 직접 로드
+          // ⚾ ktwiz-board 방식: 오픈 프록시를 통해 브라우저에서 투수 상세 성적 로드
           if (serverKboData.todayMatch && serverKboData.todayMatch.gameId) {
-            loadPitcherStats(serverKboData.todayMatch.gameId, serverKboData.todayMatch.isHome);
+            fetchLivePitcherStats(serverKboData.todayMatch.gameId, serverKboData.todayMatch.isHome);
           }
         }
       } catch(e){ console.warn("JSON 로드 대기"); }
     }
     loadKboJson();
 
-    // 🔍 네이버 게임센터 프리뷰 API를 브라우저에서 직접 호출하여 투수 ERA/승패 로드
-    async function loadPitcherStats(gameId, isHome) {
+    // 🌐 ktwiz-board 핵심 방식: allorigins 오픈 CORS 프록시로 네이버 프리뷰 호출
+    async function fetchLivePitcherStats(gameId, isHome) {
       const ktStatEl = document.getElementById('todayKtPitcherStat');
       const oppStatEl = document.getElementById('todayOppPitcherStat');
 
       try {
-        const res = await fetch(`https://api-gw.sports.naver.com/schedule/games/${gameId}/preview`);
+        const targetUrl = encodeURIComponent(`https://api-gw.sports.naver.com/schedule/games/${gameId}/preview`);
+        const res = await fetch(`https://api.allorigins.win/get?url=${targetUrl}`);
         if (!res.ok) return;
 
-        const data = await res.json();
+        const wrapper = await res.json();
+        const data = JSON.parse(wrapper.contents);
         const result = data.result || {};
+
         const homePitcher = result.homeStarterPitcher || {};
         const awayPitcher = result.awayStarterPitcher || {};
 
-        const homeStat = (homePitcher.era !== undefined && homePitcher.era !== null) 
-          ? `ERA ${homePitcher.era} (${homePitcher.w || 0}승 ${homePitcher.l || 0}패)` 
+        const homeStat = (homePitcher.era !== undefined && homePitcher.era !== null)
+          ? `ERA ${homePitcher.era} (${homePitcher.w || 0}승 ${homePitcher.l || 0}패)`
           : '-';
 
-        const awayStat = (awayPitcher.era !== undefined && awayPitcher.era !== null) 
-          ? `ERA ${awayPitcher.era} (${awayPitcher.w || 0}승 ${awayPitcher.l || 0}패)` 
+        const awayStat = (awayPitcher.era !== undefined && awayPitcher.era !== null)
+          ? `ERA ${awayPitcher.era} (${awayPitcher.w || 0}승 ${awayPitcher.l || 0}패)`
           : '-';
 
         if (isHome) {
@@ -739,7 +740,7 @@
           if (oppStatEl) oppStatEl.innerText = homeStat;
         }
       } catch (err) {
-        console.warn("투수 상세 성적 로드 건너뜀:", err);
+        console.warn("투수 상세 성적 프록시 로드 건너뜀:", err);
       }
     }
 
