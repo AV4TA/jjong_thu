@@ -105,6 +105,7 @@
       background: var(--primary);
     }
     .menu-card.map-card::before { background: #10ac84; }
+    .menu-card.place-card::before { background: #ff9f43; }
     .menu-card.baseball-card::before { background: #ea2027; }
     .menu-card.coupon-card::before { background: #6c5ce7; }
 
@@ -122,6 +123,7 @@
       flex-shrink: 0;
     }
     .map-card .menu-icon { background: #e8f8f5; color: #10ac84; }
+    .place-card .menu-icon { background: #fff4e6; color: #ff9f43; }
     .baseball-card .menu-icon { background: #ffe8ee; color: #ea2027; }
     .coupon-card .menu-icon { background: #f0edff; color: #6c5ce7; }
 
@@ -138,6 +140,7 @@
       margin-top: 6px;
     }
     .map-card .menu-badge { background: #e8f8f5; color: #10ac84; }
+    .place-card .menu-badge { background: #fff4e6; color: #ff9f43; }
     .baseball-card .menu-badge { background: #ffe8ee; color: #ea2027; }
     .coupon-card .menu-badge { background: #f0edff; color: #6c5ce7; }
 
@@ -362,7 +365,24 @@
         </div>
       </a>
 
-      <!-- 3. 위즈파크 직관 일기 -->
+      <!-- 3. 주변 맛집 & 카페 (신규 추가) -->
+      <a href="place.html" class="menu-card place-card">
+        <div class="menu-left">
+          <div class="menu-icon">
+            <i class="fa-solid fa-utensils"></i>
+          </div>
+          <div>
+            <div class="menu-title">주변 맛집 & 카페 🍽️</div>
+            <div class="menu-desc">현재 위치 기반 데이트 장소 탐색 & 또 갈 곳</div>
+            <div class="menu-badge">GPS 실시간 추천 ✨</div>
+          </div>
+        </div>
+        <div class="menu-arrow">
+          <i class="fa-solid fa-chevron-right"></i>
+        </div>
+      </a>
+
+      <!-- 4. 위즈파크 직관 일기 -->
       <a href="baseball.html" class="menu-card baseball-card">
         <div class="menu-left">
           <div class="menu-icon">
@@ -379,7 +399,7 @@
         </div>
       </a>
 
-      <!-- 4. 기프티콘 보관함 (가장 마지막 순서) -->
+      <!-- 5. 기프티콘 보관함 -->
       <a href="gifticon.html" class="menu-card coupon-card">
         <div class="menu-left">
           <div class="menu-icon">
@@ -479,7 +499,6 @@
     async function verifyPin() {
       const inputHash = await sha256(enteredPin);
       
-      // 일치 검증
       if (inputHash === PIN_HASH || enteredPin === "100609") {
         const isAuto = document.getElementById("chkAutoLogin").checked;
         if (isAuto) {
