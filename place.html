@@ -19,8 +19,8 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <!-- 카카오 지도/장소 라이브러리 (JavaScript 키 적용) -->
-  <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6c0ba463ffa53681db449e24a9a56ef&libraries=services"></script>
+  <!-- 카카오 지도/장소 라이브러리 (JavaScript 키 적용 & autoload=false) -->
+  <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6c0ba463ffa53681db449e24a9a56ef&libraries=services&autoload=false"></script>
 
   <style>
     :root {
@@ -388,6 +388,7 @@
     let selectedFoodCategory = '전체';
     let currentActiveTab = 'tab-food';
     let wishMap = {};
+    let kakaoPlacesService = null;
 
     const DESSERT_PAIRS = [
       ["🥐 소금빵", "🍓 딸기 케이크"],
@@ -412,8 +413,8 @@
       document.getElementById(tabId).classList.add('active');
       currentActiveTab = tabId;
 
-      if (tabId === 'tab-food') searchKakaoTop5('food');
-      else if (tabId === 'tab-cafe') searchKakaoTop5('cafe');
+      if (tabId === 'tab-food') searchPlaces('food');
+      else if (tabId === 'tab-cafe') searchPlaces('cafe');
       else if (tabId === 'tab-wish') renderWishList();
     }
 
@@ -421,7 +422,7 @@
       document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       selectedFoodCategory = cat;
-      searchKakaoTop5('food');
+      searchPlaces('food');
     }
 
     function getLocation() {
@@ -434,57 +435,75 @@
             currentLat = pos.coords.latitude;
             currentLng = pos.coords.longitude;
             txt.innerText = "내 위치 수신 완료 📍";
-            if (currentActiveTab === 'tab-food') searchKakaoTop5('food');
-            else if (currentActiveTab === 'tab-cafe') searchKakaoTop5('cafe');
+            if (currentActiveTab === 'tab-food') searchPlaces('food');
+            else if (currentActiveTab === 'tab-cafe') searchPlaces('cafe');
           },
           (err) => {
             txt.innerText = "기본 위치 적용";
-            if (currentActiveTab === 'tab-food') searchKakaoTop5('food');
-            else if (currentActiveTab === 'tab-cafe') searchKakaoTop5('cafe');
+            if (currentActiveTab === 'tab-food') searchPlaces('food');
+            else if (currentActiveTab === 'tab-cafe') searchPlaces('cafe');
           },
           { enableHighAccuracy: true, timeout: 5000 }
         );
       } else {
         txt.innerText = "GPS 미지원";
-        if (currentActiveTab === 'tab-food') searchKakaoTop5('food');
-        else if (currentActiveTab === 'tab-cafe') searchKakaoTop5('cafe');
+        if (currentActiveTab === 'tab-food') searchPlaces('food');
+        else if (currentActiveTab === 'tab-cafe') searchPlaces('cafe');
       }
     }
 
-    // 카카오 서비스 객체가 로드될 때까지 재귀 대기
-    function searchKakaoTop5(type) {
-      const container = document.getElementById(type === 'food' ? 'foodList' : 'cafeList');
-      container.innerHTML = `<div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 내 주변 실제 상호명 검색 중...</div>`;
-
-      if (typeof kakao === 'undefined' || !kakao.maps || !kakao.maps.services || !kakao.maps.services.Places) {
-        setTimeout(() => searchKakaoTop5(type), 150);
+    // 카카오 SDK 초기화
+    function initKakaoServices(callback) {
+      if (kakaoPlacesService) {
+        callback();
         return;
       }
 
-      const ps = new kakao.maps.services.Places();
-      const loc = new kakao.maps.LatLng(currentLat, currentLng);
-      const radius = 500; // 500m 반경
-
-      const callback = (data, status) => {
-        if (status === kakao.maps.services.Status.OK && data && data.length > 0) {
-          // 거리순 정렬 후 정확히 상위 5곳만 슬라이스
-          data.sort((a, b) => parseInt(a.distance, 10) - parseInt(b.distance, 10));
-          const top5 = data.slice(0, 5);
-          renderKakaoPlaces(top5, type, container);
-        } else {
-          container.innerHTML = `<div class="state-box">반경 500m 이내에 등록된 ${type === 'food' ? '음식점' : '카페'}이 없습니다.<br><small style="color:#a4b0be;">(우측 상단 갱신을 눌러보세요)</small></div>`;
-        }
-      };
-
-      if (type === 'food') {
-        if (selectedFoodCategory === '전체') {
-          ps.categorySearch('FD6', callback, { location: loc, radius: radius, sort: kakao.maps.services.SortBy.DISTANCE, size: 15 });
-        } else {
-          ps.keywordSearch(selectedFoodCategory, callback, { location: loc, radius: radius, category_group_code: 'FD6', sort: kakao.maps.services.SortBy.DISTANCE, size: 15 });
-        }
-      } else if (type === 'cafe') {
-        ps.categorySearch('CE7', callback, { location: loc, radius: radius, sort: kakao.maps.services.SortBy.DISTANCE, size: 15 });
+      if (typeof kakao !== 'undefined' && kakao.maps) {
+        kakao.maps.load(() => {
+          if (kakao.maps.services && kakao.maps.services.Places) {
+            kakaoPlacesService = new kakao.maps.services.Places();
+            callback();
+          } else {
+            console.error("카카오 Places 서비스를 사용할 수 없습니다.");
+          }
+        });
       }
+    }
+
+    function searchPlaces(type) {
+      const container = document.getElementById(type === 'food' ? 'foodList' : 'cafeList');
+      container.innerHTML = `<div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 내 주변 실제 상호명 검색 중...</div>`;
+
+      initKakaoServices(() => {
+        if (!kakaoPlacesService) {
+          container.innerHTML = `<div class="state-box">카카오 서비스를 불러오지 못했습니다.<br><button class="btn-refresh-gps" style="margin:10px auto 0;" onclick="searchPlaces('${type}')">다시 시도</button></div>`;
+          return;
+        }
+
+        const loc = new kakao.maps.LatLng(currentLat, currentLng);
+        const radius = 500;
+
+        const callback = (data, status) => {
+          if (status === kakao.maps.services.Status.OK && data && data.length > 0) {
+            data.sort((a, b) => parseInt(a.distance, 10) - parseInt(b.distance, 10));
+            const top5 = data.slice(0, 5);
+            renderKakaoPlaces(top5, type, container);
+          } else {
+            container.innerHTML = `<div class="state-box">반경 500m 이내에 검색된 매장이 없습니다.<br><small style="color:#a4b0be;">(우측 상단 갱신을 눌러보세요)</small></div>`;
+          }
+        };
+
+        if (type === 'food') {
+          if (selectedFoodCategory === '전체') {
+            kakaoPlacesService.categorySearch('FD6', callback, { location: loc, radius: radius, sort: kakao.maps.services.SortBy.DISTANCE, size: 15 });
+          } else {
+            kakaoPlacesService.keywordSearch(selectedFoodCategory, callback, { location: loc, radius: radius, category_group_code: 'FD6', sort: kakao.maps.services.SortBy.DISTANCE, size: 15 });
+          }
+        } else if (type === 'cafe') {
+          kakaoPlacesService.categorySearch('CE7', callback, { location: loc, radius: radius, sort: kakao.maps.services.SortBy.DISTANCE, size: 15 });
+        }
+      });
     }
 
     function renderKakaoPlaces(places, type, container) {
@@ -620,7 +639,9 @@
 
     window.addEventListener("DOMContentLoaded", () => {
       listenWishlist();
-      getLocation();
+      initKakaoServices(() => {
+        getLocation();
+      });
     });
   </script>
 </body>
