@@ -19,7 +19,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <!-- 서울 핫플레이스 데이터 연동 -->
+  <!-- 500개 서울 빅데이터 핫플레이스 데이터 파일 연동 -->
   <script src="placesData.js"></script>
 
   <style>
@@ -323,8 +323,8 @@
     <div class="location-bar">
       <span>
         <i class="fa-solid fa-location-crosshairs" style="color:var(--primary); margin-right:4px;"></i> 
-        <span id="txtLocation">서울 내 위치 계산 중...</span>
-        <span class="radius-tag">가장 가까운 순</span>
+        <span id="txtLocation">내 위치 수신 중...</span>
+        <span class="radius-tag" id="txtCoord">주소 확인 중</span>
       </span>
       <button class="btn-refresh-gps" onclick="getLocation()"><i class="fa-solid fa-rotate-right"></i> 갱신</button>
     </div>
@@ -379,7 +379,7 @@
     const db = firebase.firestore();
     const wishCollection = db.collection("couple_space").doc("data").collection("saved_places");
 
-    let currentLat = 37.5665; // 기본 서울 시청/중구 좌표
+    let currentLat = 37.5665; // 기본 서울 시청 좌표
     let currentLng = 126.9780;
     let selectedFoodCategory = '전체';
     let currentActiveTab = 'tab-food';
@@ -412,7 +412,7 @@
     }
 
     function calculateDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371e3; // meters
+      const R = 6371e3;
       const φ1 = lat1 * Math.PI / 180;
       const φ2 = lat2 * Math.PI / 180;
       const Δφ = (lat2 - lat1) * Math.PI / 180;
@@ -423,26 +423,48 @@
       return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
     }
 
+    // 🌟 현재 위치 GPS 수신 및 실시간 동네 주소 변환 기능
     function getLocation() {
       const txt = document.getElementById("txtLocation");
-      txt.innerText = "내 위치 계산 중...";
+      const coord = document.getElementById("txtCoord");
+      txt.innerText = "GPS 수신 중...";
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-          (pos) => {
+          async (pos) => {
             currentLat = pos.coords.latitude;
             currentLng = pos.coords.longitude;
-            txt.innerText = "GPS 위치 수신 완료 📍";
+            txt.innerText = "내 위치 수신 완료 📍";
+            
+            try {
+              const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${currentLat}&lon=${currentLng}&zoom=18&addressdetails=1`, {
+                headers: { 'Accept-Language': 'ko' }
+              });
+              const data = await res.json();
+              if (data && data.address) {
+                const addr = data.address;
+                const district = addr.borough || addr.city_district || addr.suburb || addr.city || '';
+                const neighborhood = addr.dong || addr.neighbourhood || addr.village || addr.road || '';
+                coord.innerText = `${district} ${neighborhood}`.trim() || "서울 중심가";
+              } else {
+                coord.innerText = "서울 핫플 권역";
+              }
+            } catch (e) {
+              coord.innerText = "서울 권역";
+            }
+
             renderCuratedList(currentActiveTab === 'tab-food' ? 'food' : 'cafe');
           },
           () => {
             txt.innerText = "서울 중심 기준 정렬";
+            coord.innerText = "서울시 중구 (기본값)";
             renderCuratedList(currentActiveTab === 'tab-food' ? 'food' : 'cafe');
           },
-          { enableHighAccuracy: true, timeout: 4000 }
+          { enableHighAccuracy: true, timeout: 5000 }
         );
       } else {
         txt.innerText = "GPS 미지원";
+        coord.innerText = "위치 확인 불가";
         renderCuratedList(currentActiveTab === 'tab-food' ? 'food' : 'cafe');
       }
     }
@@ -451,7 +473,7 @@
       const container = document.getElementById(type === 'food' ? 'foodList' : 'cafeList');
       
       if (typeof CURATED_PLACES === 'undefined' || !CURATED_PLACES) {
-        container.innerHTML = `<div class="state-box">데이터를 불러오는 중입니다...</div>`;
+        container.innerHTML = `<div class="state-box">핫플레이스 데이터를 불러오는 중입니다...</div>`;
         return;
       }
 
