@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>뚜❣️쫑</title>
+  <title>뚜❣️쫑 - 우리의 공간</title>
 
   <!-- PWA & 모바일 홈 화면 설정 -->
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="뚜❣️쫑" />
-  <meta name="theme-color" content="#ff758c" />
+  <meta name="theme-color" content="#ff5e7e" />
 
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Pink%20Heart.png" />
@@ -20,59 +20,75 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --primary: #ff5e7e;
-      --primary-soft: #ffe8ee;
-      --bg: #f8f9fe;
+      --primary-gradient: linear-gradient(135deg, #ff5e7e 0%, #ff85a1 100%);
+      --primary-soft: #fff0f3;
+      --bg: #f5f6fa;
       --card: #ffffff;
-      --text: #2d3436;
-      --text-sub: #8395a7;
+      --text: #2f3542;
+      --text-sub: #747d8c;
       --border: #f1f2f6;
-      --radius: 22px;
-      --shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      --radius: 24px;
+      --shadow: 0 12px 30px rgba(255, 94, 126, 0.08);
+      --shadow-hover: 0 16px 36px rgba(255, 94, 126, 0.15);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 40px; min-height: 100vh; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 50px; min-height: 100vh; }
 
     /* Header */
     .home-header {
-      background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+      background: linear-gradient(135deg, #ff5e7e 0%, #ff7eb3 50%, #ffa8cc 100%);
       color: white;
-      padding: 36px 20px 28px;
-      border-radius: 0 0 32px 32px;
-      box-shadow: 0 8px 24px rgba(255, 117, 140, 0.35);
+      padding: 42px 20px 36px;
+      border-radius: 0 0 36px 36px;
+      box-shadow: 0 10px 30px rgba(255, 94, 126, 0.25);
       text-align: center;
+      position: relative;
+      overflow: hidden;
     }
+    .home-header::after {
+      content: '';
+      position: absolute;
+      top: -50px; right: -50px;
+      width: 150px; height: 150px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
     .header-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.25);
-      padding: 6px 14px;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.22);
+      padding: 7px 16px;
       border-radius: 20px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
-      backdrop-filter: blur(6px);
-      margin-bottom: 12px;
+      backdrop-filter: blur(8px);
+      margin-bottom: 14px;
+      letter-spacing: 0.5px;
     }
-    .home-title { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
-    .home-sub { font-size: 0.88rem; opacity: 0.9; margin-top: 6px; }
+    .home-title { font-size: 1.85rem; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 4px; }
+    .home-sub { font-size: 0.9rem; opacity: 0.95; font-weight: 500; }
 
     /* Container */
-    .container { max-width: 500px; margin: 0 auto; padding: 24px 18px; }
+    .container { max-width: 480px; margin: 0 auto; padding: 24px 18px; }
 
     .section-label {
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 700;
       color: var(--text-sub);
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
       gap: 6px;
+      padding-left: 4px;
     }
 
     /* Menu Cards */
@@ -81,84 +97,85 @@
     .menu-card {
       background: var(--card);
       border-radius: var(--radius);
-      padding: 22px;
+      padding: 20px 22px;
       box-shadow: var(--shadow);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(0, 0, 0, 0.02);
       text-decoration: none;
       color: inherit;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transition: all 0.25s ease;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
-      overflow: hidden;
     }
-    .menu-card:active { transform: scale(0.98); }
-
-    .menu-card::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 6px;
-      background: var(--primary);
-    }
-    .menu-card.map-card::before { background: #10ac84; }
-    .menu-card.place-card::before { background: #ff9f43; }
-    .menu-card.baseball-card::before { background: #ea2027; }
-    .menu-card.coupon-card::before { background: #6c5ce7; }
+    .menu-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    .menu-card:active { transform: scale(0.97); }
 
     .menu-left { display: flex; align-items: center; gap: 18px; }
+    
     .menu-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 18px;
-      background: var(--primary-soft);
-      color: var(--primary);
+      width: 58px;
+      height: 58px;
+      border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 1.5rem;
       flex-shrink: 0;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
     }
-    .map-card .menu-icon { background: #e8f8f5; color: #10ac84; }
-    .place-card .menu-icon { background: #fff4e6; color: #ff9f43; }
-    .baseball-card .menu-icon { background: #ffe8ee; color: #ea2027; }
-    .coupon-card .menu-icon { background: #f0edff; color: #6c5ce7; }
+    /* 테마별 아이콘 및 뱃지 스타일 */
+    .kobe-card .menu-icon { background: linear-gradient(135deg, #fff0f3 0%, #ffe0e6 100%); color: #ff5e7e; }
+    .kobe-card .menu-badge { background: #fff0f3; color: #ff5e7e; }
 
-    .menu-title { font-size: 1.15rem; font-weight: 700; color: #2d3436; margin-bottom: 4px; }
-    .menu-desc { font-size: 0.82rem; color: var(--text-sub); line-height: 1.35; }
+    .map-card .menu-icon { background: linear-gradient(135deg, #e8f8f5 0%, #d1f2eb 100%); color: #00b894; }
+    .map-card .menu-badge { background: #e8f8f5; color: #00b894; }
+
+    .place-card .menu-icon { background: linear-gradient(135deg, #fff8e8 0%, #ffeaa7 100%); color: #e17055; }
+    .place-card .menu-badge { background: #fff8e8; color: #e17055; }
+
+    .baseball-card .menu-icon { background: linear-gradient(135deg, #fff0f0 0%, #ffd2d2 100%); color: #d63031; }
+    .baseball-card .menu-badge { background: #fff0f0; color: #d63031; }
+
+    .coupon-card .menu-icon { background: linear-gradient(135deg, #f3f0ff 0%, #e2dbff 100%); color: #6c5ce7; }
+    .coupon-card .menu-badge { background: #f3f0ff; color: #6c5ce7; }
+
+    .menu-title { font-size: 1.1rem; font-weight: 800; color: var(--text); margin-bottom: 3px; }
+    .menu-desc { font-size: 0.81rem; color: var(--text-sub); line-height: 1.4; font-weight: 500; }
+    
     .menu-badge {
       display: inline-block;
-      font-size: 0.72rem;
-      font-weight: 700;
-      background: #fff0f3;
-      color: var(--primary);
-      padding: 3px 8px;
-      border-radius: 6px;
-      margin-top: 6px;
+      font-size: 0.73rem;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 8px;
+      margin-top: 8px;
     }
-    .map-card .menu-badge { background: #e8f8f5; color: #10ac84; }
-    .place-card .menu-badge { background: #fff4e6; color: #ff9f43; }
-    .baseball-card .menu-badge { background: #ffe8ee; color: #ea2027; }
-    .coupon-card .menu-badge { background: #f0edff; color: #6c5ce7; }
 
     .menu-arrow {
-      color: #dcdde1;
-      font-size: 1.1rem;
-      transition: transform 0.2s;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #f8f9fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #b2bec3;
+      font-size: 0.85rem;
+      transition: all 0.2s;
     }
-    .menu-card:hover .menu-arrow { transform: translateX(4px); color: var(--primary); }
+    .menu-card:hover .menu-arrow { background: var(--primary); color: white; transform: translateX(3px); }
 
     /* Footer Note */
     .footer-note {
       text-align: center;
-      font-size: 0.78rem;
-      color: #a4b0be;
-      margin-top: 36px;
-      line-height: 1.5;
+      font-size: 0.8rem;
+      color: #b2bec3;
+      margin-top: 40px;
+      line-height: 1.6;
+      font-weight: 500;
     }
+    .footer-note span { color: var(--primary); font-weight: 700; }
 
     /* 🔒 PIN 잠금 화면 */
     .pin-overlay {
@@ -172,55 +189,54 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 24px;
       box-sizing: border-box;
       touch-action: manipulation;
     }
     .pin-overlay.hidden { display: none !important; }
 
     .pin-badge {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
+      font-size: 2.8rem;
+      margin-bottom: 8px;
+      animation: pulse 2s infinite;
     }
-    .pin-title {
-      font-size: 1.3rem;
-      font-weight: 900;
-      margin-bottom: 6px;
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
     }
-    .pin-desc {
-      font-size: 0.85rem;
-      color: #a4b0be;
-      margin-bottom: 18px;
-      font-weight: 600;
-    }
+
+    .pin-title { font-size: 1.4rem; font-weight: 900; margin-bottom: 6px; letter-spacing: -0.5px; }
+    .pin-desc { font-size: 0.85rem; color: #808e9b; margin-bottom: 24px; font-weight: 600; }
 
     .pin-dots {
       display: flex;
       gap: 14px;
-      margin-bottom: 18px;
+      margin-bottom: 22px;
     }
     .pin-dot {
-      width: 16px;
-      height: 16px;
+      width: 15px;
+      height: 15px;
       border-radius: 50%;
-      border: 2px solid #57606f;
-      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+      border: 2px solid #485460;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .pin-dot.filled {
       background: #ff5e7e;
       border-color: #ff5e7e;
-      transform: scale(1.15);
+      transform: scale(1.2);
+      box-shadow: 0 0 12px rgba(255, 94, 126, 0.5);
     }
 
     .auto-login-box {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 22px;
+      margin-bottom: 26px;
       cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #ced6e0;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #b2bec3;
       user-select: none;
     }
     .auto-login-box input[type="checkbox"] {
@@ -228,6 +244,7 @@
       height: 18px;
       accent-color: #ff5e7e;
       cursor: pointer;
+      border-radius: 4px;
     }
 
     .pin-keypad {
@@ -235,16 +252,16 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 14px;
       width: 100%;
-      max-width: 270px;
+      max-width: 280px;
     }
     .pin-key {
-      height: 64px;
+      height: 66px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.04);
       color: white;
-      font-size: 1.55rem;
-      font-weight: 800;
+      font-size: 1.5rem;
+      font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -253,25 +270,27 @@
       -webkit-user-select: none;
       -webkit-tap-highlight-color: transparent;
       outline: none;
+      transition: background 0.15s, transform 0.1s;
     }
     .pin-key:active {
-      background: rgba(255, 255, 255, 0.3);
-      transform: scale(0.94);
+      background: rgba(255, 94, 126, 0.25);
+      transform: scale(0.92);
     }
     .pin-key.btn-action {
-      font-size: 1.05rem;
+      font-size: 1rem;
       background: transparent;
-      color: #a4b0be;
+      color: #808e9b;
+      font-weight: 600;
     }
     .pin-key.btn-action:active {
       color: white;
-      background: transparent;
+      background: rgba(255, 255, 255, 0.05);
     }
 
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-9px); }
-      40%, 80% { transform: translateX(9px); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
     }
     .shake { animation: shake 0.35s ease-in-out; }
   </style>
@@ -280,7 +299,7 @@
 
   <!-- 🔒 핀 잠금 오버레이 -->
   <div id="pinLockScreen" class="pin-overlay">
-    <div class="pin-badge">💖</div>
+    <div class="pin-badge">❤️</div>
     <div class="pin-title">뚜쫑 비밀 공간</div>
     <div class="pin-desc">둘만의 6자리 암호를 입력해주세요</div>
 
@@ -316,12 +335,11 @@
 
   <header class="home-header">
     <div class="header-badge">
-      <i class="fa-solid fa-heart"></i>
-      <span>I LOVE YOU</span>
-      <i class="fa-solid fa-heart"></i>
+      <i class="fa-solid fa-heart" style="color: #ff5e7e;"></i>
+      <span>OUR SPECIAL SPACE</span>
     </div>
     <h1 class="home-title">뚜❣️쫑</h1>
-    <p class="home-sub">우리의 홈페이지 ✨</p>
+    <p class="home-sub">우리의 소중한 추억과 계획 ✨</p>
   </header>
 
   <div class="container">
@@ -332,7 +350,7 @@
 
     <div class="menu-grid">
       <!-- 1. 고베 여행 계획서 -->
-      <a href="kobe.html" class="menu-card">
+      <a href="kobe.html" class="menu-card kobe-card">
         <div class="menu-left">
           <div class="menu-icon">
             <i class="fa-solid fa-plane-departure"></i>
@@ -365,7 +383,7 @@
         </div>
       </a>
 
-      <!-- 3. 주변 맛집 & 카페 (신규 추가) -->
+      <!-- 3. 주변 맛집 & 카페 -->
       <a href="place.html" class="menu-card place-card">
         <div class="menu-left">
           <div class="menu-icon">
@@ -418,8 +436,8 @@
     </div>
 
     <div class="footer-note">
-      뚜 & 쫑<br>
-      since 2020.10.31 ❤️
+      Always with you, <span>뚜 & 쫑</span><br>
+      Since 2020.10.31 ❤️
     </div>
   </div>
 
