@@ -29,7 +29,7 @@ def update_lineup_and_pitchers():
     today_str = now_kst.strftime("%Y-%m-%d")
     today_compact = now_kst.strftime("%Y%m%d")
 
-    print(f"=== [KBO 공식 데이터 & 상대 전적 동기화 시작: {today_str}] ===")
+    print(f"=== [KBO 공식 데이터 & 선발투수 비교 동기화: {today_str}] ===")
 
     try:
         with open("ktwiz_data.json", "r", encoding="utf-8") as f:
@@ -50,7 +50,11 @@ def update_lineup_and_pitchers():
     batters = []
     kbo_game_id = None
 
-    # 1. ⚾ KBO 메인 전광판 데이터 (예고 선발투수 & KBO 경기 고유 ID 확보)
+    # 선발투수 스펙 기본 구조
+    kt_pitcher_stat = {"name": kt_p, "era": "-", "win": "-", "lose": "-", "so": "-", "vsRecord": "-"}
+    opp_pitcher_stat = {"name": opp_p, "era": "-", "win": "-", "lose": "-", "so": "-", "vsRecord": "-"}
+
+    # 1. ⚾ KBO 메인 전광판 데이터 조회
     main_res = fetch_kbo_post(
         "https://www.koreabaseball.com/ws/Main.asmx/GetKboGameList",
         f"leId=1&srId=0&date={today_compact}"
@@ -66,12 +70,22 @@ def update_lineup_and_pitchers():
                 h_starter = g.get("B_PIT_P_NM") or g.get("HOME_PIT_P_NM")
                 a_starter = g.get("T_PIT_P_NM") or g.get("AWAY_PIT_P_NM")
                 
+                # 투수 기본 스펙 추출
+                h_era = str(g.get("B_ERA") or g.get("HOME_ERA") or "-")
+                a_era = str(g.get("T_ERA") or g.get("AWAY_ERA") or "-")
+                h_rec = str(g.get("B_W_L") or "-")
+                a_rec = str(g.get("T_W_L") or "-")
+
                 if is_home:
                     if h_starter: kt_p = str(h_starter).strip()
                     if a_starter: opp_p = str(a_starter).strip()
+                    kt_pitcher_stat = {"name": kt_p, "era": h_era, "record": h_rec}
+                    opp_pitcher_stat = {"name": opp_p, "era": a_era, "record": a_rec}
                 else:
                     if a_starter: kt_p = str(a_starter).strip()
                     if h_starter: opp_p = str(h_starter).strip()
+                    kt_pitcher_stat = {"name": kt_p, "era": a_era, "record": a_rec}
+                    opp_pitcher_stat = {"name": opp_p, "era": h_era, "record": h_rec}
                 break
 
     print(f"  👉 선발투수: KT [{kt_p}] vs 상대 [{opp_p}] (KBO GameID: {kbo_game_id})")
@@ -100,20 +114,17 @@ def update_lineup_and_pitchers():
                             "pos": pos
                         })
 
-    print(f"  👉 선발 타순 등록: {len(batters)}명")
-
-    # 3. ⚔️ 올시즌 상대 전적(H2H) 직접 계산
+    # 3. ⚔️ 올시즌 상대 전적(H2H) 계산
     h2h_wins = 0
     h2h_draws = 0
     h2h_losses = 0
 
     schedule_dict = data.get("schedule", {})
-    # 오늘 상대팀 단축명 (예: 'LG 트윈스' -> 'LG')
     opp_short = opponent_name.split()[0] if opponent_name else ""
 
     for g_date, g_info in schedule_dict.items():
         if g_date >= today_str:
-            continue  # 오늘 및 미래 경기는 전적 계산에서 제외
+            continue
 
         g_opp = g_info.get("opponent", "")
         if opp_short in g_opp or g_opp in opponent_name:
@@ -133,16 +144,20 @@ def update_lineup_and_pitchers():
     else:
         h2h_text = "올 시즌 첫 맞대결"
 
+    # 4. JSON 파일 저장 (선발투수 비교 데이터 포함)
+    data["todayMatch"]["ktPitcher"] = kt_p
+    data["todayMatch"]["oppPitcher"] = opp_p
+    
     data["todayH2H"] = {
         "text": h2h_text,
         "record": f"{h2h_wins}승 {d_txt}{h2h_losses}패"
     }
 
-    print(f"  👉 상대 전적: {h2h_text} ({opponent_name})")
+    data["pitcherComparison"] = {
+        "kt": kt_pitcher_stat,
+        "opp": opp_pitcher_stat
+    }
 
-    # 4. JSON 파일 저장
-    data["todayMatch"]["ktPitcher"] = kt_p
-    data["todayMatch"]["oppPitcher"] = opp_p
     data["todayLineup"] = {
         "ktPitcher": kt_p,
         "oppPitcher": opp_p,
@@ -154,7 +169,7 @@ def update_lineup_and_pitchers():
     with open("ktwiz_data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-    print(f"🎯 KBO 공식 데이터 & 상대 전적 동기화 완료!")
+    print(f"🎯 선발투수 비교 및 상대 전적 저장 완료!")
 
 if __name__ == "__main__":
     update_lineup_and_pitchers()
