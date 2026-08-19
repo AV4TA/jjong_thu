@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>뚜쫑 주변 데이트 🍽️ | 맛집 & 카페</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #ff5e7e;
+      --primary-soft: #fff0f3;
+      --bg: #f8f9fe;
+      --card: #ffffff;
+      --text: #2d3436;
+      --text-sub: #8395a7;
+      --border: #f1f2f6;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 50px; }
+
+    /* 헤더 */
+    .app-header {
+      background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+      color: white;
+      padding: 18px 20px;
+      border-radius: 0 0 24px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 6px 20px rgba(255, 117, 140, 0.25);
+    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .btn-back {
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      background: rgba(255, 255, 255, 0.2);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .header-title { font-size: 1.25rem; font-weight: 800; }
+
+    .container { max-width: 520px; margin: 0 auto; padding: 14px 16px; }
+
+    /* 메인 3개 탭 바 */
+    .tab-bar {
+      display: flex;
+      gap: 6px;
+      background: white;
+      padding: 6px;
+      border-radius: 16px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .tab-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 10px 4px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--text-sub);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* 서브 카테고리 칩 (가로 스크롤) */
+    .filter-scroll-box {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      scrollbar-width: none;
+    }
+    .filter-scroll-box::-webkit-scrollbar { display: none; }
+    .filter-chip {
+      white-space: nowrap;
+      background: white;
+      border: 1px solid var(--border);
+      color: #57606f;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .filter-chip.active {
+      background: #2f3542;
+      color: white;
+      border-color: #2f3542;
+    }
+
+    /* 탭 콘텐츠 영역 */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .placeholder-box {
+      background: white;
+      border-radius: 18px;
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text-sub);
+      font-weight: 700;
+      border: 1px dashed #dcdde1;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-left">
+      <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i></a>
+      <div>
+        <div class="header-title">주변 맛집 & 카페 탐색 ✨</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- 메인 3개 탭 -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('tab-food', this)">🍽️ 맛집</button>
+      <button class="tab-btn" onclick="switchTab('tab-cafe', this)">☕ 카페</button>
+      <button class="tab-btn" onclick="switchTab('tab-wish', this)">💖 또 갈 곳</button>
+    </div>
+
+    <!-- 1. 맛집 탭 -->
+    <div id="tab-food" class="tab-content active">
+      <div class="filter-scroll-box">
+        <button class="filter-chip active" onclick="setFoodCategory('전체', this)">전체</button>
+        <button class="filter-chip" onclick="setFoodCategory('한식', this)">한식 🍚</button>
+        <button class="filter-chip" onclick="setFoodCategory('일식', this)">일식 🍣</button>
+        <button class="filter-chip" onclick="setFoodCategory('양식', this)">양식 🍝</button>
+        <button class="filter-chip" onclick="setFoodCategory('중식', this)">중식 🥟</button>
+        <button class="filter-chip" onclick="setFoodCategory('분식', this)">분식 떡볶이</button>
+        <button class="filter-chip" onclick="setFoodCategory('고기', this)">고기/구이 🥩</button>
+        <button class="filter-chip" onclick="setFoodCategory('술집', this)">주점/술 🍺</button>
+      </div>
+
+      <div class="placeholder-box">
+        📍 2단계에서 GPS 위치와 맛집 목록을 연결할 영역입니다.
+      </div>
+    </div>
+
+    <!-- 2. 카페 탭 -->
+    <div id="tab-cafe" class="tab-content">
+      <div class="placeholder-box">
+        ☕ 2단계에서 디저트 2개 소개와 카페 목록이 들어갈 영역입니다.
+      </div>
+    </div>
+
+    <!-- 3. 또 갈 곳 탭 -->
+    <div id="tab-wish" class="tab-content">
+      <div class="placeholder-box">
+        💖 하트 누른 맛집/카페가 저장되는 영역입니다.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function setFoodCategory(category, btn) {
+      document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      console.log("선택된 음식 카테고리:", category);
+    }
+  </script>
+</body>
+</html>
