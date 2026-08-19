@@ -37,13 +37,13 @@ def fetch_kbo_post(url, data_str):
     except Exception:
         return None
 
-def update_data():
+def update_lineup_and_pitchers():
     kst_tz = datetime.timezone(datetime.timedelta(hours=9))
     now_kst = datetime.datetime.now(kst_tz)
     today_str = now_kst.strftime("%Y-%m-%d")
     today_compact = now_kst.strftime("%Y%m%d")
 
-    print(f"=== [선발투수 및 라인업 업데이트: {today_str}] ===")
+    print(f"=== [선발투수 및 라인업 완벽 동기화: {today_str}] ===")
 
     try:
         with open("ktwiz_data.json", "r", encoding="utf-8") as f:
@@ -64,7 +64,10 @@ def update_data():
     kbo_game_id = None
     batters = []
 
-    # 1. ⚾ Daum 스포츠 API에서 예고 선발투수 추출 (NoneType 에러 완벽 방지)
+    kt_stat_text = "-"
+    opp_stat_text = "-"
+
+    # 1. ⚾ Daum 스포츠 API에서 예고 선발투수 및 시즌 성적(ERA/승패) 추출
     daum_url = f"https://sports.daum.net/prx/hermes/api/game/schedule.json?page=1&leagueCode=kbo&fromDate={today_compact}&toDate={today_compact}"
     res_data = fetch_json(daum_url)
 
@@ -75,22 +78,37 @@ def update_data():
             a_team = str(g.get("awayTeamName", ""))
             
             if any(k in h_team or k in a_team for k in ["KT", "kt"]):
-                # None일 경우 안전하게 빈 딕셔너리로 대체
                 h_res = g.get("homeResult") or {}
                 a_res = g.get("awayResult") or {}
                 
                 h_starter = g.get("homeStarterPitcherName") or h_res.get("starterPitcherName")
                 a_starter = g.get("awayStarterPitcherName") or a_res.get("starterPitcherName")
-                
+
+                # Daum API 투수 시즌 성적 필드 추출
+                h_era = g.get("homeStarterPitcherEra") or h_res.get("starterPitcherEra") or h_res.get("era")
+                h_w = g.get("homeStarterPitcherW") or h_res.get("starterPitcherW") or h_res.get("w")
+                h_l = g.get("homeStarterPitcherL") or h_res.get("starterPitcherL") or h_res.get("l")
+
+                a_era = g.get("awayStarterPitcherEra") or a_res.get("starterPitcherEra") or a_res.get("era")
+                a_w = g.get("awayStarterPitcherW") or a_res.get("starterPitcherW") or a_res.get("w")
+                a_l = g.get("awayStarterPitcherL") or a_res.get("starterPitcherL") or a_res.get("l")
+
+                h_txt = f"ERA {h_era} ({h_w}승 {h_l}패)" if h_era and h_w is not None else "-"
+                a_txt = f"ERA {a_era} ({a_w}승 {a_l}패)" if a_era and a_w is not None else "-"
+
                 if is_home:
                     if h_starter: kt_p = str(h_starter).strip()
                     if a_starter: opp_p = str(a_starter).strip()
+                    kt_stat_text = h_txt
+                    opp_stat_text = a_txt
                 else:
                     if a_starter: kt_p = str(a_starter).strip()
                     if h_starter: opp_p = str(h_starter).strip()
+                    kt_stat_text = a_txt
+                    opp_stat_text = h_txt
                 break
 
-    # 2. 📋 KBO 메인 전광판에서 KBO 경기 ID 및 라인업 조회
+    # 2. 📋 KBO 메인 전광판에서 KBO GameID 및 1~9번 선발 라인업 조회
     main_res = fetch_kbo_post(
         "https://www.koreabaseball.com/ws/Main.asmx/GetKboGameList",
         f"leId=1&srId=0&date={today_compact}"
@@ -142,6 +160,10 @@ def update_data():
         "text": h2h_text,
         "record": f"{h2h_wins}승 {d_txt}{h2h_losses}패"
     }
+    data["pitcherComparison"] = {
+        "kt": {"name": kt_p, "statText": kt_stat_text},
+        "opp": {"name": opp_p, "statText": opp_stat_text}
+    }
     data["todayLineup"] = {
         "ktPitcher": kt_p,
         "oppPitcher": opp_p,
@@ -153,7 +175,7 @@ def update_data():
     with open("ktwiz_data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-    print(f"🎯 저장 완료: KT [{kt_p}] vs 상대 [{opp_p}] / 전적: {h2h_text}")
+    print(f"🎯 최종 동기화 완료: KT [{kt_p}: {kt_stat_text}] vs 상대 [{opp_p}: {opp_stat_text}]")
 
 if __name__ == "__main__":
-    update_data()
+    update_lineup_and_pitchers()
