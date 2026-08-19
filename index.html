@@ -104,8 +104,9 @@
       width: 6px;
       background: var(--primary);
     }
-    .menu-card.coupon-card::before { background: #6c5ce7; }
+    .menu-card.map-card::before { background: #10ac84; }
     .menu-card.baseball-card::before { background: #ea2027; }
+    .menu-card.coupon-card::before { background: #6c5ce7; }
 
     .menu-left { display: flex; align-items: center; gap: 18px; }
     .menu-icon {
@@ -120,8 +121,9 @@
       font-size: 1.5rem;
       flex-shrink: 0;
     }
-    .coupon-card .menu-icon { background: #f0edff; color: #6c5ce7; }
+    .map-card .menu-icon { background: #e8f8f5; color: #10ac84; }
     .baseball-card .menu-icon { background: #ffe8ee; color: #ea2027; }
+    .coupon-card .menu-icon { background: #f0edff; color: #6c5ce7; }
 
     .menu-title { font-size: 1.15rem; font-weight: 700; color: #2d3436; margin-bottom: 4px; }
     .menu-desc { font-size: 0.82rem; color: var(--text-sub); line-height: 1.35; }
@@ -135,8 +137,9 @@
       border-radius: 6px;
       margin-top: 6px;
     }
-    .coupon-card .menu-badge { background: #f0edff; color: #6c5ce7; }
+    .map-card .menu-badge { background: #e8f8f5; color: #10ac84; }
     .baseball-card .menu-badge { background: #ffe8ee; color: #ea2027; }
+    .coupon-card .menu-badge { background: #f0edff; color: #6c5ce7; }
 
     .menu-arrow {
       color: #dcdde1;
@@ -342,16 +345,16 @@
         </div>
       </a>
 
-      <!-- 2. 기프티콘 보관함 -->
-      <a href="gifticon.html" class="menu-card coupon-card">
+      <!-- 2. 대한민국 여행 지도 -->
+      <a href="map.html" class="menu-card map-card">
         <div class="menu-left">
           <div class="menu-icon">
-            <i class="fa-solid fa-ticket"></i>
+            <i class="fa-solid fa-map-location-dot"></i>
           </div>
           <div>
-            <div class="menu-title">기프티콘 보관함 🎁</div>
-            <div class="menu-desc">우리 둘만의 쿠폰 보관 & 바코드 확인</div>
-            <div class="menu-badge">모바일 쿠폰함</div>
+            <div class="menu-title">대한민국 여행 지도 🗺️</div>
+            <div class="menu-desc">우리가 다녀온 전국 발자국 색칠하기</div>
+            <div class="menu-badge">전국 발자국 지도 👣</div>
           </div>
         </div>
         <div class="menu-arrow">
@@ -369,6 +372,23 @@
             <div class="menu-title">야구 직관 일기 ⚾</div>
             <div class="menu-desc">kt wiz 직관 경기 기록 & 실시간 승률 계산</div>
             <div class="menu-badge">kt wiz 승리요정 🔥</div>
+          </div>
+        </div>
+        <div class="menu-arrow">
+          <i class="fa-solid fa-chevron-right"></i>
+        </div>
+      </a>
+
+      <!-- 4. 기프티콘 보관함 (가장 마지막 순서) -->
+      <a href="gifticon.html" class="menu-card coupon-card">
+        <div class="menu-left">
+          <div class="menu-icon">
+            <i class="fa-solid fa-ticket"></i>
+          </div>
+          <div>
+            <div class="menu-title">기프티콘 보관함 🎁</div>
+            <div class="menu-desc">우리 둘만의 쿠폰 보관 & 바코드 확인</div>
+            <div class="menu-badge">모바일 쿠폰함</div>
           </div>
         </div>
         <div class="menu-arrow">
