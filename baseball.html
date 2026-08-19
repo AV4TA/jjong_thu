@@ -290,6 +290,86 @@
       font-size: 0.85rem;
     }
 
+    /* 오늘 경기 카드 */
+    .today-card {
+      background: white;
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .today-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #f1f2f6;
+    }
+    .today-date-badge { font-size: 0.85rem; font-weight: 800; color: var(--kt-red); }
+    .today-time-badge { font-size: 0.78rem; font-weight: 700; color: var(--text-sub); }
+    
+    /* H2H 상대전적 뱃지 */
+    .h2h-badge-row {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .h2h-pill {
+      background: #f1f2f6;
+      color: #2f3542;
+      font-size: 0.76rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .today-matchup { display: flex; justify-content: space-around; align-items: center; margin: 8px 0 16px; }
+    .today-team { font-size: 1.2rem; font-weight: 900; }
+    .today-team.kt { color: var(--kt-red); }
+    .today-vs { font-size: 1.3rem; font-weight: 900; color: #57606f; }
+
+    /* 선발투수 대결 박스 */
+    .pitcher-duel-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      background: #f8f9fa;
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      border: 1px solid #eef0f4;
+    }
+    .pitcher-duel-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      text-align: center;
+    }
+    .pitcher-duel-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-sub);
+    }
+    .pitcher-duel-name {
+      font-size: 0.98rem;
+      font-weight: 900;
+      color: #2f3542;
+    }
+    .pitcher-duel-name.kt { color: var(--kt-red); }
+
+    .lineup-box { background: #f8f9fa; border-radius: 14px; padding: 14px; }
+    .lineup-title { font-size: 0.85rem; font-weight: 800; color: #57606f; margin-bottom: 10px; display: flex; justify-content: space-between; }
+    .lineup-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .lineup-item { background: white; border: 1px solid #eef0f4; border-radius: 8px; padding: 7px 6px; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; }
+    .order-num { font-weight: 900; color: var(--kt-red); margin-right: 4px; }
+    .player-name { font-weight: 700; color: #2f3542; }
+    .player-pos { font-size: 0.7rem; color: var(--text-sub); }
+
     /* 카드 리스트 */
     .game-list { display: flex; flex-direction: column; gap: 12px; }
     .game-card {
@@ -338,38 +418,6 @@
     }
     .btn-del-game { background: none; border: none; color: #a4b0be; font-size: 0.9rem; cursor: pointer; padding: 4px; }
     .btn-del-game:hover { color: #ff4757; }
-
-    /* 오늘 경기 카드 */
-    .today-card {
-      background: white;
-      border-radius: 20px;
-      padding: 18px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-    }
-    .today-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      padding-bottom: 10px;
-      border-bottom: 1px dashed #f1f2f6;
-    }
-    .today-date-badge { font-size: 0.85rem; font-weight: 800; color: var(--kt-red); }
-    .today-time-badge { font-size: 0.78rem; font-weight: 700; color: var(--text-sub); }
-    .today-matchup { display: flex; justify-content: space-around; align-items: center; margin: 12px 0 16px; }
-    .today-team { font-size: 1.2rem; font-weight: 900; }
-    .today-team.kt { color: var(--kt-red); }
-    .today-vs { font-size: 1.3rem; font-weight: 900; color: #57606f; }
-
-    .lineup-box { background: #f8f9fa; border-radius: 14px; padding: 14px; }
-    .lineup-title { font-size: 0.85rem; font-weight: 800; color: #57606f; margin-bottom: 10px; display: flex; justify-content: space-between; }
-    .pitcher-tag { background: #eef2ff; color: #4338ca; padding: 3px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 800; }
-    .lineup-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-    .lineup-item { background: white; border: 1px solid #eef0f4; border-radius: 8px; padding: 7px 6px; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; }
-    .order-num { font-weight: 900; color: var(--kt-red); margin-right: 4px; }
-    .player-name { font-weight: 700; color: #2f3542; }
-    .player-pos { font-size: 0.7rem; color: var(--text-sub); }
 
     /* 순위 테이블 */
     .table-card {
@@ -444,27 +492,47 @@
       <button class="fab" onclick="openAddModal()"><i class="fa-solid fa-plus"></i></button>
     </div>
 
-    <!-- 탭 2: 오늘 경기 & 라인업 -->
+    <!-- 탭 2: 오늘 경기 & 선발투수 & 상대전적 & 라인업 -->
     <div id="tab-today" class="tab-content">
       <div class="today-card">
         <div class="today-header">
           <span class="today-date-badge" id="todayDateTxt">📅 오늘 경기 일정</span>
           <span class="today-time-badge" id="todayStadiumTxt">-</span>
         </div>
+
+        <div class="h2h-badge-row">
+          <div class="h2h-pill" id="todayH2hPill">
+            <i class="fa-solid fa-handshake"></i>
+            <span id="todayH2hTxt">올 시즌 상대 전적 확인 중...</span>
+          </div>
+        </div>
+
         <div class="today-matchup">
           <span class="today-team kt">kt wiz</span>
           <span class="today-vs" id="todayScoreOrVs">VS</span>
           <span class="today-team" id="todayOpponentTxt">-</span>
         </div>
+
+        <!-- ⚔️ 선발투수 맞대결 박스 -->
+        <div class="pitcher-duel-box">
+          <div class="pitcher-duel-col">
+            <span class="pitcher-duel-label">KT 선발</span>
+            <span class="pitcher-duel-name kt" id="todayKtPitcher">미정</span>
+          </div>
+          <div class="pitcher-duel-col">
+            <span class="pitcher-duel-label">상대 선발</span>
+            <span class="pitcher-duel-name" id="todayOppPitcher">미정</span>
+          </div>
+        </div>
         
         <div class="lineup-box">
           <div class="lineup-title">
             <span>📋 선발 타순 (1~9번)</span>
-            <span class="pitcher-tag" id="todayPitcherTxt">선발: -</span>
+            <span style="font-size:0.75rem; color:var(--text-sub); font-weight:600;">경기 시작 1시간 전 발표</span>
           </div>
           <div class="lineup-grid" id="todayLineupGrid">
             <div style="grid-column: span 3; text-align: center; color: var(--text-sub); font-size: 0.8rem; padding: 10px 0;">
-              경기 1~2시간 전 라인업이 자동 등록됩니다.
+              선발 라인업 등록 대기 중입니다.
             </div>
           </div>
         </div>
@@ -473,7 +541,6 @@
 
     <!-- 탭 3: KBO 리그 공식 순위 & 매직넘버 -->
     <div id="tab-rank" class="tab-content">
-      <!-- 🏆 모던 매직넘버 카드 -->
       <div class="magic-card" id="magicNumberCard">
         <div class="magic-header">
           <div class="magic-badge"><i class="fa-solid fa-fire"></i> KT WIZ MAGIC NUMBER</div>
@@ -481,13 +548,11 @@
         </div>
 
         <div class="magic-main-grid">
-          <!-- 1위 우승 매직넘버 -->
           <div class="magic-hero-box highlight">
             <div class="magic-label"><i class="fa-solid fa-crown" style="color:#ffd32a;"></i> 정규 1위 매직넘버</div>
             <div class="magic-val primary" id="valTitleMagic">-</div>
             <div class="magic-sub-info" id="txtTitleSub">자력 우승까지 필요 승수</div>
           </div>
-          <!-- 가을야구 진출 매직넘버 -->
           <div class="magic-hero-box">
             <div class="magic-label"><i class="fa-solid fa-ticket" style="color:#2ed573;"></i> PS 진출 매직넘버</div>
             <div class="magic-val" id="valPsMagic">-</div>
@@ -614,28 +679,40 @@
         const res = await fetch('./ktwiz_data.json?t=' + Date.now());
         if (res.ok) {
           serverKboData = await res.json();
-          renderTodayMatch(serverKboData.todayMatch, serverKboData.todayLineup);
+          renderTodayMatch(serverKboData.todayMatch, serverKboData.todayLineup, serverKboData.todayH2H);
           renderRankingsAndMagic(serverKboData.rankings);
         }
       } catch(e){ console.warn("JSON 로드 대기"); }
     }
     loadKboJson();
 
-    function renderTodayMatch(todayMatch, todayLineup) {
+    function renderTodayMatch(todayMatch, todayLineup, todayH2H) {
       if (!todayMatch) {
         document.getElementById('todayDateTxt').innerText = '📅 오늘 경기 일정 없음';
         document.getElementById('todayStadiumTxt').innerText = '휴식일 🏖️';
         document.getElementById('todayScoreOrVs').innerText = '-';
         document.getElementById('todayOpponentTxt').innerText = '-';
+        document.getElementById('todayH2hTxt').innerText = '휴식일';
+        document.getElementById('todayKtPitcher').innerText = '-';
+        document.getElementById('todayOppPitcher').innerText = '-';
         return;
       }
+
       document.getElementById('todayDateTxt').innerText = `📅 ${todayMatch.date} (${todayMatch.time || '18:30'})`;
       document.getElementById('todayStadiumTxt').innerText = `📍 ${normalizeStadium(todayMatch.stadium)}`;
       document.getElementById('todayScoreOrVs').innerText = todayMatch.score;
       document.getElementById('todayOpponentTxt').innerText = normalizeTeam(todayMatch.opponent);
 
+      // 상대 전적 표시
+      if (todayH2H && todayH2H.text) {
+        document.getElementById('todayH2hTxt').innerText = todayH2H.text;
+      }
+
+      // 선발 투수 대결 표시
       if (todayLineup) {
-        document.getElementById('todayPitcherTxt').innerText = `선발: ${todayLineup.pitcher || '미발표'}`;
+        document.getElementById('todayKtPitcher').innerText = todayLineup.ktPitcher || todayMatch.ktPitcher || '미정';
+        document.getElementById('todayOppPitcher').innerText = todayLineup.oppPitcher || todayMatch.oppPitcher || '미정';
+
         const grid = document.getElementById('todayLineupGrid');
         if (todayLineup.batters && todayLineup.batters.length > 0) {
           grid.innerHTML = todayLineup.batters.map(b => `
@@ -648,7 +725,6 @@
       }
     }
 
-    // 🏆 공식 순위표 및 정교한 매직넘버 계산기
     function renderRankingsAndMagic(rankings) {
       const tbody = document.getElementById('rankingTableBody');
       if (!rankings || rankings.length === 0) {
@@ -656,7 +732,6 @@
         return;
       }
 
-      // 순위표 렌더링
       tbody.innerHTML = rankings.map(r => `
         <tr class="${r.teamName && (r.teamName.includes('KT') || r.teamName.includes('kt')) ? 'kt-row' : ''}">
           <td><b>${r.rank}</b></td>
@@ -670,7 +745,6 @@
         </tr>
       `).join('');
 
-      // 매직넘버 계산
       calculateMagicNumbers(rankings);
     }
 
@@ -697,7 +771,6 @@
       document.getElementById('valKtRank').innerText = `${kt.rank}위`;
       document.getElementById('valRemainGames').innerText = `${ktRemain}경기`;
 
-      // 1위 매직넘버 계산 (공식: 2위 최대 승수 + 1 - 1위 승수)
       let titleMagicTxt = '-';
       let titleSubTxt = '자력 우승까지 필요 승수';
       let explainTxt = '';
@@ -711,7 +784,7 @@
 
           if (magic1 <= 0) {
             titleMagicTxt = '우승 확정 🏆';
-            explainTxt = `kt wiz가 2026시즌 정규시즌 1위 우승을 최종 확정지었습니다! 🎉`;
+            explainTxt = `kt wiz가 정규시즌 1위 우승을 최종 확정지었습니다! 🎉`;
           } else if (magic1 > ktRemain) {
             titleMagicTxt = '점등 전';
             explainTxt = `아직 자력 우승 매직넘버가 점등되지 않았습니다. (남은 ${ktRemain}경기 전승 시 우승 유력)`;
@@ -735,9 +808,8 @@
       document.getElementById('valTitleMagic').innerHTML = titleMagicTxt;
       document.getElementById('txtTitleSub').innerText = titleSubTxt;
 
-      // PS 5위 확정 매직넘버 계산 (6위팀 최대 승수 + 1 - kt 승수)
       let psMagicTxt = '-';
-      const sixthTeam = parsedRankings[5]; // 6위
+      const sixthTeam = parsedRankings[5];
       if (sixthTeam) {
         const sixthRemain = TOTAL_SEASON_GAMES - sixthTeam.games;
         const sixthMaxWins = sixthTeam.win + sixthRemain;
