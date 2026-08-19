@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-19 18:30:46 (KST)",
+  "updatedAt": "2026-08-19 22:41:25 (KST)",
   "todayMatch": {
     "gameId": "20260819KTLG02026",
     "date": "2026-08-19",
@@ -7,86 +7,82 @@
     "opponent": "LG 트윈스",
     "isHome": false,
     "stadium": "원정구장 (원정)",
-    "result": "scheduled",
-    "score": "VS",
-    "ktPitcher": "대니엘",
-    "oppPitcher": "톨허스트"
+    "result": "lose",
+    "score": "KT 0 : 1 LG"
   },
   "todayLineup": {
-    "ktPitcher": "대니엘",
-    "oppPitcher": "톨허스트",
-    "pitcher": "대니엘",
+    "pitcher": "미발표",
     "batters": []
   },
   "rankings": [
     {
       "rank": "1",
       "teamName": "kt wiz",
-      "games": "104",
+      "games": "105",
       "win": "62",
       "draw": "2",
-      "lose": "40",
-      "wra": "0.608",
+      "lose": "41",
+      "wra": "0.602",
       "gameDiff": "0.0"
     },
     {
       "rank": "2",
       "teamName": "삼성 라이온즈",
-      "games": "106",
-      "win": "62",
+      "games": "107",
+      "win": "63",
       "draw": "2",
       "lose": "42",
-      "wra": "0.596",
-      "gameDiff": "1"
+      "wra": "0.600",
+      "gameDiff": "0.0"
     },
     {
       "rank": "3",
       "teamName": "LG 트윈스",
-      "games": "108",
-      "win": "59",
+      "games": "109",
+      "win": "60",
       "draw": "1",
       "lose": "48",
-      "wra": "0.551",
-      "gameDiff": "5.5"
+      "wra": "0.556",
+      "gameDiff": "4.5"
     },
     {
       "rank": "4",
       "teamName": "KIA 타이거즈",
-      "games": "107",
-      "win": "57",
+      "games": "108",
+      "win": "58",
       "draw": "2",
       "lose": "48",
-      "wra": "0.543",
-      "gameDiff": "6.5"
+      "wra": "0.547",
+      "gameDiff": "5.5"
     },
     {
       "rank": "5",
       "teamName": "두산 베어스",
-      "games": "108",
-      "win": "56",
+      "games": "109",
+      "win": "57",
       "draw": "4",
       "lose": "48",
-      "wra": "0.538",
-      "gameDiff": "7"
+      "wra": "0.543",
+      "gameDiff": "6"
     },
     {
       "rank": "6",
       "teamName": "한화 이글스",
-      "games": "105",
+      "games": "106",
       "win": "48",
       "draw": "3",
-      "lose": "54",
-      "wra": "0.471",
+      "lose": "55",
+      "wra": "0.466",
       "gameDiff": "14"
     },
     {
       "rank": "7",
       "teamName": "NC 다이노스",
-      "games": "101",
+      "games": "102",
       "win": "46",
       "draw": "2",
-      "lose": "53",
-      "wra": "0.465",
+      "lose": "54",
+      "wra": "0.460",
       "gameDiff": "14.5"
     },
     {
@@ -97,16 +93,16 @@
       "draw": "2",
       "lose": "57",
       "wra": "0.452",
-      "gameDiff": "16"
+      "gameDiff": "15.5"
     },
     {
       "rank": "9",
       "teamName": "SSG 랜더스",
-      "games": "110",
+      "games": "111",
       "win": "44",
       "draw": "4",
-      "lose": "62",
-      "wra": "0.415",
+      "lose": "63",
+      "wra": "0.411",
       "gameDiff": "20"
     },
     {
@@ -117,7 +113,7 @@
       "draw": "2",
       "lose": "69",
       "wra": "0.367",
-      "gameDiff": "25.5"
+      "gameDiff": "25"
     }
   ],
   "schedule": {
@@ -1308,8 +1304,8 @@
       "opponent": "LG 트윈스",
       "isHome": false,
       "stadium": "원정구장 (원정)",
-      "result": "scheduled",
-      "score": "VS"
+      "result": "lose",
+      "score": "KT 0 : 1 LG"
     },
     "2026-08-20": {
       "gameId": "20260820KTLG02026",
@@ -1351,10 +1347,5 @@
       "result": "scheduled",
       "score": "VS"
     }
-  },
-  "todayH2H": {
-    "text": "올시즌 13전 9승 4패",
-    "record": "9승 4패"
-  },
-  "lineupUpdatedAt": "2026-08-19 18:58:56 (KST)"
+  }
 }
