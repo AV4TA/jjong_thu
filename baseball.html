@@ -1,958 +1,266 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>위즈파크 직관 일기 ⚾ | kt wiz</title>
+import json
+import datetime
+import urllib.request
 
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="theme-color" content="#1e272e" />
-  
-  <link rel="apple-touch-icon" href="https://api.iconify.design/twemoji:baseball.svg" />
-  <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/twemoji:baseball.svg" />
+def fetch_json(url):
+    req = urllib.request.Request(
+        url,
+        headers={
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15',
+            'Referer': 'https://m.sports.naver.com/'
+        }
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=12) as res:
+            return json.loads(res.read().decode('utf-8'))
+    except Exception:
+        return None
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-  <!-- Firebase v9 SDK (Compat) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-  <style>
-    :root {
-      --kt-red: #ea2027;
-      --kt-dark: #1e272e;
-      --bg: #f5f6fa;
-      --card: #ffffff;
-      --text: #2f3542;
-      --text-sub: #747d8c;
-      --border: #f1f2f6;
-      --radius: 18px;
-      --shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
-
-    .app-header {
-      background: linear-gradient(135deg, #1e272e 0%, #2f3542 50%, #ea2027 100%);
-      color: white;
-      padding: 20px 18px 16px;
-      border-radius: 0 0 24px 24px;
-      box-shadow: 0 6px 20px rgba(234, 32, 39, 0.25);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    .header-top { display: flex; justify-content: space-between; align-items: center; }
-    .header-left { display: flex; align-items: center; gap: 12px; }
-    .btn-home {
-      color: white;
-      text-decoration: none;
-      font-size: 1.1rem;
-      background: rgba(255, 255, 255, 0.15);
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(4px);
-    }
-    .header-title { font-size: 1.25rem; font-weight: 900; letter-spacing: -0.5px; }
-
-    /* 상단 3개 탭 */
-    .tab-bar {
-      display: flex;
-      gap: 6px;
-      background: white;
-      padding: 6px;
-      border-radius: 16px;
-      margin: 14px 16px 8px;
-      box-shadow: var(--shadow);
-    }
-    .tab-btn {
-      flex: 1;
-      border: none;
-      background: transparent;
-      padding: 10px 4px;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      font-weight: 800;
-      color: var(--text-sub);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      transition: all 0.2s;
-    }
-    .tab-btn.active {
-      background: var(--kt-red);
-      color: white;
-    }
-
-    .container { max-width: 540px; margin: 0 auto; padding: 10px 16px; }
-
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    /* 요약 카드 공통 */
-    .dashboard-card {
-      background: white;
-      border-radius: 20px;
-      padding: 18px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      margin-bottom: 14px;
-      position: relative;
-      overflow: hidden;
-    }
-    .dashboard-card::before {
-      content: '⚾';
-      position: absolute;
-      right: -10px;
-      bottom: -15px;
-      font-size: 5.5rem;
-      opacity: 0.05;
-      pointer-events: none;
-    }
-    .dash-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .dash-title { font-size: 0.92rem; font-weight: 800; color: #2f3542; display: flex; align-items: center; gap: 6px; }
-    .win-rate-pill {
-      background: #ffeaa7;
-      color: #d63031;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 0.78rem;
-      font-weight: 800;
-    }
-    .dash-stats-row {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr 1fr 1fr;
-      gap: 8px;
-      text-align: center;
-    }
-    .stat-box {
-      background: #f8f9fa;
-      padding: 10px 4px;
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-    .stat-label { font-size: 0.72rem; color: var(--text-sub); font-weight: 700; }
-    .stat-val { font-size: 1.15rem; font-weight: 900; color: #2f3542; }
-    .stat-val.rate { color: var(--kt-red); }
-    .fairy-comment {
-      margin-top: 12px;
-      padding: 8px 12px;
-      background: #fff0f3;
-      border-radius: 10px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: #e04565;
-      text-align: center;
-    }
-
-    /* 🏆 매직넘버 대시보드 카드 */
-    .magic-card {
-      background: linear-gradient(145deg, #1e272e 0%, #2f3542 100%);
-      color: white;
-      border-radius: 22px;
-      padding: 20px 18px;
-      box-shadow: 0 10px 28px rgba(30, 39, 46, 0.2);
-      margin-bottom: 16px;
-      position: relative;
-      overflow: hidden;
-    }
-    .magic-card::after {
-      content: '👑';
-      position: absolute;
-      right: 14px;
-      top: 14px;
-      font-size: 2.8rem;
-      opacity: 0.15;
-    }
-    .magic-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-    .magic-badge {
-      background: rgba(234, 32, 39, 0.85);
-      color: white;
-      font-size: 0.75rem;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 20px;
-      letter-spacing: 0.5px;
-    }
-    .magic-season-txt {
-      font-size: 0.8rem;
-      color: #a4b0be;
-      font-weight: 700;
-    }
+def fetch_kt_wiz_data():
+    # 💡 한국 표준시(KST: UTC + 9시간)
+    kst_tz = datetime.timezone(datetime.timedelta(hours=9))
+    today_kst = datetime.datetime.now(kst_tz)
+    year = today_kst.year
+    today_str = today_kst.strftime("%Y-%m-%d")
     
-    .magic-main-grid {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-    .magic-hero-box {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 16px;
-      padding: 14px 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      position: relative;
-    }
-    .magic-hero-box.highlight {
-      background: linear-gradient(135deg, rgba(234, 32, 39, 0.25) 0%, rgba(234, 32, 39, 0.08) 100%);
-      border: 1px solid rgba(234, 32, 39, 0.4);
-    }
-    .magic-label {
-      font-size: 0.76rem;
-      color: #dcdde1;
-      font-weight: 700;
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .magic-val {
-      font-size: 2.2rem;
-      font-weight: 900;
-      line-height: 1.1;
-      color: #ffffff;
-      letter-spacing: -1px;
-    }
-    .magic-val.primary {
-      color: #ff4757;
-      text-shadow: 0 0 16px rgba(255, 71, 87, 0.4);
-    }
-    .magic-sub-info {
-      font-size: 0.72rem;
-      color: #a4b0be;
-      margin-top: 4px;
-      font-weight: 600;
+    # 📌 정규시즌 시작일 (3월 28일)
+    regular_season_start = f"{year}-03-28"
+
+    team_map = {
+        'LG': 'LG 트윈스', 'SSG': 'SSG 랜더스', '두산': '두산 베어스', 'KIA': 'KIA 타이거즈',
+        '삼성': '삼성 라이온즈', '롯데': '롯데 자이언츠', '한화': '한화 이글스', 'NC': 'NC 다이노스', 
+        '키움': '키움 히어로즈', 'KT': 'kt wiz'
     }
 
-    .magic-sub-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-    .magic-sub-box {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      padding: 10px 6px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .magic-sub-val {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: #f1f2f6;
-    }
-    .magic-sub-lbl {
-      font-size: 0.7rem;
-      color: #a4b0be;
-      font-weight: 700;
-    }
+    def get_team_name(code_or_name):
+        return team_map.get(code_or_name, code_or_name or "알수없음")
 
-    .magic-explain-box {
-      background: rgba(0, 0, 0, 0.25);
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-size: 0.78rem;
-      color: #ced6e0;
-      line-height: 1.45;
-      font-weight: 600;
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-    }
-    .magic-explain-box i {
-      color: #ffa502;
-      margin-top: 2px;
-      font-size: 0.85rem;
-    }
+    # 10개 구단 정규시즌 성적 딕셔너리
+    kbo_teams = [
+        'kt wiz', '삼성 라이온즈', 'LG 트윈스', '두산 베어스', 'KIA 타이거즈',
+        '한화 이글스', 'NC 다이노스', '롯데 자이언츠', 'SSG 랜더스', '키움 히어로즈'
+    ]
+    stats = {t: {"W": 0, "L": 0, "D": 0, "G": 0} for t in kbo_teams}
+    h2h_tracker = {t: {"W": 0, "L": 0, "D": 0} for t in kbo_teams}
 
-    /* 오늘 경기 카드 */
-    .today-card {
-      background: white;
-      border-radius: 20px;
-      padding: 18px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-    }
-    .today-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      padding-bottom: 10px;
-      border-bottom: 1px dashed #f1f2f6;
-    }
-    .today-date-badge { font-size: 0.85rem; font-weight: 800; color: var(--kt-red); }
-    .today-time-badge { font-size: 0.78rem; font-weight: 700; color: var(--text-sub); }
-    
-    /* H2H 상대전적 뱃지 */
-    .h2h-badge-row {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 12px;
-    }
-    .h2h-pill {
-      background: #f1f2f6;
-      color: #2f3542;
-      font-size: 0.76rem;
-      font-weight: 800;
-      padding: 4px 12px;
-      border-radius: 20px;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
+    # 1. 3월 28일 정규시즌부터 전 경기 일정 수집 (네이버 API)
+    sched_url = f"https://api-gw.sports.naver.com/schedule/games?upperCategoryId=kbaseball&fromDate={regular_season_start}&toDate={year}-12-31&size=1000"
+    s_data = fetch_json(sched_url)
 
-    .today-matchup { display: flex; justify-content: space-around; align-items: center; margin: 8px 0 16px; }
-    .today-team { font-size: 1.2rem; font-weight: 900; }
-    .today-team.kt { color: var(--kt-red); }
-    .today-vs { font-size: 1.3rem; font-weight: 900; color: #57606f; }
+    kt_schedule = {}
+    today_game_id = None
+    today_game_info = None
 
-    /* 선발투수 대결 박스 */
-    .pitcher-duel-box {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      background: #f8f9fa;
-      border-radius: 14px;
-      padding: 12px 14px;
-      margin-bottom: 14px;
-      border: 1px solid #eef0f4;
-    }
-    .pitcher-duel-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      text-align: center;
-    }
-    .pitcher-duel-label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: var(--text-sub);
-    }
-    .pitcher-duel-name {
-      font-size: 0.98rem;
-      font-weight: 900;
-      color: #2f3542;
-    }
-    .pitcher-duel-name.kt { color: var(--kt-red); }
+    if s_data and "result" in s_data:
+        games_list = s_data.get("result", {}).get("games", [])
+        for g in games_list:
+            raw_dt = g.get("gameDateTime", "")
+            game_date = raw_dt.split("T")[0] if "T" in raw_dt else raw_dt[:10]
 
-    .lineup-box { background: #f8f9fa; border-radius: 14px; padding: 14px; }
-    .lineup-title { font-size: 0.85rem; font-weight: 800; color: #57606f; margin-bottom: 10px; display: flex; justify-content: space-between; }
-    .lineup-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-    .lineup-item { background: white; border: 1px solid #eef0f4; border-radius: 8px; padding: 7px 6px; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; }
-    .order-num { font-weight: 900; color: var(--kt-red); margin-right: 4px; }
-    .player-name { font-weight: 700; color: #2f3542; }
-    .player-pos { font-size: 0.7rem; color: var(--text-sub); }
+            # 🚫 3월 28일 이전 및 시범경기 제외
+            if game_date < regular_season_start or "시범" in str(g.get("categoryName", "")) or str(g.get("leagueType", "")) == "DEMONSTRATION":
+                continue
 
-    /* 카드 리스트 */
-    .game-list { display: flex; flex-direction: column; gap: 12px; }
-    .game-card {
-      background: white;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-    }
-    .game-card-header {
-      padding: 12px 14px;
-      background: #fdfdfd;
-      border-bottom: 1px solid #f1f2f6;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .game-date { font-size: 0.85rem; font-weight: 800; color: var(--text-sub); }
-    .game-result-badge {
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.78rem;
-      font-weight: 900;
-      color: white;
-    }
-    .game-result-badge.win { background: #ea2027; }
-    .game-result-badge.lose { background: #57606f; }
-    .game-result-badge.draw { background: #ffa502; }
-    .game-result-badge.scheduled { background: #747d8c; }
-    .game-result-badge.canceled { background: #a4b0be; }
+            home_raw = g.get("homeTeamName") or g.get("homeTeamCode", "")
+            away_raw = g.get("awayTeamName") or g.get("awayTeamCode", "")
+            home = get_team_name(home_raw)
+            away = get_team_name(away_raw)
 
-    .game-card-body { padding: 16px 14px; display: flex; flex-direction: column; gap: 8px; }
-    .matchup-box { display: flex; align-items: center; justify-content: space-around; }
-    .team-col { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 80px; }
-    .team-name { font-size: 1.05rem; font-weight: 900; text-align: center; }
-    .team-name.kt { color: var(--kt-red); }
-    .score-text { font-size: 1.25rem; font-weight: 900; color: #2f3542; letter-spacing: 0.5px; }
-    .game-stadium-tag { text-align: center; font-size: 0.8rem; color: var(--text-sub); font-weight: 700; }
+            home_score = g.get("homeTeamScore")
+            away_score = g.get("awayTeamScore")
+            status = str(g.get("status", ""))
+            status_code = str(g.get("statusCode", ""))
 
-    .game-card-footer {
-      padding: 8px 14px;
-      border-top: 1px solid #f1f2f6;
-      display: flex;
-      justify-content: flex-end;
-      background: #fafafa;
-    }
-    .btn-del-game { background: none; border: none; color: #a4b0be; font-size: 0.9rem; cursor: pointer; padding: 4px; }
-    .btn-del-game:hover { color: #ff4757; }
+            # 💡 [정상 종료 판정] 미래 경기 0:0 및 우천취소 제외, 실제로 끝난 경기만 추출
+            is_canceled = ("취소" in status or status_code in ["CANCEL", "POSTPONE"])
+            is_really_finished = (status_code in ['RESULT', 'END'] or "종료" in status) and not is_canceled
+            has_valid_scores = (home_score is not None and away_score is not None and str(home_score) != "" and str(away_score) != "")
 
-    /* 순위 테이블 */
-    .table-card {
-      background: white;
-      border-radius: 20px;
-      padding: 16px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      overflow-x: auto;
-    }
-    .custom-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.82rem; }
-    .custom-table th { padding: 10px 4px; font-weight: 800; color: var(--text-sub); border-bottom: 1.5px solid #eef0f4; }
-    .custom-table td { padding: 11px 4px; font-weight: 700; border-bottom: 1px solid #f8f9fa; color: #2f3542; }
-    .custom-table tr.kt-row { background: #fff0f3; font-weight: 900; color: var(--kt-red); }
-    .custom-table tr.kt-row td { color: var(--kt-red); }
+            # 🏆 10개 구단 정규시즌 승/무/패 자체 계산 집계
+            if is_really_finished and has_valid_scores:
+                try:
+                    h_score = int(home_score)
+                    a_score = int(away_score)
 
-    /* FAB & Modal */
-    .fab {
-      position: fixed; right: 20px; bottom: 24px; width: 56px; height: 56px; border-radius: 50%;
-      background: var(--kt-red); color: white; display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; box-shadow: 0 8px 24px rgba(234, 32, 39, 0.4); cursor: pointer; border: none; z-index: 50;
-    }
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 999; align-items: center; justify-content: center; padding: 16px; }
-    .modal-overlay.active { display: flex; }
-    .modal-content { background: white; border-radius: 24px; width: 100%; max-width: 400px; padding: 22px; }
-    .form-group { margin-bottom: 14px; }
-    .form-group label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; }
-    .form-control { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 0.95rem; font-weight: 700; outline: none; }
-    .btn { flex: 1; padding: 13px; border-radius: 12px; border: none; font-size: 0.95rem; font-weight: 800; cursor: pointer; }
-    .btn-primary { background: var(--kt-red); color: white; }
-    .btn-secondary { background: #f1f2f6; color: #57606f; }
-  </style>
-</head>
-<body>
+                    if home in stats and away in stats:
+                        stats[home]["G"] += 1
+                        stats[away]["G"] += 1
+                        if h_score > a_score:
+                            stats[home]["W"] += 1
+                            stats[away]["L"] += 1
+                        elif h_score < a_score:
+                            stats[home]["L"] += 1
+                            stats[away]["W"] += 1
+                        else:
+                            stats[home]["D"] += 1
+                            stats[away]["D"] += 1
+                except Exception:
+                    pass
 
-  <header class="app-header">
-    <div class="header-top">
-      <div class="header-left">
-        <a href="index.html" class="btn-home" title="홈으로"><i class="fa-solid fa-house"></i></a>
-        <div>
-          <div class="header-title">위즈파크 직관 일기 ⚾</div>
-          <p style="font-size: 0.78rem; opacity: 0.9; margin-top: 2px;">kt wiz 직관 승률 🔥</p>
-        </div>
-      </div>
-    </div>
-  </header>
+            # KT 위즈 경기 처리
+            is_kt_home = (home == 'kt wiz' or "KT" in str(home_raw))
+            is_kt_away = (away == 'kt wiz' or "KT" in str(away_raw))
 
-  <!-- 3개 메인 탭 -->
-  <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('tab-diary', this)"><i class="fa-solid fa-ticket"></i> 직관 다이어리</button>
-    <button class="tab-btn" onclick="switchTab('tab-today', this)"><i class="fa-solid fa-calendar-day"></i> 오늘 경기</button>
-    <button class="tab-btn" onclick="switchTab('tab-rank', this)"><i class="fa-solid fa-ranking-star"></i> 리그 순위</button>
-  </div>
+            if is_kt_home or is_kt_away:
+                is_home = is_kt_home
+                opp_name = away if is_home else home
+                stadium = "수원 위즈파크 (홈)" if is_home else f"{g.get('stadium', '원정구장')} (원정)"
+                game_time = raw_dt.split("T")[1][:5] if "T" in raw_dt else "18:30"
 
-  <div class="container">
-    <!-- 탭 1: 직관 다이어리 -->
-    <div id="tab-diary" class="tab-content active">
-      <div class="dashboard-card">
-        <div class="dash-top">
-          <div class="dash-title"><i class="fa-solid fa-trophy" style="color:#ffa502;"></i> 직관 전적 요약</div>
-          <div class="win-rate-pill" id="badgeFairy">✨ 승리 요정</div>
-        </div>
-        <div class="dash-stats-row">
-          <div class="stat-box"><span class="stat-label">직관</span><span class="stat-val" id="statTotal">0회</span></div>
-          <div class="stat-box"><span class="stat-label">승/무/패</span><span class="stat-val" style="font-size:1rem;" id="statRecord">0승 0패</span></div>
-          <div class="stat-box"><span class="stat-label">승률</span><span class="stat-val rate" id="statWinRate">0%</span></div>
-          <div class="stat-box"><span class="stat-label">연승</span><span class="stat-val" style="color:#2ed573;" id="statStreak">0연승</span></div>
-        </div>
-        <div class="fairy-comment" id="fairyCommentText">직관 날짜를 등록해보세요! 🧙‍♂️⚾</div>
-      </div>
-      <div id="gameListContainer" class="game-list"></div>
-      <button class="fab" onclick="openAddModal()"><i class="fa-solid fa-plus"></i></button>
-    </div>
+                res_type = "scheduled"
+                score_str = "VS"
 
-    <!-- 탭 2: 오늘 경기 & 선발투수 & 상대전적 & 라인업 -->
-    <div id="tab-today" class="tab-content">
-      <div class="today-card">
-        <div class="today-header">
-          <span class="today-date-badge" id="todayDateTxt">📅 오늘 경기 일정</span>
-          <span class="today-time-badge" id="todayStadiumTxt">-</span>
-        </div>
+                if is_canceled:
+                    res_type = "canceled"
+                    score_str = "취소"
+                elif is_really_finished and has_valid_scores:
+                    try:
+                        kt_score = int(home_score if is_home else away_score)
+                        opp_score = int(away_score if is_home else home_score)
+                        score_str = f"KT {kt_score} : {opp_score} {opp_name.split(' ')[0]}"
 
-        <div class="h2h-badge-row">
-          <div class="h2h-pill" id="todayH2hPill">
-            <i class="fa-solid fa-handshake"></i>
-            <span id="todayH2hTxt">올 시즌 상대 전적 확인 중...</span>
-          </div>
-        </div>
+                        if opp_name in h2h_tracker:
+                            if kt_score > opp_score:
+                                res_type = "win"
+                                h2h_tracker[opp_name]["W"] += 1
+                            elif kt_score < opp_score:
+                                res_type = "lose"
+                                h2h_tracker[opp_name]["L"] += 1
+                            else:
+                                res_type = "draw"
+                                h2h_tracker[opp_name]["D"] += 1
+                    except Exception:
+                        pass
 
-        <div class="today-matchup">
-          <span class="today-team kt">kt wiz</span>
-          <span class="today-vs" id="todayScoreOrVs">VS</span>
-          <span class="today-team" id="todayOpponentTxt">-</span>
-        </div>
+                # 선발투수 기본 데이터 파싱
+                kt_p = g.get("homeStarterPitcherName" if is_home else "awayStarterPitcherName") or g.get("homeStarterName" if is_home else "awayStarterName") or "미정"
+                opp_p = g.get("awayStarterPitcherName" if is_home else "homeStarterPitcherName") or g.get("awayStarterName" if is_home else "homeStarterName") or "미정"
 
-        <!-- ⚔️ 선발투수 맞대결 박스 -->
-        <div class="pitcher-duel-box">
-          <div class="pitcher-duel-col">
-            <span class="pitcher-duel-label">KT 선발</span>
-            <span class="pitcher-duel-name kt" id="todayKtPitcher">미정</span>
-          </div>
-          <div class="pitcher-duel-col">
-            <span class="pitcher-duel-label">상대 선발</span>
-            <span class="pitcher-duel-name" id="todayOppPitcher">미정</span>
-          </div>
-        </div>
-        
-        <div class="lineup-box">
-          <div class="lineup-title">
-            <span>📋 선발 타순 (1~9번)</span>
-            <span style="font-size:0.75rem; color:var(--text-sub); font-weight:600;">경기 시작 1시간 전 발표</span>
-          </div>
-          <div class="lineup-grid" id="todayLineupGrid">
-            <div style="grid-column: span 3; text-align: center; color: var(--text-sub); font-size: 0.8rem; padding: 10px 0;">
-              선발 라인업 등록 대기 중입니다.
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+                game_obj = {
+                    "gameId": g.get("gameId"),
+                    "date": game_date,
+                    "time": game_time,
+                    "opponent": opp_name,
+                    "isHome": is_home,
+                    "stadium": stadium,
+                    "result": res_type,
+                    "score": score_str,
+                    "ktPitcher": kt_p,
+                    "oppPitcher": opp_p
+                }
 
-    <!-- 탭 3: KBO 리그 공식 순위 & 매직넘버 -->
-    <div id="tab-rank" class="tab-content">
-      <div class="magic-card" id="magicNumberCard">
-        <div class="magic-header">
-          <div class="magic-badge"><i class="fa-solid fa-fire"></i> KT WIZ MAGIC NUMBER</div>
-          <div class="magic-season-txt" id="magicDateTxt">정규시즌 144경기 기준</div>
-        </div>
+                kt_schedule[game_date] = game_obj
+                if game_date == today_str:
+                    today_game_id = g.get("gameId")
+                    today_game_info = game_obj
 
-        <div class="magic-main-grid">
-          <div class="magic-hero-box highlight">
-            <div class="magic-label"><i class="fa-solid fa-crown" style="color:#ffd32a;"></i> 정규 1위 매직넘버</div>
-            <div class="magic-val primary" id="valTitleMagic">-</div>
-            <div class="magic-sub-info" id="txtTitleSub">자력 우승까지 필요 승수</div>
-          </div>
-          <div class="magic-hero-box">
-            <div class="magic-label"><i class="fa-solid fa-ticket" style="color:#2ed573;"></i> PS 진출 매직넘버</div>
-            <div class="magic-val" id="valPsMagic">-</div>
-            <div class="magic-sub-info">가을야구(TOP 5) 확정</div>
-          </div>
-        </div>
+    # 2. 📊 순위 직접 계산 (승률 = 승 / (승 + 패))
+    def calc_wra(w, l):
+        tot = w + l
+        return (w / tot) if tot > 0 else 0.0
 
-        <div class="magic-sub-grid">
-          <div class="magic-sub-box">
-            <div class="magic-sub-val" id="valKtRank" style="color:#ff4757;">-위</div>
-            <div class="magic-sub-lbl">현재 순위</div>
-          </div>
-          <div class="magic-sub-box">
-            <div class="magic-sub-val" id="valRemainGames">-</div>
-            <div class="magic-sub-lbl">남은 경기</div>
-          </div>
-          <div class="magic-sub-box">
-            <div class="magic-sub-val" id="valLeadDiff">-</div>
-            <div class="magic-sub-lbl" id="lblLeadDiff">게임차</div>
-          </div>
-        </div>
+    sorted_teams = sorted(
+        stats.items(),
+        key=lambda x: (calc_wra(x[1]["W"], x[1]["L"]), x[1]["W"]),
+        reverse=True
+    )
 
-        <div class="magic-explain-box">
-          <i class="fa-solid fa-circle-info"></i>
-          <span id="magicExplainTxt">순위 데이터를 기반으로 매직넘버를 계산하는 중입니다...</span>
-        </div>
-      </div>
+    rankings = []
+    top_w = sorted_teams[0][1]["W"] if sorted_teams else 0
+    top_l = sorted_teams[0][1]["L"] if sorted_teams else 0
 
-      <!-- 순위 테이블 -->
-      <div class="table-card">
-        <div style="font-size:0.88rem; font-weight:800; color:#2f3542; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
-          <span>📊 KBO 공식 순위표</span>
-          <span style="font-size:0.75rem; color:var(--text-sub); font-weight:600;">상위 5팀 포스트시즌 진출</span>
-        </div>
-        <table class="custom-table">
-          <thead>
-            <tr>
-              <th>순위</th><th>구단</th><th>경기</th><th>승</th><th>무</th><th>패</th><th>승률</th><th>게임차</th>
-            </tr>
-          </thead>
-          <tbody id="rankingTableBody">
-            <tr><td colspan="8" style="padding:20px 0;">순위 데이터를 불러오는 중...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+    for i, (team, s) in enumerate(sorted_teams):
+        wra = calc_wra(s["W"], s["L"])
+        diff = ((top_w - s["W"]) + (s["L"] - top_l)) / 2.0
+        diff_str = "0.0" if i == 0 or diff <= 0 else f"{diff:.1f}".rstrip('0').rstrip('.') if f"{diff:.1f}".endswith('.0') else f"{diff:.1f}"
 
-  <!-- 직관 경기 추가 모달 -->
-  <div class="modal-overlay" id="addModal">
-    <div class="modal-content" onclick="event.stopPropagation()">
-      <h3 style="font-size:1.2rem; font-weight:800; margin-bottom:14px;">⚾ 직관 날짜 선택</h3>
-      <div class="form-group">
-        <label>경기 날짜</label>
-        <input type="date" class="form-control" id="gameDate" onchange="matchKtGame(this.value)">
-      </div>
-      <div style="background:#f8f9fc; border:1px dashed #dcdde1; border-radius:12px; padding:12px; margin-bottom:16px; font-size:0.88rem; display:flex; flex-direction:column; gap:6px;">
-        <div style="display:flex; justify-content:space-between; font-weight:700;"><span style="color:var(--text-sub);">상대팀</span><span id="txtOpponent">-</span></div>
-        <div style="display:flex; justify-content:space-between; font-weight:700;"><span style="color:var(--text-sub);">결과</span><span id="txtResult" style="color:var(--kt-red);">-</span></div>
-        <div style="display:flex; justify-content:space-between; font-weight:700;"><span style="color:var(--text-sub);">구장</span><span id="txtStadium" style="color:#57606f;">-</span></div>
-      </div>
-      <input type="hidden" id="autoOpponent"><input type="hidden" id="autoResult"><input type="hidden" id="autoScore"><input type="hidden" id="autoStadium">
-      <div style="display:flex; gap:10px;">
-        <button class="btn btn-secondary" onclick="closeModal()">취소</button>
-        <button class="btn btn-primary" id="btnSaveSubmit" onclick="saveGame()">기록 추가</button>
-      </div>
-    </div>
-  </div>
+        rankings.append({
+            "rank": str(i + 1),
+            "teamName": team,
+            "games": str(s["G"]),
+            "win": str(s["W"]),
+            "draw": str(s["D"]),
+            "lose": str(s["L"]),
+            "wra": f"{wra:.3f}",
+            "gameDiff": diff_str
+        })
 
-  <script>
-    const teamFullMap = {
-      'LG': 'LG 트윈스', 'SSG': 'SSG 랜더스', '두산': '두산 베어스', 'KIA': 'KIA 타이거즈',
-      '삼성': '삼성 라이온즈', '롯데': '롯데 자이언츠', '한화': '한화 이글스', 'NC': 'NC 다이노스', '키움': '키움 히어로즈', 'KT': 'kt wiz'
-    };
+    # 3. ⚔️ 올시즌 상대 전적 계산
+    today_h2h = {"text": "올 시즌 맞대결 기록 없음", "record": "-"}
+    if today_game_info:
+        opp = today_game_info["opponent"]
+        if opp in h2h_tracker:
+            st = h2h_tracker[opp]
+            tot = st["W"] + st["L"] + st["D"]
+            if tot > 0:
+                d_txt = f"{st['D']}무 " if st['D'] > 0 else ""
+                today_h2h = {
+                    "text": f"올시즌 {tot}전 {st['W']}승 {d_txt}{st['L']}패",
+                    "record": f"{st['W']}승 {d_txt}{st['L']}패"
+                }
+            else:
+                today_h2h = {"text": "올 시즌 첫 맞대결", "record": "0승 0패"}
 
-    function normalizeTeam(name) {
-      if (!name) return '상대팀';
-      for (const [k, v] of Object.entries(teamFullMap)) {
-        if (name.includes(k)) return v;
-      }
-      return name;
+    # 4. ⚾ 오늘 라인업 및 선발투수
+    today_lineup = {
+        "ktPitcher": today_game_info.get("ktPitcher", "미정") if today_game_info else "미정",
+        "oppPitcher": today_game_info.get("oppPitcher", "미정") if today_game_info else "미정",
+        "pitcher": today_game_info.get("ktPitcher", "미정") if today_game_info else "미정",
+        "batters": []
     }
 
-    function normalizeScore(score, oppName) {
-      if (!score) return 'VS';
-      if (score.includes('KT') || score.includes('VS') || score.includes('취소')) return score;
-      const parts = score.split(':').map(s => s.trim());
-      if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
-        return `KT ${parts[0]} : ${parts[1]} ${normalizeTeam(oppName).split(' ')[0]}`;
-      }
-      return score;
+    if today_game_id:
+        # A. 프리뷰 조회 (예고 선발투수)
+        prev_url = f"https://api-gw.sports.naver.com/schedule/games/{today_game_id}/preview"
+        p_data = fetch_json(prev_url)
+        if p_data and "result" in p_data:
+            g_info = p_data.get("result", {}).get("gameInfo", {})
+            h_starter = p_data.get("result", {}).get("homeStarterPitcher", {}).get("name") or g_info.get("homeStarterPitcherName")
+            a_starter = p_data.get("result", {}).get("awayStarterPitcher", {}).get("name") or g_info.get("awayStarterPitcherName")
+            is_h = today_game_info.get("isHome", True)
+
+            if is_h:
+                if h_starter: today_lineup["ktPitcher"] = h_starter; today_lineup["pitcher"] = h_starter
+                if a_starter: today_lineup["oppPitcher"] = a_starter
+            else:
+                if a_starter: today_lineup["ktPitcher"] = a_starter; today_lineup["pitcher"] = a_starter
+                if h_starter: today_lineup["oppPitcher"] = h_starter
+
+        # B. 릴레이 조회 (직전 타순 및 확정 선발투수)
+        l_url = f"https://api-gw.sports.naver.com/schedule/games/{today_game_id}/relay"
+        l_data = fetch_json(l_url)
+        if l_data and "result" in l_data:
+            l_root = l_data.get("result", {}).get("lineup", {})
+            is_h = today_game_info.get("isHome", True)
+            kt_l = l_root.get("home" if is_h else "away", {})
+            opp_l = l_root.get("away" if is_h else "home", {})
+
+            real_kt_p = kt_l.get("starterPitcher", {}).get("name")
+            real_opp_p = opp_l.get("starterPitcher", {}).get("name")
+            if real_kt_p: today_lineup["ktPitcher"] = real_kt_p; today_lineup["pitcher"] = real_kt_p
+            if real_opp_p: today_lineup["oppPitcher"] = real_opp_p
+
+            batters = kt_l.get("batters", [])
+            if batters:
+                today_lineup["batters"] = [
+                    {"order": b.get("order", "-"), "name": b.get("name", "-"), "pos": b.get("pos", "-")}
+                    for b in batters
+                ]
+
+    # 5. JSON 저장
+    final_payload = {
+        "updatedAt": today_kst.strftime("%Y-%m-%d %H:%M:%S (KST)"),
+        "todayMatch": today_game_info,
+        "todayH2H": today_h2h,
+        "todayLineup": today_lineup,
+        "rankings": rankings,
+        "schedule": kt_schedule
     }
 
-    function normalizeStadium(stadium) {
-      if (!stadium || stadium === '수원') return '수원 위즈파크 (홈)';
-      return stadium;
-    }
+    with open("ktwiz_data.json", "w", encoding="utf-8") as f:
+        json.dump(final_payload, f, ensure_ascii=False, indent=2)
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
-      authDomain: "kobe-couple-app.firebaseapp.com",
-      projectId: "kobe-couple-app",
-      storageBucket: "kobe-couple-app.firebasestorage.app",
-      messagingSenderId: "755701956140",
-      appId: "1:755701956140:web:ea39d7d1e00bd83ade1b89"
-    };
+    print(f"✅ 동기화 완료 ({today_str}): 3/28 이후 순위 10개 구단 직접 계산 | 오늘경기: {'있음' if today_game_info else '휴식일'}")
 
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const baseballCollection = db.collection("couple_space").doc("data").collection("baseball_games");
-
-    let gameList = [];
-    let serverKboData = {};
-
-    function switchTab(tabId, el) {
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      el.classList.add('active');
-      document.getElementById(tabId).classList.add('active');
-    }
-
-    async function loadKboJson() {
-      try {
-        const res = await fetch('./ktwiz_data.json?t=' + Date.now());
-        if (res.ok) {
-          serverKboData = await res.json();
-          renderTodayMatch(serverKboData.todayMatch, serverKboData.todayLineup, serverKboData.todayH2H);
-          renderRankingsAndMagic(serverKboData.rankings);
-        }
-      } catch(e){ console.warn("JSON 로드 대기"); }
-    }
-    loadKboJson();
-
-    function renderTodayMatch(todayMatch, todayLineup, todayH2H) {
-      if (!todayMatch) {
-        document.getElementById('todayDateTxt').innerText = '📅 오늘 경기 일정 없음';
-        document.getElementById('todayStadiumTxt').innerText = '휴식일 🏖️';
-        document.getElementById('todayScoreOrVs').innerText = '-';
-        document.getElementById('todayOpponentTxt').innerText = '-';
-        document.getElementById('todayH2hTxt').innerText = '휴식일';
-        document.getElementById('todayKtPitcher').innerText = '-';
-        document.getElementById('todayOppPitcher').innerText = '-';
-        return;
-      }
-
-      document.getElementById('todayDateTxt').innerText = `📅 ${todayMatch.date} (${todayMatch.time || '18:30'})`;
-      document.getElementById('todayStadiumTxt').innerText = `📍 ${normalizeStadium(todayMatch.stadium)}`;
-      document.getElementById('todayScoreOrVs').innerText = todayMatch.score;
-      document.getElementById('todayOpponentTxt').innerText = normalizeTeam(todayMatch.opponent);
-
-      // 상대 전적 표시
-      if (todayH2H && todayH2H.text) {
-        document.getElementById('todayH2hTxt').innerText = todayH2H.text;
-      }
-
-      // 선발 투수 대결 표시
-      if (todayLineup) {
-        document.getElementById('todayKtPitcher').innerText = todayLineup.ktPitcher || todayMatch.ktPitcher || '미정';
-        document.getElementById('todayOppPitcher').innerText = todayLineup.oppPitcher || todayMatch.oppPitcher || '미정';
-
-        const grid = document.getElementById('todayLineupGrid');
-        if (todayLineup.batters && todayLineup.batters.length > 0) {
-          grid.innerHTML = todayLineup.batters.map(b => `
-            <div class="lineup-item">
-              <div><span class="order-num">${b.order}</span><span class="player-name">${b.name}</span></div>
-              <span class="player-pos">${b.pos}</span>
-            </div>
-          `).join('');
-        }
-      }
-    }
-
-    function renderRankingsAndMagic(rankings) {
-      const tbody = document.getElementById('rankingTableBody');
-      if (!rankings || rankings.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="padding:20px 0;">순위 데이터를 불러오는 중...</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = rankings.map(r => `
-        <tr class="${r.teamName && (r.teamName.includes('KT') || r.teamName.includes('kt')) ? 'kt-row' : ''}">
-          <td><b>${r.rank}</b></td>
-          <td>${r.teamName}</td>
-          <td>${r.games}</td>
-          <td>${r.win}</td>
-          <td>${r.draw || 0}</td>
-          <td>${r.lose}</td>
-          <td>${r.wra}</td>
-          <td>${r.gameDiff}</td>
-        </tr>
-      `).join('');
-
-      calculateMagicNumbers(rankings);
-    }
-
-    function calculateMagicNumbers(rankings) {
-      const TOTAL_SEASON_GAMES = 144;
-      
-      const parsedRankings = rankings.map(r => ({
-        rank: parseInt(r.rank) || 0,
-        teamName: r.teamName,
-        games: parseInt(r.games) || 0,
-        win: parseInt(r.win) || 0,
-        draw: parseInt(r.draw) || 0,
-        lose: parseInt(r.lose) || 0,
-        wra: parseFloat(r.wra) || 0.0,
-        gameDiff: r.gameDiff
-      })).sort((a, b) => a.rank - b.rank);
-
-      const ktIndex = parsedRankings.findIndex(r => r.teamName && (r.teamName.includes('KT') || r.teamName.includes('kt')));
-      if (ktIndex === -1) return;
-
-      const kt = parsedRankings[ktIndex];
-      const ktRemain = TOTAL_SEASON_GAMES - kt.games;
-
-      document.getElementById('valKtRank').innerText = `${kt.rank}위`;
-      document.getElementById('valRemainGames').innerText = `${ktRemain}경기`;
-
-      let titleMagicTxt = '-';
-      let titleSubTxt = '자력 우승까지 필요 승수';
-      let explainTxt = '';
-
-      if (kt.rank === 1) {
-        const secondTeam = parsedRankings[1];
-        if (secondTeam) {
-          const secondRemain = TOTAL_SEASON_GAMES - secondTeam.games;
-          const secondMaxWins = secondTeam.win + secondRemain;
-          const magic1 = secondMaxWins + 1 - kt.win;
-
-          if (magic1 <= 0) {
-            titleMagicTxt = '우승 확정 🏆';
-            explainTxt = `kt wiz가 정규시즌 1위 우승을 최종 확정지었습니다! 🎉`;
-          } else if (magic1 > ktRemain) {
-            titleMagicTxt = '점등 전';
-            explainTxt = `아직 자력 우승 매직넘버가 점등되지 않았습니다. (남은 ${ktRemain}경기 전승 시 우승 유력)`;
-          } else {
-            titleMagicTxt = `${magic1}`;
-            const diffTxt = secondTeam.gameDiff ? `${secondTeam.gameDiff}G차` : '';
-            explainTxt = `<b>1위 매직넘버 ${magic1}</b> — 2위 ${secondTeam.teamName.split(' ')[0]}(${diffTxt})이 남은 ${secondRemain}경기를 전승해도, kt가 <b>${magic1}승</b>만 추가하면 정규 1위가 확정됩니다.`;
-          }
-
-          document.getElementById('valLeadDiff').innerText = `+${secondTeam.gameDiff || '0.0'}`;
-          document.getElementById('lblLeadDiff').innerText = `2위 ${secondTeam.teamName.split(' ')[0]} 리드`;
-        }
-      } else {
-        const firstTeam = parsedRankings[0];
-        titleMagicTxt = `+${kt.gameDiff || '0.0'}`;
-        titleSubTxt = `1위 ${firstTeam.teamName.split(' ')[0]}와 게임차`;
-        document.getElementById('valLeadDiff').innerText = `-${kt.gameDiff || '0.0'}`;
-        document.getElementById('lblLeadDiff').innerText = `1위와 게임차`;
-        explainTxt = `현재 1위 ${firstTeam.teamName.split(' ')[0]}를 ${kt.gameDiff}게임 차로 추격 중입니다. 역전 우승을 향해 파이팅! 🔥`;
-      }
-      document.getElementById('valTitleMagic').innerHTML = titleMagicTxt;
-      document.getElementById('txtTitleSub').innerText = titleSubTxt;
-
-      let psMagicTxt = '-';
-      const sixthTeam = parsedRankings[5];
-      if (sixthTeam) {
-        const sixthRemain = TOTAL_SEASON_GAMES - sixthTeam.games;
-        const sixthMaxWins = sixthTeam.win + sixthRemain;
-        const magicPs = sixthMaxWins + 1 - kt.win;
-
-        if (magicPs <= 0) {
-          psMagicTxt = 'PS 확정 🎟️';
-        } else if (magicPs > ktRemain) {
-          psMagicTxt = `${magicPs}`;
-        } else {
-          psMagicTxt = `${magicPs}`;
-        }
-      }
-      document.getElementById('valPsMagic').innerText = psMagicTxt;
-      document.getElementById('magicExplainTxt').innerHTML = explainTxt;
-    }
-
-    baseballCollection.onSnapshot((snapshot) => {
-      const list = [];
-      snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
-      gameList = list;
-      updateDashboard();
-      renderGames();
-    });
-
-    function updateDashboard() {
-      const completedGames = gameList.filter(g => g.result === 'win' || g.result === 'lose' || g.result === 'draw');
-      const wins = gameList.filter(g => g.result === 'win').length;
-      const loses = gameList.filter(g => g.result === 'lose').length;
-      const draws = gameList.filter(g => g.result === 'draw').length;
-      const winRate = (wins + loses) > 0 ? Math.round((wins / (wins + loses)) * 100) : 0;
-
-      document.getElementById('statTotal').innerText = `${gameList.length}회`;
-      document.getElementById('statRecord').innerText = `${wins}승 ${draws ? draws + '무 ' : ''}${loses}패`;
-      document.getElementById('statWinRate').innerText = `${winRate}%`;
-
-      let streak = 0;
-      const sorted = [...completedGames].sort((a, b) => new Date(b.date) - new Date(a.date));
-      for (let g of sorted) {
-        if (g.result === 'win') streak++; else break;
-      }
-      document.getElementById('statStreak').innerText = `${streak}연승`;
-
-      const commentEl = document.getElementById('fairyCommentText');
-      const badgeEl = document.getElementById('badgeFairy');
-      if (gameList.length === 0) {
-        commentEl.innerText = "직관 날짜를 등록해보세요! 🧙‍♂️⚾";
-        badgeEl.innerText = "✨ 첫 직관 대기";
-      } else if (winRate >= 70) {
-        commentEl.innerText = `승률 ${winRate}%! 뚜쫑은 kt wiz의 절대적인 승리요정 🧚💖`;
-        badgeEl.innerText = "🔥 승리 요정";
-      } else if (winRate >= 50) {
-        commentEl.innerText = `오늘도 승리의 함성을 함께 질러봐요! ⚡`;
-        badgeEl.innerText = "⚾ 든든한 위즈팬";
-      } else {
-        commentEl.innerText = "다음 경기엔 반드시 승리한다! kt wiz 파이팅! 🔥";
-        badgeEl.innerText = "✨ 열혈 응원단";
-      }
-    }
-
-    function renderGames() {
-      const container = document.getElementById('gameListContainer');
-      let list = [...gameList].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-
-      if (list.length === 0) {
-        container.innerHTML = `<div style="text-align:center; padding:40px 10px; color:#a4b0be; font-size:0.9rem; font-weight:800;">등록된 직관 기록이 없습니다. + 버튼을 눌러 추가해보세요!</div>`;
-        return;
-      }
-
-      const resText = { win: 'WIN 🔴', lose: 'LOSE ⚫', draw: 'DRAW 🟡', scheduled: '직관 예정 ⚪', canceled: '취소 🌧️' };
-      container.innerHTML = list.map(g => {
-        const fullOpponent = normalizeTeam(g.opponent);
-        const formattedScore = normalizeScore(g.score, fullOpponent);
-        const formattedStadium = normalizeStadium(g.stadium);
-
-        return `
-          <div class="game-card">
-            <div class="game-card-header">
-              <span class="game-date">📅 ${g.date}</span>
-              <span class="game-result-badge ${g.result || 'scheduled'}">${resText[g.result] || '예정'}</span>
-            </div>
-            <div class="game-card-body">
-              <div class="matchup-box">
-                <div class="team-col"><span class="team-name kt">kt wiz</span></div>
-                <span class="score-text">${formattedScore}</span>
-                <div class="team-col"><span class="team-name">${fullOpponent}</span></div>
-              </div>
-              <div class="game-stadium-tag">📍 ${formattedStadium}</div>
-            </div>
-            <div class="game-card-footer">
-              <button class="btn-del-game" onclick="deleteGame('${g.id}')"><i class="fa-solid fa-trash-can"></i></button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function matchKtGame(dateStr) {
-      if (!dateStr || !serverKboData.schedule) return;
-      const gameInfo = serverKboData.schedule[dateStr];
-      if (gameInfo) {
-        document.getElementById('autoOpponent').value = gameInfo.opponent;
-        document.getElementById('autoResult').value = gameInfo.result;
-        document.getElementById('autoScore').value = gameInfo.score;
-        document.getElementById('autoStadium').value = gameInfo.stadium;
-
-        const resLabels = { win: '🔴 승리', lose: '⚫ 패배', draw: '🟡 무승부', scheduled: '⚪ 직관 예정', canceled: '🌧️ 취소' };
-        document.getElementById('txtOpponent').innerText = `${normalizeTeam(gameInfo.opponent)} (${gameInfo.isHome ? '홈' : '원정'})`;
-        document.getElementById('txtResult').innerText = resLabels[gameInfo.result] || '⚪ 직관 예정';
-        document.getElementById('txtStadium').innerText = normalizeStadium(gameInfo.stadium);
-      } else {
-        document.getElementById('autoOpponent').value = '';
-        document.getElementById('txtOpponent').innerText = '공식 경기 없음';
-        document.getElementById('txtResult').innerText = '-';
-        document.getElementById('txtStadium').innerText = '-';
-      }
-    }
-
-    function saveGame() {
-      const date = document.getElementById('gameDate').value;
-      const opponent = document.getElementById('autoOpponent').value;
-      const result = document.getElementById('autoResult').value;
-      const score = document.getElementById('autoScore').value;
-      const stadium = document.getElementById('autoStadium').value;
-      if (!date) return alert('경기 날짜를 선택해주세요!');
-      if (!opponent) return alert('해당 날짜에는 kt wiz 공식 경기가 없습니다.');
-
-      baseballCollection.doc(String(Date.now())).set({
-        date, opponent, result, score, stadium, createdAt: Date.now()
-      }).then(() => closeModal());
-    }
-
-    function deleteGame(id) {
-      if (confirm('이 직관 기록을 삭제할까요?')) baseballCollection.doc(id).delete();
-    }
-
-    function openAddModal() {
-      const todayStr = new Date().toISOString().split('T')[0];
-      document.getElementById('gameDate').value = todayStr;
-      document.getElementById('addModal').classList.add('active');
-      matchKtGame(todayStr);
-    }
-    function closeModal() { document.getElementById('addModal').classList.remove('active'); }
-  </script>
-</body>
-</html>
+if __name__ == "__main__":
+    fetch_kt_wiz_data()
