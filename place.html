@@ -19,7 +19,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-    <!-- 25개 자치구 파일 각자 불러오기 -->
+  <!-- 25개 자치구 파일 각자 불러오기 -->
   <script src="place/places_dobong.js"></script>
   <script src="place/places_dongdaemun.js"></script>
   <script src="place/places_dongjak.js"></script>
@@ -582,19 +582,32 @@
         list = list.filter(p => p.cat === selectedFoodCategory);
       }
 
+      // 거리 계산 삽입
       list = list.map(p => ({
         ...p,
         dist: calculateDistance(currentLat, currentLng, p.lat, p.lon)
       }));
 
+      // 🌟 내 위치 기준 2km(2000m) 이내 가게들 우선 필터링 (부족하면 반경 자동 확장 안전장치 포함)
+      let filteredList = list.filter(p => p.dist <= 2000);
+      let radius = 2000;
+      while (filteredList.length < 15 && radius < 20000) {
+        radius += 2000;
+        filteredList = list.filter(p => p.dist <= radius);
+      }
+      if (filteredList.length === 0) {
+        filteredList = list;
+      }
+
+      // 정렬 방식 적용 (가까운순 vs 별점순)
       if (currentSortMode === 'dist') {
-        list.sort((a, b) => a.dist - b.dist);
+        filteredList.sort((a, b) => a.dist - b.dist);
       } else if (currentSortMode === 'rating') {
-        list.sort((a, b) => parseFloat(b.rating || 4.5) - parseFloat(a.rating || 4.5));
+        filteredList.sort((a, b) => parseFloat(b.rating || 4.5) - parseFloat(a.rating || 4.5));
       }
 
       // TOP 15개 슬라이싱
-      const top15 = list.slice(0, 15);
+      const top15 = filteredList.slice(0, 15);
 
       if (top15.length === 0) {
         container.innerHTML = `<div class="state-box">해당 조건에 일치하는 장소가 없습니다.</div>`;
@@ -611,7 +624,7 @@
 
         return `
           <div class="place-card">
-            <div class="top-rank-badge">서울 TOP ${idx + 1}</div>
+            <div class="top-rank-badge">추천 TOP ${idx + 1}</div>
             <div class="place-card-top">
               <div class="place-title-group">
                 <div class="place-title">${p.name}</div>
