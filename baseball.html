@@ -332,14 +332,14 @@
     .today-team.kt { color: var(--kt-red); }
     .today-vs { font-size: 1.3rem; font-weight: 900; color: #57606f; }
 
-    /* 선발투수 대결 박스 */
+    /* ⚔️ 선발투수 대결 박스 */
     .pitcher-duel-box {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       background: #f8f9fa;
       border-radius: 14px;
-      padding: 12px 14px;
+      padding: 14px;
       margin-bottom: 14px;
       border: 1px solid #eef0f4;
     }
@@ -347,7 +347,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
+      gap: 3px;
       text-align: center;
     }
     .pitcher-duel-label {
@@ -356,11 +356,27 @@
       color: var(--text-sub);
     }
     .pitcher-duel-name {
-      font-size: 0.98rem;
+      font-size: 1.02rem;
       font-weight: 900;
       color: #2f3542;
     }
     .pitcher-duel-name.kt { color: var(--kt-red); }
+    
+    /* 📊 선발투수 세부 성적 뱃지 */
+    .pitcher-stat-badge {
+      font-size: 0.73rem;
+      font-weight: 700;
+      color: #57606f;
+      background: #ffffff;
+      padding: 3px 8px;
+      border-radius: 8px;
+      border: 1px solid #eef0f4;
+      margin-top: 2px;
+      min-height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     .lineup-box { background: #f8f9fa; border-radius: 14px; padding: 14px; }
     .lineup-title { font-size: 0.85rem; font-weight: 800; color: #57606f; margin-bottom: 10px; display: flex; justify-content: space-between; }
@@ -513,15 +529,17 @@
           <span class="today-team" id="todayOpponentTxt">-</span>
         </div>
 
-        <!-- ⚔️ 선발투수 맞대결 박스 -->
+        <!-- ⚔️ 선발투수 맞대결 & 시즌 성적 박스 -->
         <div class="pitcher-duel-box">
           <div class="pitcher-duel-col">
             <span class="pitcher-duel-label">KT 선발</span>
             <span class="pitcher-duel-name kt" id="todayKtPitcher">미정</span>
+            <span class="pitcher-stat-badge" id="todayKtPitcherStat">-</span>
           </div>
           <div class="pitcher-duel-col">
             <span class="pitcher-duel-label">상대 선발</span>
             <span class="pitcher-duel-name" id="todayOppPitcher">미정</span>
+            <span class="pitcher-stat-badge" id="todayOppPitcherStat">-</span>
           </div>
         </div>
         
@@ -681,10 +699,49 @@
           serverKboData = await res.json();
           renderTodayMatch(serverKboData.todayMatch, serverKboData.todayLineup, serverKboData.todayH2H);
           renderRankingsAndMagic(serverKboData.rankings);
+
+          // 브라우저에서 투수 상세 성적(ERA / 승패) 직접 로드
+          if (serverKboData.todayMatch && serverKboData.todayMatch.gameId) {
+            loadPitcherStats(serverKboData.todayMatch.gameId, serverKboData.todayMatch.isHome);
+          }
         }
       } catch(e){ console.warn("JSON 로드 대기"); }
     }
     loadKboJson();
+
+    // 🔍 네이버 게임센터 프리뷰 API를 브라우저에서 직접 호출하여 투수 ERA/승패 로드
+    async function loadPitcherStats(gameId, isHome) {
+      const ktStatEl = document.getElementById('todayKtPitcherStat');
+      const oppStatEl = document.getElementById('todayOppPitcherStat');
+
+      try {
+        const res = await fetch(`https://api-gw.sports.naver.com/schedule/games/${gameId}/preview`);
+        if (!res.ok) return;
+
+        const data = await res.json();
+        const result = data.result || {};
+        const homePitcher = result.homeStarterPitcher || {};
+        const awayPitcher = result.awayStarterPitcher || {};
+
+        const homeStat = (homePitcher.era !== undefined && homePitcher.era !== null) 
+          ? `ERA ${homePitcher.era} (${homePitcher.w || 0}승 ${homePitcher.l || 0}패)` 
+          : '-';
+
+        const awayStat = (awayPitcher.era !== undefined && awayPitcher.era !== null) 
+          ? `ERA ${awayPitcher.era} (${awayPitcher.w || 0}승 ${awayPitcher.l || 0}패)` 
+          : '-';
+
+        if (isHome) {
+          if (ktStatEl) ktStatEl.innerText = homeStat;
+          if (oppStatEl) oppStatEl.innerText = awayStat;
+        } else {
+          if (ktStatEl) ktStatEl.innerText = awayStat;
+          if (oppStatEl) oppStatEl.innerText = homeStat;
+        }
+      } catch (err) {
+        console.warn("투수 상세 성적 로드 건너뜀:", err);
+      }
+    }
 
     function renderTodayMatch(todayMatch, todayLineup, todayH2H) {
       if (!todayMatch) {
@@ -695,6 +752,8 @@
         document.getElementById('todayH2hTxt').innerText = '휴식일';
         document.getElementById('todayKtPitcher').innerText = '-';
         document.getElementById('todayOppPitcher').innerText = '-';
+        document.getElementById('todayKtPitcherStat').innerText = '-';
+        document.getElementById('todayOppPitcherStat').innerText = '-';
         return;
       }
 
@@ -708,7 +767,7 @@
         document.getElementById('todayH2hTxt').innerText = todayH2H.text;
       }
 
-      // 선발 투수 대결 표시
+      // 선발 투수 이름 표시
       if (todayLineup) {
         document.getElementById('todayKtPitcher').innerText = todayLineup.ktPitcher || todayMatch.ktPitcher || '미정';
         document.getElementById('todayOppPitcher').innerText = todayLineup.oppPitcher || todayMatch.oppPitcher || '미정';
