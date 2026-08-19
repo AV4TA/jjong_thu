@@ -452,11 +452,14 @@
       <input type="hidden" id="editItemId" value="">
 
       <div class="form-group">
-        <label>바코드/쿠폰 사진 <span style="font-size:0.8rem; color:var(--primary); font-weight:normal;">(사진 올리면 유효기간 자동분석 ✨)</span></label>
+        <label>바코드/쿠폰 사진 <span style="font-size:0.8rem; color:var(--primary); font-weight:normal;">(사진 올리면 자동 분석 ✨)</span></label>
         <input type="file" class="form-control" id="giftImage" accept="image/*" onchange="handleImageOCR(this)">
         <div class="ocr-loader" id="ocrLoader">
           <i class="fa-solid fa-wand-magic-sparkles"></i>
-          <span id="ocrText">AI가 상품명과 유효기간을 분석 중...</span>
+          <span id="ocrText">AI가 텍스트를 정밀 분석 중...</span>
+        </div>
+        <div id="ocrNotice" style="display:none; font-size: 0.78rem; color: #0984e3; margin-top: 6px; font-weight: 600;">
+          💡 AI가 분석한 내용입니다. 글자가 다를 경우 직접 수정해 주세요!
         </div>
       </div>
       <div class="form-group">
@@ -512,7 +515,6 @@
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // ★ 완전히 분리된 전용 컬렉션 경로: couple_space/data/couple_gifticons
     const giftCollection = db.collection("couple_space").doc("data").collection("couple_gifticons");
 
     let gifticons = [];
@@ -718,6 +720,7 @@
       document.getElementById('itemMemo').value = g.memo || '';
       editingExistingImg = g.img || null;
       editingExistingThumb = g.thumbImg || null;
+      document.getElementById('ocrNotice').style.display = 'none';
       document.getElementById('addModal').classList.add('active');
     }
 
@@ -784,6 +787,7 @@
       document.getElementById('editItemId').value = '';
       editingExistingImg = null;
       editingExistingThumb = null;
+      document.getElementById('ocrNotice').style.display = 'none';
       document.getElementById('addModal').classList.add('active');
     }
 
@@ -797,11 +801,64 @@
       document.getElementById('giftImage').value = '';
       document.getElementById('editItemId').value = '';
       document.getElementById('ocrLoader').classList.remove('active');
+      document.getElementById('ocrNotice').style.display = 'none';
       const submitBtn = document.getElementById('btnSaveSubmit');
       submitBtn.disabled = false;
       submitBtn.innerText = '저장하기';
       editingExistingImg = null;
       editingExistingThumb = null;
+    }
+
+    // ★ 이미지 전처리(흑백 및 대비 강화) 함수 추가
+    function preprocessImageForOCR(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          
+          // OCR 인식을 위해 적절한 크기로 리사이징 (최대 1200px)
+          const maxDim = 1200;
+          if (width > height && width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // 픽셀 데이터를 가져와 흑백 변환 및 대비(Contrast) 향상 수행
+          const imgData = ctx.getImageData(0, 0, width, height);
+          const data = imgData.data;
+          const contrast = 1.3; // 대비 계수
+          const intercept = 128 * (1 - contrast);
+
+          for (let i = 0; i < data.length; i += 4) {
+            // 그레이스케일(흑백) 변환
+            let avg = 0.3 * data[i] + 0.59 * data[i + 1] + 0.11 * data[i + 2];
+            // 대비 강화
+            let cVal = contrast * avg + intercept;
+            cVal = cVal < 0 ? 0 : (cVal > 255 ? 255 : cVal);
+
+            data[i]     = cVal; // R
+            data[i + 1] = cVal; // G
+            data[i + 2] = cVal; // B
+          }
+          ctx.putImageData(imgData, 0, 0);
+
+          // 전처리된 이미지를 DataURL로 변환하여 전달
+          callback(canvas.toDataURL('image/jpeg', 0.9));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
     }
 
     function handleImageOCR(input) {
@@ -811,24 +868,33 @@
 
       const loader = document.getElementById('ocrLoader');
       const ocrText = document.getElementById('ocrText');
+      const ocrNotice = document.getElementById('ocrNotice');
+      
       loader.classList.add('active');
-      ocrText.innerText = 'AI가 상품명과 유효기간을 분석 중...';
+      ocrNotice.style.display = 'none';
+      ocrText.innerText = '이미지 전처리 및 분석 중...';
 
-      Tesseract.recognize(file, 'kor+eng', {
-        logger: m => {
-          if (requestId !== currentOcrRequestId) return;
-          if (m.status === 'recognizing text') {
-            ocrText.innerText = `텍스트 분석 중... (${Math.round(m.progress * 100)}%)`;
-          }
-        }
-      }).then(({ data: { text } }) => {
+      // 1. 전처리 함수 호출 후 Tesseract 실행
+      preprocessImageForOCR(file, (processedImgUrl) => {
         if (requestId !== currentOcrRequestId) return;
-        loader.classList.remove('active');
-        extractGifticonInfo(text);
-      }).catch(err => {
-        if (requestId === currentOcrRequestId) {
+
+        Tesseract.recognize(processedImgUrl, 'kor+eng', {
+          logger: m => {
+            if (requestId !== currentOcrRequestId) return;
+            if (m.status === 'recognizing text') {
+              ocrText.innerText = `텍스트 분석 중... (${Math.round(m.progress * 100)}%)`;
+            }
+          }
+        }).then(({ data: { text } }) => {
+          if (requestId !== currentOcrRequestId) return;
           loader.classList.remove('active');
-        }
+          ocrNotice.style.display = 'block'; // AI 분석 완료 안내 문구 표시
+          extractGifticonInfo(text);
+        }).catch(err => {
+          if (requestId === currentOcrRequestId) {
+            loader.classList.remove('active');
+          }
+        });
       });
     }
 
