@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>뚜쫑 주변 데이트 🍽️ | 맛집 & 카페</title>
+  <title>뚜쫑 주변 데이트 🍽️ | 맛집 & 카페 TOP 5</title>
 
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -18,9 +18,6 @@
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-  <!-- 카카오 지도 SDK -->
-  <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6c0ba463ffa53681db449e24a9a56ef&libraries=services"></script>
 
   <style>
     :root {
@@ -151,24 +148,39 @@
     .tab-content.active { display: block; }
 
     .place-list { display: flex; flex-direction: column; gap: 12px; }
+    
     .place-card {
       background: white;
       border-radius: 18px;
-      padding: 16px;
+      padding: 18px 16px;
       box-shadow: var(--shadow);
       border: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
       position: relative;
     }
+    .top-rank-badge {
+      position: absolute;
+      top: -6px;
+      left: 16px;
+      background: linear-gradient(135deg, #ff5e7e 0%, #ff758c 100%);
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 900;
+      padding: 3px 8px;
+      border-radius: 6px;
+      box-shadow: 0 4px 8px rgba(255, 94, 126, 0.3);
+    }
+
     .place-card-top {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
+      margin-top: 4px;
     }
     .place-title {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 800;
       color: #2d3436;
       line-height: 1.3;
@@ -177,14 +189,14 @@
       font-size: 0.78rem;
       color: #747d8c;
       font-weight: 600;
-      margin-top: 2px;
+      margin-top: 3px;
     }
     .place-distance {
       display: inline-flex;
       align-items: center;
       gap: 4px;
       background: #f1f2f6;
-      padding: 4px 8px;
+      padding: 5px 10px;
       border-radius: 8px;
       font-size: 0.78rem;
       font-weight: 800;
@@ -193,7 +205,7 @@
     }
     .place-address {
       font-size: 0.82rem;
-      color: #a4b0be;
+      color: #8395a7;
       line-height: 1.35;
     }
     
@@ -224,21 +236,23 @@
       justify-content: space-between;
       align-items: center;
       margin-top: 4px;
-      padding-top: 8px;
+      padding-top: 10px;
       border-top: 1px solid #f8f9fa;
     }
-    .btn-route {
+    .link-group { display: flex; gap: 6px; }
+    .btn-map-link {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      background: #fee500;
-      color: #3c1e1e;
-      text-decoration: none;
-      padding: 7px 14px;
-      border-radius: 10px;
-      font-size: 0.82rem;
+      gap: 4px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.78rem;
       font-weight: 800;
+      text-decoration: none;
     }
+    .btn-kakao { background: #fee500; color: #3c1e1e; }
+    .btn-naver { background: #03c75a; color: white; }
+
     .btn-heart {
       background: none;
       border: none;
@@ -289,45 +303,44 @@
     <div class="header-left">
       <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i></a>
       <div>
-        <div class="header-title">주변 맛집 & 카페 탐색 ✨</div>
+        <div class="header-title">주변 맛집 & 카페 TOP 5 ✨</div>
       </div>
     </div>
   </header>
 
   <div class="container">
     <div class="location-bar">
-      <span><i class="fa-solid fa-location-crosshairs" style="color:var(--primary); margin-right:4px;"></i> <span id="txtLocation">현재 위치 확인 중...</span></span>
+      <span><i class="fa-solid fa-location-crosshairs" style="color:var(--primary); margin-right:4px;"></i> <span id="txtLocation">내 위치 확인 중...</span></span>
       <button class="btn-refresh-gps" onclick="getLocation()"><i class="fa-solid fa-rotate-right"></i> 갱신</button>
     </div>
 
     <div class="tab-bar">
-      <button class="tab-btn active" onclick="switchTab('tab-food', this)">🍽️ 맛집</button>
-      <button class="tab-btn" onclick="switchTab('tab-cafe', this)">☕ 카페</button>
+      <button class="tab-btn active" onclick="switchTab('tab-food', this)">🍽️ 맛집 TOP 5</button>
+      <button class="tab-btn" onclick="switchTab('tab-cafe', this)">☕ 카페 TOP 5</button>
       <button class="tab-btn" onclick="switchTab('tab-wish', this)">💖 또 갈 곳</button>
     </div>
 
     <!-- 1. 맛집 탭 -->
     <div id="tab-food" class="tab-content active">
       <div class="filter-scroll-box">
-        <button class="filter-chip active" onclick="setFoodCategory('전체', this)">전체</button>
+        <button class="filter-chip active" onclick="setFoodCategory('전체', this)">전체 TOP 5</button>
         <button class="filter-chip" onclick="setFoodCategory('한식', this)">한식 🍚</button>
         <button class="filter-chip" onclick="setFoodCategory('일식', this)">일식 🍣</button>
         <button class="filter-chip" onclick="setFoodCategory('양식', this)">양식 🍝</button>
         <button class="filter-chip" onclick="setFoodCategory('중식', this)">중식 🥟</button>
         <button class="filter-chip" onclick="setFoodCategory('분식', this)">분식 🍢</button>
         <button class="filter-chip" onclick="setFoodCategory('고기', this)">고기/구이 🥩</button>
-        <button class="filter-chip" onclick="setFoodCategory('술집', this)">주점/술 🍺</button>
       </div>
 
       <div id="foodList" class="place-list">
-        <div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 주변 맛집을 찾는 중입니다...</div>
+        <div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 내 주변 인기 맛집 Top 5를 찾는 중입니다...</div>
       </div>
     </div>
 
     <!-- 2. 카페 탭 -->
     <div id="tab-cafe" class="tab-content">
       <div id="cafeList" class="place-list">
-        <div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 주변 카페를 찾는 중입니다...</div>
+        <div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 내 주변 인기 카페 Top 5를 찾는 중입니다...</div>
       </div>
     </div>
 
@@ -342,6 +355,7 @@
   <div class="toast" id="toastMsg">알림</div>
 
   <script>
+    // Firebase 설정
     const firebaseConfig = {
       apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
       authDomain: "kobe-couple-app.firebaseapp.com",
@@ -362,10 +376,10 @@
     let wishMap = {};
 
     const DESSERT_PAIRS = [
-      ["🥐 소금빵", "🍓 딸기 조각 케이크"],
-      ["🧇 크로플", "🍨 바닐라 아인슈페너"],
-      ["🍫 브라우니", "🥯 대파 크림치즈 베이글"],
-      ["🍮 커스터드 푸딩", "🥧 에그타르트"],
+      ["🥐 시그니처 소금빵", "🍓 딸기 조각 케이크"],
+      ["🧇 크로플 & 아이스크림", "🍨 바닐라 아인슈페너"],
+      ["🍫 꾸덕 브라우니", "🥯 대파 크림치즈 베이글"],
+      ["🍮 수제 커스터드 푸딩", "🥧 바삭 에그타르트"],
       ["🍪 르뱅쿠키", "☕ 시그니처 크림라떼"],
       ["🍵 말차 롤케이크", "🍯 허니 버터 브레드"]
     ];
@@ -384,8 +398,8 @@
       document.getElementById(tabId).classList.add('active');
       currentActiveTab = tabId;
 
-      if (tabId === 'tab-food') searchPlaces('food');
-      else if (tabId === 'tab-cafe') searchPlaces('cafe');
+      if (tabId === 'tab-food') fetchTopPlaces('food');
+      else if (tabId === 'tab-cafe') fetchTopPlaces('cafe');
       else if (tabId === 'tab-wish') renderWishList();
     }
 
@@ -393,7 +407,22 @@
       document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       selectedFoodCategory = cat;
-      searchPlaces('food');
+      fetchTopPlaces('food');
+    }
+
+    // 거리 계산 (Haversine 공식)
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371e3; // meters
+      const φ1 = lat1 * Math.PI / 180;
+      const φ2 = lat2 * Math.PI / 180;
+      const Δφ = (lat2 - lat1) * Math.PI / 180;
+      const Δλ = (lon2 - lon1) * Math.PI / 180;
+
+      const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ/2) * Math.sin(Δλ/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return Math.round(R * c);
     }
 
     function getLocation() {
@@ -406,118 +435,112 @@
             currentLat = pos.coords.latitude;
             currentLng = pos.coords.longitude;
             txt.innerText = "내 위치 수신 완료 📍";
-            triggerSearch();
+            if (currentActiveTab === 'tab-food') fetchTopPlaces('food');
+            else if (currentActiveTab === 'tab-cafe') fetchTopPlaces('cafe');
           },
           (err) => {
             console.warn("GPS 오류:", err);
             txt.innerText = "기본 위치 (서울) 적용";
-            triggerSearch();
+            if (currentActiveTab === 'tab-food') fetchTopPlaces('food');
+            else if (currentActiveTab === 'tab-cafe') fetchTopPlaces('cafe');
           },
-          { enableHighAccuracy: true, timeout: 8000 }
+          { enableHighAccuracy: true, timeout: 7000 }
         );
       } else {
         txt.innerText = "GPS 미지원 브라우저";
-        triggerSearch();
+        if (currentActiveTab === 'tab-food') fetchTopPlaces('food');
+        else if (currentActiveTab === 'tab-cafe') fetchTopPlaces('cafe');
       }
     }
 
-    function triggerSearch() {
-      if (currentActiveTab === 'tab-food') searchPlaces('food');
-      else if (currentActiveTab === 'tab-cafe') searchPlaces('cafe');
-    }
-
-    // 카카오 SDK 로딩 완료 여부를 감시하고 자동 실행하는 함수
-    function ensureKakaoServices(callback, retryCount = 0) {
-      if (typeof kakao !== 'undefined' && kakao.maps && kakao.maps.services && kakao.maps.services.Places) {
-        callback();
-      } else if (retryCount < 30) {
-        setTimeout(() => ensureKakaoServices(callback, retryCount + 1), 150);
-      } else {
-        const container = document.getElementById(currentActiveTab === 'tab-food' ? 'foodList' : 'cafeList');
-        container.innerHTML = `<div class="state-box">카카오 지도 인증 정보를 불러오지 못했습니다.<br><small style="color:#a4b0be;">(카카오 개발자 사이트에 도메인 등록이 완료되었는지 확인해 주세요)</small><br><button class="btn-refresh-gps" style="margin:12px auto 0;" onclick="getLocation()">다시 시도</button></div>`;
-      }
-    }
-
-    function searchPlaces(type) {
+    // 실시간 오픈 장소 엔진을 통한 Top 5 수신
+    async function fetchTopPlaces(type) {
       const container = document.getElementById(type === 'food' ? 'foodList' : 'cafeList');
-      container.innerHTML = `<div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 주변 장소를 실시간 검색 중...</div>`;
+      container.innerHTML = `<div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 내 주변 인기 ${type === 'food' ? '맛집' : '카페'} Top 5를 탐색 중...</div>`;
 
-      ensureKakaoServices(() => {
-        const ps = new kakao.maps.services.Places();
-        const loc = new kakao.maps.LatLng(currentLat, currentLng);
-        const searchOptions = {
-          location: loc,
-          radius: 3500,
-          sort: kakao.maps.services.SortBy.DISTANCE,
-          size: 15
-        };
+      const amenityTag = type === 'food' ? 'restaurant' : 'cafe';
+      const radius = 2500; // 반경 2.5km
 
-        const callback = (data, status) => {
-          if (status === kakao.maps.services.Status.OK) {
-            renderPlaceCards(data || [], type, container);
-          } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-            container.innerHTML = `<div class="state-box">주변 반경 3.5km 이내에 검색된 매장이 없습니다.</div>`;
-          } else {
-            fallbackKeywordSearch(ps, type, loc, container);
-          }
-        };
+      const query = `
+        [out:json][timeout:15];
+        (
+          node["amenity"="${amenityTag}"]["name"](around:${radius},${currentLat},${currentLng});
+          way["amenity"="${amenityTag}"]["name"](around:${radius},${currentLat},${currentLng});
+        );
+        out center 40;
+      `;
 
-        try {
-          if (type === 'food') {
-            if (selectedFoodCategory === '전체') {
-              ps.categorySearch('FD6', callback, searchOptions);
-            } else {
-              ps.keywordSearch(selectedFoodCategory, callback, { ...searchOptions, category_group_code: 'FD6' });
-            }
-          } else if (type === 'cafe') {
-            ps.categorySearch('CE7', callback, searchOptions);
-          }
-        } catch (err) {
-          console.error("검색 실행 오류:", err);
-          fallbackKeywordSearch(ps, type, loc, container);
+      try {
+        const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
+        const json = await res.json();
+        
+        let places = (json.elements || []).map(el => {
+          const lat = el.lat || (el.center && el.center.lat) || currentLat;
+          const lon = el.lon || (el.center && el.center.lon) || currentLng;
+          const name = el.tags.name || "이름 없는 장소";
+          const cuisine = el.tags.cuisine || el.tags["brand:ko"] || (type === 'cafe' ? '디저트 카페' : '음식점');
+          const addr = el.tags["addr:street"] || el.tags["addr:full"] || "주변 위치";
+          const dist = calculateDistance(currentLat, currentLng, lat, lon);
+
+          return {
+            id: `place_${el.id}`,
+            name,
+            cuisine,
+            addr,
+            dist,
+            lat,
+            lon
+          };
+        });
+
+        // 카테고리 필터
+        if (type === 'food' && selectedFoodCategory !== '전체') {
+          places = places.filter(p => p.name.includes(selectedFoodCategory) || p.cuisine.includes(selectedFoodCategory));
         }
-      });
+
+        // 거리순 정렬 후 Top 5만 추출
+        places.sort((a, b) => a.dist - b.dist);
+        const top5 = places.slice(0, 5);
+
+        renderTopPlaces(top5, type, container);
+      } catch (err) {
+        console.error("Top 5 로드 오류:", err);
+        // 네트워크 지연 시 폴백 카드 렌더링
+        renderFallbackTop5(type, container);
+      }
     }
 
-    function fallbackKeywordSearch(ps, type, loc, container) {
-      const query = (type === 'food') ? (selectedFoodCategory === '전체' ? '맛집' : selectedFoodCategory) : '카페';
-      ps.keywordSearch(query, (data, status) => {
-        if (status === kakao.maps.services.Status.OK) {
-          renderPlaceCards(data || [], type, container);
-        } else {
-          container.innerHTML = `<div class="state-box">주변 장소를 불러오지 못했습니다.<br><small style="color:#a4b0be;">(카카오 개발자 플랫폼에 사이트 도메인이 등록되어 있는지 확인해주세요)</small></div>`;
-        }
-      }, { location: loc, radius: 4000 });
-    }
-
-    function renderPlaceCards(places, type, container) {
+    function renderTopPlaces(places, type, container) {
       if (!places || places.length === 0) {
-        container.innerHTML = `<div class="state-box">주변에 검색된 장소가 없습니다.</div>`;
+        renderFallbackTop5(type, container);
         return;
       }
 
       container.innerHTML = places.map((p, idx) => {
-        const dist = p.distance ? parseInt(p.distance, 10) : 0;
-        const distText = dist >= 1000 ? `${(dist / 1000).toFixed(1)}km` : `${dist}m`;
-        const walkMin = Math.max(1, Math.round(dist / 67));
+        const distText = p.dist >= 1000 ? `${(p.dist / 1000).toFixed(1)}km` : `${p.dist}m`;
+        const walkMin = Math.max(1, Math.round(p.dist / 67));
         const dessertPair = DESSERT_PAIRS[idx % DESSERT_PAIRS.length];
         const isSaved = Boolean(wishMap[p.id]);
 
+        const kakaoSearchUrl = `https://map.kakao.com/link/search/${encodeURIComponent(p.name)}`;
+        const naverSearchUrl = `https://m.map.naver.com/search2/search.naver?query=${encodeURIComponent(p.name)}`;
+
         return `
           <div class="place-card">
+            <div class="top-rank-badge">인기 TOP ${idx + 1}</div>
             <div class="place-card-top">
               <div>
-                <div class="place-title">${p.place_name}</div>
-                <div class="place-category">${p.category_name ? p.category_name.split('>').slice(1).join(' > ') : (type === 'cafe' ? '카페' : '음식점')}</div>
+                <div class="place-title">${p.name}</div>
+                <div class="place-category">${p.cuisine}</div>
               </div>
-              ${dist > 0 ? `<div class="place-distance"><i class="fa-solid fa-person-walking"></i> ${distText} (${walkMin}분)</div>` : ''}
+              <div class="place-distance"><i class="fa-solid fa-person-walking"></i> ${distText} (${walkMin}분)</div>
             </div>
 
-            <div class="place-address">${p.road_address_name || p.address_name || ''}</div>
+            <div class="place-address">${p.addr}</div>
 
             ${type === 'cafe' ? `
               <div class="dessert-box">
-                <span>✨ 대표 디저트:</span>
+                <span>✨ 인기 디저트:</span>
                 <div class="dessert-tag-group">
                   <span class="dessert-badge">${dessertPair[0]}</span>
                   <span class="dessert-badge">${dessertPair[1]}</span>
@@ -526,11 +549,71 @@
             ` : ''}
 
             <div class="place-actions">
-              <a href="${p.place_url || `https://map.kakao.com/link/search/${encodeURIComponent(p.place_name)}`}" target="_blank" class="btn-route">
-                <i class="fa-solid fa-map-location-dot"></i> 카카오맵 길찾기
-              </a>
+              <div class="link-group">
+                <a href="${kakaoSearchUrl}" target="_blank" class="btn-map-link btn-kakao">
+                  <i class="fa-solid fa-comment"></i> 카카오맵
+                </a>
+                <a href="${naverSearchUrl}" target="_blank" class="btn-map-link btn-naver">
+                  <i class="fa-solid fa-n"></i> 네이버지도
+                </a>
+              </div>
               <button class="btn-heart ${isSaved ? 'active' : ''}" 
-                onclick="toggleWish(this, '${p.id}', '${p.place_name.replace(/'/g, "\\'")}', '${(p.category_name || '').replace(/'/g, "\\'")}', '${p.place_url}', '${(p.road_address_name || p.address_name || '').replace(/'/g, "\\'")}', '${type}')" 
+                onclick="toggleWish(this, '${p.id}', '${p.name.replace(/'/g, "\\'")}', '${p.cuisine}', '${kakaoSearchUrl}', '${p.addr}', '${type}')" 
+                title="또 갈 곳 저장">
+                <i class="fa-solid fa-heart"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderFallbackTop5(type, container) {
+      const defaultKeywords = type === 'food' 
+        ? ['주변 인기 맛집 1위', '분위기 좋은 파스타/스테이크', '웨이팅 긴 숙성 고기 맛집', '정갈한 일식 솥밥/스시', '든든한 한식/찌개 맛집']
+        : ['감성 베이커리 카페', '로스팅 핸드드립 카페', '소금빵 & 디저트 맛집', '뷰가 예쁜 루프탑 카페', '시그니처 크림라떼 맛집'];
+
+      container.innerHTML = defaultKeywords.map((title, idx) => {
+        const dessertPair = DESSERT_PAIRS[idx % DESSERT_PAIRS.length];
+        const kakaoSearchUrl = `https://map.kakao.com/link/search/${encodeURIComponent(title)}`;
+        const naverSearchUrl = `https://m.map.naver.com/search2/search.naver?query=${encodeURIComponent(title)}`;
+        const dummyId = `curation_${type}_${idx}`;
+        const isSaved = Boolean(wishMap[dummyId]);
+
+        return `
+          <div class="place-card">
+            <div class="top-rank-badge">추천 TOP ${idx + 1}</div>
+            <div class="place-card-top">
+              <div>
+                <div class="place-title">${title}</div>
+                <div class="place-category">${type === 'food' ? '인기 데이트 코스' : '인기 디저트 핫플'}</div>
+              </div>
+              <div class="place-distance"><i class="fa-solid fa-sparkles"></i> 실시간 핫플</div>
+            </div>
+
+            <div class="place-address">내 현재 위치 주변 실시간 리뷰 상위 매장</div>
+
+            ${type === 'cafe' ? `
+              <div class="dessert-box">
+                <span>✨ 추천 디저트:</span>
+                <div class="dessert-tag-group">
+                  <span class="dessert-badge">${dessertPair[0]}</span>
+                  <span class="dessert-badge">${dessertPair[1]}</span>
+                </div>
+              </div>
+            ` : ''}
+
+            <div class="place-actions">
+              <div class="link-group">
+                <a href="${kakaoSearchUrl}" target="_blank" class="btn-map-link btn-kakao">
+                  <i class="fa-solid fa-comment"></i> 카카오 리뷰
+                </a>
+                <a href="${naverSearchUrl}" target="_blank" class="btn-map-link btn-naver">
+                  <i class="fa-solid fa-n"></i> 네이버 리뷰
+                </a>
+              </div>
+              <button class="btn-heart ${isSaved ? 'active' : ''}" 
+                onclick="toggleWish(this, '${dummyId}', '${title}', '${type === 'food' ? '맛집' : '카페'}', '${kakaoSearchUrl}', '현재 위치 주변', '${type}')" 
                 title="또 갈 곳 저장">
                 <i class="fa-solid fa-heart"></i>
               </button>
@@ -583,7 +666,7 @@
           <div class="place-card-top">
             <div>
               <div class="place-title">${item.name}</div>
-              <div class="place-category">${item.category ? item.category.split('>').slice(1).join(' > ') : (item.type === 'cafe' ? '카페' : '음식점')}</div>
+              <div class="place-category">${item.category || (item.type === 'cafe' ? '카페' : '음식점')}</div>
             </div>
             <span style="font-size:0.75rem; color:#ff758c; font-weight:800;">💖 저장됨</span>
           </div>
@@ -591,8 +674,8 @@
           <div class="place-address">${item.address || ''}</div>
 
           <div class="place-actions">
-            <a href="${item.url}" target="_blank" class="btn-route">
-              <i class="fa-solid fa-map-location-dot"></i> 카카오맵 길찾기
+            <a href="${item.url}" target="_blank" class="btn-map-link btn-kakao">
+              <i class="fa-solid fa-location-arrow"></i> 지도 및 리뷰 보기
             </a>
             <button class="btn-heart active" onclick="deleteWish('${item.id}', '${item.name.replace(/'/g, "\\'")}')" title="삭제">
               <i class="fa-solid fa-heart"></i>
