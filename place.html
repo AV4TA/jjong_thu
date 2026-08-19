@@ -19,8 +19,8 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <!-- 카카오 지도/장소검색 SDK (JavaScript Key 적용) -->
-  <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6c0ba463ffa53681db449e24a9a56ef&libraries=services"></script>
+  <!-- 카카오 지도/장소검색 SDK (autoload=false 적용) -->
+  <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6c0ba463ffa53681db449e24a9a56ef&libraries=services&autoload=false"></script>
 
   <style>
     :root {
@@ -356,6 +356,7 @@
     let selectedFoodCategory = '전체';
     let currentActiveTab = 'tab-food';
     let wishMap = {};
+    let isKakaoLoaded = false;
 
     const DESSERT_PAIRS = [
       ["🥐 소금빵", "🍓 딸기 조각 케이크"],
@@ -402,37 +403,38 @@
             currentLat = pos.coords.latitude;
             currentLng = pos.coords.longitude;
             txt.innerText = "내 위치 수신 완료";
-            if (currentActiveTab === 'tab-food') searchPlaces('food');
-            else if (currentActiveTab === 'tab-cafe') searchPlaces('cafe');
+            triggerSearch();
           },
           (err) => {
             console.warn("GPS 오류:", err);
             txt.innerText = "기본 위치 적용";
-            if (currentActiveTab === 'tab-food') searchPlaces('food');
-            else if (currentActiveTab === 'tab-cafe') searchPlaces('cafe');
+            triggerSearch();
           },
           { enableHighAccuracy: true, timeout: 8000 }
         );
       } else {
         txt.innerText = "GPS 미지원";
-        if (currentActiveTab === 'tab-food') searchPlaces('food');
-        else if (currentActiveTab === 'tab-cafe') searchPlaces('cafe');
+        triggerSearch();
       }
     }
 
-    // 카카오 SDK Places 서비스를 통한 안전한 장소 검색
+    function triggerSearch() {
+      if (currentActiveTab === 'tab-food') searchPlaces('food');
+      else if (currentActiveTab === 'tab-cafe') searchPlaces('cafe');
+    }
+
     function searchPlaces(type) {
       const container = document.getElementById(type === 'food' ? 'foodList' : 'cafeList');
       container.innerHTML = `<div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 주변 장소 검색 중...</div>`;
 
-      if (typeof kakao === 'undefined' || !kakao.maps || !kakao.maps.services) {
-        container.innerHTML = `<div class="state-box">지도 서비스를 불러오는 중입니다. 잠시 후 갱신을 눌러주세요.</div>`;
+      if (!isKakaoLoaded) {
+        container.innerHTML = `<div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 지도 서비스 초기화 중...</div>`;
         return;
       }
 
       const ps = new kakao.maps.services.Places();
       const loc = new kakao.maps.LatLng(currentLat, currentLng);
-      const radius = 2500; // 반경 2.5km
+      const radius = 2500;
 
       const callback = (data, status) => {
         if (status === kakao.maps.services.Status.OK) {
@@ -583,7 +585,16 @@
 
     window.addEventListener("DOMContentLoaded", () => {
       listenWishlist();
-      getLocation();
+
+      // kakao SDK 로드 보장
+      if (typeof kakao !== 'undefined' && kakao.maps) {
+        kakao.maps.load(() => {
+          isKakaoLoaded = true;
+          getLocation();
+        });
+      } else {
+        getLocation();
+      }
     });
   </script>
 </body>
