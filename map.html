@@ -282,7 +282,7 @@
       opacity: 1;
     }
 
-    /* 📖 다이어리 피드 */
+    /* 다이어리 피드 */
     .diary-list { display: flex; flex-direction: column; gap: 14px; }
     .diary-card {
       background: white;
@@ -369,7 +369,7 @@
         </div>
         <div class="stat-desc-row">
           <span>색칠한 여행지: <b id="txtCount" style="color:#ff5e7e;">0</b>곳</span>
-          <span>전국 권역: <b id="txtTotalCount">162</b>개</span>
+          <span>전국 권역: <b id="txtTotalCount">163</b>개</span>
         </div>
       </div>
 
@@ -378,7 +378,7 @@
 
         <div class="map-loading" id="mapLoading">
           <i class="fa-solid fa-spinner fa-spin" style="font-size:1.8rem;"></i>
-          <span>정밀 섬 외형 구성 중...</span>
+          <span>정밀 지도 구성 중...</span>
         </div>
 
         <div class="map-controls">
@@ -452,7 +452,7 @@
     let visitedMap = {};
     let diaryList = [];
     let svg, g, pathGroup, labelGroup, zoomBehavior, pathGenerator;
-    let totalConsolidatedCount = 162;
+    let totalConsolidatedCount = 163;
 
     function switchTab(tabId, el) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -468,13 +468,13 @@
       setTimeout(() => t.classList.remove("show"), 1800);
     }
 
-    // 🏙️ 대도시/특례시 그룹화 판정
+    // 🏙️ 정밀 행정구역 코드 기반 그룹화 (광주광역시 vs 경기도 광주시 완벽 분리)
     function getConsolidatedGroup(props, id) {
       const rawName = props.name || props.name_kor || props.NAME || props.SIG_KOR_NM || "";
       const code = String(props.code || id || "");
 
-      // 서울 (25개 구 개별 유지)
-      if (code.startsWith("11") || rawName.startsWith("서울")) {
+      // 1) 서울특별시 (코드 '11' - 25개 구 개별 유지)
+      if (code.startsWith("11")) {
         let guName = rawName.replace("서울특별시", "").replace("서울", "").trim();
         return {
           groupId: "SEOUL_" + guName,
@@ -483,16 +483,22 @@
         };
       }
 
-      // 광역시 단일화
-      if (code.startsWith("21") || rawName.startsWith("부산")) return { groupId: "METRO_BUSAN", displayName: "부산", fullName: "부산" };
-      if (code.startsWith("22") || rawName.startsWith("대구")) return { groupId: "METRO_DAEGU", displayName: "대구", fullName: "대구" };
-      if (code.startsWith("23") || rawName.startsWith("인천")) return { groupId: "METRO_INCHEON", displayName: "인천", fullName: "인천" };
-      if (code.startsWith("24") || rawName.startsWith("광주")) return { groupId: "METRO_GWANGJU", displayName: "광주", fullName: "광주" };
-      if (code.startsWith("25") || rawName.startsWith("대전")) return { groupId: "METRO_DAEJEON", displayName: "대전", fullName: "대전" };
-      if (code.startsWith("26") || rawName.startsWith("울산")) return { groupId: "METRO_ULSAN", displayName: "울산", fullName: "울산" };
-      if (code.startsWith("29") || rawName.startsWith("세종")) return { groupId: "METRO_SEJONG", displayName: "세종", fullName: "세종" };
+      // 2) 6대 광역시 및 세종시 (고유 코드 앞 2자리 기준 완벽 통합)
+      if (code.startsWith("21")) return { groupId: "METRO_BUSAN", displayName: "부산", fullName: "부산" };
+      if (code.startsWith("22")) return { groupId: "METRO_DAEGU", displayName: "대구", fullName: "대구" };
+      if (code.startsWith("23")) return { groupId: "METRO_INCHEON", displayName: "인천", fullName: "인천" };
+      // 🌟 광주광역시는 코드 '24'로만 엄격히 격리
+      if (code.startsWith("24")) return { groupId: "METRO_GWANGJU", displayName: "광주", fullName: "광주광역시" };
+      if (code.startsWith("25")) return { groupId: "METRO_DAEJEON", displayName: "대전", fullName: "대전" };
+      if (code.startsWith("26")) return { groupId: "METRO_ULSAN", displayName: "울산", fullName: "울산" };
+      if (code.startsWith("29")) return { groupId: "METRO_SEJONG", displayName: "세종", fullName: "세종" };
 
-      // 복수 구를 가진 일반 시 통합
+      // 3) 경기도 광주시 (코드 '31250' 등 경기)
+      if (code.startsWith("31") && rawName.includes("광주")) {
+        return { groupId: "CITY_GG_GWANGJU", displayName: "광주", fullName: "경기 광주시" };
+      }
+
+      // 4) 복수 구를 가진 일반 시 통합
       const majorCities = [
         "수원", "성남", "안양", "부천", "안산", "고양", "용인", "청주", "천안", "전주", "포항", "창원", "김해", "평택", "화성", "남양주"
       ];
@@ -502,12 +508,12 @@
         }
       }
 
-      // 울릉도 (커스텀 실루엣으로 별도 렌더링)
+      // 5) 울릉도
       if (rawName.includes("울릉")) {
         return { groupId: "ISLAND_ULLEUNG", displayName: "울릉", fullName: "울릉도" };
       }
 
-      // 그 외 일반 시/군
+      // 6) 그 외 일반 시/군
       let cleanName = rawName.split(" ").pop();
       let displayName = cleanName;
       if (displayName.length > 2 && (displayName.endsWith("시") || displayName.endsWith("군") || displayName.endsWith("구"))) {
@@ -520,7 +526,7 @@
       };
     }
 
-    // 1. 지도 초기화 및 정밀 섬 실루엣 렌더링
+    // 1. 지도 초기화 및 병합
     async function initMap() {
       const width = document.querySelector('.map-frame').clientWidth - 16;
       const height = 530;
@@ -557,8 +563,7 @@
         const groupBuckets = {};
         geometries.forEach(geom => {
           const groupInfo = getConsolidatedGroup(geom.properties, geom.id);
-          // 울릉도는 전용 섬 벡터로 그리기 위해 제외
-          if (groupInfo.groupId === "ISLAND_ULLEUNG") return;
+          if (groupInfo.groupId === "ISLAND_ULLEUNG") return; // 울릉도는 커스텀 벡터로 그림
 
           if (!groupBuckets[groupInfo.groupId]) {
             groupBuckets[groupInfo.groupId] = {
@@ -593,7 +598,7 @@
           }
         });
 
-        // 1) 완전히 병합된 시/군 폴리곤 렌더링
+        // 1) 전국 시/군 폴리곤 렌더링
         pathGroup.selectAll("path.district")
           .data(mergedFeatures)
           .enter()
@@ -603,11 +608,11 @@
           .attr("data-group", d => d.groupInfo.groupId)
           .on("click", (e, d) => onSingleTouch(d.groupInfo));
 
-        // 2) 🌊 실제 섬 실루엣 벡터 (울릉도 & 독도)
+        // 2) 🌊 울릉도 & 🇰🇷 독도 실제 섬 실루엣 벡터
         const ulleungPos = projection([130.86, 37.50]);
         const dokdoPos = projection([131.86, 37.24]);
 
-        // 🏝️ 울릉도: 실제 울릉도의 5각형 화산섬 지형 패스
+        // 울릉도 실루엣
         const ulleungPathD = "M -10,-4 C -8,-9 -1,-11 6,-7 C 11,-4 13,2 9,7 C 5,11 -4,11 -8,6 C -12,2 -11,0 -10,-4 Z";
         const ulleungGroup = pathGroup.append("g")
           .attr("class", "custom-island-group")
@@ -628,7 +633,7 @@
           y: ulleungPos[1] + 13
         });
 
-        // 🇰🇷 독도: 동도(East Islet)와 서도(West Islet)의 실제 쌍둥이 바위섬 패스
+        // 독도 실루엣 (동도/서도)
         const dokdoGroup = pathGroup.append("g")
           .attr("class", "custom-island-group")
           .attr("id", "island-dokdo")
@@ -636,12 +641,10 @@
           .style("cursor", "pointer")
           .on("click", () => onSingleTouch({ groupId: "ISLAND_DOKDO", displayName: "독도", fullName: "독도" }));
 
-        // 서도 (West Islet - 뾰족한 삼각 암봉)
         dokdoGroup.append("path")
           .attr("class", "custom-island-path")
           .attr("d", "M -6,4 C -8,1 -6,-4 -3,-5 C -1,-6 1,-2 0,4 C -1,6 -4,6 -6,4 Z");
 
-        // 동도 (East Islet - 분화구 지형)
         dokdoGroup.append("path")
           .attr("class", "custom-island-path")
           .attr("d", "M 2,5 C 1,2 2,-3 5,-4 C 8,-4 9,0 8,4 C 7,7 3,7 2,5 Z");
@@ -715,7 +718,7 @@
         d3.selectAll(".district")
           .classed("visited", d => Boolean(visitedMap[d.groupInfo.groupId]));
 
-        // 🏝️ 울릉도 & 독도 섬 그룹 색칠 연동
+        // 울릉도 & 독도 색칠
         d3.select("#island-ulleung")
           .classed("visited", Boolean(visitedMap["ISLAND_ULLEUNG"]));
         d3.select("#island-dokdo")
