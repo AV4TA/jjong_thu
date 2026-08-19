@@ -19,7 +19,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <!-- 정제된 데이터 파일 연동 -->
+  <!-- 데이터 파일 연동 -->
   <script src="placesData.js"></script>
 
   <style>
@@ -129,13 +129,20 @@
       color: white;
     }
 
+    .filter-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
     .filter-scroll-box {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       overflow-x: auto;
-      padding-bottom: 8px;
-      margin-bottom: 14px;
+      padding-bottom: 4px;
       scrollbar-width: none;
+      flex: 1;
     }
     .filter-scroll-box::-webkit-scrollbar { display: none; }
     .filter-chip {
@@ -143,9 +150,9 @@
       background: white;
       border: 1px solid var(--border);
       color: #57606f;
-      padding: 7px 14px;
+      padding: 6px 12px;
       border-radius: 20px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 700;
       cursor: pointer;
     }
@@ -153,6 +160,31 @@
       background: #2f3542;
       color: white;
       border-color: #2f3542;
+    }
+
+    .sort-toggle-box {
+      display: flex;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3px;
+      margin-left: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .sort-btn {
+      border: none;
+      background: transparent;
+      padding: 5px 10px;
+      border-radius: 16px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--text-sub);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .sort-btn.active {
+      background: var(--primary-soft);
+      color: var(--primary);
     }
 
     .tab-content { display: none; }
@@ -350,14 +382,20 @@
 
     <!-- 1. 맛집 탭 -->
     <div id="tab-food" class="tab-content active">
-      <div class="filter-scroll-box">
-        <button class="filter-chip active" onclick="setFoodCategory('전체', this)">전체 TOP 5</button>
-        <button class="filter-chip" onclick="setFoodCategory('한식', this)">한식 🍚</button>
-        <button class="filter-chip" onclick="setFoodCategory('일식', this)">일식 🍣</button>
-        <button class="filter-chip" onclick="setFoodCategory('양식', this)">양식 🍝</button>
-        <button class="filter-chip" onclick="setFoodCategory('중식', this)">중식 🥟</button>
-        <button class="filter-chip" onclick="setFoodCategory('분식', this)">분식 🍢</button>
-        <button class="filter-chip" onclick="setFoodCategory('고기', this)">고기/구이 🥩</button>
+      <div class="filter-wrapper">
+        <div class="filter-scroll-box">
+          <button class="filter-chip active" onclick="setFoodCategory('전체', this)">전체</button>
+          <button class="filter-chip" onclick="setFoodCategory('한식', this)">한식 🍚</button>
+          <button class="filter-chip" onclick="setFoodCategory('일식', this)">일식 🍣</button>
+          <button class="filter-chip" onclick="setFoodCategory('양식', this)">양식 🍝</button>
+          <button class="filter-chip" onclick="setFoodCategory('중식', this)">중식 🥟</button>
+          <button class="filter-chip" onclick="setFoodCategory('분식', this)">분식 🍢</button>
+          <button class="filter-chip" onclick="setFoodCategory('고기', this)">고기 🥩</button>
+        </div>
+        <div class="sort-toggle-box">
+          <button class="sort-btn active" id="btnSortDist" onclick="setSortMode('dist', this)">📍 가까운순</button>
+          <button class="sort-btn" id="btnSortRating" onclick="setSortMode('rating', this)">⭐ 별점순</button>
+        </div>
       </div>
 
       <div id="foodList" class="place-list"></div>
@@ -365,6 +403,12 @@
 
     <!-- 2. 카페 탭 -->
     <div id="tab-cafe" class="tab-content">
+      <div class="filter-wrapper" style="justify-content: flex-end;">
+        <div class="sort-toggle-box">
+          <button class="sort-btn active" id="btnSortDistCafe" onclick="setSortMode('dist', this)">📍 가까운순</button>
+          <button class="sort-btn" id="btnSortRatingCafe" onclick="setSortMode('rating', this)">⭐ 별점순</button>
+        </div>
+      </div>
       <div id="cafeList" class="place-list"></div>
     </div>
 
@@ -396,6 +440,7 @@
     let currentLng = 126.9780;
     let selectedFoodCategory = '전체';
     let currentActiveTab = 'tab-food';
+    let currentSortMode = 'dist'; // 기본 정렬: 거리순 ('dist' 또는 'rating')
     let wishMap = {};
 
     function showToast(msg) {
@@ -422,6 +467,23 @@
       btn.classList.add('active');
       selectedFoodCategory = cat;
       renderCuratedList('food');
+    }
+
+    // 정렬 모드 변경 (거리순 vs 별점순)
+    function setSortMode(mode, btn) {
+      currentSortMode = mode;
+      
+      // 버튼 활성화 디자인 동기화
+      document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+      if (mode === 'dist') {
+        document.getElementById('btnSortDist').classList.add('active');
+        document.getElementById('btnSortDistCafe').classList.add('active');
+      } else {
+        document.getElementById('btnSortRating').classList.add('active');
+        document.getElementById('btnSortRatingCafe').classList.add('active');
+      }
+
+      renderCuratedList(currentActiveTab === 'tab-food' ? 'food' : 'cafe');
     }
 
     function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -495,10 +557,18 @@
         list = list.filter(p => p.cat === selectedFoodCategory);
       }
 
+      // 거리 계산 삽입
       list = list.map(p => ({
         ...p,
         dist: calculateDistance(currentLat, currentLng, p.lat, p.lon)
-      })).sort((a, b) => a.dist - b.dist);
+      }));
+
+      // 🌟 정렬 로직 (가까운순 vs 별점순)
+      if (currentSortMode === 'dist') {
+        list.sort((a, b) => a.dist - b.dist);
+      } else if (currentSortMode === 'rating') {
+        list.sort((a, b) => parseFloat(b.rating || 4.5) - parseFloat(a.rating || 4.5));
+      }
 
       const top5 = list.slice(0, 5);
 
