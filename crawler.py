@@ -7,8 +7,9 @@ def fetch_json(url):
     req = urllib.request.Request(
         url,
         headers={
-            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15',
-            'Referer': 'https://m.sports.naver.com/'
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
+            'Referer': 'https://m.sports.naver.com/',
+            'Accept': 'application/json, text/plain, */*'
         }
     )
     try:
@@ -35,22 +36,70 @@ def fetch_kbo_rankings():
     team_name_map = {
         'KT': 'kt wiz', '삼성': '삼성 라이온즈', 'LG': 'LG 트윈스', '두산': '두산 베어스',
         'KIA': 'KIA 타이거즈', '한화': '한화 이글스', 'NC': 'NC 다이노스', '롯데': '롯데 자이언츠',
-        'SSG': 'SSG 랜더스', '키움': '키움 히어로즈'
+        'SSG': 'SSG 랜더스', '키움': '키움 히어로즈',
+        'SAMSUNG': '삼성 라이온즈', 'DOOSAN': '두산 베어스', 'HANWHA': '한화 이글스',
+        'LOTTE': '롯데 자이언츠', 'KIWOOM': '키움 히어로즈'
     }
 
-    html = fetch_html("https://www.koreabaseball.com/Record/TeamRank/TeamRank.aspx")
     rankings = []
-    if html:
-        rows = re.findall(r'<tr[^>]*>(.*?)</tr>', html, re.DOTALL)
+
+    # 1차 시도: 네이버 스포츠 최신 공식 랭킹 API
+    api_url = "https://api-gw.sports.naver.com/baseball/kbo/ranking/team"
+    data = fetch_json(api_url)
+    if data and "result" in data:
+        r_list = data.get("result", {}).get("teamRankList", []) or data.get("result", {}).get("regularSeason", [])
+        for r in r_list:
+            raw_name = r.get("teamName") or r.get("name", "-")
+            rankings.append({
+                "rank": str(r.get("rank") or r.get("ranking", "-")),
+                "teamName": team_name_map.get(raw_name, raw_name),
+                "games": str(r.get("gameCount") or r.get("games", 0)),
+                "win": str(r.get("winCount") or r.get("wins", 0)),
+                "draw": str(r.get("drawCount") or r.get("draws", 0)),
+                "lose": str(r.get("loseCount") or r.get("loses", 0)),
+                "wra": str(r.get("wra") or r.get("winRate", "0.000")),
+                "gameDiff": str(r.get("gameDiff") or r.get("diff", "0.0"))
+            })
+        if len(rankings) == 10:
+            return rankings
+
+    # 2차 시도: KBO 공식 영문 정적 테이블
+    eng_html = fetch_html("https://eng.koreabaseball.com/Standings/TeamStandings.aspx")
+    if eng_html:
+        rankings = []
+        rows = re.findall(r'<tr[^>]*>(.*?)</tr>', eng_html, re.DOTALL)
         for r in rows:
             tds = re.findall(r'<td[^>]*>(.*?)</td>', r, re.DOTALL)
             if len(tds) >= 8:
                 clean_tds = [re.sub(r'<[^>]+>', '', td).strip() for td in tds]
-                rank_str = clean_tds[0]
-                if rank_str.isdigit() and 1 <= int(rank_str) <= 10:
+                if clean_tds[0].isdigit() and 1 <= int(clean_tds[0]) <= 10:
+                    raw_team = clean_tds[1].upper()
+                    rankings.append({
+                        "rank": clean_tds[0],
+                        "teamName": team_name_map.get(raw_team, clean_tds[1]),
+                        "games": clean_tds[2],
+                        "win": clean_tds[3],
+                        "lose": clean_tds[4],
+                        "draw": clean_tds[5],
+                        "wra": clean_tds[6],
+                        "gameDiff": clean_tds[7]
+                    })
+        if len(rankings) == 10:
+            return rankings
+
+    # 3차 시도: KBO 국문 기록실
+    kor_html = fetch_html("https://www.koreabaseball.com/Record/TeamRank/TeamRank.aspx")
+    if kor_html:
+        rankings = []
+        rows = re.findall(r'<tr[^>]*>(.*?)</tr>', kor_html, re.DOTALL)
+        for r in rows:
+            tds = re.findall(r'<td[^>]*>(.*?)</td>', r, re.DOTALL)
+            if len(tds) >= 8:
+                clean_tds = [re.sub(r'<[^>]+>', '', td).strip() for td in tds]
+                if clean_tds[0].isdigit() and 1 <= int(clean_tds[0]) <= 10:
                     raw_team = clean_tds[1]
                     rankings.append({
-                        "rank": rank_str,
+                        "rank": clean_tds[0],
                         "teamName": team_name_map.get(raw_team, raw_team),
                         "games": clean_tds[2],
                         "win": clean_tds[3],
@@ -62,33 +111,9 @@ def fetch_kbo_rankings():
         if len(rankings) == 10:
             return rankings
 
-    n_html = fetch_html("https://sports.news.naver.com/kbaseball/record/index?category=kbo")
-    if n_html:
-        match = re.search(r'jsonTeamRecord\s*=\s*(\{.*?\});', n_html, re.DOTALL)
-        if match:
-            try:
-                data = json.loads(match.group(1))
-                for item in data.get("regularTeamRecordList", []):
-                    raw_name = item.get("name", "")
-                    rankings.append({
-                        "rank": str(item.get("rank", "-")),
-                        "teamName": team_name_map.get(raw_name, raw_name),
-                        "games": str(item.get("gameCount", "-")),
-                        "win": str(item.get("won", "-")),
-                        "draw": str(item.get("drawn", "0")),
-                        "lose": str(item.get("lost", "-")),
-                        "wra": str(item.get("winRates", "-")),
-                        "gameDiff": str(item.get("gameDiff", "-"))
-                    })
-                if len(rankings) == 10:
-                    return rankings
-            except Exception:
-                pass
-
     return []
 
 def fetch_kt_wiz_data():
-    # 💡 한국 표준시(KST: UTC + 9시간) 강제 계산
     kst_tz = datetime.timezone(datetime.timedelta(hours=9))
     today_kst = datetime.datetime.now(kst_tz)
     year = today_kst.year
@@ -181,7 +206,7 @@ def fetch_kt_wiz_data():
                 "batters": [{"order": b.get("order", "-"), "name": b.get("name", "-"), "pos": b.get("pos", "-")} for b in target_lineup.get("batters", [])]
             }
 
-    # 3. KBO 공식 순위표
+    # 3. 실시간 순위표 수집
     rankings = fetch_kbo_rankings()
 
     final_payload = {
