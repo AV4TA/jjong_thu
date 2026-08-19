@@ -8,7 +8,9 @@
     "isHome": false,
     "stadium": "원정구장 (원정)",
     "result": "scheduled",
-    "score": "VS"
+    "score": "VS",
+    "ktPitcher": "미정",
+    "oppPitcher": "미정"
   },
   "todayLineup": {
     "ktPitcher": "미정",
@@ -1350,5 +1352,5 @@
       "score": "VS"
     }
   },
-  "lineupUpdatedAt": "2026-08-19 15:05:45 (KST)"
+  "lineupUpdatedAt": "2026-08-19 15:13:51 (KST)"
 }
