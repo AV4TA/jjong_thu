@@ -6,6 +6,20 @@ import sys
 
 ssl_ctx = ssl._create_unverified_context()
 
+def fetch_json_get(url, referer='https://m.sports.naver.com/'):
+    req = urllib.request.Request(
+        url,
+        headers={
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
+            'Referer': referer
+        }
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=12, context=ssl_ctx) as res:
+            return json.loads(res.read().decode('utf-8'))
+    except Exception as e:
+        return None
+
 def fetch_kbo_post(url, data_str):
     req = urllib.request.Request(
         url,
@@ -29,7 +43,7 @@ def update_lineup_and_pitchers():
     today_str = now_kst.strftime("%Y-%m-%d")
     today_compact = now_kst.strftime("%Y%m%d")
 
-    print(f"=== [KBO 공식 데이터 & 선발투수 비교 동기화: {today_str}] ===")
+    print(f"=== [선발투수 상세 비교 & 라인업 갱신: {today_str}] ===")
 
     try:
         with open("ktwiz_data.json", "r", encoding="utf-8") as f:
@@ -43,18 +57,20 @@ def update_lineup_and_pitchers():
         print("ℹ️ 오늘 경기 일정이 없습니다.")
         return
 
+    game_id = today_match.get("gameId")
     is_home = today_match.get("isHome", True)
     opponent_name = today_match.get("opponent", "")
+    
     kt_p = today_match.get("ktPitcher") or "미정"
     opp_p = today_match.get("oppPitcher") or "미정"
     batters = []
     kbo_game_id = None
 
-    # 선발투수 스펙 기본 구조
-    kt_pitcher_stat = {"name": kt_p, "era": "-", "win": "-", "lose": "-", "so": "-", "vsRecord": "-"}
-    opp_pitcher_stat = {"name": opp_p, "era": "-", "win": "-", "lose": "-", "so": "-", "vsRecord": "-"}
+    # 기본 선발 스펙 객체
+    kt_stat = {"name": kt_p, "era": "-", "record": "-"}
+    opp_stat = {"name": opp_p, "era": "-", "record": "-"}
 
-    # 1. ⚾ KBO 메인 전광판 데이터 조회
+    # 1. ⚾ KBO 메인 전광판에서 선발투수 이름 & KBO GameID 가져오기
     main_res = fetch_kbo_post(
         "https://www.koreabaseball.com/ws/Main.asmx/GetKboGameList",
         f"leId=1&srId=0&date={today_compact}"
@@ -70,27 +86,49 @@ def update_lineup_and_pitchers():
                 h_starter = g.get("B_PIT_P_NM") or g.get("HOME_PIT_P_NM")
                 a_starter = g.get("T_PIT_P_NM") or g.get("AWAY_PIT_P_NM")
                 
-                # 투수 기본 스펙 추출
-                h_era = str(g.get("B_ERA") or g.get("HOME_ERA") or "-")
-                a_era = str(g.get("T_ERA") or g.get("AWAY_ERA") or "-")
-                h_rec = str(g.get("B_W_L") or "-")
-                a_rec = str(g.get("T_W_L") or "-")
-
                 if is_home:
                     if h_starter: kt_p = str(h_starter).strip()
                     if a_starter: opp_p = str(a_starter).strip()
-                    kt_pitcher_stat = {"name": kt_p, "era": h_era, "record": h_rec}
-                    opp_pitcher_stat = {"name": opp_p, "era": a_era, "record": a_rec}
                 else:
                     if a_starter: kt_p = str(a_starter).strip()
                     if h_starter: opp_p = str(h_starter).strip()
-                    kt_pitcher_stat = {"name": kt_p, "era": a_era, "record": a_rec}
-                    opp_pitcher_stat = {"name": opp_p, "era": h_era, "record": h_rec}
                 break
 
-    print(f"  👉 선발투수: KT [{kt_p}] vs 상대 [{opp_p}] (KBO GameID: {kbo_game_id})")
+    kt_stat["name"] = kt_p
+    opp_stat["name"] = opp_p
 
-    # 2. 📋 KBO 공식 선발 타순 (1~9번 라인업) 조회
+    # 2. 🔍 네이버 게임센터 프리뷰 API에서 투수 ERA / 승패 성적 가져오기
+    if game_id:
+        prev_data = fetch_json_get(f"https://api-gw.sports.naver.com/schedule/games/{game_id}/preview")
+        if prev_data and "result" in prev_data:
+            res = prev_data.get("result", {})
+            h_pitcher_info = res.get("homeStarterPitcher") or {}
+            a_pitcher_info = res.get("awayStarterPitcher") or {}
+
+            # 홈팀 투수 스펙
+            h_era = str(h_pitcher_info.get("era", "-"))
+            h_w = h_pitcher_info.get("w", "-")
+            h_l = h_pitcher_info.get("l", "-")
+            h_rec = f"{h_w}승 {h_l}패" if h_w != "-" and h_l != "-" else "-"
+
+            # 원정팀 투수 스펙
+            a_era = str(a_pitcher_info.get("era", "-"))
+            a_w = a_pitcher_info.get("w", "-")
+            a_l = a_pitcher_info.get("l", "-")
+            a_rec = f"{a_w}승 {a_l}패" if a_w != "-" and a_l != "-" else "-"
+
+            if is_home:
+                kt_stat["era"] = h_era
+                kt_stat["record"] = h_rec
+                opp_stat["era"] = a_era
+                opp_stat["record"] = a_rec
+            else:
+                kt_stat["era"] = a_era
+                kt_stat["record"] = a_rec
+                opp_stat["era"] = h_era
+                opp_stat["record"] = h_rec
+
+    # 3. 📋 KBO 공식 선발 타순 (1~9번 라인업) 조회
     if kbo_game_id:
         lineup_res = fetch_kbo_post(
             "https://www.koreabaseball.com/ws/Schedule.asmx/GetLineUp",
@@ -114,7 +152,7 @@ def update_lineup_and_pitchers():
                             "pos": pos
                         })
 
-    # 3. ⚔️ 올시즌 상대 전적(H2H) 계산
+    # 4. ⚔️ 올시즌 상대 전적(H2H) 계산
     h2h_wins = 0
     h2h_draws = 0
     h2h_losses = 0
@@ -144,7 +182,7 @@ def update_lineup_and_pitchers():
     else:
         h2h_text = "올 시즌 첫 맞대결"
 
-    # 4. JSON 파일 저장 (선발투수 비교 데이터 포함)
+    # 5. JSON 파일 저장
     data["todayMatch"]["ktPitcher"] = kt_p
     data["todayMatch"]["oppPitcher"] = opp_p
     
@@ -154,8 +192,8 @@ def update_lineup_and_pitchers():
     }
 
     data["pitcherComparison"] = {
-        "kt": kt_pitcher_stat,
-        "opp": opp_pitcher_stat
+        "kt": kt_stat,
+        "opp": opp_stat
     }
 
     data["todayLineup"] = {
@@ -169,7 +207,7 @@ def update_lineup_and_pitchers():
     with open("ktwiz_data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-    print(f"🎯 선발투수 비교 및 상대 전적 저장 완료!")
+    print(f"🎯 투수 비교 스펙 갱신: KT[{kt_p}: {kt_stat['era']}, {kt_stat['record']}] vs 상대[{opp_p}: {opp_stat['era']}, {opp_stat['record']}]")
 
 if __name__ == "__main__":
     update_lineup_and_pitchers()
