@@ -209,8 +209,8 @@
     }
     #map-svg:active { cursor: grabbing; }
 
-    /* 시군구 벡터 */
-    .district {
+    /* 시군구 및 섬 벡터 */
+    .district, .custom-island {
       fill: var(--land-base);
       stroke: var(--land-border);
       stroke-width: 0.55;
@@ -219,9 +219,9 @@
       transition: fill 0.2s ease;
       cursor: pointer;
     }
-    .district:hover { fill: #fff5f7; }
+    .district:hover, .custom-island:hover { fill: #fff5f7; }
     
-    .district.visited {
+    .district.visited, .custom-island.visited {
       fill: var(--colored) !important;
     }
 
@@ -369,7 +369,7 @@
         </div>
         <div class="stat-desc-row">
           <span>색칠한 여행지: <b id="txtCount" style="color:#ff5e7e;">0</b>곳</span>
-          <span>전국 시·군: <b id="txtTotalCount">160</b>개 권역</span>
+          <span>전국 권역: <b id="txtTotalCount">162</b>개</span>
         </div>
       </div>
 
@@ -404,7 +404,7 @@
       <h3 style="font-size:1.15rem; font-weight:900; margin-bottom:14px; color:#2f3542;">📸 여행 추억 기록</h3>
 
       <div class="form-group">
-        <label>방문 지역 (시/군/서울구)</label>
+        <label>방문 지역 (시/군/구)</label>
         <select class="form-control" id="diarySelectRegion">
           <option value="">색칠된 지역 선택</option>
         </select>
@@ -422,7 +422,7 @@
 
       <div class="form-group">
         <label>추억 한줄 메모 📝</label>
-        <textarea class="form-control" id="diaryMemo" rows="3" placeholder="예: 맛있는 음식 먹고 드라이브 한 날!"></textarea>
+        <textarea class="form-control" id="diaryMemo" rows="3" placeholder="예: 바다 보고 드라이브 한 날!"></textarea>
       </div>
 
       <div class="btn-modal-row">
@@ -453,7 +453,7 @@
     let visitedMap = {};
     let diaryList = [];
     let svg, g, pathGroup, labelGroup, zoomBehavior, pathGenerator;
-    let totalConsolidatedCount = 160;
+    let totalConsolidatedCount = 162;
 
     function switchTab(tabId, el) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -469,12 +469,12 @@
       setTimeout(() => t.classList.remove("show"), 1800);
     }
 
-    // 🏙️ 대도시/특례시 구 단위 묶기 & 서울은 구 단위 유지 매핑
+    // 🏙️ 대도시 구 단위 묶기 & 서울은 구 단위 유지 매핑
     function getConsolidatedGroup(props, id) {
       const rawName = props.name || props.name_kor || props.NAME || props.SIG_KOR_NM || "";
       const code = String(props.code || id || "");
 
-      // 1) 서울특별시 (25개 구 개별 유지) -> 코드 앞 2자리 '11'
+      // 1) 서울특별시 (25개 구 개별 유지)
       if (code.startsWith("11") || rawName.startsWith("서울")) {
         let guName = rawName.replace("서울특별시", "").replace("서울", "").trim();
         return {
@@ -484,7 +484,7 @@
         };
       }
 
-      // 2) 광역시 단일 통합 (부산, 대구, 인천, 광주, 대전, 울산)
+      // 2) 광역시 단일 통합
       if (code.startsWith("21") || rawName.startsWith("부산")) return { groupId: "METRO_BUSAN", displayName: "부산", fullName: "부산" };
       if (code.startsWith("22") || rawName.startsWith("대구")) return { groupId: "METRO_DAEGU", displayName: "대구", fullName: "대구" };
       if (code.startsWith("23") || rawName.startsWith("인천")) return { groupId: "METRO_INCHEON", displayName: "인천", fullName: "인천" };
@@ -493,7 +493,7 @@
       if (code.startsWith("26") || rawName.startsWith("울산")) return { groupId: "METRO_ULSAN", displayName: "울산", fullName: "울산" };
       if (code.startsWith("29") || rawName.startsWith("세종")) return { groupId: "METRO_SEJONG", displayName: "세종", fullName: "세종" };
 
-      // 3) 여러 구로 쪼개진 일반 시 통합 (수원, 성남, 안양, 부천, 안산, 고양, 용인, 청주, 천안, 전주, 포항, 창원 등)
+      // 3) 복수 구를 가진 일반 시 통합
       const majorCities = [
         "수원", "성남", "안양", "부천", "안산", "고양", "용인", "청주", "천안", "전주", "포항", "창원", "김해", "평택", "화성", "남양주"
       ];
@@ -503,7 +503,12 @@
         }
       }
 
-      // 4) 그 외 일반 시/군 (강릉, 속초, 경주, 여수, 제주, 서귀포 등)
+      // 4) 울릉도
+      if (rawName.includes("울릉")) {
+        return { groupId: "ISLAND_ULLEUNG", displayName: "울릉", fullName: "울릉도" };
+      }
+
+      // 5) 그 외 일반 시/군
       let cleanName = rawName.split(" ").pop();
       let displayName = cleanName;
       if (displayName.length > 2 && (displayName.endsWith("시") || displayName.endsWith("군") || displayName.endsWith("구"))) {
@@ -550,13 +555,11 @@
         const topoData = await res.json();
         const geojson = topojson.feature(topoData, topoData.objects.skorea_municipalities_2018_geo);
 
-        // 각 feature에 통합 그룹 정보 매핑
         const groupCenters = {};
         geojson.features.forEach(f => {
           const groupInfo = getConsolidatedGroup(f.properties, f.id);
           f.groupInfo = groupInfo;
 
-          // 그룹 중심점 계산용 좌표 누적
           const centroid = pathGenerator.centroid(f);
           if (!isNaN(centroid[0])) {
             if (!groupCenters[groupInfo.groupId]) {
@@ -572,8 +575,8 @@
           }
         });
 
-        // 1) 시군구 폴리곤 렌더링
-        pathGroup.selectAll("path")
+        // 1) 전국 시군구 폴리곤 렌더링
+        pathGroup.selectAll("path.district")
           .data(geojson.features)
           .enter()
           .append("path")
@@ -582,7 +585,50 @@
           .attr("data-group", d => d.groupInfo.groupId)
           .on("click", (e, d) => onSingleTouch(d.groupInfo));
 
-        // 2) 대표 권역별 라벨만 생성 (수원, 부산 등 1개만 깔끔하게 출력)
+        // 2) 🌊 울릉도 & 🇰🇷 독도 강조 전용 커스텀 폴리곤 추가 (실제보다 크게 표시)
+        const ulleungCoords = projection([130.85, 37.50]);
+        const dokdoCoords = projection([131.86, 37.24]);
+
+        const customIslands = [
+          {
+            groupId: "ISLAND_ULLEUNG",
+            displayName: "울릉",
+            fullName: "울릉도",
+            cx: ulleungCoords[0],
+            cy: ulleungCoords[1],
+            r: 7.5
+          },
+          {
+            groupId: "ISLAND_DOKDO",
+            displayName: "독도",
+            fullName: "독도",
+            cx: dokdoCoords[0],
+            cy: dokdoCoords[1],
+            r: 5.5
+          }
+        ];
+
+        customIslands.forEach(island => {
+          // 큼직한 원형 섬 폴리곤 추가
+          pathGroup.append("circle")
+            .attr("class", "custom-island")
+            .attr("cx", island.cx)
+            .attr("cy", island.cy)
+            .attr("r", island.r)
+            .attr("data-group", island.groupId)
+            .on("click", () => onSingleTouch(island));
+
+          // 라벨 위치 등록
+          groupCenters[island.groupId] = {
+            displayName: island.displayName,
+            fullName: island.fullName,
+            xSum: island.cx,
+            ySum: island.cy + island.r + 3.8,
+            count: 1
+          };
+        });
+
+        // 3) 대표 권역별 라벨 생성 (울릉도, 독도 포함)
         const labelData = Object.entries(groupCenters).map(([groupId, info]) => ({
           groupId,
           displayName: info.displayName,
@@ -609,7 +655,7 @@
       }
     }
 
-    // 2. ⚡ 터치 시 대표 도시 전체 색칠 / 취소
+    // 2. ⚡ 터치 시 색칠 토글
     function onSingleTouch(groupInfo) {
       const isColored = Boolean(visitedMap[groupInfo.groupId]);
 
@@ -646,10 +692,18 @@
           selectBox.appendChild(opt);
         });
 
-        // 🏙️ 그룹 ID 기준으로 지도 폴리곤 및 라벨 일괄 색칠
+        // 일반 폴리곤 색칠
         d3.selectAll(".district")
           .classed("visited", d => Boolean(visitedMap[d.groupInfo.groupId]));
 
+        // 독도 & 울릉도 원형 폴리곤 색칠
+        d3.selectAll(".custom-island")
+          .classed("visited", function() {
+            const gid = d3.select(this).attr("data-group");
+            return Boolean(visitedMap[gid]);
+          });
+
+        // 라벨 반전 색상 적용
         d3.selectAll(".district-label")
           .classed("visited-label", d => Boolean(visitedMap[d.groupId]));
 
