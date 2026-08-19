@@ -14,10 +14,13 @@
   <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/twemoji:fork-and-knife-with-plate.svg" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&family=Pretendard:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <!-- 카카오 지도/장소검색 SDK (JavaScript Key 적용) -->
+  <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6c0ba463ffa53681db449e24a9a56ef&libraries=services"></script>
 
   <style>
     :root {
@@ -348,8 +351,6 @@
     const db = firebase.firestore();
     const wishCollection = db.collection("couple_space").doc("data").collection("saved_places");
 
-    const KAKAO_REST_KEY = "326134762cc7285ab277b5003c189233";
-
     let currentLat = 37.5665;
     let currentLng = 126.9780;
     let selectedFoodCategory = '전체';
@@ -407,44 +408,54 @@
           (err) => {
             console.warn("GPS 오류:", err);
             txt.innerText = "기본 위치 적용";
-            searchPlaces('food');
+            if (currentActiveTab === 'tab-food') searchPlaces('food');
+            else if (currentActiveTab === 'tab-cafe') searchPlaces('cafe');
           },
           { enableHighAccuracy: true, timeout: 8000 }
         );
       } else {
         txt.innerText = "GPS 미지원";
-        searchPlaces('food');
+        if (currentActiveTab === 'tab-food') searchPlaces('food');
+        else if (currentActiveTab === 'tab-cafe') searchPlaces('cafe');
       }
     }
 
-    async function searchPlaces(type) {
+    // 카카오 SDK Places 서비스를 통한 안전한 장소 검색
+    function searchPlaces(type) {
       const container = document.getElementById(type === 'food' ? 'foodList' : 'cafeList');
       container.innerHTML = `<div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 주변 장소 검색 중...</div>`;
 
-      const categoryCode = (type === 'food') ? 'FD6' : 'CE7';
-      const radius = 2000;
-      
-      let queryUrl = `https://dapi.kakao.com/v2/local/search/category.json?category_group_code=${categoryCode}&x=${currentLng}&y=${currentLat}&radius=${radius}&sort=distance&size=15`;
-      
-      if (type === 'food' && selectedFoodCategory !== '전체') {
-        queryUrl = `https://dapi.kakao.com/v2/local/search/keyword.json?category_group_code=FD6&query=${encodeURIComponent(selectedFoodCategory)}&x=${currentLng}&y=${currentLat}&radius=${radius}&sort=distance&size=15`;
+      if (typeof kakao === 'undefined' || !kakao.maps || !kakao.maps.services) {
+        container.innerHTML = `<div class="state-box">지도 서비스를 불러오는 중입니다. 잠시 후 갱신을 눌러주세요.</div>`;
+        return;
       }
 
-      try {
-        const res = await fetch(queryUrl, {
-          headers: { Authorization: `KakaoAK ${KAKAO_REST_KEY}` }
-        });
-        const data = await res.json();
-        renderPlaceCards(data.documents || [], type, container);
-      } catch (err) {
-        console.error("장소 검색 에러:", err);
-        container.innerHTML = `<div class="state-box">주변 장소를 불러오지 못했습니다.</div>`;
+      const ps = new kakao.maps.services.Places();
+      const loc = new kakao.maps.LatLng(currentLat, currentLng);
+      const radius = 2500; // 반경 2.5km
+
+      const callback = (data, status) => {
+        if (status === kakao.maps.services.Status.OK) {
+          renderPlaceCards(data || [], type, container);
+        } else {
+          container.innerHTML = `<div class="state-box">주변 반경 2.5km 이내에 검색된 장소가 없습니다.</div>`;
+        }
+      };
+
+      if (type === 'food') {
+        if (selectedFoodCategory === '전체') {
+          ps.categorySearch('FD6', callback, { location: loc, radius: radius, sort: kakao.maps.services.SortBy.DISTANCE, size: 15 });
+        } else {
+          ps.keywordSearch(selectedFoodCategory, callback, { location: loc, radius: radius, category_group_code: 'FD6', sort: kakao.maps.services.SortBy.DISTANCE, size: 15 });
+        }
+      } else if (type === 'cafe') {
+        ps.categorySearch('CE7', callback, { location: loc, radius: radius, sort: kakao.maps.services.SortBy.DISTANCE, size: 15 });
       }
     }
 
     function renderPlaceCards(places, type, container) {
-      if (places.length === 0) {
-        container.innerHTML = `<div class="state-box">주변 반경 2km 이내에 검색된 장소가 없습니다.</div>`;
+      if (!places || places.length === 0) {
+        container.innerHTML = `<div class="state-box">주변 반경 2.5km 이내에 검색된 장소가 없습니다.</div>`;
         return;
       }
 
@@ -460,7 +471,7 @@
             <div class="place-card-top">
               <div>
                 <div class="place-title">${p.place_name}</div>
-                <div class="place-category">${p.category_name.split('>').slice(1).join(' > ') || p.category_name}</div>
+                <div class="place-category">${p.category_name ? p.category_name.split('>').slice(1).join(' > ') : (type === 'cafe' ? '카페' : '음식점')}</div>
               </div>
               <div class="place-distance"><i class="fa-solid fa-person-walking"></i> ${distText} (${walkMin}분)</div>
             </div>
@@ -482,7 +493,7 @@
                 <i class="fa-solid fa-map-location-dot"></i> 카카오맵 길찾기
               </a>
               <button class="btn-heart ${isSaved ? 'active' : ''}" 
-                onclick="toggleWish(this, '${p.id}', '${p.place_name.replace(/'/g, "\\'")}', '${p.category_name.replace(/'/g, "\\'")}', '${p.place_url}', '${(p.road_address_name || p.address_name).replace(/'/g, "\\'")}', '${type}')" 
+                onclick="toggleWish(this, '${p.id}', '${p.place_name.replace(/'/g, "\\'")}', '${(p.category_name || '').replace(/'/g, "\\'")}', '${p.place_url}', '${(p.road_address_name || p.address_name).replace(/'/g, "\\'")}', '${type}')" 
                 title="또 갈 곳 저장">
                 <i class="fa-solid fa-heart"></i>
               </button>
