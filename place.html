@@ -19,8 +19,8 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <!-- 카카오 지도/장소검색 SDK (autoload=false 적용) -->
-  <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6c0ba463ffa53681db449e24a9a56ef&libraries=services&autoload=false"></script>
+  <!-- 카카오 지도/장소검색 SDK (직접 로드) -->
+  <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6c0ba463ffa53681db449e24a9a56ef&libraries=services"></script>
 
   <style>
     :root {
@@ -356,7 +356,6 @@
     let selectedFoodCategory = '전체';
     let currentActiveTab = 'tab-food';
     let wishMap = {};
-    let isKakaoLoaded = false;
 
     const DESSERT_PAIRS = [
       ["🥐 소금빵", "🍓 딸기 조각 케이크"],
@@ -427,20 +426,21 @@
       const container = document.getElementById(type === 'food' ? 'foodList' : 'cafeList');
       container.innerHTML = `<div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 주변 장소 검색 중...</div>`;
 
-      if (!isKakaoLoaded) {
-        container.innerHTML = `<div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 지도 서비스 초기화 중...</div>`;
+      // 카카오 Places 객체 확인 및 재시도
+      if (typeof kakao === 'undefined' || !kakao.maps || !kakao.maps.services) {
+        setTimeout(() => searchPlaces(type), 300);
         return;
       }
 
       const ps = new kakao.maps.services.Places();
       const loc = new kakao.maps.LatLng(currentLat, currentLng);
-      const radius = 2500;
+      const radius = 3000;
 
       const callback = (data, status) => {
         if (status === kakao.maps.services.Status.OK) {
           renderPlaceCards(data || [], type, container);
         } else {
-          container.innerHTML = `<div class="state-box">주변 반경 2.5km 이내에 검색된 장소가 없습니다.</div>`;
+          container.innerHTML = `<div class="state-box">주변 반경 3km 이내에 검색된 장소가 없습니다.</div>`;
         }
       };
 
@@ -457,7 +457,7 @@
 
     function renderPlaceCards(places, type, container) {
       if (!places || places.length === 0) {
-        container.innerHTML = `<div class="state-box">주변 반경 2.5km 이내에 검색된 장소가 없습니다.</div>`;
+        container.innerHTML = `<div class="state-box">주변 반경 3km 이내에 검색된 장소가 없습니다.</div>`;
         return;
       }
 
@@ -585,16 +585,7 @@
 
     window.addEventListener("DOMContentLoaded", () => {
       listenWishlist();
-
-      // kakao SDK 로드 보장
-      if (typeof kakao !== 'undefined' && kakao.maps) {
-        kakao.maps.load(() => {
-          isKakaoLoaded = true;
-          getLocation();
-        });
-      } else {
-        getLocation();
-      }
+      getLocation();
     });
   </script>
 </body>
