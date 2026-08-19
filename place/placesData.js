@@ -1,4 +1,8 @@
-// place/placesData.js 파일 내용
+// place/placesData.js
+// 모든 자치구 변수가 선언된 이후에 합치기 위해 setTimeout을 사용하거나
+// 로드 순서를 보장해야 합니다. 
+// 가장 쉬운 방법은 합쳐진 전체 데이터를 하나로 선언하는 것입니다.
+
 const CURATED_PLACES = [
   ...(typeof curated_places_dobong !== 'undefined' ? curated_places_dobong : []),
   ...(typeof curated_places_dongdaemun !== 'undefined' ? curated_places_dongdaemun : []),
