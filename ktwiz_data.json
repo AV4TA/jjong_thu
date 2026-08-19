@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-08-19 22:41:25 (KST)",
+  "updatedAt": "2026-08-20 06:21:54 (KST)",
   "todayMatch": {
-    "gameId": "20260819KTLG02026",
-    "date": "2026-08-19",
+    "gameId": "20260820KTLG02026",
+    "date": "2026-08-20",
     "time": "19:00",
     "opponent": "LG 트윈스",
     "isHome": false,
     "stadium": "원정구장 (원정)",
-    "result": "lose",
-    "score": "KT 0 : 1 LG"
+    "result": "scheduled",
+    "score": "VS"
   },
   "todayLineup": {
     "pitcher": "미발표",
@@ -88,12 +88,12 @@
     {
       "rank": "8",
       "teamName": "롯데 자이언츠",
-      "games": "106",
-      "win": "47",
+      "games": "107",
+      "win": "48",
       "draw": "2",
       "lose": "57",
-      "wra": "0.452",
-      "gameDiff": "15.5"
+      "wra": "0.457",
+      "gameDiff": "15"
     },
     {
       "rank": "9",
@@ -108,12 +108,12 @@
     {
       "rank": "10",
       "teamName": "키움 히어로즈",
-      "games": "111",
+      "games": "112",
       "win": "40",
       "draw": "2",
-      "lose": "69",
-      "wra": "0.367",
-      "gameDiff": "25"
+      "lose": "70",
+      "wra": "0.364",
+      "gameDiff": "25.5"
     }
   ],
   "schedule": {
