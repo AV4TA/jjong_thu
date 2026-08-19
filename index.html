@@ -153,9 +153,138 @@
       margin-top: 36px;
       line-height: 1.5;
     }
+
+    /* 🔒 6자리 PIN 잠금 화면 스타일 */
+    .pin-overlay {
+      position: fixed;
+      inset: 0;
+      background: #1e272e;
+      color: white;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      backdrop-filter: blur(8px);
+    }
+    .pin-overlay.hidden { display: none !important; }
+
+    .pin-badge {
+      font-size: 2.6rem;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 4px 10px rgba(255, 107, 129, 0.4));
+    }
+    .pin-title {
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+    .pin-desc {
+      font-size: 0.85rem;
+      color: #a4b0be;
+      margin-bottom: 28px;
+      font-weight: 600;
+    }
+
+    /* 6자리 도트 인디케이터 */
+    .pin-dots {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 34px;
+    }
+    .pin-dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      border: 2px solid #57606f;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .pin-dot.filled {
+      background: #ff6b81;
+      border-color: #ff6b81;
+      box-shadow: 0 0 14px rgba(255, 107, 129, 0.7);
+      transform: scale(1.15);
+    }
+
+    /* 3x4 키패드 */
+    .pin-keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      width: 100%;
+      max-width: 270px;
+    }
+    .pin-key {
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: white;
+      font-size: 1.55rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.12s, transform 0.1s;
+    }
+    .pin-key:active {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(0.92);
+    }
+    .pin-key.btn-action {
+      font-size: 1.1rem;
+      background: transparent;
+      color: #a4b0be;
+    }
+    .pin-key.btn-action:active {
+      background: transparent;
+      color: white;
+    }
+
+    /* 오답 시 흔들림 애니메이션 */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-9px); }
+      40%, 80% { transform: translateX(9px); }
+    }
+    .shake { animation: shake 0.35s ease-in-out; }
   </style>
 </head>
 <body>
+
+  <!-- 🔒 뚜쫑 공간 6자리 PIN 잠금 오버레이 -->
+  <div id="pinLockScreen" class="pin-overlay">
+    <div class="pin-badge">💖</div>
+    <div class="pin-title">뚜쫑 비밀 공간</div>
+    <div class="pin-desc">암호를 입력해주세요</div>
+
+    <div class="pin-dots" id="pinDotsContainer">
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+    </div>
+
+    <div class="pin-keypad">
+      <button type="button" class="pin-key" onclick="pressPin('1')">1</button>
+      <button type="button" class="pin-key" onclick="pressPin('2')">2</button>
+      <button type="button" class="pin-key" onclick="pressPin('3')">3</button>
+      <button type="button" class="pin-key" onclick="pressPin('4')">4</button>
+      <button type="button" class="pin-key" onclick="pressPin('5')">5</button>
+      <button type="button" class="pin-key" onclick="pressPin('6')">6</button>
+      <button type="button" class="pin-key" onclick="pressPin('7')">7</button>
+      <button type="button" class="pin-key" onclick="pressPin('8')">8</button>
+      <button type="button" class="pin-key" onclick="pressPin('9')">9</button>
+      <button type="button" class="pin-key btn-action" onclick="clearPin()">취소</button>
+      <button type="button" class="pin-key" onclick="pressPin('0')">0</button>
+      <button type="button" class="pin-key btn-action" onclick="deletePin()"><i class="fa-solid fa-delete-left"></i></button>
+    </div>
+  </div>
 
   <header class="home-header">
     <div class="header-badge">
@@ -233,6 +362,70 @@
   </div>
 
   <script>
+    // 💡 두 분이 사용하실 6자리 비밀번호를 설정하세요 (예: 201031)
+    const CORRECT_PIN = "100609";
+
+    let enteredPin = "";
+
+    // 세션 잠금 해제 여부 확인
+    document.addEventListener('DOMContentLoaded', () => {
+      const isUnlocked = sessionStorage.getItem("ddo_jjong_unlocked");
+      if (isUnlocked === "true") {
+        const lockEl = document.getElementById("pinLockScreen");
+        if (lockEl) lockEl.classList.add("hidden");
+      }
+    });
+
+    function pressPin(digit) {
+      if (enteredPin.length >= 6) return;
+      enteredPin += digit;
+      updatePinDots();
+
+      if (enteredPin.length === 6) {
+        setTimeout(verifyPin, 120);
+      }
+    }
+
+    function deletePin() {
+      if (enteredPin.length > 0) {
+        enteredPin = enteredPin.slice(0, -1);
+        updatePinDots();
+      }
+    }
+
+    function clearPin() {
+      enteredPin = "";
+      updatePinDots();
+    }
+
+    function updatePinDots() {
+      const dots = document.querySelectorAll(".pin-dot");
+      dots.forEach((dot, idx) => {
+        if (idx < enteredPin.length) {
+          dot.classList.add("filled");
+        } else {
+          dot.classList.remove("filled");
+        }
+      });
+    }
+
+    function verifyPin() {
+      if (enteredPin === CORRECT_PIN) {
+        sessionStorage.setItem("ddo_jjong_unlocked", "true");
+        const lockEl = document.getElementById("pinLockScreen");
+        if (lockEl) lockEl.classList.add("hidden");
+      } else {
+        const dotsContainer = document.getElementById("pinDotsContainer");
+        if (dotsContainer) dotsContainer.classList.add("shake");
+        if (navigator.vibrate) navigator.vibrate(200);
+
+        setTimeout(() => {
+          if (dotsContainer) dotsContainer.classList.remove("shake");
+          clearPin();
+        }, 400);
+      }
+    }
+
     // 서비스 워커 등록 (PWA 앱 설치 활성화)
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js');
@@ -245,9 +438,11 @@
     const diff = Math.ceil((tripDate - today) / (1000 * 60 * 60 * 24));
     
     const badge = document.getElementById('ddayBadge');
-    if (diff > 0) badge.innerText = `고베 여행 D-${diff} 🛫`;
-    else if (diff === 0) badge.innerText = `오늘 고베 출발! 🛫`;
-    else if (diff >= -3) badge.innerText = `고베 여행 중 (${Math.abs(diff)+1}일차) 🇯🇵`;
+    if (badge) {
+      if (diff > 0) badge.innerText = `고베 여행 D-${diff} 🛫`;
+      else if (diff === 0) badge.innerText = `오늘 고베 출발! 🛫`;
+      else if (diff >= -3) badge.innerText = `고베 여행 중 (${Math.abs(diff)+1}일차) 🇯🇵`;
+    }
   </script>
 </body>
 </html>
