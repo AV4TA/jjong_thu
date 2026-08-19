@@ -206,6 +206,7 @@
       height: 530px;
       display: block;
       cursor: grab;
+      touch-action: none;
     }
     #map-svg:active { cursor: grabbing; }
 
@@ -380,7 +381,7 @@
 
       <!-- 🗺️ 종이 지도 프레임 -->
       <div class="map-frame">
-        <div class="map-header-tag">💡 지역을 <b>2번 연속 터치</b>하면 색칠돼요!</div>
+        <div class="map-header-tag">💡 지역을 <b>터치</b>하면 즉시 색칠돼요!</div>
 
         <div class="map-loading" id="mapLoading">
           <i class="fa-solid fa-spinner fa-spin" style="font-size:1.8rem;"></i>
@@ -461,8 +462,6 @@
     let visitedMap = {};
     let diaryList = [];
     let svg, g, pathGroup, labelGroup, zoomBehavior, pathGenerator;
-    let lastClickTime = 0;
-    let lastClickedCode = null;
     const TOTAL_DISTRICTS = 250;
 
     function switchTab(tabId, el) {
@@ -513,6 +512,7 @@
 
       pathGenerator = d3.geoPath().projection(projection);
 
+      // 줌 설정 (더블클릭/더블탭 확대 기능 비활성화)
       zoomBehavior = d3.zoom()
         .scaleExtent([1, 14])
         .on("zoom", (e) => {
@@ -523,14 +523,14 @@
             .style("stroke-width", `${dynamicSize * 0.18}px`);
         });
 
-      svg.call(zoomBehavior);
+      svg.call(zoomBehavior).on("dblclick.zoom", null); // 🚫 더블클릭 확대 원천 차단
 
       try {
         const res = await fetch("https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2018/json/skorea-municipalities-2018-topo-simple.json");
         const topoData = await res.json();
         const geojson = topojson.feature(topoData, topoData.objects.skorea_municipalities_2018_geo);
 
-        // 1) 시군구 폴리곤
+        // 1) 시군구 폴리곤 (1번 클릭/터치 시 즉시 토글)
         pathGroup.selectAll("path")
           .data(geojson.features)
           .enter()
@@ -538,7 +538,7 @@
           .attr("class", "district")
           .attr("d", pathGenerator)
           .attr("id", d => `d-${d.properties.code || d.id}`)
-          .on("click", (e, d) => handleDoubleTouch(d.properties, d.id));
+          .on("click", (e, d) => onSingleTouch(d.properties, d.id));
 
         // 2) 2글자 라벨
         labelGroup.selectAll("text")
@@ -560,21 +560,11 @@
       }
     }
 
-    // 2. ⚡ 터치 2번(더블 클릭)으로 팝업 없이 즉시 색칠 토글
-    function handleDoubleTouch(prop, id) {
+    // 2. ⚡ 1번 터치로 즉시 색칠 / 취소 토글
+    function onSingleTouch(prop, id) {
       const code = String(prop.code || id);
       const fullName = getFullName(prop);
-      const now = Date.now();
-
-      if (lastClickedCode === code && (now - lastClickTime) < 400) {
-        // 더블 클릭 성공 -> 즉시 색칠 토글
-        toggleColor(code, fullName);
-        lastClickTime = 0;
-        lastClickedCode = null;
-      } else {
-        lastClickTime = now;
-        lastClickedCode = code;
-      }
+      toggleColor(code, fullName);
     }
 
     function toggleColor(code, name) {
