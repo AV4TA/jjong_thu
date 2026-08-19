@@ -29,7 +29,7 @@ def update_lineup_and_pitchers():
     today_str = now_kst.strftime("%Y-%m-%d")
     today_compact = now_kst.strftime("%Y%m%d")
 
-    print(f"=== [KBO 공식 데이터 동기화 시작: {today_str}] ===")
+    print(f"=== [KBO 공식 데이터 & 상대 전적 동기화 시작: {today_str}] ===")
 
     try:
         with open("ktwiz_data.json", "r", encoding="utf-8") as f:
@@ -44,6 +44,7 @@ def update_lineup_and_pitchers():
         return
 
     is_home = today_match.get("isHome", True)
+    opponent_name = today_match.get("opponent", "")
     kt_p = today_match.get("ktPitcher") or "미정"
     opp_p = today_match.get("oppPitcher") or "미정"
     batters = []
@@ -83,13 +84,11 @@ def update_lineup_and_pitchers():
         )
         
         if lineup_res:
-            # 홈/원정 구분하여 KT 타자 목록 추출
             target_key = "homeLineUp" if is_home else "awayLineUp"
             raw_batters = lineup_res.get(target_key, []) or lineup_res.get("lineUp", [])
             
             if raw_batters:
                 for idx, b in enumerate(raw_batters):
-                    # 1~9번 선발 타자만 필터링
                     order = str(b.get("TURN") or b.get("BAT_ORDER_NO") or (idx + 1))
                     name = str(b.get("P_NM") or b.get("NAME") or "-").strip()
                     pos = str(b.get("POS_NM") or b.get("POSITION") or "-").strip()
@@ -103,7 +102,45 @@ def update_lineup_and_pitchers():
 
     print(f"  👉 선발 타순 등록: {len(batters)}명")
 
-    # 3. JSON 저장
+    # 3. ⚔️ 올시즌 상대 전적(H2H) 직접 계산
+    h2h_wins = 0
+    h2h_draws = 0
+    h2h_losses = 0
+
+    schedule_dict = data.get("schedule", {})
+    # 오늘 상대팀 단축명 (예: 'LG 트윈스' -> 'LG')
+    opp_short = opponent_name.split()[0] if opponent_name else ""
+
+    for g_date, g_info in schedule_dict.items():
+        if g_date >= today_str:
+            continue  # 오늘 및 미래 경기는 전적 계산에서 제외
+
+        g_opp = g_info.get("opponent", "")
+        if opp_short in g_opp or g_opp in opponent_name:
+            res = g_info.get("result")
+            if res == "win":
+                h2h_wins += 1
+            elif res == "lose":
+                h2h_losses += 1
+            elif res == "draw":
+                h2h_draws += 1
+
+    total_h2h_games = h2h_wins + h2h_losses + h2h_draws
+    d_txt = f"{h2h_draws}무 " if h2h_draws > 0 else ""
+
+    if total_h2h_games > 0:
+        h2h_text = f"올시즌 {total_h2h_games}전 {h2h_wins}승 {d_txt}{h2h_losses}패"
+    else:
+        h2h_text = "올 시즌 첫 맞대결"
+
+    data["todayH2H"] = {
+        "text": h2h_text,
+        "record": f"{h2h_wins}승 {d_txt}{h2h_losses}패"
+    }
+
+    print(f"  👉 상대 전적: {h2h_text} ({opponent_name})")
+
+    # 4. JSON 파일 저장
     data["todayMatch"]["ktPitcher"] = kt_p
     data["todayMatch"]["oppPitcher"] = opp_p
     data["todayLineup"] = {
@@ -117,7 +154,7 @@ def update_lineup_and_pitchers():
     with open("ktwiz_data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-    print(f"🎯 KBO 공식 선발투수 & 라인업 전체 갱신 완료!")
+    print(f"🎯 KBO 공식 데이터 & 상대 전적 동기화 완료!")
 
 if __name__ == "__main__":
     update_lineup_and_pitchers()
