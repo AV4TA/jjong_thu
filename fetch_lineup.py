@@ -21,8 +21,7 @@ def fetch_json(url, referer='https://m.sports.naver.com/'):
         print(f"  [API 오류] {url} -> {e}")
         return None
 
-def deep_find_pitcher(obj, team_hint=""):
-    """JSON 객체 안에서 투수 이름(2~4글자 한글)을 재귀적으로 탐색"""
+def deep_find_pitcher(obj):
     if not obj:
         return None
     if isinstance(obj, str) and 2 <= len(obj.strip()) <= 4 and obj.strip() not in ["미정", "None", "VS", "결과", "예정"]:
@@ -90,7 +89,7 @@ def update_starter_pitchers():
             if h_p: opp_p = h_p
         print(f"   👉 프리뷰 결과: KT={kt_p}, 상대={opp_p}")
 
-    # 2. 🔍 [2순위] 다음(Daum) 스포츠 API 탐색
+    # 2. 🔍 [2순위] 다음(Daum) 스포츠 API 탐색 (에러 방지 처리 완료)
     if not kt_p or not opp_p:
         print("2. Daum 스포츠 API 조회 중...")
         daum_url = f"https://sports.daum.net/prx/hermes/api/game/schedule.json?page=1&leagueCode=kbo&fromDate={today_compact}&toDate={today_compact}"
@@ -100,8 +99,14 @@ def update_starter_pitchers():
                 h_team = str(g.get("homeTeamName", ""))
                 a_team = str(g.get("awayTeamName", ""))
                 if "KT" in h_team or "KT" in a_team or "kt" in h_team or "kt" in a_team:
-                    h_starter = deep_find_pitcher(g.get("homeStarterPitcherName")) or deep_find_pitcher(g.get("homeResult", {}).get("starterPitcherName"))
-                    a_starter = deep_find_pitcher(g.get("awayStarterPitcherName")) or deep_find_pitcher(g.get("awayResult", {}).get("starterPitcherName"))
+                    
+                    # 💡 API에서 값이 null(None)로 와도 안전하게 빈 딕셔너리로 대체
+                    home_res = g.get("homeResult") or {}
+                    away_res = g.get("awayResult") or {}
+                    
+                    h_starter = deep_find_pitcher(g.get("homeStarterPitcherName")) or deep_find_pitcher(home_res.get("starterPitcherName"))
+                    a_starter = deep_find_pitcher(g.get("awayStarterPitcherName")) or deep_find_pitcher(away_res.get("starterPitcherName"))
+                    
                     if is_home:
                         if h_starter and not kt_p: kt_p = h_starter
                         if a_starter and not opp_p: opp_p = a_starter
@@ -125,7 +130,6 @@ def update_starter_pitchers():
         if real_kt_p: kt_p = real_kt_p
         if real_opp_p: opp_p = real_opp_p
 
-        # 타순
         b_list = kt_l.get("batters", [])
         if b_list:
             batters = [
