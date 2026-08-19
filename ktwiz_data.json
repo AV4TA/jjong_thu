@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-19 06:20:36 (KST)",
+  "updatedAt": "2026-08-19 13:33:38 (KST)",
   "todayMatch": {
     "gameId": "20260819KTLG02026",
     "date": "2026-08-19",
@@ -23,7 +23,7 @@
       "lose": "39",
       "draw": "2",
       "wra": "0.614",
-      "gameDiff": "0"
+      "gameDiff": "0.0"
     },
     {
       "rank": "2",
@@ -33,7 +33,7 @@
       "lose": "41",
       "draw": "2",
       "wra": "0.602",
-      "gameDiff": "1"
+      "gameDiff": "1.0"
     },
     {
       "rank": "3",
@@ -63,7 +63,7 @@
       "lose": "48",
       "draw": "4",
       "wra": "0.534",
-      "gameDiff": "8"
+      "gameDiff": "8.0"
     },
     {
       "rank": "6",
@@ -73,7 +73,7 @@
       "lose": "53",
       "draw": "3",
       "wra": "0.475",
-      "gameDiff": "14"
+      "gameDiff": "14.0"
     },
     {
       "rank": "7",
@@ -93,7 +93,7 @@
       "lose": "57",
       "draw": "2",
       "wra": "0.447",
-      "gameDiff": "17"
+      "gameDiff": "17.0"
     },
     {
       "rank": "9",
@@ -103,7 +103,7 @@
       "lose": "62",
       "draw": "4",
       "wra": "0.410",
-      "gameDiff": "21"
+      "gameDiff": "21.0"
     },
     {
       "rank": "10",
