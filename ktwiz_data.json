@@ -9,13 +9,13 @@
     "stadium": "원정구장 (원정)",
     "result": "scheduled",
     "score": "VS",
-    "ktPitcher": "미정",
-    "oppPitcher": "미정"
+    "ktPitcher": "대니엘",
+    "oppPitcher": "톨허스트"
   },
   "todayLineup": {
-    "ktPitcher": "미정",
-    "oppPitcher": "미정",
-    "pitcher": "미정",
+    "ktPitcher": "대니엘",
+    "oppPitcher": "톨허스트",
+    "pitcher": "대니엘",
     "batters": []
   },
   "rankings": [
@@ -1352,5 +1352,5 @@
       "score": "VS"
     }
   },
-  "lineupUpdatedAt": "2026-08-19 15:41:35 (KST)"
+  "lineupUpdatedAt": "2026-08-19 15:42:52 (KST)"
 }
