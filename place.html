@@ -333,14 +333,14 @@
       </div>
 
       <div id="foodList" class="place-list">
-        <div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 내 주변 인기 맛집 Top 5를 찾는 중입니다...</div>
+        <div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 내 주변 인기 맛집을 불러오는 중...</div>
       </div>
     </div>
 
     <!-- 2. 카페 탭 -->
     <div id="tab-cafe" class="tab-content">
       <div id="cafeList" class="place-list">
-        <div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 내 주변 인기 카페 Top 5를 찾는 중입니다...</div>
+        <div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 내 주변 인기 카페를 불러오는 중...</div>
       </div>
     </div>
 
@@ -355,7 +355,6 @@
   <div class="toast" id="toastMsg">알림</div>
 
   <script>
-    // Firebase 설정
     const firebaseConfig = {
       apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
       authDomain: "kobe-couple-app.firebaseapp.com",
@@ -410,19 +409,16 @@
       fetchTopPlaces('food');
     }
 
-    // 거리 계산 (Haversine 공식)
     function calculateDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371e3; // meters
+      const R = 6371e3;
       const φ1 = lat1 * Math.PI / 180;
       const φ2 = lat2 * Math.PI / 180;
       const Δφ = (lat2 - lat1) * Math.PI / 180;
       const Δλ = (lon2 - lon1) * Math.PI / 180;
-
       const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
                 Math.cos(φ1) * Math.cos(φ2) *
                 Math.sin(Δλ/2) * Math.sin(Δλ/2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-      return Math.round(R * c);
+      return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
     }
 
     function getLocation() {
@@ -439,73 +435,64 @@
             else if (currentActiveTab === 'tab-cafe') fetchTopPlaces('cafe');
           },
           (err) => {
-            console.warn("GPS 오류:", err);
-            txt.innerText = "기본 위치 (서울) 적용";
+            txt.innerText = "기본 위치 적용";
             if (currentActiveTab === 'tab-food') fetchTopPlaces('food');
             else if (currentActiveTab === 'tab-cafe') fetchTopPlaces('cafe');
           },
-          { enableHighAccuracy: true, timeout: 7000 }
+          { enableHighAccuracy: true, timeout: 5000, maximumAge: 60000 }
         );
       } else {
-        txt.innerText = "GPS 미지원 브라우저";
+        txt.innerText = "GPS 미지원";
         if (currentActiveTab === 'tab-food') fetchTopPlaces('food');
         else if (currentActiveTab === 'tab-cafe') fetchTopPlaces('cafe');
       }
     }
 
-    // 실시간 오픈 장소 엔진을 통한 Top 5 수신
+    // 초고속 노드 중심 쿼리 및 Kumi 초고속 CDN 연동
     async function fetchTopPlaces(type) {
       const container = document.getElementById(type === 'food' ? 'foodList' : 'cafeList');
-      container.innerHTML = `<div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 내 주변 인기 ${type === 'food' ? '맛집' : '카페'} Top 5를 탐색 중...</div>`;
+      container.innerHTML = `<div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 실시간 탐색 중...</div>`;
 
       const amenityTag = type === 'food' ? 'restaurant' : 'cafe';
-      const radius = 2500; // 반경 2.5km
+      const radius = 1200; // 반경 1.2km (초고속 응답 최적화)
 
-      const query = `
-        [out:json][timeout:15];
-        (
-          node["amenity"="${amenityTag}"]["name"](around:${radius},${currentLat},${currentLng});
-          way["amenity"="${amenityTag}"]["name"](around:${radius},${currentLat},${currentLng});
-        );
-        out center 40;
-      `;
+      const query = `[out:json][timeout:5];node["amenity"="${amenityTag}"]["name"](around:${radius},${currentLat},${currentLng});out 25;`;
+      
+      const endpoints = [
+        `https://overpass.kumi.systems/api/interpreter?data=${encodeURIComponent(query)}`,
+        `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`
+      ];
 
       try {
-        const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
+        // 타임아웃 4초 설정으로 무한 대기 방지
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 4000);
+
+        const res = await fetch(endpoints[0], { signal: controller.signal }).catch(() => fetch(endpoints[1]));
+        clearTimeout(timeoutId);
+        
         const json = await res.json();
         
         let places = (json.elements || []).map(el => {
-          const lat = el.lat || (el.center && el.center.lat) || currentLat;
-          const lon = el.lon || (el.center && el.center.lon) || currentLng;
-          const name = el.tags.name || "이름 없는 장소";
+          const lat = el.lat;
+          const lon = el.lon;
+          const name = el.tags.name;
           const cuisine = el.tags.cuisine || el.tags["brand:ko"] || (type === 'cafe' ? '디저트 카페' : '음식점');
           const addr = el.tags["addr:street"] || el.tags["addr:full"] || "주변 위치";
           const dist = calculateDistance(currentLat, currentLng, lat, lon);
 
-          return {
-            id: `place_${el.id}`,
-            name,
-            cuisine,
-            addr,
-            dist,
-            lat,
-            lon
-          };
+          return { id: `place_${el.id}`, name, cuisine, addr, dist, lat, lon };
         });
 
-        // 카테고리 필터
         if (type === 'food' && selectedFoodCategory !== '전체') {
           places = places.filter(p => p.name.includes(selectedFoodCategory) || p.cuisine.includes(selectedFoodCategory));
         }
 
-        // 거리순 정렬 후 Top 5만 추출
         places.sort((a, b) => a.dist - b.dist);
         const top5 = places.slice(0, 5);
 
         renderTopPlaces(top5, type, container);
       } catch (err) {
-        console.error("Top 5 로드 오류:", err);
-        // 네트워크 지연 시 폴백 카드 렌더링
         renderFallbackTop5(type, container);
       }
     }
