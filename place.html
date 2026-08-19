@@ -499,14 +499,14 @@
     function getLocation() {
       const txt = document.getElementById("txtLocation");
       const coord = document.getElementById("txtCoord");
-      txt.innerText = "GPS 수신 중...";
+      if (txt) txt.innerText = "GPS 수신 중...";
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           async (pos) => {
             currentLat = pos.coords.latitude;
             currentLng = pos.coords.longitude;
-            txt.innerText = "내 위치 수신 완료 📍";
+            if (txt) txt.innerText = "내 위치 수신 완료 📍";
             
             try {
               const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${currentLat}&lon=${currentLng}&zoom=18&addressdetails=1`, {
@@ -517,26 +517,26 @@
                 const addr = data.address;
                 const district = addr.borough || addr.city_district || addr.suburb || addr.city || '';
                 const neighborhood = addr.dong || addr.neighbourhood || addr.village || addr.road || '';
-                coord.innerText = `${district} ${neighborhood}`.trim() || "서울 중심가";
+                if (coord) coord.innerText = `${district} ${neighborhood}`.trim() || "서울 중심가";
               } else {
-                coord.innerText = "서울 핫플 권역";
+                if (coord) coord.innerText = "서울 핫플 권역";
               }
             } catch (e) {
-              coord.innerText = "서울 권역";
+              if (coord) coord.innerText = "서울 권역";
             }
 
             renderCuratedList(currentActiveTab === 'tab-food' ? 'food' : 'cafe');
           },
           () => {
-            txt.innerText = "서울 중심 기준 정렬";
-            coord.innerText = "서울시 중구 (기본값)";
+            if (txt) txt.innerText = "서울 중심 기준 정렬";
+            if (coord) coord.innerText = "서울시 중구 (기본값)";
             renderCuratedList(currentActiveTab === 'tab-food' ? 'food' : 'cafe');
           },
           { enableHighAccuracy: true, timeout: 5000 }
         );
       } else {
-        txt.innerText = "GPS 미지원";
-        coord.innerText = "위치 확인 불가";
+        if (txt) txt.innerText = "GPS 미지원";
+        if (coord) coord.innerText = "위치 확인 불가";
         renderCuratedList(currentActiveTab === 'tab-food' ? 'food' : 'cafe');
       }
     }
@@ -569,6 +569,11 @@
       // TOP 15개 슬라이싱
       const top15 = list.slice(0, 15);
 
+      if (top15.length === 0) {
+        container.innerHTML = `<div class="state-box">해당 조건에 일치하는 장소가 없습니다.</div>`;
+        return;
+      }
+
       container.innerHTML = top15.map((p, idx) => {
         const distText = p.dist >= 1000 ? `${(p.dist / 1000).toFixed(1)}km` : `${p.dist}m`;
         const walkMin = Math.max(1, Math.round(p.dist / 67));
@@ -587,7 +592,7 @@
                   <span>⭐ ${p.rating || '4.7'}</span>
                   <span class="review-text">(${p.reviews || '인기 데이트 핫플'})</span>
                 </div>
-                <div class="place-category">${p.cuisine}</div>
+                <div class="place-category">${p.cat || p.cuisine || ''}</div>
               </div>
               <div class="place-distance">
                 <i class="fa-solid ${p.dist < 1500 ? 'fa-person-walking' : 'fa-car'}"></i> 
@@ -617,7 +622,7 @@
                 </a>
               </div>
               <button class="btn-heart ${isSaved ? 'active' : ''}" 
-                onclick="toggleWish(this, '${p.id}', '${p.name.replace(/'/g, "\\'")}', '${p.cuisine}', '${kakaoSearchUrl}', '${p.addr}', '${type}')" 
+                onclick="toggleWish(this, '${p.id}', '${p.name.replace(/'/g, "\\'")}', '${p.cat || p.cuisine || ''}', '${kakaoSearchUrl}', '${p.addr}', '${type}')" 
                 title="또 갈 곳 저장">
                 <i class="fa-solid fa-heart"></i>
               </button>
