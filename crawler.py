@@ -15,11 +15,11 @@ def fetch_json(url):
         with urllib.request.urlopen(req, timeout=15) as res:
             return json.loads(res.read().decode('utf-8'))
     except Exception as e:
-        print(f"JSON Request Error [{url}]: {e}")
+        print(f"JSON 가져오기 오류: {e}")
         return None
 
-def fetch_kbo_mobile_starters():
-    """KBO 공식 모바일 페이지(m.koreabaseball.com)에서 오늘 KT 경기 예고 선발투수 직접 스크래핑"""
+def fetch_kbo_starters_from_web():
+    """KBO 공식 홈페이지에서 오늘 KT 경기 예고 선발투수를 직접 긁어오기"""
     url = "https://m.koreabaseball.com/"
     req = urllib.request.Request(
         url,
@@ -31,14 +31,16 @@ def fetch_kbo_mobile_starters():
     try:
         with urllib.request.urlopen(req, timeout=10) as res:
             html = res.read().decode('utf-8', errors='ignore')
+            # 경기 카드 목록 파싱
             match_blocks = re.findall(r'<li[^>]*>(.*?)</li>', html, re.DOTALL)
             for block in match_blocks:
                 if 'KT' in block or 'kt' in block:
+                    # '선발 : 홍길동' 형태 텍스트 추출
                     pitchers = re.findall(r'선발\s*[:：]?\s*([가-힣a-zA-Z]+)', block)
                     if len(pitchers) >= 2:
                         return {"p1": pitchers[0].strip(), "p2": pitchers[1].strip()}
     except Exception as e:
-        print(f"KBO 모바일 선발투수 파싱 예외: {e}")
+        print(f"선발투수 웹 스크래핑 오류: {e}")
     return None
 
 def fetch_kt_wiz_data():
@@ -46,6 +48,9 @@ def fetch_kt_wiz_data():
     now = datetime.datetime.now(kst_tz)
     year = now.year
     today_str = now.strftime("%Y-%m-%d")
+    
+    # 📌 정규시즌 시작일 (3월 28일 이전 경기 및 시범경기는 순위 계산에서 완전 제외)
+    regular_season_start = f"{year}-03-28"
 
     team_map = {
         'KT': 'kt wiz', 'LG': 'LG 트윈스', 'SSG': 'SSG 랜더스', '두산': '두산 베어스',
@@ -58,6 +63,7 @@ def fetch_kt_wiz_data():
     def get_team_name(code_or_name):
         return team_map.get(code_or_name, code_or_name or "알수없음")
 
+    # 10개 구단 성적 저장소
     kbo_teams = [
         'kt wiz', '삼성 라이온즈', 'LG 트윈스', '두산 베어스', 'KIA 타이거즈',
         '한화 이글스', 'NC 다이노스', '롯데 자이언츠', 'SSG 랜더스', '키움 히어로즈'
@@ -65,8 +71,8 @@ def fetch_kt_wiz_data():
     stats = {t: {"W": 0, "L": 0, "D": 0, "G": 0} for t in kbo_teams}
     h2h_tracker = {t: {"W": 0, "L": 0, "D": 0} for t in kbo_teams}
 
-    # 1. 📅 1년치 KBO 일정 수집
-    sched_url = f"https://api-gw.sports.naver.com/schedule/games?upperCategoryId=kbaseball&fromDate={year}-03-01&toDate={year}-11-30&size=1000"
+    # 1. 📅 기존 방식으로 경기 일정 & 결과 가져오기
+    sched_url = f"https://api-gw.sports.naver.com/schedule/games?upperCategoryId=kbaseball&fromDate={regular_season_start}&toDate={year}-12-31&size=1000"
     s_res = fetch_json(sched_url)
 
     kt_schedule = {}
@@ -78,17 +84,13 @@ def fetch_kt_wiz_data():
             raw_dt = g.get("gameDateTime", "")
             g_date = raw_dt.split("T")[0] if "T" in raw_dt else raw_dt[:10]
 
-            cat_name = str(g.get("categoryName", ""))
-            title = str(g.get("title", ""))
-            l_type = str(g.get("leagueType", ""))
-
-            # 🚫 시범경기만 정확하게 제외 (정규시즌만 허용)
-            if "시범" in cat_name or "시범" in title or l_type in ["DEMONSTRATION", "EXHIBITION"]:
+            # 3월 28일 이전 또는 시범경기는 완벽 제외
+            if g_date < regular_season_start or "시범" in str(g.get("categoryName", "")) or str(g.get("leagueType", "")) == "DEMONSTRATION":
                 continue
 
-            home_raw = g.get("homeTeamName") or g.get("homeTeamCode", "")
-            away_raw = g.get("awayTeamName") or g.get("awayTeamCode", "")
-            home_team = get_team_name(home_raw)
+            h_raw = g.get("homeTeamName") or g.get("homeTeamCode", "")
+            a_raw = g.get("awayTeamName") or g.get("awayTeamCode", "")
+            home_team = get_team_name(h_raw)
             away_team = get_team_name(away_raw)
 
             home_score_val = g.get("homeTeamScore")
@@ -99,7 +101,7 @@ def fetch_kt_wiz_data():
             has_score = (home_score_val is not None and away_score_val is not None and str(home_score_val) != "" and str(away_score_val) != "")
             is_finished = (st_code in ['RESULT', 'END'] or has_score) and ("취소" not in st_txt and st_code != "CANCEL")
 
-            # 🏆 10개 구단 정규시즌 승패 집계
+            # 🏆 정규시즌 경기 결과 누적 (순위 직접 계산용)
             if is_finished:
                 try:
                     h_score = int(home_score_val)
@@ -119,9 +121,9 @@ def fetch_kt_wiz_data():
                 except Exception:
                     pass
 
-            # KT 위즈 경기 처리
-            is_kt_home = (home_team == 'kt wiz' or "KT" in str(home_raw))
-            is_kt_away = (away_team == 'kt wiz' or "KT" in str(away_raw))
+            # KT 위즈 경기 분기
+            is_kt_home = (home_team == 'kt wiz' or "KT" in str(h_raw))
+            is_kt_away = (away_team == 'kt wiz' or "KT" in str(a_raw))
 
             if is_kt_home or is_kt_away:
                 opp_team = away_team if is_kt_home else home_team
@@ -153,8 +155,8 @@ def fetch_kt_wiz_data():
                     except Exception:
                         pass
 
-                kt_pitcher = g.get("homeStarterPitcherName" if is_kt_home else "awayStarterPitcherName") or g.get("homeStarterName" if is_kt_home else "awayStarterName") or "미정"
-                opp_pitcher = g.get("awayStarterPitcherName" if is_kt_home else "homeStarterPitcherName") or g.get("awayStarterName" if is_kt_home else "homeStarterName") or "미정"
+                kt_p = g.get("homeStarterPitcherName" if is_kt_home else "awayStarterPitcherName") or g.get("homeStarterName" if is_kt_home else "awayStarterName") or "미정"
+                opp_p = g.get("awayStarterPitcherName" if is_kt_home else "homeStarterPitcherName") or g.get("awayStarterName" if is_kt_home else "homeStarterName") or "미정"
 
                 game_entry = {
                     "gameId": g.get("gameId"),
@@ -165,15 +167,15 @@ def fetch_kt_wiz_data():
                     "stadium": stadium,
                     "result": res_type,
                     "score": score_str,
-                    "ktPitcher": kt_pitcher,
-                    "oppPitcher": opp_pitcher
+                    "ktPitcher": kt_p,
+                    "oppPitcher": opp_p
                 }
 
                 kt_schedule[g_date] = game_entry
                 if g_date == today_str:
                     today_game_obj = game_entry
 
-    # 2. 📊 순위 직접 계산 (승률 = 승 / (승 + 패))
+    # 2. 📊 정규시즌 공식 순위 직접 계산 (승률 = 승 / (승 + 패))
     def calc_wra(w, l):
         tot = w + l
         return (w / tot) if tot > 0 else 0.0
@@ -204,7 +206,7 @@ def fetch_kt_wiz_data():
             "gameDiff": diff_str
         })
 
-    # 3. ⚔️ 오늘 상대전적
+    # 3. ⚔️ 오늘 상대전적 요약 (직접 계산)
     today_h2h = {"text": "올 시즌 맞대결 기록 없음", "record": "-"}
     if today_game_obj:
         opp = today_game_obj["opponent"]
@@ -220,7 +222,7 @@ def fetch_kt_wiz_data():
             else:
                 today_h2h = {"text": "올 시즌 첫 맞대결", "record": "0승 0패"}
 
-    # 4. ⚾ 선발투수 2중 보강 (KBO 모바일 스크래핑)
+    # 4. ⚾ 오늘 선발투수 홈페이지 직접 스크래핑으로 보강
     today_lineup = {
         "ktPitcher": today_game_obj.get("ktPitcher", "미정") if today_game_obj else "미정",
         "oppPitcher": today_game_obj.get("oppPitcher", "미정") if today_game_obj else "미정",
@@ -228,17 +230,18 @@ def fetch_kt_wiz_data():
         "batters": []
     }
 
+    # API에서 선발투수가 미정으로 오면 홈페이지에서 직접 긁어오기
     if today_game_obj and (today_lineup["ktPitcher"] == "미정" or today_lineup["oppPitcher"] == "미정"):
-        kbo_mobile_p = fetch_kbo_mobile_starters()
-        if kbo_mobile_p:
+        web_starters = fetch_kbo_starters_from_web()
+        if web_starters:
             if today_game_obj["isHome"]:
-                today_lineup["oppPitcher"] = kbo_mobile_p["p1"]
-                today_lineup["ktPitcher"] = kbo_mobile_p["p2"]
-                today_lineup["pitcher"] = kbo_mobile_p["p2"]
+                today_lineup["oppPitcher"] = web_starters["p1"]
+                today_lineup["ktPitcher"] = web_starters["p2"]
+                today_lineup["pitcher"] = web_starters["p2"]
             else:
-                today_lineup["ktPitcher"] = kbo_mobile_p["p1"]
-                today_lineup["pitcher"] = kbo_mobile_p["p1"]
-                today_lineup["oppPitcher"] = kbo_mobile_p["p2"]
+                today_lineup["ktPitcher"] = web_starters["p1"]
+                today_lineup["pitcher"] = web_starters["p1"]
+                today_lineup["oppPitcher"] = web_starters["p2"]
 
     # 5. 최종 JSON 출력
     final_payload = {
@@ -253,7 +256,7 @@ def fetch_kt_wiz_data():
     with open("ktwiz_data.json", "w", encoding="utf-8") as f:
         json.dump(final_payload, f, ensure_ascii=False, indent=2)
 
-    print(f"✅ [동기화 완료] 순위: {len(rankings)}팀 정규시즌 계산 완료 | KT경기 수: {len(kt_schedule)}개 | 오늘: {today_game_obj['opponent'] if today_game_obj else '경기 없음'}")
+    print(f"✅ 완료: 3/28 정규시즌 기준 순위 직접 계산({len(rankings)}팀) | 선발투수: {today_lineup['ktPitcher']} vs {today_lineup['oppPitcher']}")
 
 if __name__ == "__main__":
     fetch_kt_wiz_data()
