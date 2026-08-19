@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-19 14:24:17 (KST)",
+  "updatedAt": "2026-08-19 14:26:13 (KST)",
   "todayMatch": {
     "gameId": "20260819KTLG02026",
     "date": "2026-08-19",
@@ -22,7 +22,108 @@
     "pitcher": "미정",
     "batters": []
   },
-  "rankings": [],
+  "rankings": [
+    {
+      "rank": "1",
+      "teamName": "kt wiz",
+      "games": "123",
+      "win": "62",
+      "draw": "21",
+      "lose": "40",
+      "wra": "0.608",
+      "gameDiff": "0.0"
+    },
+    {
+      "rank": "2",
+      "teamName": "삼성 라이온즈",
+      "games": "122",
+      "win": "62",
+      "draw": "18",
+      "lose": "42",
+      "wra": "0.596",
+      "gameDiff": "1"
+    },
+    {
+      "rank": "3",
+      "teamName": "LG 트윈스",
+      "games": "123",
+      "win": "59",
+      "draw": "16",
+      "lose": "48",
+      "wra": "0.551",
+      "gameDiff": "5.5"
+    },
+    {
+      "rank": "4",
+      "teamName": "KIA 타이거즈",
+      "games": "123",
+      "win": "57",
+      "draw": "18",
+      "lose": "48",
+      "wra": "0.543",
+      "gameDiff": "6.5"
+    },
+    {
+      "rank": "5",
+      "teamName": "두산 베어스",
+      "games": "122",
+      "win": "56",
+      "draw": "18",
+      "lose": "48",
+      "wra": "0.538",
+      "gameDiff": "7"
+    },
+    {
+      "rank": "6",
+      "teamName": "한화 이글스",
+      "games": "123",
+      "win": "48",
+      "draw": "21",
+      "lose": "54",
+      "wra": "0.471",
+      "gameDiff": "14"
+    },
+    {
+      "rank": "7",
+      "teamName": "NC 다이노스",
+      "games": "122",
+      "win": "46",
+      "draw": "23",
+      "lose": "53",
+      "wra": "0.465",
+      "gameDiff": "14.5"
+    },
+    {
+      "rank": "8",
+      "teamName": "롯데 자이언츠",
+      "games": "122",
+      "win": "47",
+      "draw": "18",
+      "lose": "57",
+      "wra": "0.452",
+      "gameDiff": "16"
+    },
+    {
+      "rank": "9",
+      "teamName": "SSG 랜더스",
+      "games": "123",
+      "win": "44",
+      "draw": "17",
+      "lose": "62",
+      "wra": "0.415",
+      "gameDiff": "20"
+    },
+    {
+      "rank": "10",
+      "teamName": "키움 히어로즈",
+      "games": "123",
+      "win": "40",
+      "draw": "14",
+      "lose": "69",
+      "wra": "0.367",
+      "gameDiff": "25.5"
+    }
+  ],
   "schedule": {
     "2026-03-28": {
       "gameId": "20260328KTLG02026",
