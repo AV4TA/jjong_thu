@@ -1,0 +1,28 @@
+// place/placesData.js 파일 내용
+const CURATED_PLACES = [
+  ...(typeof CURATED_PLACES_DOBONG !== 'undefined' ? CURATED_PLACES_DOBONG : []),
+  ...(typeof CURATED_PLACES_DONGDAEMUN !== 'undefined' ? CURATED_PLACES_DONGDAEMUN : []),
+  ...(typeof CURATED_PLACES_DONGJAK !== 'undefined' ? CURATED_PLACES_DONGJAK : []),
+  ...(typeof CURATED_PLACES_EUNPYEONG !== 'undefined' ? CURATED_PLACES_EUNPYEONG : []),
+  ...(typeof CURATED_PLACES_GANGBUK !== 'undefined' ? CURATED_PLACES_GANGBUK : []),
+  ...(typeof CURATED_PLACES_GANGDONG !== 'undefined' ? CURATED_PLACES_GANGDONG : []),
+  ...(typeof CURATED_PLACES_GANGNAM !== 'undefined' ? CURATED_PLACES_GANGNAM : []),
+  ...(typeof CURATED_PLACES_GANGSEO !== 'undefined' ? CURATED_PLACES_GANGSEO : []),
+  ...(typeof CURATED_PLACES_GEUMCHEON !== 'undefined' ? CURATED_PLACES_GEUMCHEON : []),
+  ...(typeof CURATED_PLACES_GURO !== 'undefined' ? CURATED_PLACES_GURO : []),
+  ...(typeof CURATED_PLACES_GWANAK !== 'undefined' ? CURATED_PLACES_GWANAK : []),
+  ...(typeof CURATED_PLACES_GWANGJIN !== 'undefined' ? CURATED_PLACES_GWANGJIN : []),
+  ...(typeof CURATED_PLACES_JONGNO !== 'undefined' ? CURATED_PLACES_JONGNO : []),
+  ...(typeof CURATED_PLACES_JUNGGU !== 'undefined' ? CURATED_PLACES_JUNGGU : []),
+  ...(typeof CURATED_PLACES_JUNGNANG !== 'undefined' ? CURATED_PLACES_JUNGNANG : []),
+  ...(typeof CURATED_PLACES_MAPO !== 'undefined' ? CURATED_PLACES_MAPO : []),
+  ...(typeof CURATED_PLACES_NOWON !== 'undefined' ? CURATED_PLACES_NOWON : []),
+  ...(typeof CURATED_PLACES_SEOCHO !== 'undefined' ? CURATED_PLACES_SEOCHO : []),
+  ...(typeof CURATED_PLACES_SEODAEMUN !== 'undefined' ? CURATED_PLACES_SEODAEMUN : []),
+  ...(typeof CURATED_PLACES_SEONGBUK !== 'undefined' ? CURATED_PLACES_SEONGBUK : []),
+  ...(typeof CURATED_PLACES_SEONGDONG !== 'undefined' ? CURATED_PLACES_SEONGDONG : []),
+  ...(typeof CURATED_PLACES_SONGPA !== 'undefined' ? CURATED_PLACES_SONGPA : []),
+  ...(typeof CURATED_PLACES_YANGCHEON !== 'undefined' ? CURATED_PLACES_YANGCHEON : []),
+  ...(typeof CURATED_PLACES_YEONGDEUNGPO !== 'undefined' ? CURATED_PLACES_YEONGDEUNGPO : []),
+  ...(typeof CURATED_PLACES_YONGSAN !== 'undefined' ? CURATED_PLACES_YONGSAN : [])
+];
