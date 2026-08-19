@@ -1,105 +1,707 @@
 {
-  "updatedAt": "2026-08-19 13:36:52 (KST)",
+  "updatedAt": "2026-08-19 13:41:27",
+  "todayMatch": {
+    "date": "2026-08-19",
+    "opponent": "LG",
+    "result": "scheduled"
+  },
   "rankings": [
     {
       "rank": "1",
-      "teamName": "KT",
-      "games": "103",
-      "win": "62",
-      "lose": "39",
-      "draw": "2",
-      "wra": "0.614",
-      "gameDiff": "0"
+      "teamName": "kt wiz",
+      "win": "0",
+      "lose": "0",
+      "draw": "0",
+      "wra": "0.000"
     },
     {
       "rank": "2",
-      "teamName": "삼성",
-      "games": "105",
-      "win": "62",
-      "lose": "41",
-      "draw": "2",
-      "wra": "0.602",
-      "gameDiff": "1"
+      "teamName": "삼성 라이온즈",
+      "win": "0",
+      "lose": "0",
+      "draw": "0",
+      "wra": "0.000"
     },
     {
       "rank": "3",
-      "teamName": "LG",
-      "games": "107",
-      "win": "58",
-      "lose": "48",
-      "draw": "1",
-      "wra": "0.547",
-      "gameDiff": "6.5"
+      "teamName": "LG 트윈스",
+      "win": "0",
+      "lose": "0",
+      "draw": "0",
+      "wra": "0.000"
     },
     {
       "rank": "4",
-      "teamName": "KIA",
-      "games": "106",
-      "win": "56",
-      "lose": "48",
-      "draw": "2",
-      "wra": "0.538",
-      "gameDiff": "7.5"
+      "teamName": "두산 베어스",
+      "win": "0",
+      "lose": "0",
+      "draw": "0",
+      "wra": "0.000"
     },
     {
       "rank": "5",
-      "teamName": "두산",
-      "games": "107",
-      "win": "55",
-      "lose": "48",
-      "draw": "4",
-      "wra": "0.534",
-      "gameDiff": "8"
+      "teamName": "KIA 타이거즈",
+      "win": "0",
+      "lose": "0",
+      "draw": "0",
+      "wra": "0.000"
     },
     {
       "rank": "6",
-      "teamName": "한화",
-      "games": "104",
-      "win": "48",
-      "lose": "53",
-      "draw": "3",
-      "wra": "0.475",
-      "gameDiff": "14"
+      "teamName": "한화 이글스",
+      "win": "0",
+      "lose": "0",
+      "draw": "0",
+      "wra": "0.000"
     },
     {
       "rank": "7",
-      "teamName": "NC",
-      "games": "100",
-      "win": "46",
-      "lose": "52",
-      "draw": "2",
-      "wra": "0.469",
-      "gameDiff": "14.5"
+      "teamName": "NC 다이노스",
+      "win": "0",
+      "lose": "0",
+      "draw": "0",
+      "wra": "0.000"
     },
     {
       "rank": "8",
-      "teamName": "롯데",
-      "games": "105",
-      "win": "46",
-      "lose": "57",
-      "draw": "2",
-      "wra": "0.447",
-      "gameDiff": "17"
+      "teamName": "롯데 자이언츠",
+      "win": "0",
+      "lose": "0",
+      "draw": "0",
+      "wra": "0.000"
     },
     {
       "rank": "9",
-      "teamName": "SSG",
-      "games": "109",
-      "win": "43",
-      "lose": "62",
-      "draw": "4",
-      "wra": "0.410",
-      "gameDiff": "21"
+      "teamName": "SSG 랜더스",
+      "win": "0",
+      "lose": "0",
+      "draw": "0",
+      "wra": "0.000"
     },
     {
       "rank": "10",
-      "teamName": "키움",
-      "games": "110",
-      "win": "40",
-      "lose": "68",
-      "draw": "2",
-      "wra": "0.370",
-      "gameDiff": "25.5"
+      "teamName": "키움 히어로즈",
+      "win": "0",
+      "lose": "0",
+      "draw": "0",
+      "wra": "0.000"
     }
-  ]
+  ],
+  "schedule": {
+    "2026-03-28": {
+      "date": "2026-03-28",
+      "opponent": "LG",
+      "result": "win"
+    },
+    "2026-03-29": {
+      "date": "2026-03-29",
+      "opponent": "LG",
+      "result": "win"
+    },
+    "2026-03-31": {
+      "date": "2026-03-31",
+      "opponent": "한화",
+      "result": "win"
+    },
+    "2026-04-01": {
+      "date": "2026-04-01",
+      "opponent": "한화",
+      "result": "win"
+    },
+    "2026-04-02": {
+      "date": "2026-04-02",
+      "opponent": "한화",
+      "result": "win"
+    },
+    "2026-04-03": {
+      "date": "2026-04-03",
+      "opponent": "삼성",
+      "result": "lose"
+    },
+    "2026-04-04": {
+      "date": "2026-04-04",
+      "opponent": "삼성",
+      "result": "lose"
+    },
+    "2026-04-05": {
+      "date": "2026-04-05",
+      "opponent": "삼성",
+      "result": "win"
+    },
+    "2026-04-07": {
+      "date": "2026-04-07",
+      "opponent": "롯데",
+      "result": "win"
+    },
+    "2026-04-08": {
+      "date": "2026-04-08",
+      "opponent": "롯데",
+      "result": "lose"
+    },
+    "2026-04-09": {
+      "date": "2026-04-09",
+      "opponent": "롯데",
+      "result": "scheduled"
+    },
+    "2026-04-10": {
+      "date": "2026-04-10",
+      "opponent": "두산",
+      "result": "lose"
+    },
+    "2026-04-11": {
+      "date": "2026-04-11",
+      "opponent": "두산",
+      "result": "win"
+    },
+    "2026-04-12": {
+      "date": "2026-04-12",
+      "opponent": "두산",
+      "result": "win"
+    },
+    "2026-04-14": {
+      "date": "2026-04-14",
+      "opponent": "NC",
+      "result": "lose"
+    },
+    "2026-04-15": {
+      "date": "2026-04-15",
+      "opponent": "NC",
+      "result": "win"
+    },
+    "2026-04-16": {
+      "date": "2026-04-16",
+      "opponent": "NC",
+      "result": "win"
+    },
+    "2026-04-17": {
+      "date": "2026-04-17",
+      "opponent": "키움",
+      "result": "win"
+    },
+    "2026-04-18": {
+      "date": "2026-04-18",
+      "opponent": "키움",
+      "result": "win"
+    },
+    "2026-04-19": {
+      "date": "2026-04-19",
+      "opponent": "키움",
+      "result": "lose"
+    },
+    "2026-04-21": {
+      "date": "2026-04-21",
+      "opponent": "KIA",
+      "result": "win"
+    },
+    "2026-04-22": {
+      "date": "2026-04-22",
+      "opponent": "KIA",
+      "result": "win"
+    },
+    "2026-04-23": {
+      "date": "2026-04-23",
+      "opponent": "KIA",
+      "result": "win"
+    },
+    "2026-04-24": {
+      "date": "2026-04-24",
+      "opponent": "SSG",
+      "result": "lose"
+    },
+    "2026-04-25": {
+      "date": "2026-04-25",
+      "opponent": "SSG",
+      "result": "lose"
+    },
+    "2026-04-26": {
+      "date": "2026-04-26",
+      "opponent": "SSG",
+      "result": "win"
+    },
+    "2026-04-28": {
+      "date": "2026-04-28",
+      "opponent": "LG",
+      "result": "win"
+    },
+    "2026-04-29": {
+      "date": "2026-04-29",
+      "opponent": "LG",
+      "result": "win"
+    },
+    "2026-04-30": {
+      "date": "2026-04-30",
+      "opponent": "LG",
+      "result": "lose"
+    },
+    "2026-05-01": {
+      "date": "2026-05-01",
+      "opponent": "KIA",
+      "result": "win"
+    },
+    "2026-05-02": {
+      "date": "2026-05-02",
+      "opponent": "KIA",
+      "result": "lose"
+    },
+    "2026-05-03": {
+      "date": "2026-05-03",
+      "opponent": "KIA",
+      "result": "win"
+    },
+    "2026-05-05": {
+      "date": "2026-05-05",
+      "opponent": "롯데",
+      "result": "win"
+    },
+    "2026-05-06": {
+      "date": "2026-05-06",
+      "opponent": "롯데",
+      "result": "lose"
+    },
+    "2026-05-07": {
+      "date": "2026-05-07",
+      "opponent": "롯데",
+      "result": "scheduled"
+    },
+    "2026-05-08": {
+      "date": "2026-05-08",
+      "opponent": "키움",
+      "result": "win"
+    },
+    "2026-05-09": {
+      "date": "2026-05-09",
+      "opponent": "키움",
+      "result": "draw"
+    },
+    "2026-05-10": {
+      "date": "2026-05-10",
+      "opponent": "키움",
+      "result": "lose"
+    },
+    "2026-05-12": {
+      "date": "2026-05-12",
+      "opponent": "SSG",
+      "result": "lose"
+    },
+    "2026-05-13": {
+      "date": "2026-05-13",
+      "opponent": "SSG",
+      "result": "win"
+    },
+    "2026-05-14": {
+      "date": "2026-05-14",
+      "opponent": "SSG",
+      "result": "lose"
+    },
+    "2026-05-15": {
+      "date": "2026-05-15",
+      "opponent": "한화",
+      "result": "lose"
+    },
+    "2026-05-16": {
+      "date": "2026-05-16",
+      "opponent": "한화",
+      "result": "lose"
+    },
+    "2026-05-17": {
+      "date": "2026-05-17",
+      "opponent": "한화",
+      "result": "win"
+    },
+    "2026-05-19": {
+      "date": "2026-05-19",
+      "opponent": "삼성",
+      "result": "lose"
+    },
+    "2026-05-20": {
+      "date": "2026-05-20",
+      "opponent": "삼성",
+      "result": "scheduled"
+    },
+    "2026-05-21": {
+      "date": "2026-05-21",
+      "opponent": "삼성",
+      "result": "lose"
+    },
+    "2026-05-22": {
+      "date": "2026-05-22",
+      "opponent": "NC",
+      "result": "win"
+    },
+    "2026-05-23": {
+      "date": "2026-05-23",
+      "opponent": "NC",
+      "result": "win"
+    },
+    "2026-05-24": {
+      "date": "2026-05-24",
+      "opponent": "NC",
+      "result": "lose"
+    },
+    "2026-05-26": {
+      "date": "2026-05-26",
+      "opponent": "두산",
+      "result": "win"
+    },
+    "2026-05-27": {
+      "date": "2026-05-27",
+      "opponent": "두산",
+      "result": "lose"
+    },
+    "2026-05-28": {
+      "date": "2026-05-28",
+      "opponent": "두산",
+      "result": "win"
+    },
+    "2026-05-29": {
+      "date": "2026-05-29",
+      "opponent": "키움",
+      "result": "win"
+    },
+    "2026-05-30": {
+      "date": "2026-05-30",
+      "opponent": "키움",
+      "result": "win"
+    },
+    "2026-05-31": {
+      "date": "2026-05-31",
+      "opponent": "키움",
+      "result": "win"
+    },
+    "2026-06-02": {
+      "date": "2026-06-02",
+      "opponent": "LG",
+      "result": "lose"
+    },
+    "2026-06-03": {
+      "date": "2026-06-03",
+      "opponent": "LG",
+      "result": "win"
+    },
+    "2026-06-04": {
+      "date": "2026-06-04",
+      "opponent": "LG",
+      "result": "lose"
+    },
+    "2026-06-05": {
+      "date": "2026-06-05",
+      "opponent": "SSG",
+      "result": "lose"
+    },
+    "2026-06-06": {
+      "date": "2026-06-06",
+      "opponent": "SSG",
+      "result": "win"
+    },
+    "2026-06-07": {
+      "date": "2026-06-07",
+      "opponent": "SSG",
+      "result": "lose"
+    },
+    "2026-06-09": {
+      "date": "2026-06-09",
+      "opponent": "삼성",
+      "result": "win"
+    },
+    "2026-06-10": {
+      "date": "2026-06-10",
+      "opponent": "삼성",
+      "result": "win"
+    },
+    "2026-06-11": {
+      "date": "2026-06-11",
+      "opponent": "삼성",
+      "result": "lose"
+    },
+    "2026-06-12": {
+      "date": "2026-06-12",
+      "opponent": "NC",
+      "result": "win"
+    },
+    "2026-06-13": {
+      "date": "2026-06-13",
+      "opponent": "NC",
+      "result": "win"
+    },
+    "2026-06-14": {
+      "date": "2026-06-14",
+      "opponent": "NC",
+      "result": "scheduled"
+    },
+    "2026-06-16": {
+      "date": "2026-06-16",
+      "opponent": "두산",
+      "result": "win"
+    },
+    "2026-06-17": {
+      "date": "2026-06-17",
+      "opponent": "두산",
+      "result": "win"
+    },
+    "2026-06-18": {
+      "date": "2026-06-18",
+      "opponent": "두산",
+      "result": "lose"
+    },
+    "2026-06-19": {
+      "date": "2026-06-19",
+      "opponent": "KIA",
+      "result": "lose"
+    },
+    "2026-06-20": {
+      "date": "2026-06-20",
+      "opponent": "KIA",
+      "result": "win"
+    },
+    "2026-06-21": {
+      "date": "2026-06-21",
+      "opponent": "KIA",
+      "result": "lose"
+    },
+    "2026-06-23": {
+      "date": "2026-06-23",
+      "opponent": "SSG",
+      "result": "win"
+    },
+    "2026-06-24": {
+      "date": "2026-06-24",
+      "opponent": "SSG",
+      "result": "lose"
+    },
+    "2026-06-25": {
+      "date": "2026-06-25",
+      "opponent": "SSG",
+      "result": "win"
+    },
+    "2026-06-26": {
+      "date": "2026-06-26",
+      "opponent": "삼성",
+      "result": "lose"
+    },
+    "2026-06-27": {
+      "date": "2026-06-27",
+      "opponent": "삼성",
+      "result": "lose"
+    },
+    "2026-06-28": {
+      "date": "2026-06-28",
+      "opponent": "삼성",
+      "result": "lose"
+    },
+    "2026-06-30": {
+      "date": "2026-06-30",
+      "opponent": "한화",
+      "result": "scheduled"
+    },
+    "2026-07-01": {
+      "date": "2026-07-01",
+      "opponent": "한화",
+      "result": "win"
+    },
+    "2026-07-02": {
+      "date": "2026-07-02",
+      "opponent": "한화",
+      "result": "lose"
+    },
+    "2026-07-03": {
+      "date": "2026-07-03",
+      "opponent": "롯데",
+      "result": "lose"
+    },
+    "2026-07-04": {
+      "date": "2026-07-04",
+      "opponent": "롯데",
+      "result": "lose"
+    },
+    "2026-07-05": {
+      "date": "2026-07-05",
+      "opponent": "롯데",
+      "result": "win"
+    },
+    "2026-07-07": {
+      "date": "2026-07-07",
+      "opponent": "키움",
+      "result": "win"
+    },
+    "2026-07-08": {
+      "date": "2026-07-08",
+      "opponent": "키움",
+      "result": "win"
+    },
+    "2026-07-09": {
+      "date": "2026-07-09",
+      "opponent": "키움",
+      "result": "scheduled"
+    },
+    "2026-07-16": {
+      "date": "2026-07-16",
+      "opponent": "LG",
+      "result": "win"
+    },
+    "2026-07-17": {
+      "date": "2026-07-17",
+      "opponent": "LG",
+      "result": "win"
+    },
+    "2026-07-18": {
+      "date": "2026-07-18",
+      "opponent": "LG",
+      "result": "win"
+    },
+    "2026-07-19": {
+      "date": "2026-07-19",
+      "opponent": "LG",
+      "result": "win"
+    },
+    "2026-07-21": {
+      "date": "2026-07-21",
+      "opponent": "두산",
+      "result": "draw"
+    },
+    "2026-07-22": {
+      "date": "2026-07-22",
+      "opponent": "두산",
+      "result": "scheduled"
+    },
+    "2026-07-23": {
+      "date": "2026-07-23",
+      "opponent": "두산",
+      "result": "scheduled"
+    },
+    "2026-07-24": {
+      "date": "2026-07-24",
+      "opponent": "롯데",
+      "result": "win"
+    },
+    "2026-07-25": {
+      "date": "2026-07-25",
+      "opponent": "롯데",
+      "result": "win"
+    },
+    "2026-07-26": {
+      "date": "2026-07-26",
+      "opponent": "롯데",
+      "result": "lose"
+    },
+    "2026-07-28": {
+      "date": "2026-07-28",
+      "opponent": "NC",
+      "result": "win"
+    },
+    "2026-07-29": {
+      "date": "2026-07-29",
+      "opponent": "NC",
+      "result": "win"
+    },
+    "2026-07-30": {
+      "date": "2026-07-30",
+      "opponent": "NC",
+      "result": "win"
+    },
+    "2026-07-31": {
+      "date": "2026-07-31",
+      "opponent": "한화",
+      "result": "win"
+    },
+    "2026-08-01": {
+      "date": "2026-08-01",
+      "opponent": "한화",
+      "result": "win"
+    },
+    "2026-08-02": {
+      "date": "2026-08-02",
+      "opponent": "한화",
+      "result": "win"
+    },
+    "2026-08-04": {
+      "date": "2026-08-04",
+      "opponent": "KIA",
+      "result": "scheduled"
+    },
+    "2026-08-05": {
+      "date": "2026-08-05",
+      "opponent": "KIA",
+      "result": "scheduled"
+    },
+    "2026-08-06": {
+      "date": "2026-08-06",
+      "opponent": "KIA",
+      "result": "scheduled"
+    },
+    "2026-08-07": {
+      "date": "2026-08-07",
+      "opponent": "롯데",
+      "result": "scheduled"
+    },
+    "2026-08-08": {
+      "date": "2026-08-08",
+      "opponent": "롯데",
+      "result": "scheduled"
+    },
+    "2026-08-09": {
+      "date": "2026-08-09",
+      "opponent": "롯데",
+      "result": "scheduled"
+    },
+    "2026-08-11": {
+      "date": "2026-08-11",
+      "opponent": "NC",
+      "result": "win"
+    },
+    "2026-08-12": {
+      "date": "2026-08-12",
+      "opponent": "NC",
+      "result": "lose"
+    },
+    "2026-08-13": {
+      "date": "2026-08-13",
+      "opponent": "NC",
+      "result": "lose"
+    },
+    "2026-08-14": {
+      "date": "2026-08-14",
+      "opponent": "키움",
+      "result": "win"
+    },
+    "2026-08-15": {
+      "date": "2026-08-15",
+      "opponent": "키움",
+      "result": "lose"
+    },
+    "2026-08-16": {
+      "date": "2026-08-16",
+      "opponent": "키움",
+      "result": "win"
+    },
+    "2026-08-18": {
+      "date": "2026-08-18",
+      "opponent": "LG",
+      "result": "lose"
+    },
+    "2026-08-19": {
+      "date": "2026-08-19",
+      "opponent": "LG",
+      "result": "scheduled"
+    },
+    "2026-08-20": {
+      "date": "2026-08-20",
+      "opponent": "LG",
+      "result": "scheduled"
+    },
+    "2026-08-21": {
+      "date": "2026-08-21",
+      "opponent": "SSG",
+      "result": "scheduled"
+    },
+    "2026-08-22": {
+      "date": "2026-08-22",
+      "opponent": "SSG",
+      "result": "scheduled"
+    },
+    "2026-08-23": {
+      "date": "2026-08-23",
+      "opponent": "SSG",
+      "result": "scheduled"
+    }
+  }
 }
