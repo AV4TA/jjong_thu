@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>뚜쫑 서울 데이트 🍽️ | 서울 맛집 & 카페 TOP 5</title>
+  <title>뚜쫑 서울 데이트 🍽️ | 서울 맛집 & 카페 TOP 15</title>
 
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -19,8 +19,8 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <!-- 데이터 파일 연동 -->
-  <script src="placesData.js"></script>
+  <!-- 데이터 통합 파일 연동 (place 폴더 안) -->
+  <script src="place/placesData.js"></script>
 
   <style>
     :root {
@@ -359,7 +359,7 @@
     <div class="header-left">
       <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i></a>
       <div>
-        <div class="header-title">서울 데이트 맛집 & 카페 TOP 5 ✨</div>
+        <div class="header-title">서울 데이트 맛집 & 카페 TOP 15 ✨</div>
       </div>
     </div>
   </header>
@@ -375,8 +375,8 @@
     </div>
 
     <div class="tab-bar">
-      <button class="tab-btn active" onclick="switchTab('tab-food', this)">🍽️ 서울 맛집 TOP 5</button>
-      <button class="tab-btn" onclick="switchTab('tab-cafe', this)">☕ 감성 카페 TOP 5</button>
+      <button class="tab-btn active" onclick="switchTab('tab-food', this)">🍽️ 서울 맛집 TOP 15</button>
+      <button class="tab-btn" onclick="switchTab('tab-cafe', this)">☕ 감성 카페 TOP 15</button>
       <button class="tab-btn" onclick="switchTab('tab-wish', this)">💖 또 갈 곳</button>
     </div>
 
@@ -440,7 +440,7 @@
     let currentLng = 126.9780;
     let selectedFoodCategory = '전체';
     let currentActiveTab = 'tab-food';
-    let currentSortMode = 'dist'; // 기본 정렬: 거리순 ('dist' 또는 'rating')
+    let currentSortMode = 'dist'; 
     let wishMap = {};
 
     function showToast(msg) {
@@ -469,11 +469,9 @@
       renderCuratedList('food');
     }
 
-    // 정렬 모드 변경 (거리순 vs 별점순)
     function setSortMode(mode, btn) {
       currentSortMode = mode;
       
-      // 버튼 활성화 디자인 동기화
       document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
       if (mode === 'dist') {
         document.getElementById('btnSortDist').classList.add('active');
@@ -557,22 +555,21 @@
         list = list.filter(p => p.cat === selectedFoodCategory);
       }
 
-      // 거리 계산 삽입
       list = list.map(p => ({
         ...p,
         dist: calculateDistance(currentLat, currentLng, p.lat, p.lon)
       }));
 
-      // 🌟 정렬 로직 (가까운순 vs 별점순)
       if (currentSortMode === 'dist') {
         list.sort((a, b) => a.dist - b.dist);
       } else if (currentSortMode === 'rating') {
         list.sort((a, b) => parseFloat(b.rating || 4.5) - parseFloat(a.rating || 4.5));
       }
 
-      const top5 = list.slice(0, 5);
+      // TOP 15개 슬라이싱
+      const top15 = list.slice(0, 15);
 
-      container.innerHTML = top5.map((p, idx) => {
+      container.innerHTML = top15.map((p, idx) => {
         const distText = p.dist >= 1000 ? `${(p.dist / 1000).toFixed(1)}km` : `${p.dist}m`;
         const walkMin = Math.max(1, Math.round(p.dist / 67));
         const isSaved = Boolean(wishMap[p.id]);
