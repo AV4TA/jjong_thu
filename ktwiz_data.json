@@ -11,7 +11,9 @@
     "score": "VS"
   },
   "todayLineup": {
-    "pitcher": "미발표",
+    "ktPitcher": "미정",
+    "oppPitcher": "미정",
+    "pitcher": "미정",
     "batters": []
   },
   "rankings": [
@@ -1347,5 +1349,6 @@
       "result": "scheduled",
       "score": "VS"
     }
-  }
+  },
+  "lineupUpdatedAt": "2026-08-19 15:05:45 (KST)"
 }
