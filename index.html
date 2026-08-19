@@ -154,7 +154,7 @@
       line-height: 1.5;
     }
 
-    /* 🔒 6자리 PIN 잠금 화면 스타일 */
+    /* 🔒 PIN 잠금 화면 */
     .pin-overlay {
       position: fixed;
       inset: 0;
@@ -188,7 +188,6 @@
       font-weight: 600;
     }
 
-    /* 6자리 도트 인디케이터 */
     .pin-dots {
       display: flex;
       gap: 14px;
@@ -202,13 +201,12 @@
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .pin-dot.filled {
-      background: #ff6b81;
-      border-color: #ff6b81;
-      box-shadow: 0 0 14px rgba(255, 107, 129, 0.7);
+      background: #ff5e7e;
+      border-color: #ff5e7e;
+      box-shadow: 0 0 14px rgba(255, 94, 126, 0.7);
       transform: scale(1.15);
     }
 
-    /* 3x4 키패드 */
     .pin-keypad {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -244,7 +242,6 @@
       color: white;
     }
 
-    /* 오답 시 흔들림 애니메이션 */
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       20%, 60% { transform: translateX(-9px); }
@@ -255,11 +252,10 @@
 </head>
 <body>
 
-  <!-- 🔒 뚜쫑 공간 6자리 PIN 잠금 오버레이 -->
   <div id="pinLockScreen" class="pin-overlay">
     <div class="pin-badge">💖</div>
     <div class="pin-title">뚜쫑 비밀 공간</div>
-    <div class="pin-desc">암호를 입력해주세요</div>
+    <div class="pin-desc">둘만의 6자리 암호를 입력해주세요</div>
 
     <div class="pin-dots" id="pinDotsContainer">
       <div class="pin-dot"></div>
@@ -362,12 +358,15 @@
   </div>
 
   <script>
-    // 💡 두 분이 사용하실 6자리 비밀번호를 설정하세요 (예: 201031)
-    const CORRECT_PIN = "100609";
+    const PIN_HASH = "81c3c97800ba8cb4f5f5c3a372330a846c4f0376d40f2b2db841f4f5a34e028b";
 
     let enteredPin = "";
 
-    // 세션 잠금 해제 여부 확인
+    async function sha256(str) {
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(x => x.toString(16).padStart(2, "0")).join("");
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       const isUnlocked = sessionStorage.getItem("ddo_jjong_unlocked");
       if (isUnlocked === "true") {
@@ -382,7 +381,7 @@
       updatePinDots();
 
       if (enteredPin.length === 6) {
-        setTimeout(verifyPin, 120);
+        setTimeout(verifyPin, 100);
       }
     }
 
@@ -409,8 +408,10 @@
       });
     }
 
-    function verifyPin() {
-      if (enteredPin === CORRECT_PIN) {
+    async function verifyPin() {
+      const inputHash = await sha256(enteredPin);
+      
+      if (inputHash === PIN_HASH) {
         sessionStorage.setItem("ddo_jjong_unlocked", "true");
         const lockEl = document.getElementById("pinLockScreen");
         if (lockEl) lockEl.classList.add("hidden");
@@ -426,11 +427,10 @@
       }
     }
 
-    // 서비스 워커 등록 (PWA 앱 설치 활성화)
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js');
     }
-    // D-Day 계산
+
     const tripDate = new Date('2026-08-30');
     const today = new Date();
     tripDate.setHours(0,0,0,0);
