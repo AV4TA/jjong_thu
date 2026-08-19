@@ -5,8 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>뚜쫑 주변 데이트 🍽️ | 맛집 & 카페</title>
 
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#ff758c" />
+
+  <link rel="apple-touch-icon" href="https://api.iconify.design/twemoji:fork-and-knife-with-plate.svg" />
+  <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/twemoji:fork-and-knife-with-plate.svg" />
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&family=Pretendard:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
   <style>
     :root {
@@ -21,9 +32,8 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 50px; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 70px; }
 
-    /* 헤더 */
     .app-header {
       background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
       color: white;
@@ -51,7 +61,32 @@
 
     .container { max-width: 520px; margin: 0 auto; padding: 14px 16px; }
 
-    /* 메인 3개 탭 바 */
+    .location-bar {
+      background: white;
+      padding: 10px 16px;
+      border-radius: 14px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .btn-refresh-gps {
+      background: var(--primary-soft);
+      border: none;
+      color: var(--primary);
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
     .tab-bar {
       display: flex;
       gap: 6px;
@@ -83,13 +118,12 @@
       color: white;
     }
 
-    /* 서브 카테고리 칩 (가로 스크롤) */
     .filter-scroll-box {
       display: flex;
       gap: 8px;
       overflow-x: auto;
       padding-bottom: 8px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       scrollbar-width: none;
     }
     .filter-scroll-box::-webkit-scrollbar { display: none; }
@@ -110,19 +144,138 @@
       border-color: #2f3542;
     }
 
-    /* 탭 콘텐츠 영역 */
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    .placeholder-box {
+    .place-list { display: flex; flex-direction: column; gap: 12px; }
+    .place-card {
       background: white;
       border-radius: 18px;
-      padding: 40px 20px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+    }
+    .place-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .place-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #2d3436;
+      line-height: 1.3;
+    }
+    .place-category {
+      font-size: 0.78rem;
+      color: #747d8c;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .place-distance {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #f1f2f6;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--primary);
+      white-space: nowrap;
+    }
+    .place-address {
+      font-size: 0.82rem;
+      color: #a4b0be;
+      line-height: 1.35;
+    }
+    
+    .dessert-box {
+      background: #fff8fa;
+      border: 1px dashed #ffd1dc;
+      padding: 8px 12px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #d63031;
+    }
+    .dessert-tag-group { display: flex; gap: 6px; flex-wrap: wrap; }
+    .dessert-badge {
+      background: white;
+      padding: 3px 8px;
+      border-radius: 8px;
+      border: 1px solid #ffd1dc;
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+
+    .place-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+      padding-top: 8px;
+      border-top: 1px solid #f8f9fa;
+    }
+    .btn-route {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #fee500;
+      color: #3c1e1e;
+      text-decoration: none;
+      padding: 7px 14px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .btn-heart {
+      background: none;
+      border: none;
+      font-size: 1.45rem;
+      color: #dcdde1;
+      cursor: pointer;
+      transition: transform 0.15s, color 0.15s;
+      padding: 4px 6px;
+    }
+    .btn-heart.active { color: var(--primary); transform: scale(1.15); }
+
+    .state-box {
+      background: white;
+      border-radius: 18px;
+      padding: 50px 20px;
       text-align: center;
       color: var(--text-sub);
       font-weight: 700;
-      border: 1px dashed #dcdde1;
-      margin-top: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(50px);
+      background: rgba(47, 53, 66, 0.9);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      opacity: 0;
+      transition: all 0.3s;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
     }
   </style>
 </head>
@@ -138,14 +291,17 @@
   </header>
 
   <div class="container">
-    <!-- 메인 3개 탭 -->
+    <div class="location-bar">
+      <span><i class="fa-solid fa-location-crosshairs" style="color:var(--primary); margin-right:4px;"></i> <span id="txtLocation">현재 위치 확인 중...</span></span>
+      <button class="btn-refresh-gps" onclick="getLocation()"><i class="fa-solid fa-rotate-right"></i> 갱신</button>
+    </div>
+
     <div class="tab-bar">
       <button class="tab-btn active" onclick="switchTab('tab-food', this)">🍽️ 맛집</button>
       <button class="tab-btn" onclick="switchTab('tab-cafe', this)">☕ 카페</button>
       <button class="tab-btn" onclick="switchTab('tab-wish', this)">💖 또 갈 곳</button>
     </div>
 
-    <!-- 1. 맛집 탭 -->
     <div id="tab-food" class="tab-content active">
       <div class="filter-scroll-box">
         <button class="filter-chip active" onclick="setFoodCategory('전체', this)">전체</button>
@@ -153,44 +309,271 @@
         <button class="filter-chip" onclick="setFoodCategory('일식', this)">일식 🍣</button>
         <button class="filter-chip" onclick="setFoodCategory('양식', this)">양식 🍝</button>
         <button class="filter-chip" onclick="setFoodCategory('중식', this)">중식 🥟</button>
-        <button class="filter-chip" onclick="setFoodCategory('분식', this)">분식 떡볶이</button>
+        <button class="filter-chip" onclick="setFoodCategory('분식', this)">분식 🍢</button>
         <button class="filter-chip" onclick="setFoodCategory('고기', this)">고기/구이 🥩</button>
-        <button class="filter-chip" onclick="setFoodCategory('술집', this)">주점/술 🍺</button>
+        <button class="filter-chip" onclick="setFoodCategory('주점', this)">주점/술 🍺</button>
       </div>
 
-      <div class="placeholder-box">
-        📍 2단계에서 GPS 위치와 맛집 목록을 연결할 영역입니다.
+      <div id="foodList" class="place-list">
+        <div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 주변 맛집을 찾는 중입니다...</div>
       </div>
     </div>
 
-    <!-- 2. 카페 탭 -->
     <div id="tab-cafe" class="tab-content">
-      <div class="placeholder-box">
-        ☕ 2단계에서 디저트 2개 소개와 카페 목록이 들어갈 영역입니다.
+      <div id="cafeList" class="place-list">
+        <div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 주변 카페를 찾는 중입니다...</div>
       </div>
     </div>
 
-    <!-- 3. 또 갈 곳 탭 -->
     <div id="tab-wish" class="tab-content">
-      <div class="placeholder-box">
-        💖 하트 누른 맛집/카페가 저장되는 영역입니다.
+      <div id="wishList" class="place-list">
+        <div class="state-box">💖 하트로 찜한 '또 갈 곳'이 여기에 표시됩니다.</div>
       </div>
     </div>
   </div>
 
+  <div class="toast" id="toastMsg">알림</div>
+
   <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
+      authDomain: "kobe-couple-app.firebaseapp.com",
+      projectId: "kobe-couple-app",
+      storageBucket: "kobe-couple-app.firebasestorage.app",
+      messagingSenderId: "755701956140",
+      appId: "1:755701956140:web:ea39d7d1e00bd83ade1b89"
+    };
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const wishCollection = db.collection("couple_space").doc("data").collection("saved_places");
+
+    const KAKAO_REST_KEY = "69430c58e7275bb247e1fa1e793e2b27";
+
+    let currentLat = 37.5665;
+    let currentLng = 126.9780;
+    let selectedFoodCategory = '전체';
+    let currentActiveTab = 'tab-food';
+    let wishMap = {};
+
+    const DESSERT_PAIRS = [
+      ["🥐 소금빵", "🍓 딸기 조각 케이크"],
+      ["🧇 크로플", "🍨 바닐라 아인슈페너"],
+      ["🍫 브라우니", "🥯 대파 크림치즈 베이글"],
+      ["🍮 커스터드 푸딩", "🥧 에그타르트"],
+      ["🍪 르뱅쿠키", "☕ 시그니처 크림라떼"],
+      ["🍵 말차 롤케이크", "🍯 허니 버터 브레드"]
+    ];
+
+    function showToast(msg) {
+      const t = document.getElementById("toastMsg");
+      t.innerText = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 1800);
+    }
+
     function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById(tabId).classList.add('active');
+      currentActiveTab = tabId;
+
+      if (tabId === 'tab-food') searchPlaces('food');
+      else if (tabId === 'tab-cafe') searchPlaces('cafe');
+      else if (tabId === 'tab-wish') renderWishList();
     }
 
-    function setFoodCategory(category, btn) {
+    function setFoodCategory(cat, btn) {
       document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      console.log("선택된 음식 카테고리:", category);
+      selectedFoodCategory = cat;
+      searchPlaces('food');
     }
+
+    function getLocation() {
+      const txt = document.getElementById("txtLocation");
+      txt.innerText = "GPS 수신 중...";
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            currentLat = pos.coords.latitude;
+            currentLng = pos.coords.longitude;
+            txt.innerText = "내 위치 수신 완료";
+            if (currentActiveTab === 'tab-food') searchPlaces('food');
+            else if (currentActiveTab === 'tab-cafe') searchPlaces('cafe');
+          },
+          (err) => {
+            console.warn("GPS 오류:", err);
+            txt.innerText = "기본 위치 적용";
+            searchPlaces('food');
+          },
+          { enableHighAccuracy: true, timeout: 8000 }
+        );
+      } else {
+        txt.innerText = "GPS 미지원";
+        searchPlaces('food');
+      }
+    }
+
+    async function searchPlaces(type) {
+      const container = document.getElementById(type === 'food' ? 'foodList' : 'cafeList');
+      container.innerHTML = `<div class="state-box"><i class="fa-solid fa-spinner fa-spin"></i> 주변 장소 검색 중...</div>`;
+
+      const categoryCode = (type === 'food') ? 'FD6' : 'CE7';
+      const radius = 2000;
+      
+      let queryUrl = `https://dapi.kakao.com/v2/local/search/category.json?category_group_code=${categoryCode}&x=${currentLng}&y=${currentLat}&radius=${radius}&sort=distance&size=15`;
+      
+      if (type === 'food' && selectedFoodCategory !== '전체') {
+        queryUrl = `https://dapi.kakao.com/v2/local/search/keyword.json?category_group_code=FD6&query=${encodeURIComponent(selectedFoodCategory)}&x=${currentLng}&y=${currentLat}&radius=${radius}&sort=distance&size=15`;
+      }
+
+      try {
+        const res = await fetch(queryUrl, {
+          headers: { Authorization: `KakaoAK ${KAKAO_REST_KEY}` }
+        });
+        const data = await res.json();
+        renderPlaceCards(data.documents || [], type, container);
+      } catch (err) {
+        console.error("장소 검색 에러:", err);
+        container.innerHTML = `<div class="state-box">주변 장소를 불러오지 못했습니다.</div>`;
+      }
+    }
+
+    function renderPlaceCards(places, type, container) {
+      if (places.length === 0) {
+        container.innerHTML = `<div class="state-box">주변 반경 2km 이내에 검색된 장소가 없습니다.</div>`;
+        return;
+      }
+
+      container.innerHTML = places.map((p, idx) => {
+        const dist = parseInt(p.distance, 10);
+        const distText = dist >= 1000 ? `${(dist / 1000).toFixed(1)}km` : `${dist}m`;
+        const walkMin = Math.max(1, Math.round(dist / 67));
+        const dessertPair = DESSERT_PAIRS[idx % DESSERT_PAIRS.length];
+        const isSaved = Boolean(wishMap[p.id]);
+
+        return `
+          <div class="place-card">
+            <div class="place-card-top">
+              <div>
+                <div class="place-title">${p.place_name}</div>
+                <div class="place-category">${p.category_name.split('>').slice(1).join(' > ') || p.category_name}</div>
+              </div>
+              <div class="place-distance"><i class="fa-solid fa-person-walking"></i> ${distText} (${walkMin}분)</div>
+            </div>
+
+            <div class="place-address">${p.road_address_name || p.address_name}</div>
+
+            ${type === 'cafe' ? `
+              <div class="dessert-box">
+                <span>✨ 대표 디저트:</span>
+                <div class="dessert-tag-group">
+                  <span class="dessert-badge">${dessertPair[0]}</span>
+                  <span class="dessert-badge">${dessertPair[1]}</span>
+                </div>
+              </div>
+            ` : ''}
+
+            <div class="place-actions">
+              <a href="${p.place_url}" target="_blank" class="btn-route">
+                <i class="fa-solid fa-map-location-dot"></i> 카카오맵 길찾기
+              </a>
+              <button class="btn-heart ${isSaved ? 'active' : ''}" 
+                onclick="toggleWish(this, '${p.id}', '${p.place_name.replace(/'/g, "\\'")}', '${p.category_name.replace(/'/g, "\\'")}', '${p.place_url}', '${(p.road_address_name || p.address_name).replace(/'/g, "\\'")}', '${type}')" 
+                title="또 갈 곳 저장">
+                <i class="fa-solid fa-heart"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleWish(btn, id, name, category, url, address, type) {
+      const isSaved = Boolean(wishMap[id]);
+
+      if (isSaved) {
+        wishCollection.doc(id).delete().then(() => {
+          btn.classList.remove('active');
+          showToast(`'${name}' 또 갈 곳에서 삭제되었습니다.`);
+        });
+      } else {
+        wishCollection.doc(id).set({
+          name: name,
+          category: category,
+          url: url,
+          address: address,
+          type: type,
+          savedAt: Date.now()
+        }).then(() => {
+          btn.classList.add('active');
+          showToast(`'${name}' 또 갈 곳에 저장 완료! 💖`);
+        });
+      }
+    }
+
+    function renderWishList() {
+      const container = document.getElementById("wishList");
+      const list = Object.entries(wishMap).map(([id, item]) => ({ id, ...item }));
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="state-box">
+            <i class="fa-solid fa-heart-crack" style="font-size:2rem; color:#ffb8c6; margin-bottom:10px;"></i><br>
+            아직 저장된 '또 갈 곳'이 없습니다.<br>
+            맛집과 카페에서 하트(❤️)를 눌러보세요!
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = list.map(item => `
+        <div class="place-card">
+          <div class="place-card-top">
+            <div>
+              <div class="place-title">${item.name}</div>
+              <div class="place-category">${item.category ? item.category.split('>').slice(1).join(' > ') : (item.type === 'cafe' ? '카페' : '음식점')}</div>
+            </div>
+            <span style="font-size:0.75rem; color:#ff758c; font-weight:800;">💖 저장됨</span>
+          </div>
+
+          <div class="place-address">${item.address || ''}</div>
+
+          <div class="place-actions">
+            <a href="${item.url}" target="_blank" class="btn-route">
+              <i class="fa-solid fa-map-location-dot"></i> 카카오맵 길찾기
+            </a>
+            <button class="btn-heart active" onclick="deleteWish('${item.id}', '${item.name.replace(/'/g, "\\'")}')" title="삭제">
+              <i class="fa-solid fa-heart"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deleteWish(id, name) {
+      wishCollection.doc(id).delete().then(() => {
+        showToast(`'${name}' 또 갈 곳에서 삭제되었습니다.`);
+      });
+    }
+
+    function listenWishlist() {
+      wishCollection.onSnapshot(snapshot => {
+        wishMap = {};
+        snapshot.forEach(doc => {
+          wishMap[doc.id] = doc.data();
+        });
+        if (currentActiveTab === 'tab-wish') renderWishList();
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      listenWishlist();
+      getLocation();
+    });
   </script>
 </body>
 </html>
