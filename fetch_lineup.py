@@ -1,6 +1,10 @@
 import json
 import datetime
 import urllib.request
+import re
+import ssl
+
+ssl_ctx = ssl._create_unverified_context()
 
 def fetch_json(url):
     req = urllib.request.Request(
@@ -11,23 +15,21 @@ def fetch_json(url):
         }
     )
     try:
-        with urllib.request.urlopen(req, timeout=12) as res:
+        with urllib.request.urlopen(req, timeout=12, context=ssl_ctx) as res:
             return json.loads(res.read().decode('utf-8'))
-    except Exception as e:
-        print(f"JSON 호출 실패 [{url}]: {e}")
+    except Exception:
         return None
 
-def extract_pitcher_name(obj):
-    """다양한 네이버 API 구조에서 투수 이름을 안전하게 추출"""
-    if not obj:
-        return None
-    if isinstance(obj, str) and obj.strip() not in ["", "미정", "None"]:
-        return obj.strip()
-    if isinstance(obj, dict):
-        for k in ['name', 'playerName', 'pitcherName', 'starterName']:
-            if obj.get(k) and str(obj[k]).strip() not in ["", "미정"]:
-                return str(obj[k]).strip()
-    return None
+def fetch_html(url):
+    req = urllib.request.Request(
+        url,
+        headers={'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)'}
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=12, context=ssl_ctx) as res:
+            return res.read().decode('utf-8', errors='ignore')
+    except Exception:
+        return ""
 
 def update_lineup():
     kst_tz = datetime.timezone(datetime.timedelta(hours=9))
@@ -38,78 +40,81 @@ def update_lineup():
         with open("ktwiz_data.json", "r", encoding="utf-8") as f:
             data = json.load(f)
     except Exception as e:
-        print(f"ktwiz_data.json 읽기 오류: {e}")
+        print(f"JSON 로드 오류: {e}")
         return
 
     today_match = data.get("todayMatch")
     if not today_match or not today_match.get("gameId"):
-        print("오늘 KT 경기가 없거나 gameId가 없습니다.")
+        print("오늘 KT 경기 일정이 없습니다.")
         return
 
     game_id = today_match["gameId"]
     is_home = today_match.get("isHome", True)
 
-    kt_pitcher = today_match.get("ktPitcher") or "미정"
-    opp_pitcher = today_match.get("oppPitcher") or "미정"
+    kt_p = "미정"
+    opp_p = "미정"
     batters = []
 
-    # 1. 📅 기본 일정 데이터에서 선발투수 재확인
-    sched_url = f"https://api-gw.sports.naver.com/schedule/games?upperCategoryId=kbaseball&fromDate={today_str}&toDate={today_str}&size=10"
-    s_data = fetch_json(sched_url)
-    if s_data and "result" in s_data:
-        for g in s_data.get("result", {}).get("games", []):
-            if g.get("gameId") == game_id:
-                h_p = extract_pitcher_name(g.get("homeStarterPitcher")) or extract_pitcher_name(g.get("homeStarterName")) or extract_pitcher_name(g.get("homeStarterPitcherName"))
-                a_p = extract_pitcher_name(g.get("awayStarterPitcher")) or extract_pitcher_name(g.get("awayStarterName")) or extract_pitcher_name(g.get("awayStarterPitcherName"))
-                if is_home:
-                    if h_p: kt_pitcher = h_p
-                    if a_p: opp_pitcher = a_p
-                else:
-                    if a_p: kt_pitcher = a_p
-                    if h_p: opp_pitcher = h_p
-
-    # 2. 🔍 프리뷰 API (오전/낮 예고 선발투수 추출)
-    prev_url = f"https://api-gw.sports.naver.com/schedule/games/{game_id}/preview"
-    p_data = fetch_json(prev_url)
+    # 1. 🔍 네이버 프리뷰 API 전체 탐색
+    p_data = fetch_json(f"https://api-gw.sports.naver.com/schedule/games/{game_id}/preview")
     if p_data and "result" in p_data:
         res = p_data.get("result", {})
         g_info = res.get("gameInfo", {})
         
-        # preview 내부의 다양한 위치 탐색
-        h_starter = (
-            extract_pitcher_name(res.get("homeStarterPitcher")) or
-            extract_pitcher_name(res.get("homeStarter")) or
-            extract_pitcher_name(g_info.get("homeStarterPitcherName")) or
-            extract_pitcher_name(g_info.get("homeStarterName"))
-        )
-        a_starter = (
-            extract_pitcher_name(res.get("awayStarterPitcher")) or
-            extract_pitcher_name(res.get("awayStarter")) or
-            extract_pitcher_name(g_info.get("awayStarterPitcherName")) or
-            extract_pitcher_name(g_info.get("awayStarterName"))
-        )
+        # 홈/원정 선발투수 추출
+        h_cand = [
+            res.get("homeStarterPitcher", {}).get("name") if isinstance(res.get("homeStarterPitcher"), dict) else None,
+            res.get("homeStarter", {}).get("name") if isinstance(res.get("homeStarter"), dict) else None,
+            g_info.get("homeStarterPitcherName"),
+            g_info.get("homeStarterName")
+        ]
+        a_cand = [
+            res.get("awayStarterPitcher", {}).get("name") if isinstance(res.get("awayStarterPitcher"), dict) else None,
+            res.get("awayStarter", {}).get("name") if isinstance(res.get("awayStarter"), dict) else None,
+            g_info.get("awayStarterPitcherName"),
+            g_info.get("awayStarterName")
+        ]
+
+        h_starter = next((c for c in h_cand if c and str(c).strip() not in ["", "미정"]), None)
+        a_starter = next((c for c in a_cand if c and str(c).strip() not in ["", "미정"]), None)
 
         if is_home:
-            if h_starter: kt_pitcher = h_starter
-            if a_starter: opp_pitcher = a_starter
+            if h_starter: kt_p = h_starter
+            if a_starter: opp_p = a_starter
         else:
-            if a_starter: kt_pitcher = a_starter
-            if h_starter: opp_pitcher = h_starter
+            if a_starter: kt_p = a_starter
+            if h_starter: opp_p = h_starter
 
-    # 3. 📋 중계 릴레이 API (경기 시작 직전 확정 라인업 및 타순)
-    relay_url = f"https://api-gw.sports.naver.com/schedule/games/{game_id}/relay"
-    r_data = fetch_json(relay_url)
+    # 2. 🔍 KBO 모바일 웹페이지 예비 탐색 (네이버에 아직 안 떴을 경우)
+    if kt_p == "미정" or opp_p == "미정":
+        kbo_html = fetch_html("https://m.koreabaseball.com/")
+        if kbo_html:
+            # KT 경기 블록 탐색
+            blocks = re.findall(r'<li[^>]*>(.*?)</li>', kbo_html, re.DOTALL)
+            for b in blocks:
+                if 'KT' in b or 'kt' in b:
+                    found = re.findall(r'선발\s*[:：]?\s*([가-힣a-zA-Z]+)', b)
+                    if len(found) >= 2:
+                        if is_home:
+                            opp_p = found[0].strip()
+                            kt_p = found[1].strip()
+                        else:
+                            kt_p = found[0].strip()
+                            opp_p = found[1].strip()
+                        break
+
+    # 3. 📋 네이버 릴레이 API (경기 시작 직전 라인업 및 타순)
+    r_data = fetch_json(f"https://api-gw.sports.naver.com/schedule/games/{game_id}/relay")
     if r_data and "result" in r_data:
-        lineup_root = r_data.get("result", {}).get("lineup", {})
-        kt_l = lineup_root.get("home" if is_home else "away", {})
-        opp_l = lineup_root.get("away" if is_home else "home", {})
+        l_root = r_data.get("result", {}).get("lineup", {})
+        kt_l = l_root.get("home" if is_home else "away", {})
+        opp_l = l_root.get("away" if is_home else "home", {})
 
-        real_kt_p = extract_pitcher_name(kt_l.get("starterPitcher")) or extract_pitcher_name(kt_l.get("pitcher"))
-        real_opp_p = extract_pitcher_name(opp_l.get("starterPitcher")) or extract_pitcher_name(opp_l.get("pitcher"))
-        if real_kt_p: kt_pitcher = real_kt_p
-        if real_opp_p: opp_pitcher = real_opp_p
+        p_kt = kt_l.get("starterPitcher", {}).get("name") or kt_l.get("pitcher", {}).get("name")
+        p_opp = opp_l.get("starterPitcher", {}).get("name") or opp_l.get("pitcher", {}).get("name")
+        if p_kt: kt_p = p_kt
+        if p_opp: opp_p = p_opp
 
-        # 1~9번 타순 파싱
         b_list = kt_l.get("batters", [])
         if b_list:
             batters = [
@@ -121,14 +126,13 @@ def update_lineup():
                 for idx, b in enumerate(b_list)
             ]
 
-    # 오늘 경기 데이터 동기화
-    data["todayMatch"]["ktPitcher"] = kt_pitcher
-    data["todayMatch"]["oppPitcher"] = opp_pitcher
-    
+    # JSON 데이터 업데이트
+    data["todayMatch"]["ktPitcher"] = kt_p
+    data["todayMatch"]["oppPitcher"] = opp_p
     data["todayLineup"] = {
-        "ktPitcher": kt_pitcher,
-        "oppPitcher": opp_pitcher,
-        "pitcher": kt_pitcher,
+        "ktPitcher": kt_p,
+        "oppPitcher": opp_p,
+        "pitcher": kt_p,
         "batters": batters
     }
     data["lineupUpdatedAt"] = now_kst.strftime("%Y-%m-%d %H:%M:%S (KST)")
@@ -136,7 +140,7 @@ def update_lineup():
     with open("ktwiz_data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-    print(f"🎯 선발투수 반영 성공: KT [{kt_pitcher}] vs 상대 [{opp_pitcher}] (타자: {len(batters)}명)")
+    print(f"🎯 선발투수 갱신 완료: KT [{kt_p}] vs 상대 [{opp_p}] (타자 {len(batters)}명)")
 
 if __name__ == "__main__":
     update_lineup()
