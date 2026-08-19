@@ -8,10 +8,14 @@
     "isHome": false,
     "stadium": "원정구장 (원정)",
     "result": "scheduled",
-    "score": "VS"
+    "score": "VS",
+    "ktPitcher": "대니엘",
+    "oppPitcher": "톨허스트"
   },
   "todayLineup": {
-    "pitcher": "미발표",
+    "ktPitcher": "대니엘",
+    "oppPitcher": "톨허스트",
+    "pitcher": "대니엘",
     "batters": []
   },
   "rankings": [
@@ -1347,5 +1351,10 @@
       "result": "scheduled",
       "score": "VS"
     }
-  }
+  },
+  "todayH2H": {
+    "text": "올시즌 13전 9승 4패",
+    "record": "9승 4패"
+  },
+  "lineupUpdatedAt": "2026-08-19 18:47:00 (KST)"
 }
