@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>뚜쫑 전국 여행 지도 🗺️ | 대한민국 색칠하기</title>
+
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#1e272e" />
+
+  <link rel="apple-touch-icon" href="https://api.iconify.design/twemoji:world-map.svg" />
+  <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/twemoji:world-map.svg" />
+
+  <!-- 아이콘 & 폰트 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- D3.js & TopoJSON (정밀 벡터 지도 렌더링) -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/topojson-client@3"></script>
+
+  <!-- Firebase v9 SDK (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    :root {
+      --kt-red: #ea2027;
+      --kt-dark: #1e272e;
+      --bg: #f5f6fa;
+      --card: #ffffff;
+      --text: #2f3542;
+      --text-sub: #747d8c;
+      --border: #eef0f4;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+      
+      /* 지도 색상 */
+      --map-base: #e9ecef;
+      --map-stroke: #ffffff;
+      --map-active: #ff4757;
+      --map-active-glow: rgba(255, 71, 87, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 40px; overflow-x: hidden; }
+
+    .app-header {
+      background: linear-gradient(135deg, #1e272e 0%, #2f3542 50%, #ea2027 100%);
+      color: white;
+      padding: 18px 18px 16px;
+      border-radius: 0 0 24px 24px;
+      box-shadow: 0 6px 20px rgba(234, 32, 39, 0.25);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-top { display: flex; justify-content: space-between; align-items: center; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .btn-home {
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      background: rgba(255, 255, 255, 0.15);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .header-title { font-size: 1.2rem; font-weight: 900; letter-spacing: -0.5px; }
+
+    .container { max-width: 540px; margin: 0 auto; padding: 12px 16px; }
+
+    /* 통계 대시보드 */
+    .stat-card {
+      background: white;
+      border-radius: 20px;
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stat-title { font-size: 0.88rem; font-weight: 800; color: #2f3542; display: flex; align-items: center; gap: 6px; }
+    .stat-badge {
+      background: #fff0f3;
+      color: #ff4757;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: #f1f2f6;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff6b81, #ea2027);
+      width: 0%;
+      border-radius: 10px;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .stat-desc-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      font-weight: 700;
+    }
+
+    /* 지도 캔버스 영역 */
+    .map-wrapper {
+      background: white;
+      border-radius: 22px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      touch-action: pan-x pan-y pinch-zoom;
+    }
+    .map-controls {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 10;
+    }
+    .btn-ctrl {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: white;
+      border: 1px solid #dcdde1;
+      color: #2f3542;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .btn-ctrl:active { background: #f1f2f6; }
+
+    #map-svg {
+      width: 100%;
+      height: 520px;
+      display: block;
+      cursor: grab;
+    }
+    #map-svg:active { cursor: grabbing; }
+
+    /* 시군구 벡터 스타일 */
+    .district {
+      fill: var(--map-base);
+      stroke: var(--map-stroke);
+      stroke-width: 0.6;
+      stroke-linejoin: round;
+      transition: fill 0.25s, stroke-width 0.2s, filter 0.2s;
+      cursor: pointer;
+    }
+    .district:hover {
+      fill: #ced6e0;
+    }
+    .district.visited {
+      fill: var(--map-active);
+      filter: drop-shadow(0 2px 4px var(--map-active-glow));
+    }
+    .district.visited:hover {
+      fill: #eb3b5a;
+    }
+
+    /* 로딩 인디케이터 */
+    .map-loading {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(4px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--text);
+      z-index: 20;
+    }
+
+    /* 다이어리 등록/조회 모달 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-content {
+      background: white;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 380px;
+      padding: 22px;
+      animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes modalPop {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .modal-title { font-size: 1.15rem; font-weight: 900; color: #2f3542; }
+    .btn-close-modal { background: none; border: none; font-size: 1.2rem; color: #a4b0be; cursor: pointer; }
+
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--text-sub); margin-bottom: 4px; }
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      font-size: 0.9rem;
+      font-weight: 700;
+      outline: none;
+    }
+    .form-control:focus { border-color: var(--kt-red); }
+
+    .btn-modal-row { display: flex; gap: 8px; margin-top: 16px; }
+    .btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-size: 0.9rem; font-weight: 800; cursor: pointer; }
+    .btn-save { background: var(--kt-red); color: white; }
+    .btn-uncolor { background: #f1f2f6; color: #57606f; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-top">
+      <div class="header-left">
+        <a href="index.html" class="btn-home" title="직관일기로 이동"><i class="fa-solid fa-arrow-left"></i></a>
+        <div>
+          <div class="header-title">뚜쫑 대한민국 여행 지도 🗺️</div>
+          <p style="font-size: 0.74rem; opacity: 0.9; margin-top: 2px;">우리가 함께 물들인 전국 발자국 👣</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- 전국 정복 통계 대시보드 -->
+    <div class="stat-card">
+      <div class="stat-header">
+        <div class="stat-title"><i class="fa-solid fa-flag" style="color:#ff4757;"></i> 전국 정복률</div>
+        <div class="stat-badge" id="badgeRate">0.0% 정복</div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+      <div class="stat-desc-row">
+        <span>발자국 남긴 지역: <b id="txtCount" style="color:var(--kt-red);">0</b>곳</span>
+        <span>전국 시·군·구: <b>250</b>개 구역</span>
+      </div>
+    </div>
+
+    <!-- 벡터 지도 영역 -->
+    <div class="map-wrapper">
+      <div class="map-loading" id="mapLoading">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size:1.8rem; color:var(--kt-red);"></i>
+        <span>정밀 지도 불러오는 중...</span>
+      </div>
+
+      <div class="map-controls">
+        <button class="btn-ctrl" onclick="zoomIn()" title="확대"><i class="fa-solid fa-plus"></i></button>
+        <button class="btn-ctrl" onclick="zoomOut()" title="축소"><i class="fa-solid fa-minus"></i></button>
+        <button class="btn-ctrl" onclick="resetZoom()" title="초기화"><i class="fa-solid fa-rotate-right"></i></button>
+      </div>
+
+      <svg id="map-svg"></svg>
+    </div>
+  </div>
+
+  <!-- 방문 기록 팝업 모달 -->
+  <div class="modal-overlay" id="diaryModal" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title" id="modalRegionName">지역 이름</div>
+        <button class="btn-close-modal" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="form-group">
+        <label>방문 날짜</label>
+        <input type="date" class="form-control" id="inputDate">
+      </div>
+
+      <div class="form-group">
+        <label>추억 한줄 메모 📝</label>
+        <input type="text" class="form-control" id="inputMemo" placeholder="예: 강릉 바다 보고 순두부 먹음!">
+      </div>
+
+      <div class="btn-modal-row">
+        <button class="btn btn-uncolor" id="btnUncolor" onclick="deleteRecord()">색칠 취소</button>
+        <button class="btn btn-save" onclick="saveRecord()">발자국 저장 🚩</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Firebase Firestore 초기화
+    const firebaseConfig = {
+      apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
+      authDomain: "kobe-couple-app.firebaseapp.com",
+      projectId: "kobe-couple-app",
+      storageBucket: "kobe-couple-app.firebasestorage.app",
+      messagingSenderId: "755701956140",
+      appId: "1:755701956140:web:ea39d7d1e00bd83ade1b89"
+    };
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const mapCollection = db.collection("couple_space").doc("data").collection("travel_map");
+
+    let visitedMap = {};
+    let activeRegion = null;
+    let svg, g, zoomBehavior, pathGenerator;
+    const TOTAL_DISTRICTS = 250;
+
+    // 1. 지도 초기화 및 TopoJSON 로드
+    async function initMap() {
+      const width = document.querySelector('.map-wrapper').clientWidth - 24;
+      const height = 520;
+
+      svg = d3.select("#map-svg")
+        .attr("viewBox", `0 0 ${width} ${height}`);
+
+      g = svg.append("g");
+
+      // 한반도 중심 투영 좌표계 설정
+      const projection = d3.geoMercator()
+        .center([127.8, 36.0])
+        .scale(height * 7.4)
+        .translate([width / 2, height / 2]);
+
+      pathGenerator = d3.geoPath().projection(projection);
+
+      // 줌 & 팬 제스처 바인딩
+      zoomBehavior = d3.zoom()
+        .scaleExtent([1, 8])
+        .on("zoom", (e) => g.attr("transform", e.transform));
+
+      svg.call(zoomBehavior);
+
+      try {
+        // 대한민국 시/군/구 정밀 TopoJSON 로드 (경량 오픈소스 CDN)
+        const res = await fetch("https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2018/json/skorea-municipalities-2018-topo-simple.json");
+        const topoData = await res.json();
+        const geojson = topojson.feature(topoData, topoData.objects.skorea_municipalities_2018_geo);
+
+        // 시군구 패스 렌더링
+        g.selectAll("path")
+          .data(geojson.features)
+          .enter()
+          .append("path")
+          .attr("class", "district")
+          .attr("d", pathGenerator)
+          .attr("id", d => `d-${d.properties.code}`)
+          .on("click", (e, d) => onDistrictClick(d.properties));
+
+        document.getElementById("mapLoading").style.display = "none";
+        listenFirestore();
+      } catch (err) {
+        console.error("지도 로드 에러:", err);
+        document.getElementById("mapLoading").innerHTML = `<span style="color:#ff4757;">지도 로드에 실패했습니다.</span>`;
+      }
+    }
+
+    // 2. 지역 클릭 시 모달 열기
+    function onDistrictClick(prop) {
+      const code = String(prop.code);
+      const name = prop.name;
+      activeRegion = { code, name };
+
+      document.getElementById("modalRegionName").innerText = `📍 ${name}`;
+      
+      const existing = visitedMap[code];
+      if (existing) {
+        document.getElementById("inputDate").value = existing.date || "";
+        document.getElementById("inputMemo").value = existing.memo || "";
+        document.getElementById("btnUncolor").style.display = "block";
+      } else {
+        document.getElementById("inputDate").value = new Date().toISOString().split("T")[0];
+        document.getElementById("inputMemo").value = "";
+        document.getElementById("btnUncolor").style.display = "none";
+      }
+
+      document.getElementById("diaryModal").classList.add("active");
+    }
+
+    // 3. Firestore 실시간 동기화 리스너
+    function listenFirestore() {
+      mapCollection.onSnapshot(snapshot => {
+        visitedMap = {};
+        let count = 0;
+
+        snapshot.forEach(doc => {
+          visitedMap[doc.id] = doc.data();
+          count++;
+        });
+
+        // 지도 상의 모든 시군구 색상 갱신
+        d3.selectAll(".district")
+          .classed("visited", d => Boolean(visitedMap[d.properties.code]));
+
+        // 대시보드 수치 갱신
+        const rate = ((count / TOTAL_DISTRICTS) * 100).toFixed(1);
+        document.getElementById("txtCount").innerText = count;
+        document.getElementById("badgeRate").innerText = `${rate}% 정복`;
+        document.getElementById("progressBar").style.width = `${Math.min(rate, 100)}%`;
+      });
+    }
+
+    // 4. 모달 저장 / 삭제 액션
+    function saveRecord() {
+      if (!activeRegion) return;
+      const date = document.getElementById("inputDate").value;
+      const memo = document.getElementById("inputMemo").value;
+
+      mapCollection.doc(activeRegion.code).set({
+        name: activeRegion.name,
+        date: date,
+        memo: memo,
+        updatedAt: Date.now()
+      }).then(() => closeModal());
+    }
+
+    function deleteRecord() {
+      if (!activeRegion) return;
+      if (confirm(`'${activeRegion.name}'의 색칠 기록을 지울까요?`)) {
+        mapCollection.doc(activeRegion.code).delete().then(() => closeModal());
+      }
+    }
+
+    function closeModal() {
+      document.getElementById("diaryModal").classList.remove("active");
+      activeRegion = null;
+    }
+
+    // 5. 줌 컨트롤 버튼
+    function zoomIn() { svg.transition().call(zoomBehavior.scaleBy, 1.4); }
+    function zoomOut() { svg.transition().call(zoomBehavior.scaleBy, 0.7); }
+    function resetZoom() { svg.transition().call(zoomBehavior.transform, d3.zoomIdentity); }
+
+    window.addEventListener("DOMContentLoaded", initMap);
+  </script>
+</body>
+</html>
