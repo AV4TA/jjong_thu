@@ -184,14 +184,14 @@
     .pin-desc {
       font-size: 0.85rem;
       color: #a4b0be;
-      margin-bottom: 28px;
+      margin-bottom: 20px;
       font-weight: 600;
     }
 
     .pin-dots {
       display: flex;
       gap: 14px;
-      margin-bottom: 34px;
+      margin-bottom: 20px;
     }
     .pin-dot {
       width: 15px;
@@ -205,6 +205,25 @@
       border-color: #ff5e7e;
       box-shadow: 0 0 14px rgba(255, 94, 126, 0.7);
       transform: scale(1.15);
+    }
+
+    /* 자동 로그인 체크박스 UI */
+    .auto-login-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #ced6e0;
+      user-select: none;
+    }
+    .auto-login-box input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #ff5e7e;
+      cursor: pointer;
     }
 
     .pin-keypad {
@@ -265,6 +284,12 @@
       <div class="pin-dot"></div>
       <div class="pin-dot"></div>
     </div>
+
+    <!-- 자동 로그인 선택 체크박스 (기본 체크됨) -->
+    <label class="auto-login-box">
+      <input type="checkbox" id="chkAutoLogin" checked>
+      <span>이 기기에서 자동 로그인 유지</span>
+    </label>
 
     <div class="pin-keypad">
       <button type="button" class="pin-key" onclick="pressPin('1')">1</button>
@@ -367,9 +392,12 @@
       return Array.from(new Uint8Array(buf)).map(x => x.toString(16).padStart(2, "0")).join("");
     }
 
+    // 자동 로그인 또는 세션 로그인 확인
     document.addEventListener('DOMContentLoaded', () => {
-      const isUnlocked = sessionStorage.getItem("ddo_jjong_unlocked");
-      if (isUnlocked === "true") {
+      const isAutoUnlocked = localStorage.getItem("ddo_jjong_auth_token") === PIN_HASH;
+      const isSessionUnlocked = sessionStorage.getItem("ddo_jjong_unlocked") === "true";
+
+      if (isAutoUnlocked || isSessionUnlocked) {
         const lockEl = document.getElementById("pinLockScreen");
         if (lockEl) lockEl.classList.add("hidden");
       }
@@ -412,7 +440,12 @@
       const inputHash = await sha256(enteredPin);
       
       if (inputHash === PIN_HASH) {
+        const isAuto = document.getElementById("chkAutoLogin").checked;
+        if (isAuto) {
+          localStorage.setItem("ddo_jjong_auth_token", PIN_HASH); // 기기에 영구 기억
+        }
         sessionStorage.setItem("ddo_jjong_unlocked", "true");
+
         const lockEl = document.getElementById("pinLockScreen");
         if (lockEl) lockEl.classList.add("hidden");
       } else {
