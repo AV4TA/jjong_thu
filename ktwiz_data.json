@@ -1352,9 +1352,21 @@
       "score": "VS"
     }
   },
-  "lineupUpdatedAt": "2026-08-19 15:47:45 (KST)",
+  "lineupUpdatedAt": "2026-08-19 15:50:53 (KST)",
   "todayH2H": {
     "text": "올시즌 13전 9승 4패",
     "record": "9승 4패"
+  },
+  "pitcherComparison": {
+    "kt": {
+      "name": "대니엘",
+      "era": "-",
+      "record": "-"
+    },
+    "opp": {
+      "name": "톨허스트",
+      "era": "-",
+      "record": "-"
+    }
   }
 }
