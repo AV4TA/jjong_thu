@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>뚜쫑 전국 여행 지도 🗺️ | 대한민국 색칠하기</title>
+  <title>전국 여행 지도 🗺️ | 대한민국 색칠하기</title>
 
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -188,6 +188,31 @@
       fill: #eb3b5a;
     }
 
+    /* 🏷️ 확대 시 나타나는 지역 라벨 */
+    .district-label {
+      font-size: 8px;
+      font-weight: 800;
+      fill: #2f3542;
+      text-anchor: middle;
+      pointer-events: none;
+      user-select: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      paint-order: stroke;
+      stroke: #ffffff;
+      stroke-width: 2.5px;
+      stroke-linecap: butt;
+      stroke-linejoin: miter;
+    }
+    .district-label.visited-label {
+      fill: #ffffff;
+      stroke: #c0392b;
+      stroke-width: 2px;
+    }
+    .show-labels .district-label {
+      opacity: 1;
+    }
+
     /* 로딩 인디케이터 */
     .map-loading {
       position: absolute;
@@ -264,9 +289,9 @@
   <header class="app-header">
     <div class="header-top">
       <div class="header-left">
-        <a href="index.html" class="btn-home" title="직관일기로 이동"><i class="fa-solid fa-arrow-left"></i></a>
+        <a href="index.html" class="btn-home" title="홈으로 이동"><i class="fa-solid fa-arrow-left"></i></a>
         <div>
-          <div class="header-title">뚜쫑 대한민국 여행 지도 🗺️</div>
+          <div class="header-title">전국 여행 지도 🗺️</div>
           <p style="font-size: 0.74rem; opacity: 0.9; margin-top: 2px;">우리가 함께 물들인 전국 발자국 👣</p>
         </div>
       </div>
@@ -348,7 +373,7 @@
 
     let visitedMap = {};
     let activeRegion = null;
-    let svg, g, zoomBehavior, pathGenerator;
+    let svg, g, pathGroup, labelGroup, zoomBehavior, pathGenerator;
     const TOTAL_DISTRICTS = 250;
 
     // 1. 지도 초기화 및 TopoJSON 로드
@@ -360,6 +385,8 @@
         .attr("viewBox", `0 0 ${width} ${height}`);
 
       g = svg.append("g");
+      pathGroup = g.append("g").attr("class", "paths-layer");
+      labelGroup = g.append("g").attr("class", "labels-layer");
 
       // 한반도 중심 투영 좌표계 설정
       const projection = d3.geoMercator()
@@ -371,19 +398,30 @@
 
       // 줌 & 팬 제스처 바인딩
       zoomBehavior = d3.zoom()
-        .scaleExtent([1, 8])
-        .on("zoom", (e) => g.attr("transform", e.transform));
+        .scaleExtent([1, 10])
+        .on("zoom", (e) => {
+          g.attr("transform", e.transform);
+          
+          // 🔍 2.0배 이상 확대 시 텍스트 라벨 노출
+          if (e.transform.k >= 2.0) {
+            svg.classed("show-labels", true);
+            // 줌 인 비율에 맞춰 폰트 크기 자동 조절
+            labelGroup.selectAll(".district-label")
+              .style("font-size", `${Math.max(6, 9 / (e.transform.k * 0.5))}px`);
+          } else {
+            svg.classed("show-labels", false);
+          }
+        });
 
       svg.call(zoomBehavior);
 
       try {
-        // 대한민국 시/군/구 정밀 TopoJSON 로드 (경량 오픈소스 CDN)
         const res = await fetch("https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2018/json/skorea-municipalities-2018-topo-simple.json");
         const topoData = await res.json();
         const geojson = topojson.feature(topoData, topoData.objects.skorea_municipalities_2018_geo);
 
-        // 시군구 패스 렌더링
-        g.selectAll("path")
+        // 1) 시군구 영역 폴리곤 렌더링
+        pathGroup.selectAll("path")
           .data(geojson.features)
           .enter()
           .append("path")
@@ -391,6 +429,19 @@
           .attr("d", pathGenerator)
           .attr("id", d => `d-${d.properties.code}`)
           .on("click", (e, d) => onDistrictClick(d.properties));
+
+        // 2) 중심점(Centroid) 계산하여 텍스트 라벨 렌더링
+        labelGroup.selectAll("text")
+          .data(geojson.features)
+          .enter()
+          .append("text")
+          .attr("class", "district-label")
+          .attr("id", d => `lbl-${d.properties.code}`)
+          .attr("transform", d => {
+            const centroid = pathGenerator.centroid(d);
+            return isNaN(centroid[0]) ? "translate(-100,-100)" : `translate(${centroid[0]}, ${centroid[1]})`;
+          })
+          .text(d => d.properties.name);
 
         document.getElementById("mapLoading").style.display = "none";
         listenFirestore();
@@ -433,9 +484,12 @@
           count++;
         });
 
-        // 지도 상의 모든 시군구 색상 갱신
+        // 지도 상의 모든 시군구 색상 및 텍스트 스타일 갱신
         d3.selectAll(".district")
           .classed("visited", d => Boolean(visitedMap[d.properties.code]));
+
+        d3.selectAll(".district-label")
+          .classed("visited-label", d => Boolean(visitedMap[d.properties.code]));
 
         // 대시보드 수치 갱신
         const rate = ((count / TOTAL_DISTRICTS) * 100).toFixed(1);
@@ -472,9 +526,9 @@
     }
 
     // 5. 줌 컨트롤 버튼
-    function zoomIn() { svg.transition().call(zoomBehavior.scaleBy, 1.4); }
-    function zoomOut() { svg.transition().call(zoomBehavior.scaleBy, 0.7); }
-    function resetZoom() { svg.transition().call(zoomBehavior.transform, d3.zoomIdentity); }
+    function zoomIn() { svg.transition().duration(250).call(zoomBehavior.scaleBy, 1.5); }
+    function zoomOut() { svg.transition().duration(250).call(zoomBehavior.scaleBy, 0.65); }
+    function resetZoom() { svg.transition().duration(300).call(zoomBehavior.transform, d3.zoomIdentity); }
 
     window.addEventListener("DOMContentLoaded", initMap);
   </script>
