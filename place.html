@@ -19,7 +19,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <!-- 500개 서울 빅데이터 핫플레이스 데이터 파일 연동 -->
+  <!-- 정제된 데이터 파일 연동 -->
   <script src="placesData.js"></script>
 
   <style>
@@ -190,17 +190,30 @@
       align-items: flex-start;
       margin-top: 4px;
     }
+    .place-title-group { display: flex; flex-direction: column; gap: 2px; }
     .place-title {
       font-size: 1.15rem;
       font-weight: 800;
       color: #2d3436;
       line-height: 1.3;
     }
+    .place-rating-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #ffa502;
+    }
+    .review-text {
+      color: #747d8c;
+      font-weight: 600;
+      font-size: 0.76rem;
+    }
     .place-category {
       font-size: 0.78rem;
       color: #747d8c;
       font-weight: 600;
-      margin-top: 3px;
     }
     .place-distance {
       display: inline-flex;
@@ -379,7 +392,7 @@
     const db = firebase.firestore();
     const wishCollection = db.collection("couple_space").doc("data").collection("saved_places");
 
-    let currentLat = 37.5665; // 기본 서울 시청 좌표
+    let currentLat = 37.5665; 
     let currentLng = 126.9780;
     let selectedFoodCategory = '전체';
     let currentActiveTab = 'tab-food';
@@ -423,7 +436,6 @@
       return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
     }
 
-    // 🌟 현재 위치 GPS 수신 및 실시간 동네 주소 변환 기능
     function getLocation() {
       const txt = document.getElementById("txtLocation");
       const coord = document.getElementById("txtCoord");
@@ -502,8 +514,12 @@
           <div class="place-card">
             <div class="top-rank-badge">서울 TOP ${idx + 1}</div>
             <div class="place-card-top">
-              <div>
+              <div class="place-title-group">
                 <div class="place-title">${p.name}</div>
+                <div class="place-rating-row">
+                  <span>⭐ ${p.rating || '4.7'}</span>
+                  <span class="review-text">(${p.reviews || '인기 데이트 핫플'})</span>
+                </div>
                 <div class="place-category">${p.cuisine}</div>
               </div>
               <div class="place-distance">
