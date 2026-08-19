@@ -27,13 +27,12 @@
 
   <style>
     :root {
-      --sea-bg: #8ba4b6;        /* 종이 지도 바다색 */
-      --land-base: #ffffff;     /* 색칠 전 하얀 종이 */
-      --land-border: #808e9b;   /* 연필 드로잉 경계선 */
-      --colored: #ffb8c6;       /* 🌸 감성적인 연한 핑크 */
-      --colored-text: #b33939;  /* 핑크 배경 위 짙은 텍스트 */
+      --sea-bg: #8ba4b6;
+      --land-base: #ffffff;
+      --land-border: #7f8c8d;
+      --colored: #ffb8c6;
+      --colored-text: #b33939;
       --primary: #ff758c;
-      --card-bg: #ffffff;
       --text: #2f3542;
       --border: #f1f2f6;
       --shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
@@ -70,7 +69,7 @@
     }
     .header-title { font-size: 1.35rem; font-weight: 900; font-family: 'Gaegu', cursive; }
 
-    /* 상단 2개 탭 바 */
+    /* 탭 바 */
     .tab-bar {
       display: flex;
       gap: 6px;
@@ -148,7 +147,7 @@
       font-weight: 700;
     }
 
-    /* 🗺️ 종이 지도 프레임 */
+    /* 지도 프레임 */
     .map-frame {
       background-color: var(--sea-bg);
       border-radius: 24px;
@@ -210,7 +209,7 @@
     }
     #map-svg:active { cursor: grabbing; }
 
-    /* 시군구 벡터 스타일 */
+    /* 시군구 벡터 */
     .district {
       fill: var(--land-base);
       stroke: var(--land-border);
@@ -222,15 +221,14 @@
     }
     .district:hover { fill: #fff5f7; }
     
-    /* 🌸 연한 핑크 색칠 */
     .district.visited {
       fill: var(--colored) !important;
     }
 
-    /* 🏷️ 종이 지도 2글자 라벨 */
+    /* 🏷️ 대표 도시 라벨 */
     .district-label {
       font-family: 'Gaegu', cursive;
-      font-size: 3.4px;
+      font-size: 3.6px;
       font-weight: 700;
       fill: #4b6584;
       text-anchor: middle;
@@ -238,17 +236,16 @@
       pointer-events: none !important;
       user-select: none;
       paint-order: stroke fill;
-      stroke: rgba(255, 255, 255, 0.85);
-      stroke-width: 0.6px;
+      stroke: rgba(255, 255, 255, 0.9);
+      stroke-width: 0.7px;
       stroke-linejoin: round;
     }
     .district-label.visited-label {
       fill: #ffffff !important;
       stroke: var(--colored-text) !important;
-      stroke-width: 0.6px;
+      stroke-width: 0.7px;
     }
 
-    /* 로딩 */
     .map-loading {
       position: absolute;
       inset: 0;
@@ -264,7 +261,6 @@
       z-index: 20;
     }
 
-    /* 토스트 알림 */
     .toast {
       position: fixed;
       bottom: 30px;
@@ -286,7 +282,7 @@
       opacity: 1;
     }
 
-    /* 📖 기록 탭 피드 스타일 */
+    /* 📖 다이어리 피드 */
     .diary-list { display: flex; flex-direction: column; gap: 14px; }
     .diary-card {
       background: white;
@@ -311,14 +307,12 @@
     .btn-del-diary { background: none; border: none; color: #ced6e0; cursor: pointer; font-size: 0.9rem; }
     .btn-del-diary:hover { color: #ff4757; }
 
-    /* FAB 기록 추가 버튼 */
     .fab {
       position: fixed; right: 20px; bottom: 24px; width: 56px; height: 56px; border-radius: 50%;
       background: var(--primary); color: white; display: flex; align-items: center; justify-content: center;
       font-size: 1.4rem; box-shadow: 0 8px 24px rgba(255, 117, 140, 0.4); cursor: pointer; border: none; z-index: 50;
     }
 
-    /* 다이어리 등록 모달 */
     .modal-overlay {
       display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65);
       backdrop-filter: blur(4px); z-index: 999; align-items: center; justify-content: center; padding: 16px;
@@ -374,12 +368,11 @@
           <div class="progress-fill" id="progressBar"></div>
         </div>
         <div class="stat-desc-row">
-          <span>색칠한 지역: <b id="txtCount" style="color:#ff5e7e;">0</b>곳</span>
-          <span>전국 시·군·구: <b>250</b>개 구역</span>
+          <span>색칠한 여행지: <b id="txtCount" style="color:#ff5e7e;">0</b>곳</span>
+          <span>전국 시·군: <b id="txtTotalCount">160</b>개 권역</span>
         </div>
       </div>
 
-      <!-- 🗺️ 종이 지도 프레임 -->
       <div class="map-frame">
         <div class="map-header-tag">💡 지역을 <b>터치</b>하면 즉시 색칠돼요!</div>
 
@@ -400,9 +393,7 @@
 
     <!-- 탭 2: 여행 기록 피드 -->
     <div id="tab-diary" class="tab-content">
-      <div id="diaryListContainer" class="diary-list">
-        <!-- 기록 카드 렌더링 -->
-      </div>
+      <div id="diaryListContainer" class="diary-list"></div>
       <button class="fab" onclick="openAddDiaryModal()"><i class="fa-solid fa-plus"></i></button>
     </div>
   </div>
@@ -413,7 +404,7 @@
       <h3 style="font-size:1.15rem; font-weight:900; margin-bottom:14px; color:#2f3542;">📸 여행 추억 기록</h3>
 
       <div class="form-group">
-        <label>방문 지역 (시/군/구)</label>
+        <label>방문 지역 (시/군/서울구)</label>
         <select class="form-control" id="diarySelectRegion">
           <option value="">색칠된 지역 선택</option>
         </select>
@@ -431,7 +422,7 @@
 
       <div class="form-group">
         <label>추억 한줄 메모 📝</label>
-        <textarea class="form-control" id="diaryMemo" rows="3" placeholder="예: 바다 보고 순두부 젤라또 먹은 날!"></textarea>
+        <textarea class="form-control" id="diaryMemo" rows="3" placeholder="예: 맛있는 음식 먹고 드라이브 한 날!"></textarea>
       </div>
 
       <div class="btn-modal-row">
@@ -444,7 +435,7 @@
   <div class="toast" id="toastMsg">알림</div>
 
   <script>
-    // Firebase Firestore 설정
+    // Firebase Firestore
     const firebaseConfig = {
       apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
       authDomain: "kobe-couple-app.firebaseapp.com",
@@ -462,7 +453,7 @@
     let visitedMap = {};
     let diaryList = [];
     let svg, g, pathGroup, labelGroup, zoomBehavior, pathGenerator;
-    const TOTAL_DISTRICTS = 250;
+    let totalConsolidatedCount = 160;
 
     function switchTab(tabId, el) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -478,21 +469,51 @@
       setTimeout(() => t.classList.remove("show"), 1800);
     }
 
-    // 🏷️ 종이 지도 2~3글자 축약 헬퍼
-    function formatMapLabel(props) {
-      if (!props) return "";
-      let name = props.name || props.name_kor || props.NAME || props.SIG_KOR_NM || "";
-      if (name.includes(" ")) name = name.split(" ").pop();
-      if (name.length > 2) {
-        if (name.endsWith("시") || name.endsWith("군") || name.endsWith("구")) {
-          name = name.slice(0, -1);
+    // 🏙️ 대도시/특례시 구 단위 묶기 & 서울은 구 단위 유지 매핑
+    function getConsolidatedGroup(props, id) {
+      const rawName = props.name || props.name_kor || props.NAME || props.SIG_KOR_NM || "";
+      const code = String(props.code || id || "");
+
+      // 1) 서울특별시 (25개 구 개별 유지) -> 코드 앞 2자리 '11'
+      if (code.startsWith("11") || rawName.startsWith("서울")) {
+        let guName = rawName.replace("서울특별시", "").replace("서울", "").trim();
+        return {
+          groupId: "SEOUL_" + guName,
+          displayName: guName.endsWith("구") ? guName.slice(0, -1) : guName,
+          fullName: "서울 " + guName
+        };
+      }
+
+      // 2) 광역시 단일 통합 (부산, 대구, 인천, 광주, 대전, 울산)
+      if (code.startsWith("21") || rawName.startsWith("부산")) return { groupId: "METRO_BUSAN", displayName: "부산", fullName: "부산" };
+      if (code.startsWith("22") || rawName.startsWith("대구")) return { groupId: "METRO_DAEGU", displayName: "대구", fullName: "대구" };
+      if (code.startsWith("23") || rawName.startsWith("인천")) return { groupId: "METRO_INCHEON", displayName: "인천", fullName: "인천" };
+      if (code.startsWith("24") || rawName.startsWith("광주")) return { groupId: "METRO_GWANGJU", displayName: "광주", fullName: "광주" };
+      if (code.startsWith("25") || rawName.startsWith("대전")) return { groupId: "METRO_DAEJEON", displayName: "대전", fullName: "대전" };
+      if (code.startsWith("26") || rawName.startsWith("울산")) return { groupId: "METRO_ULSAN", displayName: "울산", fullName: "울산" };
+      if (code.startsWith("29") || rawName.startsWith("세종")) return { groupId: "METRO_SEJONG", displayName: "세종", fullName: "세종" };
+
+      // 3) 여러 구로 쪼개진 일반 시 통합 (수원, 성남, 안양, 부천, 안산, 고양, 용인, 청주, 천안, 전주, 포항, 창원 등)
+      const majorCities = [
+        "수원", "성남", "안양", "부천", "안산", "고양", "용인", "청주", "천안", "전주", "포항", "창원", "김해", "평택", "화성", "남양주"
+      ];
+      for (const city of majorCities) {
+        if (rawName.includes(city)) {
+          return { groupId: "CITY_" + city, displayName: city, fullName: city + "시" };
         }
       }
-      return name;
-    }
 
-    function getFullName(props) {
-      return props.name || props.name_kor || props.NAME || props.SIG_KOR_NM || "지역";
+      // 4) 그 외 일반 시/군 (강릉, 속초, 경주, 여수, 제주, 서귀포 등)
+      let cleanName = rawName.split(" ").pop();
+      let displayName = cleanName;
+      if (displayName.length > 2 && (displayName.endsWith("시") || displayName.endsWith("군") || displayName.endsWith("구"))) {
+        displayName = displayName.slice(0, -1);
+      }
+      return {
+        groupId: "DISTRICT_" + (code || cleanName),
+        displayName: displayName,
+        fullName: cleanName
+      };
     }
 
     // 1. 지도 초기화
@@ -512,46 +533,74 @@
 
       pathGenerator = d3.geoPath().projection(projection);
 
-      // 줌 설정 (더블클릭/더블탭 확대 기능 비활성화)
       zoomBehavior = d3.zoom()
         .scaleExtent([1, 14])
         .on("zoom", (e) => {
           g.attr("transform", e.transform);
-          const dynamicSize = Math.max(1.8, 3.4 / Math.sqrt(e.transform.k));
+          const dynamicSize = Math.max(1.8, 3.6 / Math.sqrt(e.transform.k));
           labelGroup.selectAll(".district-label")
             .style("font-size", `${dynamicSize}px`)
             .style("stroke-width", `${dynamicSize * 0.18}px`);
         });
 
-      svg.call(zoomBehavior).on("dblclick.zoom", null); // 🚫 더블클릭 확대 원천 차단
+      svg.call(zoomBehavior).on("dblclick.zoom", null);
 
       try {
         const res = await fetch("https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2018/json/skorea-municipalities-2018-topo-simple.json");
         const topoData = await res.json();
         const geojson = topojson.feature(topoData, topoData.objects.skorea_municipalities_2018_geo);
 
-        // 1) 시군구 폴리곤 (1번 클릭/터치 시 즉시 토글)
+        // 각 feature에 통합 그룹 정보 매핑
+        const groupCenters = {};
+        geojson.features.forEach(f => {
+          const groupInfo = getConsolidatedGroup(f.properties, f.id);
+          f.groupInfo = groupInfo;
+
+          // 그룹 중심점 계산용 좌표 누적
+          const centroid = pathGenerator.centroid(f);
+          if (!isNaN(centroid[0])) {
+            if (!groupCenters[groupInfo.groupId]) {
+              groupCenters[groupInfo.groupId] = {
+                displayName: groupInfo.displayName,
+                fullName: groupInfo.fullName,
+                xSum: 0, ySum: 0, count: 0
+              };
+            }
+            groupCenters[groupInfo.groupId].xSum += centroid[0];
+            groupCenters[groupInfo.groupId].ySum += centroid[1];
+            groupCenters[groupInfo.groupId].count += 1;
+          }
+        });
+
+        // 1) 시군구 폴리곤 렌더링
         pathGroup.selectAll("path")
           .data(geojson.features)
           .enter()
           .append("path")
           .attr("class", "district")
           .attr("d", pathGenerator)
-          .attr("id", d => `d-${d.properties.code || d.id}`)
-          .on("click", (e, d) => onSingleTouch(d.properties, d.id));
+          .attr("data-group", d => d.groupInfo.groupId)
+          .on("click", (e, d) => onSingleTouch(d.groupInfo));
 
-        // 2) 2글자 라벨
+        // 2) 대표 권역별 라벨만 생성 (수원, 부산 등 1개만 깔끔하게 출력)
+        const labelData = Object.entries(groupCenters).map(([groupId, info]) => ({
+          groupId,
+          displayName: info.displayName,
+          x: info.xSum / info.count,
+          y: info.ySum / info.count
+        }));
+
+        totalConsolidatedCount = labelData.length;
+        document.getElementById("txtTotalCount").innerText = totalConsolidatedCount;
+
         labelGroup.selectAll("text")
-          .data(geojson.features)
+          .data(labelData)
           .enter()
           .append("text")
           .attr("class", "district-label")
-          .attr("id", d => `lbl-${d.properties.code || d.id}`)
-          .attr("transform", d => {
-            const centroid = pathGenerator.centroid(d);
-            return isNaN(centroid[0]) ? "translate(-100,-100)" : `translate(${centroid[0]}, ${centroid[1]})`;
-          })
-          .text(d => formatMapLabel(d.properties));
+          .attr("data-group-label", d => d.groupId)
+          .attr("transform", d => `translate(${d.x}, ${d.y})`)
+          .text(d => d.displayName);
 
         document.getElementById("mapLoading").style.display = "none";
         listenFirestore();
@@ -560,33 +609,26 @@
       }
     }
 
-    // 2. ⚡ 1번 터치로 즉시 색칠 / 취소 토글
-    function onSingleTouch(prop, id) {
-      const code = String(prop.code || id);
-      const fullName = getFullName(prop);
-      toggleColor(code, fullName);
-    }
-
-    function toggleColor(code, name) {
-      const isColored = Boolean(visitedMap[code]);
+    // 2. ⚡ 터치 시 대표 도시 전체 색칠 / 취소
+    function onSingleTouch(groupInfo) {
+      const isColored = Boolean(visitedMap[groupInfo.groupId]);
 
       if (isColored) {
-        mapCollection.doc(code).delete().then(() => {
-          showToast(`'${name}' 색칠 취소 ⚪`);
+        mapCollection.doc(groupInfo.groupId).delete().then(() => {
+          showToast(`'${groupInfo.fullName}' 색칠 취소 ⚪`);
         });
       } else {
-        mapCollection.doc(code).set({
-          name: name,
+        mapCollection.doc(groupInfo.groupId).set({
+          name: groupInfo.fullName,
           updatedAt: Date.now()
         }).then(() => {
-          showToast(`'${name}' 핑크빛 색칠 완료! 🌸`);
+          showToast(`'${groupInfo.fullName}' 핑크빛 색칠 완료! 🌸`);
         });
       }
     }
 
-    // 3. Firestore 리스너 (지도 색칠 & 다이어리)
+    // 3. Firestore 실시간 리스너
     function listenFirestore() {
-      // 지도 색칠 리스너
       mapCollection.onSnapshot(snapshot => {
         visitedMap = {};
         let count = 0;
@@ -598,26 +640,26 @@
           visitedMap[doc.id] = data;
           count++;
 
-          // 기록 모달 셀렉트박스에 추가
           const opt = document.createElement("option");
           opt.value = data.name || doc.id;
           opt.innerText = data.name || doc.id;
           selectBox.appendChild(opt);
         });
 
+        // 🏙️ 그룹 ID 기준으로 지도 폴리곤 및 라벨 일괄 색칠
         d3.selectAll(".district")
-          .classed("visited", d => Boolean(visitedMap[String(d.properties.code || d.id)]));
+          .classed("visited", d => Boolean(visitedMap[d.groupInfo.groupId]));
 
         d3.selectAll(".district-label")
-          .classed("visited-label", d => Boolean(visitedMap[String(d.properties.code || d.id)]));
+          .classed("visited-label", d => Boolean(visitedMap[d.groupId]));
 
-        const rate = ((count / TOTAL_DISTRICTS) * 100).toFixed(1);
+        const rate = ((count / totalConsolidatedCount) * 100).toFixed(1);
         document.getElementById("txtCount").innerText = count;
         document.getElementById("badgeRate").innerText = `${rate}% 완성`;
         document.getElementById("progressBar").style.width = `${Math.min(rate, 100)}%`;
       });
 
-      // 다이어리 피드 리스너
+      // 다이어리 피드
       diaryCollection.orderBy("date", "desc").onSnapshot(snapshot => {
         diaryList = [];
         snapshot.forEach(doc => diaryList.push({ id: doc.id, ...doc.data() }));
@@ -625,7 +667,7 @@
       });
     }
 
-    // 4. 여행 기록 피드 렌더링
+    // 4. 다이어리 렌더링
     function renderDiaryList() {
       const container = document.getElementById("diaryListContainer");
       if (diaryList.length === 0) {
