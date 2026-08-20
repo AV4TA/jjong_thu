@@ -1,4 +1,4 @@
-// KBO 라이브 데이터 수집 & 시즌 전체 경기 일정 호환 통합 스크립트
+// KBO 라이브 데이터 수집 & 월별 분할 조회로 시즌 전체 경기 수집
 const fs = require('fs');
 const path = require('path');
 
@@ -19,7 +19,7 @@ async function j(url) {
 }
 
 async function games(from, to, size) {
-  const u = `${API}/schedule/games?fields=basic,stadium,statusNum,homeStarterName,awayStarterName,winPitcherName,losePitcherName&upperCategoryId=kbaseball&categoryId=kbo&fromDate=${from}&toDate=${to}&size=${size || 500}`;
+  const u = `${API}/schedule/games?fields=basic,stadium,statusNum,homeStarterName,awayStarterName,winPitcherName,losePitcherName&upperCategoryId=kbaseball&categoryId=kbo&fromDate=${from}&toDate=${to}&size=${size || 200}`;
   const d = await j(u);
   return (d.result && d.result.games) || [];
 }
@@ -85,12 +85,34 @@ async function selfStandings(today) {
   let prev = null;
   try { prev = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) {}
 
-  // 💡 2026년 정규시즌 개막일(03-28)부터 오늘까지의 시즌 전체 경기 일정 조회
-  const allSeasonGamesRaw = await games('20260328', todayCompact, 1000);
-  const mappedGames = allSeasonGamesRaw.map(mapGame);
+  // 💡 400 에러 방지를 위해 월별로 나누어 안전하게 전체 시즌 경기 조회 후 합치기
+  const monthRanges = [
+    ['20260328', '20260331'],
+    ['20260401', '20260430'],
+    ['20260501', '20260531'],
+    ['20260601', '20260630'],
+    ['20260701', '20260731'],
+    ['20260801', todayCompact]
+  ];
+
+  let allRawGames = [];
+  for (const [from, to] of monthRanges) {
+    if (from > todayCompact) break;
+    try {
+      const chunk = await games(from, to, 300);
+      allRawGames = allRawGames.concat(chunk);
+    } catch (e) {
+      console.error(`chunk fetch fail (${from}~${to})`, e.message);
+    }
+  }
+
+  // 중복 제거 (경기 ID 기준)
+  const uniqueMap = new Map();
+  allRawGames.forEach(g => uniqueMap.set(g.gameId, g));
+  const mappedGames = Array.from(uniqueMap.values()).map(mapGame);
   
   const todayGames = mappedGames.filter(g => g.date === today);
-  
+
   const standings = {};
   let ktLineup = null, oppLineup = null, ktGameId = null, ktStarters = null;
   const ktTodayGames = todayGames.filter(g => g.home === 'KT' || g.away === 'KT');
@@ -199,7 +221,7 @@ async function selfStandings(today) {
     todayH2H: prev ? prev.todayH2H : { text: "올 시즌 상대 전적", record: "0승 0패" },
     todayLineup: todayLineup,
     rankings: rankings,
-    games: mappedGames, // 👈 시즌 전체 경기 일정이 들어가도록 설정 완료!
+    games: mappedGames, // 👈 개막일부터 오늘까지의 전체 시즌 경기 일정 포함 완료!
     kt: {
       gameId: ktGameId,
       lineup: ktLineup,
