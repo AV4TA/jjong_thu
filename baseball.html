@@ -363,6 +363,7 @@
       margin-top: 4px;
       border: 1px solid #eee;
       line-height: 1.35;
+      text-align: left;
     }
 
     .lineup-box { background: #f8f9fa; border-radius: 14px; padding: 14px; margin-top: 14px; }
@@ -633,6 +634,24 @@
       '삼성': '삼성 라이온즈', '롯데': '롯데 자이언츠', '한화': '한화 이글스', 'NC': 'NC 다이노스', '키움': '키움 히어로즈', 'KT': 'kt wiz'
     };
 
+    // 구종 영문 코드를 예쁜 한글 이름으로 변환하는 매핑
+    const pitchNameMap = {
+      'FAST': '직구(포심)',
+      'CHUP': '체인지업',
+      'SLID': '슬라이더',
+      'TWOS': '투심',
+      'SWEE': '스위퍼',
+      'CURV': '커브',
+      'SIPT': '스플리터',
+      'KTWR': '컷터',
+      'POFT': '포크볼'
+    };
+
+    function translatePitch(type) {
+      if (!type) return '기타';
+      return pitchNameMap[type.toUpperCase()] || type;
+    }
+
     function normalizeTeam(name) {
       if (!name) return '상대팀';
       for (const [k, v] of Object.entries(teamFullMap)) {
@@ -716,17 +735,33 @@
         document.getElementById('todayOpponentTxt').innerText = normalizeTeam(todayMatch.opponent);
       }
 
-      // 선발 투수 이름 및 구종 비교
+      // 선발 투수 이름
       document.getElementById('todayKtPitcher').innerText = (todayLineup && todayLineup.ktPitcher) || (todayMatch && todayMatch.ktPitcher) || '미정';
       document.getElementById('todayOppPitcher').innerText = (todayLineup && todayLineup.oppPitcher) || (todayMatch && todayMatch.oppPitcher) || '미정';
 
+      // 선발 투수 구종 및 구속 비교 (한글명 변환 및 소수점 없는 정수 퍼센트 적용)
       if (data.kt && data.kt.starters) {
         const s = data.kt.starters;
-        if (s.kt && s.kt.pitches) {
-          document.getElementById('ktPitcherPitches').innerHTML = s.kt.pitches.map(p => `• ${p.type}: ${p.rt}% (평균 ${p.spd}km)`).join('<br>');
+        if (s.kt && s.kt.pitches && s.kt.pitches.length > 0) {
+          document.getElementById('ktPitcherPitches').innerHTML = s.kt.pitches.map(p => {
+            const pName = translatePitch(p.type);
+            const pRt = Math.round(parseFloat(p.rt) || 0);
+            const pSpd = Math.round(parseFloat(p.spd) || 0);
+            return `• ${pName}: ${pRt}% (평균 ${pSpd}km)`;
+          }).join('<br>');
+        } else {
+          document.getElementById('ktPitcherPitches').innerText = '구종 데이터 없음';
         }
-        if (s.opp && s.opp.pitches) {
-          document.getElementById('oppPitcherPitches').innerHTML = s.opp.pitches.map(p => `• ${p.type}: ${p.rt}% (평균 ${p.spd}km)`).join('<br>');
+
+        if (s.opp && s.opp.pitches && s.opp.pitches.length > 0) {
+          document.getElementById('oppPitcherPitches').innerHTML = s.opp.pitches.map(p => {
+            const pName = translatePitch(p.type);
+            const pRt = Math.round(parseFloat(p.rt) || 0);
+            const pSpd = Math.round(parseFloat(p.spd) || 0);
+            return `• ${pName}: ${pRt}% (평균 ${pSpd}km)`;
+          }).join('<br>');
+        } else {
+          document.getElementById('oppPitcherPitches').innerText = '구종 데이터 없음';
         }
       }
 
