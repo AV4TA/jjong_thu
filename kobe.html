@@ -244,7 +244,7 @@
     .check-row.checked .check-text { text-decoration: line-through; color: #a4b0be; }
     .btn-del-check { background: none; border: none; color: #ff7675; font-size: 0.85rem; cursor: pointer; padding: 4px 6px; }
 
-    /* 서류 / 티켓 카드 스타일 (이미지 썸네일형) */
+    /* 서류 / 티켓 카드 스타일 */
     .doc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; }
     .doc-card {
       background: white;
@@ -633,6 +633,9 @@
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
+    // ★ 서류 전용 독립 컬렉션 경로 정의 (문서별 1개 이미지 구조로 용량 문제 원천 해결)
+    const docsCollection = db.collection("couple_space").doc("shared_data").collection("travel_documents");
+
     const initialChecklistThu = [
       { id: 1, text: "여권 및 신분증 챙기기", checked: false },
       { id: 2, text: "고데기 / 헤어롤", checked: false },
@@ -651,15 +654,9 @@
       { id: 106, text: "숙소 / 고속버스 예약 바우처", checked: false }
     ];
 
-    const initialDocuments = [
-      { id: 1, title: '고속버스 티켓 (서울-고베)', memo: '산노미야행 직행 버스 바우처', fileData: '', fileName: 'bus_ticket.jpg' },
-      { id: 2, title: '토요코인 호텔 예약증', memo: '체크인 바우처 및 예약번호 확인', fileData: '', fileName: 'hotel_voucher.jpg' }
-    ];
-
     const initialKobeData = {
       checklistThu: initialChecklistThu,
       checklistJjong: initialChecklistJjong,
-      documents: initialDocuments,
       travel: [
         { id: 101, day: 1, icon: 'fa-plane-departure', time: '13:20', title: '인천공항 출발 🛫', memo: '인천공항 탑승 수속 & 면세점 구경', query: 'Incheon International Airport', showMap: false },
         { id: 102, day: 1, icon: 'fa-plane-arrival', time: '15:00', title: '고베공항 도착 🛬', memo: '입국 수속 및 포트라이너 타고 산노미야역으로 이동', query: 'Kobe Airport, Japan', showMap: true },
@@ -686,6 +683,7 @@
     };
 
     let appData = initialKobeData;
+    let documentsList = []; // 서류 리스트 별도 관리
     let currentDay = 1;
     let activeNav = 'checklist';
     let selectedPlaceRegion = 'kobe';
@@ -700,29 +698,50 @@
     const syncDot = document.getElementById('syncDot');
     const syncText = document.getElementById('syncStatusText');
 
+    // 1. 일반 여행 데이터 실시간 동기화
     db.collection("couple_space").doc("shared_data").onSnapshot({ includeMetadataChanges: true }, (doc) => {
       if (doc.exists) {
         const remoteData = doc.data();
         appData = {
           checklistThu: remoteData.checklistThu || initialChecklistThu,
           checklistJjong: remoteData.checklistJjong || initialChecklistJjong,
-          documents: remoteData.documents !== undefined ? remoteData.documents : initialDocuments,
           travel: (remoteData.travel && remoteData.travel.length > 0) ? remoteData.travel : initialKobeData.travel,
           places: (remoteData.places && remoteData.places.length > 0) ? remoteData.places : initialKobeData.places
         };
-        syncDot.className = 'sync-dot online';
-        syncText.innerText = '실시간 동기화 완료';
+        setOnlineStatus();
         renderAll();
       } else {
         db.collection("couple_space").doc("shared_data").set(initialKobeData, { merge: true });
       }
     });
 
+    // 2. 서류(티켓) 전용 컬렉션 실시간 동기화 (개별 문서 구조로 용량 문제 해결)
+    docsCollection.onSnapshot((snapshot) => {
+      const list = [];
+      snapshot.forEach(doc => {
+        list.push({ id: doc.id, ...doc.data() });
+      });
+      documentsList = list;
+      setOnlineStatus();
+      if (activeNav === 'docs') renderDocuments();
+    }, error => {
+      console.error("Docs sync error:", error);
+    });
+
+    function setOnlineStatus() {
+      if (syncDot) syncDot.className = 'sync-dot online';
+      if (syncText) syncText.innerText = '실시간 동기화 완료';
+    }
+
+    function setSyncingStatus() {
+      if (syncDot) syncDot.className = 'sync-dot syncing';
+      if (syncText) syncText.innerText = '저장 중...';
+    }
+
     function saveData() {
-      syncDot.className = 'sync-dot syncing';
-      syncText.innerText = '저장 중...';
+      setSyncingStatus();
       db.collection("couple_space").doc("shared_data").set(appData, { merge: true })
-        .then(() => { syncDot.className = 'sync-dot online'; syncText.innerText = '실시간 동기화 완료'; });
+        .then(() => { setOnlineStatus(); });
     }
 
     function renderAll() {
@@ -806,18 +825,17 @@
 
     function renderDocuments() {
       const container = document.getElementById('documentGridContainer');
-      const docs = appData.documents || [];
 
-      if (docs.length === 0) {
+      if (documentsList.length === 0) {
         container.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:#a4b0be; padding:40px 10px;">등록된 티켓/서류가 없습니다.<br>우측 하단의 <b>+</b> 버튼을 눌러 추가해보세요!</div>`;
         return;
       }
 
-      container.innerHTML = docs.map(d => {
+      container.innerHTML = documentsList.map(d => {
         const displayImg = d.fileData || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400';
         return `
           <div class="doc-card">
-            <div class="doc-img-wrap" onclick="viewDocImage(${d.id})">
+            <div class="doc-img-wrap" onclick="viewDocImage('${d.id}')">
               <img src="${displayImg}" alt="서류">
             </div>
             <div class="doc-body">
@@ -826,8 +844,8 @@
                 <div class="doc-memo">${d.memo || '설명 없음'}</div>
               </div>
               <div class="doc-footer">
-                <button class="btn-doc-action del" onclick="deleteDocument(${d.id})">삭제</button>
-                <button class="btn-doc-action view" onclick="viewDocImage(${d.id})">확대보기</button>
+                <button class="btn-doc-action del" onclick="deleteDocument('${d.id}')">삭제</button>
+                <button class="btn-doc-action view" onclick="viewDocImage('${d.id}')">확대보기</button>
               </div>
             </div>
           </div>
@@ -851,7 +869,7 @@
     }
 
     function viewDocImage(id) {
-      const target = (appData.documents || []).find(d => d.id === id);
+      const target = documentsList.find(d => String(d.id) === String(id));
       if (target && target.fileData) {
         currentViewingDoc = target;
         document.getElementById('enlargedDocImg').src = target.fileData;
@@ -884,9 +902,10 @@
 
     function deleteDocument(id) {
       if (confirm('이 서류/티켓을 삭제할까요?')) {
-        appData.documents = (appData.documents || []).filter(d => d.id !== id);
-        saveData();
-        renderDocuments();
+        setSyncingStatus();
+        docsCollection.doc(String(id)).delete()
+          .then(() => { setOnlineStatus(); })
+          .catch(err => { console.error(err); setOnlineStatus(); });
       }
     }
 
@@ -900,13 +919,13 @@
           img.onload = function() {
             const canvas = document.createElement('canvas');
             let w = img.width, h = img.height;
-            const maxD = 1200; // 용량 초과 방지용 리사이징
+            const maxD = 1000; // 용량 최적화 (1MB 이하로 철저히 제한)
             if (w > h && w > maxD) { h = Math.round((h * maxD) / w); w = maxD; }
             else if (h > maxD) { w = Math.round((w * maxD) / h); h = maxD; }
             canvas.width = w; canvas.height = h;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, w, h);
-            tempUploadedFileBase64 = canvas.toDataURL('image/jpeg', 0.85);
+            tempUploadedFileBase64 = canvas.toDataURL('image/jpeg', 0.80);
           };
           img.src = e.target.result;
         };
@@ -1214,16 +1233,24 @@
       if (!name) return alert('이름을 입력해주세요!');
 
       if (type === 'doc') {
-        if (!appData.documents) appData.documents = [];
-        appData.documents.push({
-          id: Date.now(),
+        const docId = String(Date.now());
+        setSyncingStatus();
+        docsCollection.doc(docId).set({
           title: name,
           memo: memo,
           fileData: tempUploadedFileBase64,
-          fileName: tempUploadedFileName || 'document.jpg'
+          fileName: tempUploadedFileName || 'document.jpg',
+          createdAt: Date.now()
+        }, { merge: true })
+        .then(() => {
+          setOnlineStatus();
+          closeModal();
+        })
+        .catch(err => {
+          console.error("서류 저장 실패:", err);
+          setOnlineStatus();
+          alert("저장 실패 (이미지 용량이 너무 클 수 있습니다): " + err.message);
         });
-        saveData();
-        renderDocuments();
       } else if (type === 'travel') {
         if (!appData.travel) appData.travel = [];
         const chosenDay = parseInt(document.getElementById('travelDay').value);
@@ -1240,6 +1267,7 @@
         });
         saveData();
         switchDay(chosenDay, document.querySelectorAll('#dayTabs .sub-tab-btn')[chosenDay - 1]);
+        closeModal();
       } else {
         if (!appData.places) appData.places = [];
         const chosenRegion = document.getElementById('placeRegion').value;
@@ -1254,8 +1282,8 @@
         });
         saveData();
         switchPlaceRegion(chosenRegion);
+        closeModal();
       }
-      closeModal();
     }
 
     calculateDDay();
