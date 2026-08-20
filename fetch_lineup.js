@@ -1,9 +1,15 @@
-// KBO 및 KT 위즈 라이브 데이터 수집 (ktwiz_data.json 완벽 호환 버전)
+// KBO 및 KT 위즈 라이브 데이터 수집 (네이버 API 400 에러 방지 헤더 적용)
 const fs = require('fs');
 const path = require('path');
 
-const UA = { 'User-Agent': 'Mozilla/5.0 (ktwiz-board live fetcher)' };
 const API = 'https://api-gw.sports.naver.com';
+
+// ktwiz-board 원본과 동일한 강력한 헤더 설정
+const HEADERS = {
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+  'Referer': 'https://m.sports.naver.com/',
+  'Accept': 'application/json, text/plain, */*'
+};
 
 function kstNow() {
   return new Date(Date.now() + 9 * 3600 * 1000);
@@ -13,7 +19,7 @@ function ymd(d) {
 }
 
 async function j(url) {
-  const r = await fetch(url, { headers: UA, signal: AbortSignal.timeout(15000) });
+  const r = await fetch(url, { headers: HEADERS, signal: AbortSignal.timeout(15000) });
   if (!r.ok) throw new Error(`${r.status} ${url}`);
   return r.json();
 }
@@ -29,9 +35,9 @@ async function games(from, to, size) {
   const today = ymd(now);
   const todayCompact = today.replace(/-/g, '');
 
-  const file = path.join(__dirname, 'ktwiz_data.json');
+  const filePath = path.join(process.cwd(), 'ktwiz_data.json');
   let prev = null;
-  try { prev = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) {}
+  try { prev = JSON.parse(fs.readFileSync(filePath, 'utf8')); } catch (e) {}
 
   // 1) 오늘 경기 조회
   const todayGames = await games(todayCompact, todayCompact);
@@ -101,12 +107,11 @@ async function games(from, to, size) {
     batters: batters
   };
 
-  // 2) KBO 공식 순위표 조회 (네이버 API 활용)
+  // 2) KBO 공식 순위표 조회
   let rankings = [];
   try {
     const rankRes = await j(`https://api-gw.sports.naver.com/ranking/teamRank?categoryId=kbo`);
     const rankList = rankRes.result || rankRes.table || [];
-    // 네이버 팀 순위 데이터를 HTML이 요구하는 구조로 매핑
     rankings = rankList.map((r, idx) => ({
       rank: r.rank || (idx + 1),
       teamName: r.teamName || r.name,
@@ -122,7 +127,6 @@ async function games(from, to, size) {
     if (prev && prev.rankings) rankings = prev.rankings;
   }
 
-  // 기존 데이터 파일에 있던 schedule 및 todayH2H 유지
   const finalData = {
     todayMatch: todayMatch || (prev ? prev.todayMatch : null),
     todayH2H: prev ? prev.todayH2H : { text: "올 시즌 상대 전적 확인 중...", record: "0승 0패" },
@@ -132,6 +136,6 @@ async function games(from, to, size) {
     lineupUpdatedAt: now.toISOString()
   };
 
-  fs.writeFileSync(file, JSON.stringify(finalData, null, 2), 'utf-8');
+  fs.writeFileSync(filePath, JSON.stringify(finalData, null, 2), 'utf-8');
   console.log('🎯 ktwiz_data.json 업데이트 완료!');
 })().catch(e => { console.error(e); process.exit(1); });
