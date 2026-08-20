@@ -1,4 +1,4 @@
-// KBO 및 KT 위즈 라이브 데이터 수집 (ktwiz-board 사이트 100% 동일 방식)
+// KBO 및 KT 위즈 라이브 데이터 수집 (경기, 라인업, 순위표 완벽 통합 버전)
 const fs = require('fs');
 const path = require('path');
 
@@ -54,7 +54,6 @@ function mapLineup(lu) {
   const now = kstNow();
   const today = ymd(now);
 
-  // 데이터 파일 경로 (ktwiz_data.json)
   const file = path.join(__dirname, 'ktwiz_data.json');
   let prev = null;
   try { prev = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) {}
@@ -81,7 +80,6 @@ function mapLineup(lu) {
         ktLineup = mapLineup(pd[ktSide]);
         oppLineup = mapLineup(pd[opSide]);
 
-        // 선발 투수 구종, 구속, 시즌 성적 매핑
         const mapStarter = (s) => s && s.playerInfo ? {
           name: s.playerInfo.name,
           era: (s.currentSeasonStats || {}).era,
@@ -100,22 +98,42 @@ function mapLineup(lu) {
     }
   }
 
-  // 💡 방어 코드: 새 라인업이나 선발 정보가 없으면 기존 데이터 안전하게 유지
+  // 방어 코드
   if (!ktLineup && prev && prev.kt && prev.kt.lineup) {
     ktLineup = prev.kt.lineup;
     oppLineup = prev.kt.oppLineup;
-    console.log('ℹ️ 새로운 라인업 데이터를 가져오지 못해 기존 데이터를 유지합니다.');
   }
-
   if (!ktStarters && prev && prev.kt && prev.kt.starters) {
     ktStarters = prev.kt.starters;
   }
 
+  // 2) KBO 리그 공식 순위표 조회 추가
+  let rankings = [];
+  try {
+    const rankRes = await j(`https://api-gw.sports.naver.com/ranking/teamRank?categoryId=kbo`);
+    const rankList = rankRes.result || rankRes.table || [];
+    rankings = rankList.map((r, idx) => ({
+      rank: r.rank || (idx + 1),
+      teamName: r.teamName || r.name,
+      games: r.gameCount || r.games || 0,
+      win: r.winCount || r.win || 0,
+      draw: r.drawCount || r.draw || 0,
+      lose: r.loseCount || r.lose || 0,
+      wra: r.winRate || r.wra || '0.000',
+      gameDiff: r.gameDiff || '0.0'
+    }));
+  } catch (e) {
+    console.error('rankings fail', e.message);
+    if (prev && prev.rankings) rankings = prev.rankings;
+  }
+
+  // 최종 저장 구조 (games, kt 정보 + 순위 rankings 포함)
   const out = {
     updated: new Date().toISOString(),
     updatedKST: `${String(now.getUTCHours()).padStart(2, '0')}:${String(now.getUTCMinutes()).padStart(2, '0')}`,
     date: today,
     games: todayGames,
+    rankings: rankings.length > 0 ? rankings : (prev ? prev.rankings : []),
     kt: {
       gameId: ktGameId,
       lineup: ktLineup,
@@ -126,5 +144,5 @@ function mapLineup(lu) {
 
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, JSON.stringify(out, null, 1));
-  console.log(`🎯 데이터 수집 완료: games=${todayGames.length}, lineup=${!!ktLineup}, starters=${!!ktStarters}`);
+  console.log(`🎯 데이터 수집 완료: games=${todayGames.length}, rankings=${rankings.length}, lineup=${!!ktLineup}`);
 })().catch(e => { console.error(e); process.exit(1); });
