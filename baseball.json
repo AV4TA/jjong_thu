@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-08-20 22:43:35 (KST)",
+  "updatedAt": "2026-08-21 07:20:21 (KST)",
   "todayMatch": {
-    "gameId": "20260820KTLG02026",
-    "date": "2026-08-20",
+    "gameId": "20260821KTSK02026",
+    "date": "2026-08-21",
     "time": "19:00",
-    "opponent": "LG 트윈스",
+    "opponent": "SSG 랜더스",
     "isHome": false,
     "stadium": "원정구장 (원정)",
     "result": "scheduled",
@@ -1208,8 +1208,8 @@
       "opponent": "LG 트윈스",
       "isHome": false,
       "stadium": "원정구장 (원정)",
-      "result": "scheduled",
-      "score": "VS"
+      "result": "win",
+      "score": "KT 16 : 4 LG"
     },
     "2026-08-21": {
       "gameId": "20260821KTSK02026",
