@@ -8,10 +8,14 @@
     "isHome": false,
     "stadium": "원정구장 (원정)",
     "result": "scheduled",
-    "score": "VS"
+    "score": "VS",
+    "ktPitcher": "고영표",
+    "oppPitcher": "박시원"
   },
   "todayLineup": {
-    "pitcher": "미발표",
+    "ktPitcher": "고영표",
+    "oppPitcher": "박시원",
+    "pitcher": "고영표",
     "batters": []
   },
   "rankings": [
@@ -1347,5 +1351,10 @@
       "result": "scheduled",
       "score": "VS"
     }
-  }
+  },
+  "todayH2H": {
+    "text": "올시즌 14전 9승 5패",
+    "record": "9승 5패"
+  },
+  "lineupUpdatedAt": "2026-08-20 10:11:56 (KST)"
 }
