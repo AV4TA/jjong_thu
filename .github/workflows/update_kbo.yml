@@ -1,9 +1,9 @@
-name: Update KT Wiz Baseball Data
+Name: Update KT Wiz Baseball Data
 
 on:
   schedule:
-    # 매일 한국 시간 오전 6시, 오후 1시, 오후 6시, 오후 10시에 자동 업데이트
-    - cron: '0 21,4,9,13 * * *'
+    # 한국 시간 기준: 00:00, 06:00, 13:00, 18:00, 22:00 (UTC 기준 15, 21, 4, 9, 13)
+    - cron: '0 15,21,4,9,13 * * *'
   workflow_dispatch: # 수동 실행 지원
 
 permissions:
@@ -24,9 +24,13 @@ jobs:
       - name: Run Crawler Script
         run: python crawler.py
 
-      - name: Commit and Push Updated Data
+      - name: Pull Remote Changes
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git pull origin main --rebase
+
+      - name: Commit and Push Updated Data
+        run: |
           git add baseball.json
           git diff --quiet && git diff --staged --quiet || (git commit -m "Auto Update KT Wiz Data [skip ci]" && git push)
