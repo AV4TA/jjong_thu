@@ -498,11 +498,11 @@
         </select>
       </div>
 
-      <!-- 서류/PDF 업로드 필드 -->
+      <!-- 서류/PDF 업로드 필드 (파일 탐색기 열기 설정) -->
       <div id="docFields">
         <div class="form-group">
           <label>PDF 또는 문서 파일 첨부 (최대 700KB)</label>
-          <input type="file" class="form-control" id="docFileInput" accept=".pdf,image/*" onchange="handleDocFileSelect(this)">
+          <input type="file" class="form-control" id="docFileInput" accept=".pdf,application/pdf,*/*" onchange="handleDocFileSelect(this)">
         </div>
       </div>
 
@@ -572,7 +572,6 @@
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // 문서 1개당 PDF 1개가 개별 저장되는 전용 서브컬렉션
     const docsCollection = db.collection("couple_space").doc("shared_data").collection("travel_documents");
 
     const initialChecklistThu = [
@@ -794,7 +793,6 @@
       if (input.files && input.files[0]) {
         const file = input.files[0];
         
-        // Firestore 1MB 제한 보호 (안전하게 750KB 이하 권장)
         if (file.size > 800 * 1024) {
           alert('파일 용량이 800KB를 초과합니다. 800KB 이하의 PDF 파일을 업로드해주세요.');
           input.value = '';
@@ -804,7 +802,7 @@
         tempUploadedFileName = file.name;
         const reader = new FileReader();
         reader.onload = function(e) {
-          tempUploadedFileBase64 = e.target.result; // 원본 PDF 바이너리(Base64) 그대로 유지
+          tempUploadedFileBase64 = e.target.result;
         };
         reader.readAsDataURL(file);
       }
@@ -1126,7 +1124,7 @@
         .catch(err => {
           console.error("서류 저장 실패:", err);
           setOnlineStatus();
-          alert("저장 실패 (PDF 파일 용량이 너무 큽니다): " + err.message);
+          alert("저장 실패: " + err.message);
         });
       } else if (type === 'travel') {
         if (!appData.travel) appData.travel = [];
