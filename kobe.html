@@ -186,6 +186,7 @@
       padding: 20px;
       box-shadow: var(--shadow);
       border: 1px solid rgba(255, 117, 140, 0.15);
+      margin-bottom: 16px;
     }
     .person-switch-row { display: flex; background: #f1f2f6; padding: 4px; border-radius: 14px; margin-bottom: 16px; gap: 4px; }
     .person-btn {
@@ -241,6 +242,56 @@
     .check-row.checked .check-text { text-decoration: line-through; color: #a4b0be; }
     .btn-del-check { background: none; border: none; color: #ff7675; font-size: 0.85rem; cursor: pointer; padding: 4px 6px; }
 
+    /* PDF / 문서 카드 스타일 */
+    .doc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; }
+    .doc-card {
+      background: white;
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    .doc-icon-wrap {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: #fff0f3;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    .doc-title { font-size: 0.92rem; font-weight: 800; color: #2d3436; margin-bottom: 4px; }
+    .doc-memo { font-size: 0.75rem; color: var(--text-sub); margin-bottom: 12px; line-height: 1.3; }
+    .doc-actions { display: flex; gap: 6px; }
+    .btn-doc-view {
+      flex: 1;
+      background: var(--primary-soft);
+      color: var(--primary);
+      border: none;
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+    .btn-doc-del {
+      background: #f1f2f6;
+      color: #ff7675;
+      border: none;
+      width: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
     .timeline-item { display: flex; gap: 14px; position: relative; padding-bottom: 20px; }
     .timeline-item:last-child { padding-bottom: 0; }
     .timeline-item::before { content: ''; position: absolute; left: 19px; top: 36px; bottom: 0; width: 2px; background: #f0f0f5; }
@@ -290,8 +341,8 @@
     .fab { position: fixed; right: 20px; bottom: 86px; width: 54px; height: 54px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 8px 20px rgba(255, 94, 126, 0.4); cursor: pointer; border: none; z-index: 50; transition: transform 0.2s; }
     .fab:active { transform: scale(0.92); }
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background: white; box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05); display: flex; justify-content: space-around; align-items: center; z-index: 50; border-radius: 20px 20px 0 0; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; color: #a4b0be; font-size: 0.72rem; font-weight: 600; cursor: pointer; gap: 4px; border: none; background: none; width: 33%; }
-    .nav-item i { font-size: 1.25rem; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; color: #a4b0be; font-size: 0.68rem; font-weight: 600; cursor: pointer; gap: 4px; border: none; background: none; width: 25%; }
+    .nav-item i { font-size: 1.15rem; }
     .nav-item.active { color: var(--primary); }
 
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 999; opacity: 0; pointer-events: none; align-items: center; justify-content: center; padding: 16px; transition: opacity 0.2s ease; }
@@ -332,14 +383,17 @@
     <!-- 1. 여행일정 탭 -->
     <div id="view-travel" class="tab-view active">
       <div class="sub-tabs" id="dayTabs">
-        <button class="sub-tab-btn active" onclick="switchDay('ready', this)">🧳 여행준비</button>
-        <button class="sub-tab-btn" onclick="switchDay(1, this)">Day 1 (8/30)</button>
+        <button class="sub-tab-btn active" onclick="switchDay(1, this)">Day 1 (8/30)</button>
         <button class="sub-tab-btn" onclick="switchDay(2, this)">Day 2 (8/31)</button>
         <button class="sub-tab-btn" onclick="switchDay(3, this)">Day 3 (9/01)</button>
         <button class="sub-tab-btn" onclick="switchDay(4, this)">Day 4 (9/02)</button>
       </div>
+      <div id="timelineContainer"></div>
+    </div>
 
-      <div id="readyChecklistSection" class="checklist-card">
+    <!-- 2. 필요서류 탭 (체크리스트 + PDF/티켓 보관함) -->
+    <div id="view-docs" class="tab-view">
+      <div class="checklist-card">
         <div class="person-switch-row">
           <button class="person-btn active" id="btnPersonThu" onclick="switchPerson('thu')">👸 뚜가 챙길 거</button>
           <button class="person-btn" id="btnPersonJjong" onclick="switchPerson('jjong')">🤴 쫑이 챙길 거</button>
@@ -357,18 +411,20 @@
         </div>
         <div class="checklist-items" id="checklistContainer"></div>
       </div>
-      <div id="timelineContainer" style="display:none;"></div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0 10px;">
+        <h4 style="font-size: 1rem; font-weight: 800; color: #2d3436;"><i class="fa-solid fa-file-pdf" style="color:var(--primary);"></i> 티켓 및 예약증 PDF 보관함</h4>
+      </div>
+      <div class="doc-grid" id="documentGridContainer"></div>
     </div>
 
-    <!-- 2. 맛집/가볼곳 탭 -->
+    <!-- 3. 맛집/가볼곳 탭 -->
     <div id="view-places" class="tab-view">
-      <!-- 1단계: 지역 선택 -->
       <div class="region-switch-row">
         <button class="region-btn active" id="btnRegionKobe" onclick="switchPlaceRegion('kobe')">🥩 고베 시내</button>
         <button class="region-btn" id="btnRegionArima" onclick="switchPlaceRegion('arima')">♨️ 아리마 온천</button>
       </div>
 
-      <!-- 2단계: 세부 카테고리 선택 (숙소 추가됨) -->
       <div class="category-sub-tabs" id="placeCategoryTabs">
         <button class="cat-chip-btn active" onclick="filterPlaceCategory('all', this)">전체</button>
         <button class="cat-chip-btn" onclick="filterPlaceCategory('맛집', this)">🍣 맛집</button>
@@ -381,7 +437,7 @@
       <div id="placesContainer"></div>
     </div>
 
-    <!-- 3. 날씨 탭 -->
+    <!-- 4. 날씨 탭 -->
     <div id="view-weather" class="tab-view">
       <div class="sub-tabs">
         <button class="sub-tab-btn active" onclick="switchWeatherCity('kobe', this)">🏙️ 고베 시내</button>
@@ -410,23 +466,25 @@
 
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchNav('travel', this)"><i class="fa-solid fa-plane-departure"></i><span>여행일정</span></button>
+    <button class="nav-item" onclick="switchNav('docs', this)"><i class="fa-solid fa-file-lines"></i><span>필요서류</span></button>
     <button class="nav-item" onclick="switchNav('places', this)"><i class="fa-solid fa-utensils"></i><span>맛집/가볼곳</span></button>
     <button class="nav-item" onclick="switchNav('weather', this)"><i class="fa-solid fa-cloud-sun"></i><span>날씨</span></button>
   </nav>
 
-  <!-- 일정/장소 추가 모달 -->
+  <!-- 항목 추가 모달 -->
   <div class="modal-overlay" id="addModal">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 16px;">새 일정 / 장소 추가</h3>
+      <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 16px;" id="modalMainTitle">새 항목 추가</h3>
       <div class="form-group">
-        <label>구분</label>
+        <label>추가할 위치 (분류)</label>
         <select class="form-control" id="itemType" onchange="toggleFormFields()">
           <option value="travel">✈️ 여행 일정 (시간표)</option>
+          <option value="doc">📄 필요서류 / 티켓 PDF</option>
           <option value="place">🍽️ 맛집 / 가볼 곳 보관</option>
         </select>
       </div>
 
-      <!-- 여행 일정 전용 필드 -->
+      <!-- 여행 일정 필드 -->
       <div id="travelFields">
         <div class="form-group">
           <label>일자 (Day)</label>
@@ -438,12 +496,20 @@
           </select>
         </div>
         <div class="form-group">
-          <label>시간 (예: 11:30 또는 14:00)</label>
+          <label>시간 (예: 11:30)</label>
           <input type="text" class="form-control" id="travelTime" placeholder="예: 11:30">
         </div>
       </div>
 
-      <!-- 맛집/가볼곳 전용 지역 & 카테고리 태그 선택 필드 (숙소 추가됨) -->
+      <!-- PDF / 서류 업로드 필드 -->
+      <div id="docFields" style="display:none;">
+        <div class="form-group">
+          <label>PDF 또는 문서 파일 첨부 <span style="font-size:0.8rem; color:var(--primary); font-weight:normal;">(티켓, 예약증 등)</span></label>
+          <input type="file" class="form-control" id="docFileInput" accept=".pdf,image/*" onchange="handleDocFileSelect(this)">
+        </div>
+      </div>
+
+      <!-- 맛집/가볼곳 필드 -->
       <div id="placeFields" style="display: none;">
         <div class="form-group">
           <label>지역 선택 📍</label>
@@ -465,12 +531,12 @@
       </div>
 
       <div class="form-group">
-        <label id="nameLabel">일정 제목 / 장소명</label>
-        <input type="text" class="form-control" id="itemName" placeholder="예: 토요코인 / 고베 타다">
+        <label id="nameLabel">제목 / 이름</label>
+        <input type="text" class="form-control" id="itemName" placeholder="예: 고속버스 티켓 / 호텔 예약증">
       </div>
       <div class="form-group">
-        <label>메모 & 설명 (지도 링크 붙여넣기 가능)</label>
-        <textarea class="form-control" id="itemMemo" rows="2" placeholder="체크인/예약정보, 구글지도 링크(https://maps.app.goo.gl/...) 등"></textarea>
+        <label id="memoLabel">메모 & 설명</label>
+        <textarea class="form-control" id="itemMemo" rows="2" placeholder="예약번호, 주의사항 등"></textarea>
       </div>
       <div style="display: flex; gap: 10px; margin-top: 20px;">
         <button class="btn btn-secondary" onclick="closeModal()">취소</button>
@@ -510,9 +576,15 @@
       { id: 106, text: "숙소 / 고속버스 예약 바우처", checked: false }
     ];
 
+    const initialDocuments = [
+      { id: 1, title: '고속버스 티켓 (서울-고베)', memo: '산노미야행 직행 버스 바우처', fileData: '', fileName: 'bus_ticket.pdf' },
+      { id: 2, title: '토요코인 호텔 예약증', memo: '체크인 바우처 및 예약번호 확인', fileData: '', fileName: 'hotel_voucher.pdf' }
+    ];
+
     const initialKobeData = {
       checklistThu: initialChecklistThu,
       checklistJjong: initialChecklistJjong,
+      documents: initialDocuments,
       travel: [
         { id: 101, day: 1, icon: 'fa-plane-departure', time: '13:20', title: '인천공항 출발 🛫', memo: '인천공항 탑승 수속 & 면세점 구경', query: 'Incheon International Airport', showMap: false },
         { id: 102, day: 1, icon: 'fa-plane-arrival', time: '15:00', title: '고베공항 도착 🛬', memo: '입국 수속 및 포트라이너 타고 산노미야역으로 이동', query: 'Kobe Airport, Japan', showMap: true },
@@ -539,12 +611,14 @@
     };
 
     let appData = initialKobeData;
-    let currentDay = 'ready';
+    let currentDay = 1;
     let activeNav = 'travel';
     let selectedPlaceRegion = 'kobe';
     let selectedPlaceCategory = 'all';
     let currentWeatherCity = 'kobe';
     let currentPerson = 'thu';
+    let tempUploadedFileBase64 = '';
+    let tempUploadedFileName = '';
 
     const syncDot = document.getElementById('syncDot');
     const syncText = document.getElementById('syncStatusText');
@@ -555,6 +629,7 @@
         appData = {
           checklistThu: remoteData.checklistThu || initialChecklistThu,
           checklistJjong: remoteData.checklistJjong || initialChecklistJjong,
+          documents: remoteData.documents || initialDocuments,
           travel: (remoteData.travel && remoteData.travel.length > 0) ? remoteData.travel : initialKobeData.travel,
           places: (remoteData.places && remoteData.places.length > 0) ? remoteData.places : initialKobeData.places
         };
@@ -574,7 +649,8 @@
     }
 
     function renderAll() {
-      if (activeNav === 'travel') renderTravelView();
+      if (activeNav === 'travel') renderTimeline();
+      if (activeNav === 'docs') { renderChecklist(); renderDocuments(); }
       if (activeNav === 'places') renderPlaces();
       if (activeNav === 'weather') loadWeatherData();
     }
@@ -650,6 +726,50 @@
       renderChecklist();
     }
 
+    function renderDocuments() {
+      const container = document.getElementById('documentGridContainer');
+      const docs = appData.documents || [];
+
+      if (docs.length === 0) {
+        container.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:#a4b0be; padding:30px;">등록된 서류/티켓이 없습니다.<br>우측 하단의 <b>+</b> 버튼을 눌러 추가해보세요!</div>`;
+        return;
+      }
+
+      container.innerHTML = docs.map(d => `
+        <div class="doc-card">
+          <div>
+            <div class="doc-icon-wrap"><i class="fa-solid fa-file-pdf"></i></div>
+            <div class="doc-title">${d.title}</div>
+            <div class="doc-memo">${d.memo || '설명 없음'}</div>
+          </div>
+          <div class="doc-actions">
+            ${d.fileData ? `<a class="btn-doc-view" href="${d.fileData}" download="${d.fileName || 'document.pdf'}"><i class="fa-solid fa-download"></i> 확인/다운로드</a>` : `<span style="font-size:0.75rem; color:#a4b0be; padding:6px;">파일 없음</span>`}
+            <button class="btn-doc-del" onclick="deleteDocument(${d.id})"><i class="fa-solid fa-trash-can"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deleteDocument(id) {
+      if (confirm('이 서류/티켓을 삭제할까요?')) {
+        appData.documents = (appData.documents || []).filter(d => d.id !== id);
+        saveData();
+        renderDocuments();
+      }
+    }
+
+    function handleDocFileSelect(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        tempUploadedFileName = file.name;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          tempUploadedFileBase64 = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
     function calculateDDay() {
       const tripDate = new Date('2026-08-30');
       const today = new Date();
@@ -676,21 +796,7 @@
       currentDay = day;
       document.querySelectorAll('#dayTabs .sub-tab-btn').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
-      renderTravelView();
-    }
-
-    function renderTravelView() {
-      const checkSec = document.getElementById('readyChecklistSection');
-      const timelineSec = document.getElementById('timelineContainer');
-      if (currentDay === 'ready') {
-        checkSec.style.display = 'block';
-        timelineSec.style.display = 'none';
-        renderChecklist();
-      } else {
-        checkSec.style.display = 'none';
-        timelineSec.style.display = 'block';
-        renderTimeline();
-      }
+      renderTimeline();
     }
 
     function parseTimeToMinutes(timeStr) {
@@ -941,22 +1047,39 @@
     }
 
     function openAddModal() {
-      document.getElementById('itemType').value = (activeNav === 'places') ? 'place' : 'travel';
+      if (activeNav === 'places') document.getElementById('itemType').value = 'place';
+      else if (activeNav === 'docs') document.getElementById('itemType').value = 'doc';
+      else document.getElementById('itemType').value = 'travel';
       toggleFormFields();
       document.getElementById('addModal').classList.add('active');
     }
+
     function closeModal() {
       document.getElementById('addModal').classList.remove('active');
       document.getElementById('itemName').value = '';
       document.getElementById('itemMemo').value = '';
       document.getElementById('travelTime').value = '';
+      document.getElementById('docFileInput').value = '';
+      tempUploadedFileBase64 = '';
+      tempUploadedFileName = '';
     }
 
     function toggleFormFields() {
       const type = document.getElementById('itemType').value;
       document.getElementById('travelFields').style.display = (type === 'travel') ? 'block' : 'none';
+      document.getElementById('docFields').style.display = (type === 'doc') ? 'block' : 'none';
       document.getElementById('placeFields').style.display = (type === 'place') ? 'block' : 'none';
-      document.getElementById('nameLabel').innerText = (type === 'place') ? '맛집 / 장소명' : '일정 제목 / 장소';
+      
+      if (type === 'doc') {
+        document.getElementById('nameLabel').innerText = '서류 / 티켓 명칭';
+        document.getElementById('memoLabel').innerText = '예약번호 및 간단 설명';
+      } else if (type === 'place') {
+        document.getElementById('nameLabel').innerText = '맛집 / 장소명';
+        document.getElementById('memoLabel').innerText = '설명 및 구글지도 링크';
+      } else {
+        document.getElementById('nameLabel').innerText = '일정 제목 / 장소';
+        document.getElementById('memoLabel').innerText = '메모 & 설명';
+      }
     }
 
     function getAutoIcon(text) {
@@ -993,11 +1116,18 @@
           showMap: true
         });
         saveData();
-        if (currentDay === 'ready' || currentDay !== chosenDay) {
-          switchDay(chosenDay, document.querySelectorAll('#dayTabs .sub-tab-btn')[chosenDay]);
-        } else {
-          renderTimeline();
-        }
+        switchDay(chosenDay, document.querySelectorAll('#dayTabs .sub-tab-btn')[chosenDay - 1]);
+      } else if (type === 'doc') {
+        if (!appData.documents) appData.documents = [];
+        appData.documents.push({
+          id: Date.now(),
+          title: name,
+          memo: memo,
+          fileData: tempUploadedFileBase64,
+          fileName: tempUploadedFileName || 'document.pdf'
+        });
+        saveData();
+        renderDocuments();
       } else {
         if (!appData.places) appData.places = [];
         const chosenRegion = document.getElementById('placeRegion').value;
