@@ -1,4 +1,4 @@
-Name: Update KT Wiz Baseball Data
+name: Update KT Wiz Baseball Data
 
 on:
   schedule:
