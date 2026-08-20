@@ -1,88 +1,256 @@
 {
-  "todayMatch": null,
+  "todayMatch": {
+    "date": "2026-08-20",
+    "time": "19:00",
+    "stadium": "잠실",
+    "opponent": "LG",
+    "isHome": false,
+    "score": "VS",
+    "ktPitcher": "고영표",
+    "oppPitcher": "박시원"
+  },
   "todayLineup": {
-    "ktPitcher": "미정",
-    "oppPitcher": "미정",
-    "pitcher": "미정",
+    "ktPitcher": "고영표",
+    "oppPitcher": "박시원",
+    "pitcher": "고영표",
     "batters": []
   },
   "rankings": [
     {
       "rank": 1,
-      "games": null,
-      "draw": 0,
+      "teamName": "KT",
+      "games": 105,
+      "win": 62,
+      "draw": 2,
+      "lose": 41,
       "wra": 0.602,
       "gameDiff": "0.0"
     },
     {
       "rank": 2,
-      "games": null,
-      "draw": 0,
+      "teamName": "삼성",
+      "games": 107,
+      "win": 63,
+      "draw": 2,
+      "lose": 42,
       "wra": 0.6,
       "gameDiff": "0.0"
     },
     {
       "rank": 3,
-      "games": null,
-      "draw": 0,
+      "teamName": "LG",
+      "games": 109,
+      "win": 60,
+      "draw": 1,
+      "lose": 48,
       "wra": 0.556,
       "gameDiff": "0.0"
     },
     {
       "rank": 4,
-      "games": null,
-      "draw": 0,
+      "teamName": "KIA",
+      "games": 108,
+      "win": 58,
+      "draw": 2,
+      "lose": 48,
       "wra": 0.547,
       "gameDiff": "0.0"
     },
     {
       "rank": 5,
-      "games": null,
-      "draw": 0,
+      "teamName": "두산",
+      "games": 109,
+      "win": 57,
+      "draw": 4,
+      "lose": 48,
       "wra": 0.543,
       "gameDiff": "0.0"
     },
     {
       "rank": 6,
-      "games": null,
-      "draw": 0,
+      "teamName": "한화",
+      "games": 106,
+      "win": 48,
+      "draw": 3,
+      "lose": 55,
       "wra": 0.466,
       "gameDiff": "0.0"
     },
     {
       "rank": 7,
-      "games": null,
-      "draw": 0,
+      "teamName": "NC",
+      "games": 102,
+      "win": 46,
+      "draw": 2,
+      "lose": 54,
       "wra": 0.46,
       "gameDiff": "0.0"
     },
     {
       "rank": 8,
-      "games": null,
-      "draw": 0,
+      "teamName": "롯데",
+      "games": 107,
+      "win": 48,
+      "draw": 2,
+      "lose": 57,
       "wra": 0.457,
       "gameDiff": "0.0"
     },
     {
       "rank": 9,
-      "games": null,
-      "draw": 0,
+      "teamName": "SSG",
+      "games": 111,
+      "win": 44,
+      "draw": 4,
+      "lose": 63,
       "wra": 0.411,
       "gameDiff": "0.0"
     },
     {
       "rank": 10,
-      "games": null,
-      "draw": 0,
+      "teamName": "키움",
+      "games": 112,
+      "win": 40,
+      "draw": 2,
+      "lose": 70,
       "wra": 0.364,
       "gameDiff": "0.0"
     }
   ],
-  "games": [],
+  "games": [
+    {
+      "id": "20260820HTHH02026",
+      "date": "2026-08-20",
+      "time": "19:00",
+      "stadium": "대전",
+      "away": "KIA",
+      "home": "한화",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "황동하",
+      "hp": "류현진",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260820KTLG02026",
+      "date": "2026-08-20",
+      "time": "19:00",
+      "stadium": "잠실",
+      "away": "KT",
+      "home": "LG",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "고영표",
+      "hp": "박시원",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260820OBNC02026",
+      "date": "2026-08-20",
+      "time": "19:00",
+      "stadium": "창원",
+      "away": "두산",
+      "home": "NC",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "잭로그",
+      "hp": "구창모",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260820SKSS02026",
+      "date": "2026-08-20",
+      "time": "19:00",
+      "stadium": "대구",
+      "away": "SSG",
+      "home": "삼성",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "최민준",
+      "hp": "최원태",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260820WOLT02026",
+      "date": "2026-08-20",
+      "time": "19:00",
+      "stadium": "사직",
+      "away": "키움",
+      "home": "롯데",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "박준현",
+      "hp": "나균안",
+      "wp": "",
+      "lp": ""
+    }
+  ],
   "kt": {
-    "gameId": null,
+    "gameId": "20260820KTLG02026",
     "lineup": null,
-    "starters": null
+    "starters": {
+      "kt": {
+        "name": "고영표",
+        "era": "3.70",
+        "w": 9,
+        "l": 6,
+        "pitches": [
+          {
+            "type": "CHUP",
+            "rt": 43.20000076293945,
+            "spd": 118
+          },
+          {
+            "type": "TWOS",
+            "rt": 30.100000381469727,
+            "spd": 134
+          },
+          {
+            "type": "SWEE",
+            "rt": 10.600000381469727,
+            "spd": 117
+          }
+        ]
+      },
+      "opp": {
+        "name": "박시원",
+        "era": "3.98",
+        "w": 0,
+        "l": 2,
+        "pitches": [
+          {
+            "type": "FAST",
+            "rt": 58.29999923706055,
+            "spd": 147
+          },
+          {
+            "type": "SLID",
+            "rt": 25.5,
+            "spd": 137
+          },
+          {
+            "type": "CURV",
+            "rt": 10,
+            "spd": 124
+          }
+        ]
+      },
+      "oppName": "LG"
+    }
   },
-  "updated": "2026-08-20T03:00:30.682Z"
+  "updated": "2026-08-20T03:03:48.286Z"
 }
