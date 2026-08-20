@@ -634,7 +634,6 @@
       '삼성': '삼성 라이온즈', '롯데': '롯데 자이언츠', '한화': '한화 이글스', 'NC': 'NC 다이노스', '키움': '키움 히어로즈', 'KT': 'kt wiz'
     };
 
-    // 구종 영문 코드를 예쁜 한글 이름으로 변환하는 매핑
     const pitchNameMap = {
       'FAST': '직구(포심)',
       'CHUP': '체인지업',
@@ -699,7 +698,6 @@
       document.getElementById(tabId).classList.add('active');
     }
 
-    // 💡 1. ktwiz_data.json 로드 (순위, 라인업, 투수 구종 담당)
     async function loadKboJson() {
       try {
         const res = await fetch('./ktwiz_data.json?t=' + Date.now());
@@ -712,7 +710,6 @@
     }
     loadKboJson();
 
-    // 💡 2. baseball.json 로드 (직관 다이어리 및 올시즌 상대전적 담당)
     async function loadBaseballJson() {
       try {
         const res = await fetch('./baseball.json?t=' + Date.now());
@@ -735,11 +732,9 @@
         document.getElementById('todayOpponentTxt').innerText = normalizeTeam(todayMatch.opponent);
       }
 
-      // 선발 투수 이름
       document.getElementById('todayKtPitcher').innerText = (todayLineup && todayLineup.ktPitcher) || (todayMatch && todayMatch.ktPitcher) || '미정';
       document.getElementById('todayOppPitcher').innerText = (todayLineup && todayLineup.oppPitcher) || (todayMatch && todayMatch.oppPitcher) || '미정';
 
-      // 선발 투수 구종 및 구속 비교 (한글명 변환 및 소수점 없는 정수 퍼센트 적용)
       if (data.kt && data.kt.starters) {
         const s = data.kt.starters;
         if (s.kt && s.kt.pitches && s.kt.pitches.length > 0) {
@@ -765,7 +760,6 @@
         }
       }
 
-      // 선발 라인업 (1~9번)
       if (todayLineup && todayLineup.batters && todayLineup.batters.length > 0) {
         const grid = document.getElementById('todayLineupGrid');
         grid.innerHTML = todayLineup.batters.map(b => `
@@ -783,7 +777,6 @@
       }
     }
 
-    // ⚔️ 올시즌 상대 전적 계산 (baseball.json의 schedule 활용)
     function calculateH2H(schedule, todayMatch) {
       if (!schedule || !todayMatch || !todayMatch.opponent) {
         document.getElementById('todayH2hTxt').innerText = "올 시즌 상대 전적 없음";
@@ -810,6 +803,7 @@
       document.getElementById('todayH2hTxt').innerText = h2hText;
     }
 
+    // 💡 1위 팀 기준 게임차(GB) 자동 계산 로직 적용
     function renderRankingsAndMagic(rankings) {
       const tbody = document.getElementById('rankingTableBody');
       if (!rankings || rankings.length === 0) {
@@ -817,7 +811,27 @@
         return;
       }
 
-      tbody.innerHTML = rankings.map(r => `
+      const topTeam = rankings[0];
+      const topWin = parseInt(topTeam.win) || 0;
+      const topLose = parseInt(topTeam.lose) || 0;
+
+      const calculatedRankings = rankings.map((r, idx) => {
+        const win = parseInt(r.win) || 0;
+        const lose = parseInt(r.lose) || 0;
+        
+        let diffStr = "0.0";
+        if (idx > 0) {
+          const diff = ((topWin - win) + (lose - topLose)) / 2.0;
+          diffStr = diff > 0 ? diff.toFixed(1) : "0.0";
+        }
+
+        return {
+          ...r,
+          gameDiff: diffStr
+        };
+      });
+
+      tbody.innerHTML = calculatedRankings.map(r => `
         <tr class="${r.teamName && (r.teamName.includes('KT') || r.teamName.includes('kt')) ? 'kt-row' : ''}">
           <td><b>${r.rank}</b></td>
           <td>${r.teamName}</td>
@@ -826,11 +840,11 @@
           <td>${r.draw || 0}</td>
           <td>${r.lose}</td>
           <td>${r.wra}</td>
-          <td>${r.gameDiff || '0.0'}</td>
+          <td>${r.gameDiff}</td>
         </tr>
       `).join('');
 
-      calculateMagicNumbers(rankings);
+      calculateMagicNumbers(calculatedRankings);
     }
 
     function calculateMagicNumbers(rankings) {
@@ -984,7 +998,6 @@
       }).join('');
     }
 
-    // 💡 직관 날짜 선택 시 baseball.json의 schedule에서 3/28 이후 경기 자동 매칭
     function matchKtGame(dateStr) {
       if (!dateStr || !serverBaseballData.schedule) return;
       const gameInfo = serverBaseballData.schedule[dateStr];
