@@ -916,13 +916,21 @@
           img.onload = function() {
             const canvas = document.createElement('canvas');
             let w = img.width, h = img.height;
-            const maxD = 1000;
+            
+            // 고해상도 유지 (최대 1800px)
+            const maxD = 1800;
             if (w > h && w > maxD) { h = Math.round((h * maxD) / w); w = maxD; }
             else if (h > maxD) { w = Math.round((w * maxD) / h); h = maxD; }
-            canvas.width = w; canvas.height = h;
+            
+            canvas.width = w; 
+            canvas.height = h;
             const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
             ctx.drawImage(img, 0, 0, w, h);
-            tempUploadedFileBase64 = canvas.toDataURL('image/jpeg', 0.80);
+            
+            // 고화질 압축 품질 (90%)
+            tempUploadedFileBase64 = canvas.toDataURL('image/jpeg', 0.90);
           };
           img.src = e.target.result;
         };
