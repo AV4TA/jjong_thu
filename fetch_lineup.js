@@ -85,7 +85,7 @@ async function selfStandings(today) {
   let prev = null;
   try { prev = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) {}
 
-  // 💡 400 에러 방지를 위해 월별로 나누어 안전하게 전체 시즌 경기 조회 후 합치기
+  // 월별로 나누어 400 에러 없이 전체 시즌 경기 조회 후 합치기
   const monthRanges = [
     ['20260328', '20260331'],
     ['20260401', '20260430'],
@@ -221,7 +221,7 @@ async function selfStandings(today) {
     todayH2H: prev ? prev.todayH2H : { text: "올 시즌 상대 전적", record: "0승 0패" },
     todayLineup: todayLineup,
     rankings: rankings,
-    games: mappedGames, // 👈 개막일부터 오늘까지의 전체 시즌 경기 일정 포함 완료!
+    games: mappedGames,
     kt: {
       gameId: ktGameId,
       lineup: ktLineup,
