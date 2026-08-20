@@ -1,6 +1,7 @@
 import json
 import datetime
 import urllib.request
+import urllib.error
 import ssl
 import sys
 
@@ -12,15 +13,25 @@ def fetch_kbo_post(url, data_str):
         data=data_str.encode('utf-8'),
         headers={
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Referer': 'https://www.koreabaseball.com/'
         }
     )
     try:
         with urllib.request.urlopen(req, timeout=12, context=ssl_ctx) as res:
-            return json.loads(res.read().decode('utf-8'))
+            body = res.read().decode('utf-8')
+            json_data = json.loads(body)
+            if not json_data:
+                print(f"⚠️ [경고] KBO 응답은 성공했으나 데이터가 비어있습니다. URL: {url}")
+            return json_data
+    except urllib.error.HTTPError as e:
+        print(f"❌ [HTTP 에러] URL: {url} | 상태 코드: {e.code} | 사유: {e.reason}")
+        return None
+    except urllib.error.URLError as e:
+        print(f"❌ [URL/네트워크 에러] URL: {url} | 사유: {e.reason}")
+        return None
     except Exception as e:
-        print(f"KBO 통신 에러 [{url}]: {e}")
+        print(f"❌ [기타 통신 에러] URL: {url} | 타입: {type(e).__name__} | 내용: {e}")
         return None
 
 def update_lineup_and_pitchers():
@@ -57,14 +68,19 @@ def update_lineup_and_pitchers():
     )
 
     if main_res and "game" in main_res:
-        for g in main_res.get("game", []):
+        games = main_res.get("game", [])
+        print(f"  🔍 오늘 전체 경기 수: {len(games)}개")
+        for g in games:
             h_name = g.get("HOME_NM", "")
             a_name = g.get("AWAY_NM", "")
             
-            if "KT" in h_name or "kt" in h_name or "KT" in a_name or "kt" in a_name:
+            # 대소문자 관계없이 kt 포함 여부 확인
+            if "kt" in h_name.lower() or "kt" in a_name.lower():
                 kbo_game_id = g.get("G_ID")
                 h_starter = g.get("B_PIT_P_NM") or g.get("HOME_PIT_P_NM")
                 a_starter = g.get("T_PIT_P_NM") or g.get("AWAY_PIT_P_NM")
+                
+                print(gh_match_debug := f"  🎯 KT 경기 발견! ID: {kbo_game_id} (홈: {h_name}, 원정: {a_name})")
                 
                 if is_home:
                     if h_starter: kt_p = str(h_starter).strip()
@@ -73,6 +89,10 @@ def update_lineup_and_pitchers():
                     if a_starter: kt_p = str(a_starter).strip()
                     if h_starter: opp_p = str(h_starter).strip()
                 break
+        if not kbo_game_id:
+            print("  ⚠️ 오늘 경기 목록에서 'KT'를 포함한 매치업을 찾지 못했습니다.")
+    else:
+        print("  ⚠️ KBO 메인 경기 목록(GetKboGameList)을 불러오지 못했습니다.")
 
     print(f"  👉 선발투수: KT [{kt_p}] vs 상대 [{opp_p}]")
 
@@ -87,6 +107,8 @@ def update_lineup_and_pitchers():
             target_key = "homeLineUp" if is_home else "awayLineUp"
             raw_batters = lineup_res.get(target_key, []) or lineup_res.get("lineUp", [])
             
+            print(f"  📋 라인업 응답 수신 성공 (타자 데이터 수: {len(raw_batters)}명)")
+            
             if raw_batters:
                 for idx, b in enumerate(raw_batters):
                     order = str(b.get("TURN") or b.get("BAT_ORDER_NO") or (idx + 1))
@@ -99,8 +121,19 @@ def update_lineup_and_pitchers():
                             "name": name,
                             "pos": pos
                         })
+            else:
+                print("  ⚠️ API 응답에 타자 라인업 배열이 비어있습니다 (아직 미등록 상태 가능성 높음).")
+        else:
+            print("  ⚠️ 라인업 API(GetLineUp) 호출에 실패했습니다.")
+    else:
+        print("  ℹ️ kbo_game_id가 없어 라인업 조회를 스킵합니다.")
 
-    print(f"  👉 선발 타순 등록: {len(batters)}명")
+    # 💡 방어 코드: 라인업이 아직 안 떠서 비어있다면, 기존에 저장되어 있던 라인업 유지
+    if not batters and "todayLineup" in data and "batters" in data["todayLineup"]:
+        batters = data["todayLineup"]["batters"]
+        print("  ℹ️ 기존에 저장되어 있던 라인업 데이터를 유지합니다.")
+
+    print(f"  👉 최종 선발 타순 등록: {len(batters)}명")
 
     # 3. ⚔️ 올시즌 상대 전적 계산
     h2h_wins = 0
@@ -149,7 +182,6 @@ def update_lineup_and_pitchers():
     }
     data["lineupUpdatedAt"] = now_kst.strftime("%Y-%m-%d %H:%M:%S (KST)")
 
-    # 미사용 투수 성적 필드 정리
     if "pitcherComparison" in data:
         del data["pitcherComparison"]
 
