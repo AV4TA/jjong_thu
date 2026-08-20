@@ -513,7 +513,7 @@
           <span class="today-team" id="todayOpponentTxt">-</span>
         </div>
 
-        <!-- ⚔️ 선발투수 맞대결 박스 (깔끔 버전) -->
+        <!-- ⚔️ 선발투수 맞대결 박스 -->
         <div class="pitcher-duel-box">
           <div class="pitcher-duel-col">
             <span class="pitcher-duel-label">KT 선발</span>
@@ -674,20 +674,23 @@
       document.getElementById(tabId).classList.add('active');
     }
 
+    // 💡 방금 성공한 js 구조(games, kt.lineup 등)에 맞춘 로딩 및 매핑 함수
     async function loadKboJson() {
       try {
         const res = await fetch('./ktwiz_data.json?t=' + Date.now());
         if (res.ok) {
           serverKboData = await res.json();
-          renderTodayMatch(serverKboData.todayMatch, serverKboData.todayLineup, serverKboData.todayH2H);
-          renderRankingsAndMagic(serverKboData.rankings);
+          renderTodayMatchFromNewSchema(serverKboData);
         }
-      } catch(e){ console.warn("JSON 로드 대기"); }
+      } catch(e){ console.warn("JSON 로드 대기", e); }
     }
     loadKboJson();
 
-    function renderTodayMatch(todayMatch, todayLineup, todayH2H) {
-      if (!todayMatch) {
+    function renderTodayMatchFromNewSchema(data) {
+      const games = data.games || [];
+      const ktGame = games.find(g => g.home === 'KT' || g.away === 'KT');
+
+      if (!ktGame) {
         document.getElementById('todayDateTxt').innerText = '📅 오늘 경기 일정 없음';
         document.getElementById('todayStadiumTxt').innerText = '휴식일 🏖️';
         document.getElementById('todayScoreOrVs').innerText = '-';
@@ -698,134 +701,47 @@
         return;
       }
 
-      document.getElementById('todayDateTxt').innerText = `📅 ${todayMatch.date} (${todayMatch.time || '18:30'})`;
-      document.getElementById('todayStadiumTxt').innerText = `📍 ${normalizeStadium(todayMatch.stadium)}`;
-      document.getElementById('todayScoreOrVs').innerText = todayMatch.score;
-      document.getElementById('todayOpponentTxt').innerText = normalizeTeam(todayMatch.opponent);
+      const isHome = ktGame.home === 'KT';
+      const opponent = isHome ? ktGame.away : ktGame.home;
 
-      // 상대 전적 표시
-      if (todayH2H && todayH2H.text) {
-        document.getElementById('todayH2hTxt').innerText = todayH2H.text;
+      document.getElementById('todayDateTxt').innerText = `📅 ${ktGame.date} (${ktGame.time || '18:30'})`;
+      document.getElementById('todayStadiumTxt').innerText = `📍 ${normalizeStadium(ktGame.stadium)}`;
+      
+      let scoreTxt = 'VS';
+      if (ktGame.code === 'RESULT' || ktGame.code === 'ENDED') {
+        const myScore = isHome ? ktGame.hs : ktGame.as;
+        const opScore = isHome ? ktGame.as : ktGame.hs;
+        scoreTxt = `KT ${myScore} : ${opScore} ${opponent}`;
+      } else if (ktGame.code === 'CANCEL') {
+        scoreTxt = '경기 취소';
+      }
+      document.getElementById('todayScoreOrVs').innerText = scoreTxt;
+      document.getElementById('todayOpponentTxt').innerText = normalizeTeam(opponent);
+      document.getElementById('todayH2hTxt').innerText = "올 시즌 상대 전적";
+
+      // 선발 투수 표시
+      const starters = data.kt && data.kt.starters;
+      if (starters) {
+        document.getElementById('todayKtPitcher').innerText = starters.kt ? starters.kt.name : '미정';
+        document.getElementById('todayOppPitcher').innerText = starters.opp ? starters.opp.name : '미정';
+      } else {
+        document.getElementById('todayKtPitcher').innerText = isHome ? (ktGame.hp || '미정') : (ktGame.ap || '미정');
+        document.getElementById('todayOppPitcher').innerText = isHome ? (ktGame.ap || '미정') : (ktGame.hp || '미정');
       }
 
-      // 선발 투수 대결 표시
-      document.getElementById('todayKtPitcher').innerText = (todayLineup && todayLineup.ktPitcher) || todayMatch.ktPitcher || '미정';
-      document.getElementById('todayOppPitcher').innerText = (todayLineup && todayLineup.oppPitcher) || todayMatch.oppPitcher || '미정';
-
-      // 선발 타순 (1~9번)
-      if (todayLineup) {
+      // 선발 타순 (1~9번) 표시
+      if (data.kt && data.kt.lineup && data.kt.lineup.batters) {
         const grid = document.getElementById('todayLineupGrid');
-        if (todayLineup.batters && todayLineup.batters.length > 0) {
-          grid.innerHTML = todayLineup.batters.map(b => `
+        const batters = data.kt.lineup.batters;
+        if (batters.length > 0) {
+          grid.innerHTML = batters.map(b => `
             <div class="lineup-item">
-              <div><span class="order-num">${b.order}</span><span class="player-name">${b.name}</span></div>
+              <div><span class="order-num">${b.o || b.order}</span><span class="player-name">${b.name}</span></div>
               <span class="player-pos">${b.pos}</span>
             </div>
           `).join('');
         }
       }
-    }
-
-    function renderRankingsAndMagic(rankings) {
-      const tbody = document.getElementById('rankingTableBody');
-      if (!rankings || rankings.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="padding:20px 0;">순위 데이터를 불러오는 중...</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = rankings.map(r => `
-        <tr class="${r.teamName && (r.teamName.includes('KT') || r.teamName.includes('kt')) ? 'kt-row' : ''}">
-          <td><b>${r.rank}</b></td>
-          <td>${r.teamName}</td>
-          <td>${r.games}</td>
-          <td>${r.win}</td>
-          <td>${r.draw || 0}</td>
-          <td>${r.lose}</td>
-          <td>${r.wra}</td>
-          <td>${r.gameDiff}</td>
-        </tr>
-      `).join('');
-
-      calculateMagicNumbers(rankings);
-    }
-
-    function calculateMagicNumbers(rankings) {
-      const TOTAL_SEASON_GAMES = 144;
-      
-      const parsedRankings = rankings.map(r => ({
-        rank: parseInt(r.rank) || 0,
-        teamName: r.teamName,
-        games: parseInt(r.games) || 0,
-        win: parseInt(r.win) || 0,
-        draw: parseInt(r.draw) || 0,
-        lose: parseInt(r.lose) || 0,
-        wra: parseFloat(r.wra) || 0.0,
-        gameDiff: r.gameDiff
-      })).sort((a, b) => a.rank - b.rank);
-
-      const ktIndex = parsedRankings.findIndex(r => r.teamName && (r.teamName.includes('KT') || r.teamName.includes('kt')));
-      if (ktIndex === -1) return;
-
-      const kt = parsedRankings[ktIndex];
-      const ktRemain = TOTAL_SEASON_GAMES - kt.games;
-
-      document.getElementById('valKtRank').innerText = `${kt.rank}위`;
-      document.getElementById('valRemainGames').innerText = `${ktRemain}경기`;
-
-      let titleMagicTxt = '-';
-      let titleSubTxt = '자력 우승까지 필요 승수';
-      let explainTxt = '';
-
-      if (kt.rank === 1) {
-        const secondTeam = parsedRankings[1];
-        if (secondTeam) {
-          const secondRemain = TOTAL_SEASON_GAMES - secondTeam.games;
-          const secondMaxWins = secondTeam.win + secondRemain;
-          const magic1 = secondMaxWins + 1 - kt.win;
-
-          if (magic1 <= 0) {
-            titleMagicTxt = '우승 확정 🏆';
-            explainTxt = `kt wiz가 정규시즌 1위 우승을 최종 확정지었습니다! 🎉`;
-          } else if (magic1 > ktRemain) {
-            titleMagicTxt = '점등 전';
-            explainTxt = `아직 자력 우승 매직넘버가 점등되지 않았습니다. (남은 ${ktRemain}경기 전승 시 우승 유력)`;
-          } else {
-            titleMagicTxt = `${magic1}`;
-            const diffTxt = secondTeam.gameDiff ? `${secondTeam.gameDiff}G차` : '';
-            explainTxt = `<b>1위 매직넘버 ${magic1}</b> — 2위 ${secondTeam.teamName.split(' ')[0]}(${diffTxt})이 남은 ${secondRemain}경기를 전승해도, kt가 <b>${magic1}승</b>만 추가하면 정규 1위가 확정됩니다.`;
-          }
-
-          document.getElementById('valLeadDiff').innerText = `+${secondTeam.gameDiff || '0.0'}`;
-          document.getElementById('lblLeadDiff').innerText = `2위 ${secondTeam.teamName.split(' ')[0]} 리드`;
-        }
-      } else {
-        const firstTeam = parsedRankings[0];
-        titleMagicTxt = `+${kt.gameDiff || '0.0'}`;
-        titleSubTxt = `1위 ${firstTeam.teamName.split(' ')[0]}와 게임차`;
-        document.getElementById('valLeadDiff').innerText = `-${kt.gameDiff || '0.0'}`;
-        document.getElementById('lblLeadDiff').innerText = `1위와 게임차`;
-        explainTxt = `현재 1위 ${firstTeam.teamName.split(' ')[0]}를 ${kt.gameDiff}게임 차로 추격 중입니다. 역전 우승을 향해 파이팅! 🔥`;
-      }
-      document.getElementById('valTitleMagic').innerHTML = titleMagicTxt;
-      document.getElementById('txtTitleSub').innerText = titleSubTxt;
-
-      let psMagicTxt = '-';
-      const sixthTeam = parsedRankings[5];
-      if (sixthTeam) {
-        const sixthRemain = TOTAL_SEASON_GAMES - sixthTeam.games;
-        const sixthMaxWins = sixthTeam.win + sixthRemain;
-        const magicPs = sixthMaxWins + 1 - kt.win;
-
-        if (magicPs <= 0) {
-          psMagicTxt = 'PS 확정 🎟️';
-        } else if (magicPs > ktRemain) {
-          psMagicTxt = `${magicPs}`;
-        } else {
-          psMagicTxt = `${magicPs}`;
-        }
-      }
-      document.getElementById('valPsMagic').innerText = psMagicTxt;
-      document.getElementById('magicExplainTxt').innerHTML = explainTxt;
     }
 
     baseballCollection.onSnapshot((snapshot) => {
@@ -909,17 +825,29 @@
     }
 
     function matchKtGame(dateStr) {
-      if (!dateStr || !serverKboData.schedule) return;
-      const gameInfo = serverKboData.schedule[dateStr];
+      if (!dateStr || !serverKboData.games) return;
+      const gameInfo = serverKboData.games.find(g => g.date === dateStr && (g.home === 'KT' || g.away === 'KT'));
       if (gameInfo) {
-        document.getElementById('autoOpponent').value = gameInfo.opponent;
-        document.getElementById('autoResult').value = gameInfo.result;
-        document.getElementById('autoScore').value = gameInfo.score;
+        const isHome = gameInfo.home === 'KT';
+        const opponent = isHome ? gameInfo.away : gameInfo.home;
+        
+        document.getElementById('autoOpponent').value = opponent;
         document.getElementById('autoStadium').value = gameInfo.stadium;
 
+        let res = 'scheduled';
+        if (gameInfo.code === 'RESULT' || gameInfo.code === 'ENDED') {
+          const my = isHome ? gameInfo.hs : gameInfo.as;
+          const op = isHome ? gameInfo.as : gameInfo.hs;
+          res = my > op ? 'win' : (my < op ? 'lose' : 'draw');
+        } else if (gameInfo.code === 'CANCEL') {
+          res = 'canceled';
+        }
+        document.getElementById('autoResult').value = res;
+        document.getElementById('autoScore').value = `${isHome ? gameInfo.hs : gameInfo.as}:${isHome ? gameInfo.as : gameInfo.hs}`;
+
         const resLabels = { win: '🔴 승리', lose: '⚫ 패배', draw: '🟡 무승부', scheduled: '⚪ 직관 예정', canceled: '🌧️ 취소' };
-        document.getElementById('txtOpponent').innerText = `${normalizeTeam(gameInfo.opponent)} (${gameInfo.isHome ? '홈' : '원정'})`;
-        document.getElementById('txtResult').innerText = resLabels[gameInfo.result] || '⚪ 직관 예정';
+        document.getElementById('txtOpponent').innerText = `${normalizeTeam(opponent)} (${isHome ? '홈' : '원정'})`;
+        document.getElementById('txtResult').innerText = resLabels[res] || '⚪ 직관 예정';
         document.getElementById('txtStadium').innerText = normalizeStadium(gameInfo.stadium);
       } else {
         document.getElementById('autoOpponent').value = '';
