@@ -332,6 +332,39 @@
     .today-team.kt { color: var(--kt-red); }
     .today-vs { font-size: 1.3rem; font-weight: 900; color: #57606f; }
 
+    /* ⚔️ 선발투수 맞대결 & 구종 비교 박스 */
+    .pitcher-duel-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      background: #f8f9fa;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+      border: 1px solid #eef0f4;
+    }
+    .pitcher-duel-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-align: center;
+    }
+    .pitcher-duel-label { font-size: 0.7rem; font-weight: 700; color: var(--text-sub); }
+    .pitcher-duel-name { font-size: 1.05rem; font-weight: 900; color: #2f3542; }
+    .pitcher-duel-name.kt { color: var(--kt-red); }
+    .pitcher-pitches {
+      font-size: 0.73rem;
+      color: #57606f;
+      background: white;
+      padding: 6px 8px;
+      border-radius: 8px;
+      width: 100%;
+      margin-top: 4px;
+      border: 1px solid #eee;
+      line-height: 1.35;
+    }
+
     /* 카드 리스트 */
     .game-list { display: flex; flex-direction: column; gap: 12px; }
     .game-card {
@@ -427,7 +460,7 @@
     </div>
   </header>
 
-  <!-- 3개 메인 탭 유지 -->
+  <!-- 3개 메인 탭 -->
   <div class="tab-bar">
     <button class="tab-btn active" onclick="switchTab('tab-diary', this)"><i class="fa-solid fa-ticket"></i> 직관 다이어리</button>
     <button class="tab-btn" onclick="switchTab('tab-today', this)"><i class="fa-solid fa-calendar-day"></i> 오늘 경기</button>
@@ -454,7 +487,7 @@
       <button class="fab" onclick="openAddModal()"><i class="fa-solid fa-plus"></i></button>
     </div>
 
-    <!-- 탭 2: 오늘 경기 & 올시즌 상대전적 -->
+    <!-- 탭 2: 오늘 경기 & 선발투수 구종 비교 & 올시즌 상대전적 -->
     <div id="tab-today" class="tab-content">
       <div class="today-card">
         <div class="today-header">
@@ -474,10 +507,24 @@
           <span class="today-vs" id="todayScoreOrVs">VS</span>
           <span class="today-team" id="todayOpponentTxt">-</span>
         </div>
+
+        <!-- ⚔️ 선발투수 맞대결 & 구종 비교 박스 -->
+        <div class="pitcher-duel-box">
+          <div class="pitcher-duel-col">
+            <span class="pitcher-duel-label">KT 선발 투수</span>
+            <span class="pitcher-duel-name kt" id="todayKtPitcher">미정</span>
+            <div class="pitcher-pitches" id="ktPitcherPitches">구종 데이터 대기 중</div>
+          </div>
+          <div class="pitcher-duel-col">
+            <span class="pitcher-duel-label">상대 선발 투수</span>
+            <span class="pitcher-duel-name" id="todayOppPitcher">미정</span>
+            <div class="pitcher-pitches" id="oppPitcherPitches">구종 데이터 대기 중</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- 탭 3: KBO 리그 공식 순위 & 매직넘버 (기존 그대로 유지) -->
+    <!-- 탭 3: KBO 리그 공식 순위 & 매직넘버 -->
     <div id="tab-rank" class="tab-content">
       <div class="magic-card" id="magicNumberCard">
         <div class="magic-header">
@@ -584,7 +631,7 @@
       document.getElementById(tabId).classList.add('active');
     }
 
-    // 💡 baseball.json 데이터 로드 (순위표 계산 및 오늘 경기 / 상대전적 연동)
+    // 💡 baseball.json 로드 및 데이터 연동
     async function loadBaseballJson() {
       try {
         const res = await fetch('./baseball.json?t=' + Date.now());
@@ -593,7 +640,6 @@
           renderTodayMatch(serverBaseballData.todayMatch);
           calculateH2H(serverBaseballData.schedule, serverBaseballData.todayMatch);
           
-          // baseball.json의 schedule 데이터를 기반으로 순위표 역산 및 렌더링
           if (serverBaseballData.schedule) {
             generateRankingsFromSchedule(serverBaseballData.schedule);
           }
@@ -609,6 +655,10 @@
         document.getElementById('todayScoreOrVs').innerText = '-';
         document.getElementById('todayOpponentTxt').innerText = '-';
         document.getElementById('todayH2hTxt').innerText = '휴식일';
+        document.getElementById('todayKtPitcher').innerText = '-';
+        document.getElementById('todayOppPitcher').innerText = '-';
+        document.getElementById('ktPitcherPitches').innerText = '정보 없음';
+        document.getElementById('oppPitcherPitches').innerText = '정보 없음';
         return;
       }
 
@@ -616,9 +666,28 @@
       document.getElementById('todayStadiumTxt').innerText = `📍 ${todayMatch.stadium}`;
       document.getElementById('todayScoreOrVs').innerText = todayMatch.score;
       document.getElementById('todayOpponentTxt').innerText = todayMatch.opponent;
+
+      // 선발 투수 이름 및 구종 비교 반영 (데이터가 있는 경우 표시)
+      const ktP = todayMatch.ktPitcher || '미정';
+      const oppP = todayMatch.oppPitcher || '미정';
+      document.getElementById('todayKtPitcher').innerText = ktP;
+      document.getElementById('todayOppPitcher').innerText = oppP;
+
+      // 구종/구속 데이터가 있으면 렌더링, 없으면 안내문구
+      if (todayMatch.ktPitches && todayMatch.ktPitches.length > 0) {
+        document.getElementById('ktPitcherPitches').innerHTML = todayMatch.ktPitches.map(p => `• ${p.type}: ${p.rt}% (평균 ${p.spd}km)`).join('<br>');
+      } else {
+        document.getElementById('ktPitcherPitches').innerText = '구종 통계 준비 중';
+      }
+
+      if (todayMatch.oppPitches && todayMatch.oppPitches.length > 0) {
+        document.getElementById('oppPitcherPitches').innerHTML = todayMatch.oppPitches.map(p => `• ${p.type}: ${p.rt}% (평균 ${p.spd}km)`).join('<br>');
+      } else {
+        document.getElementById('oppPitcherPitches').innerText = '구종 통계 준비 중';
+      }
     }
 
-    // ⚔️ 올시즌 상대 전적 계산 함수
+    // ⚔️ 올시즌 상대 전적 계산
     function calculateH2H(schedule, todayMatch) {
       if (!schedule || !todayMatch || !todayMatch.opponent) {
         document.getElementById('todayH2hTxt').innerText = "올 시즌 상대 전적 없음";
@@ -645,7 +714,7 @@
       document.getElementById('todayH2hTxt').innerText = h2hText;
     }
 
-    // 📊 순위표 자동 생성 및 매직넘버 계산 함수 (schedule 데이터 활용)
+    // 📊 순위표 자동 생성 및 매직넘버 계산
     function generateRankingsFromSchedule(schedule) {
       const teams = ['kt wiz', 'LG 트윈스', '삼성 라이온즈', '두산 베어스', 'KIA 타이거즈', '롯데 자이언츠', 'SSG 랜더스', 'NC 다이노스', '한화 이글스', '키움 히어로즈'];
       const stats = {};
@@ -654,7 +723,6 @@
       for (const info of Object.values(schedule)) {
         if (info.result === 'win' || info.result === 'lose' || info.result === 'draw') {
           const opp = info.opponent;
-          // KT 기준 결과 반영
           if (stats['kt wiz']) {
             stats['kt wiz'].games++;
             if (info.result === 'win') stats['kt wiz'].win++;
