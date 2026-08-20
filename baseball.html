@@ -63,7 +63,7 @@
     }
     .header-title { font-size: 1.25rem; font-weight: 900; letter-spacing: -0.5px; }
 
-    /* 상단 2개 탭 (일정/오늘경기) 또는 기존 3탭 유지 가능 */
+    /* 상단 3개 탭 */
     .tab-bar {
       display: flex;
       gap: 6px;
@@ -95,6 +95,7 @@
     }
 
     .container { max-width: 540px; margin: 0 auto; padding: 10px 16px; }
+
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
@@ -111,26 +112,220 @@
     }
     .dashboard-card::before {
       content: '⚾';
-      position: absolute; right: -10px; bottom: -15px; font-size: 5.5rem; opacity: 0.05; pointer-events: none;
+      position: absolute;
+      right: -10px;
+      bottom: -15px;
+      font-size: 5.5rem;
+      opacity: 0.05;
+      pointer-events: none;
     }
     .dash-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .dash-title { font-size: 0.92rem; font-weight: 800; color: #2f3542; display: flex; align-items: center; gap: 6px; }
-    .win-rate-pill { background: #ffeaa7; color: #d63031; padding: 4px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 800; }
-    .dash-stats-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 8px; text-align: center; }
-    .stat-box { background: #f8f9fa; padding: 10px 4px; border-radius: 12px; display: flex; flex-direction: column; gap: 3px; }
+    .win-rate-pill {
+      background: #ffeaa7;
+      color: #d63031;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .dash-stats-row {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr 1fr;
+      gap: 8px;
+      text-align: center;
+    }
+    .stat-box {
+      background: #f8f9fa;
+      padding: 10px 4px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
     .stat-label { font-size: 0.72rem; color: var(--text-sub); font-weight: 700; }
     .stat-val { font-size: 1.15rem; font-weight: 900; color: #2f3542; }
     .stat-val.rate { color: var(--kt-red); }
-    .fairy-comment { margin-top: 12px; padding: 8px 12px; background: #fff0f3; border-radius: 10px; font-size: 0.82rem; font-weight: 700; color: #e04565; text-align: center; }
+    .fairy-comment {
+      margin-top: 12px;
+      padding: 8px 12px;
+      background: #fff0f3;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #e04565;
+      text-align: center;
+    }
+
+    /* 🏆 매직넘버 대시보드 카드 */
+    .magic-card {
+      background: linear-gradient(145deg, #1e272e 0%, #2f3542 100%);
+      color: white;
+      border-radius: 22px;
+      padding: 20px 18px;
+      box-shadow: 0 10px 28px rgba(30, 39, 46, 0.2);
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .magic-card::after {
+      content: '👑';
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      font-size: 2.8rem;
+      opacity: 0.15;
+    }
+    .magic-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .magic-badge {
+      background: rgba(234, 32, 39, 0.85);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+    .magic-season-txt {
+      font-size: 0.8rem;
+      color: #a4b0be;
+      font-weight: 700;
+    }
+    
+    .magic-main-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .magic-hero-box {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 14px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+    .magic-hero-box.highlight {
+      background: linear-gradient(135deg, rgba(234, 32, 39, 0.25) 0%, rgba(234, 32, 39, 0.08) 100%);
+      border: 1px solid rgba(234, 32, 39, 0.4);
+    }
+    .magic-label {
+      font-size: 0.76rem;
+      color: #dcdde1;
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .magic-val {
+      font-size: 2.2rem;
+      font-weight: 900;
+      line-height: 1.1;
+      color: #ffffff;
+      letter-spacing: -1px;
+    }
+    .magic-val.primary {
+      color: #ff4757;
+      text-shadow: 0 0 16px rgba(255, 71, 87, 0.4);
+    }
+    .magic-sub-info {
+      font-size: 0.72rem;
+      color: #a4b0be;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .magic-sub-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .magic-sub-box {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 10px 6px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .magic-sub-val {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #f1f2f6;
+    }
+    .magic-sub-lbl {
+      font-size: 0.7rem;
+      color: #a4b0be;
+      font-weight: 700;
+    }
+
+    .magic-explain-box {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 0.78rem;
+      color: #ced6e0;
+      line-height: 1.45;
+      font-weight: 600;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .magic-explain-box i {
+      color: #ffa502;
+      margin-top: 2px;
+      font-size: 0.85rem;
+    }
 
     /* 오늘 경기 카드 */
-    .today-card { background: white; border-radius: 20px; padding: 18px; box-shadow: var(--shadow); border: 1px solid var(--border); }
-    .today-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed #f1f2f6; }
+    .today-card {
+      background: white;
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .today-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #f1f2f6;
+    }
     .today-date-badge { font-size: 0.85rem; font-weight: 800; color: var(--kt-red); }
     .today-time-badge { font-size: 0.78rem; font-weight: 700; color: var(--text-sub); }
     
-    .h2h-badge-row { display: flex; justify-content: center; margin-bottom: 12px; }
-    .h2h-pill { background: #f1f2f6; color: #2f3542; font-size: 0.76rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px; }
+    /* H2H 상대전적 뱃지 */
+    .h2h-badge-row {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .h2h-pill {
+      background: #f1f2f6;
+      color: #2f3542;
+      font-size: 0.76rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
 
     .today-matchup { display: flex; justify-content: space-around; align-items: center; margin: 8px 0 16px; }
     .today-team { font-size: 1.2rem; font-weight: 900; }
@@ -139,10 +334,29 @@
 
     /* 카드 리스트 */
     .game-list { display: flex; flex-direction: column; gap: 12px; }
-    .game-card { background: white; border-radius: 18px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); }
-    .game-card-header { padding: 12px 14px; background: #fdfdfd; border-bottom: 1px solid #f1f2f6; display: flex; justify-content: space-between; align-items: center; }
+    .game-card {
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .game-card-header {
+      padding: 12px 14px;
+      background: #fdfdfd;
+      border-bottom: 1px solid #f1f2f6;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
     .game-date { font-size: 0.85rem; font-weight: 800; color: var(--text-sub); }
-    .game-result-badge { padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 900; color: white; }
+    .game-result-badge {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      color: white;
+    }
     .game-result-badge.win { background: #ea2027; }
     .game-result-badge.lose { background: #57606f; }
     .game-result-badge.draw { background: #ffa502; }
@@ -157,9 +371,30 @@
     .score-text { font-size: 1.25rem; font-weight: 900; color: #2f3542; letter-spacing: 0.5px; }
     .game-stadium-tag { text-align: center; font-size: 0.8rem; color: var(--text-sub); font-weight: 700; }
 
-    .game-card-footer { padding: 8px 14px; border-top: 1px solid #f1f2f6; display: flex; justify-content: flex-end; background: #fafafa; }
+    .game-card-footer {
+      padding: 8px 14px;
+      border-top: 1px solid #f1f2f6;
+      display: flex;
+      justify-content: flex-end;
+      background: #fafafa;
+    }
     .btn-del-game { background: none; border: none; color: #a4b0be; font-size: 0.9rem; cursor: pointer; padding: 4px; }
     .btn-del-game:hover { color: #ff4757; }
+
+    /* 순위 테이블 */
+    .table-card {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .custom-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.82rem; }
+    .custom-table th { padding: 10px 4px; font-weight: 800; color: var(--text-sub); border-bottom: 1.5px solid #eef0f4; }
+    .custom-table td { padding: 11px 4px; font-weight: 700; border-bottom: 1px solid #f8f9fa; color: #2f3542; }
+    .custom-table tr.kt-row { background: #fff0f3; font-weight: 900; color: var(--kt-red); }
+    .custom-table tr.kt-row td { color: var(--kt-red); }
 
     /* FAB & Modal */
     .fab {
@@ -192,10 +427,11 @@
     </div>
   </header>
 
-  <!-- 2개 메인 탭 (다이어리 / 오늘 경기) -->
+  <!-- 3개 메인 탭 유지 -->
   <div class="tab-bar">
     <button class="tab-btn active" onclick="switchTab('tab-diary', this)"><i class="fa-solid fa-ticket"></i> 직관 다이어리</button>
     <button class="tab-btn" onclick="switchTab('tab-today', this)"><i class="fa-solid fa-calendar-day"></i> 오늘 경기</button>
+    <button class="tab-btn" onclick="switchTab('tab-rank', this)"><i class="fa-solid fa-ranking-star"></i> 리그 순위</button>
   </div>
 
   <div class="container">
@@ -238,6 +474,67 @@
           <span class="today-vs" id="todayScoreOrVs">VS</span>
           <span class="today-team" id="todayOpponentTxt">-</span>
         </div>
+      </div>
+    </div>
+
+    <!-- 탭 3: KBO 리그 공식 순위 & 매직넘버 (기존 그대로 유지) -->
+    <div id="tab-rank" class="tab-content">
+      <div class="magic-card" id="magicNumberCard">
+        <div class="magic-header">
+          <div class="magic-badge"><i class="fa-solid fa-fire"></i> KT WIZ MAGIC NUMBER</div>
+          <div class="magic-season-txt" id="magicDateTxt">정규시즌 144경기 기준</div>
+        </div>
+
+        <div class="magic-main-grid">
+          <div class="magic-hero-box highlight">
+            <div class="magic-label"><i class="fa-solid fa-crown" style="color:#ffd32a;"></i> 정규 1위 매직넘버</div>
+            <div class="magic-val primary" id="valTitleMagic">-</div>
+            <div class="magic-sub-info" id="txtTitleSub">자력 우승까지 필요 승수</div>
+          </div>
+          <div class="magic-hero-box">
+            <div class="magic-label"><i class="fa-solid fa-ticket" style="color:#2ed573;"></i> PS 진출 매직넘버</div>
+            <div class="magic-val" id="valPsMagic">-</div>
+            <div class="magic-sub-info">가을야구(TOP 5) 확정</div>
+          </div>
+        </div>
+
+        <div class="magic-sub-grid">
+          <div class="magic-sub-box">
+            <div class="magic-sub-val" id="valKtRank" style="color:#ff4757;">-위</div>
+            <div class="magic-sub-lbl">현재 순위</div>
+          </div>
+          <div class="magic-sub-box">
+            <div class="magic-sub-val" id="valRemainGames">-</div>
+            <div class="magic-sub-lbl">남은 경기</div>
+          </div>
+          <div class="magic-sub-box">
+            <div class="magic-sub-val" id="valLeadDiff">-</div>
+            <div class="magic-sub-lbl" id="lblLeadDiff">게임차</div>
+          </div>
+        </div>
+
+        <div class="magic-explain-box">
+          <i class="fa-solid fa-circle-info"></i>
+          <span id="magicExplainTxt">순위 데이터를 기반으로 매직넘버를 계산하는 중입니다...</span>
+        </div>
+      </div>
+
+      <!-- 순위 테이블 -->
+      <div class="table-card">
+        <div style="font-size:0.88rem; font-weight:800; color:#2f3542; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+          <span>📊 KBO 공식 순위표</span>
+          <span style="font-size:0.75rem; color:var(--text-sub); font-weight:600;">상위 5팀 포스트시즌 진출</span>
+        </div>
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>순위</th><th>구단</th><th>경기</th><th>승</th><th>무</th><th>패</th><th>승률</th><th>게임차</th>
+            </tr>
+          </thead>
+          <tbody id="rankingTableBody">
+            <tr><td colspan="8" style="padding:20px 0;">순위 데이터를 불러오는 중...</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -287,7 +584,7 @@
       document.getElementById(tabId).classList.add('active');
     }
 
-    // 💡 baseball.json 데이터 로드
+    // 💡 baseball.json 데이터 로드 (순위표 계산 및 오늘 경기 / 상대전적 연동)
     async function loadBaseballJson() {
       try {
         const res = await fetch('./baseball.json?t=' + Date.now());
@@ -295,6 +592,11 @@
           serverBaseballData = await res.json();
           renderTodayMatch(serverBaseballData.todayMatch);
           calculateH2H(serverBaseballData.schedule, serverBaseballData.todayMatch);
+          
+          // baseball.json의 schedule 데이터를 기반으로 순위표 역산 및 렌더링
+          if (serverBaseballData.schedule) {
+            generateRankingsFromSchedule(serverBaseballData.schedule);
+          }
         }
       } catch(e){ console.warn("baseball.json 로드 대기 중", e); }
     }
@@ -306,6 +608,7 @@
         document.getElementById('todayStadiumTxt').innerText = '휴식일 🏖️';
         document.getElementById('todayScoreOrVs').innerText = '-';
         document.getElementById('todayOpponentTxt').innerText = '-';
+        document.getElementById('todayH2hTxt').innerText = '휴식일';
         return;
       }
 
@@ -326,7 +629,6 @@
       let wins = 0, losses = 0, draws = 0;
 
       for (const [date, info] of Object.entries(schedule)) {
-        // 오늘 날짜 이전의 경기이면서 상대팀이 일치하는 경우만 집계 (3/28 개막 이후 자동 포함)
         if (date < todayMatch.date && info.opponent === opp) {
           if (info.result === 'win') wins++;
           else if (info.result === 'lose') losses++;
@@ -341,6 +643,147 @@
         h2hText = `올시즌 ${total}전 ${wins}승 ${drawTxt}${losses}패`;
       }
       document.getElementById('todayH2hTxt').innerText = h2hText;
+    }
+
+    // 📊 순위표 자동 생성 및 매직넘버 계산 함수 (schedule 데이터 활용)
+    function generateRankingsFromSchedule(schedule) {
+      const teams = ['kt wiz', 'LG 트윈스', '삼성 라이온즈', '두산 베어스', 'KIA 타이거즈', '롯데 자이언츠', 'SSG 랜더스', 'NC 다이노스', '한화 이글스', '키움 히어로즈'];
+      const stats = {};
+      teams.forEach(t => stats[t] = { win: 0, lose: 0, draw: 0, games: 0 });
+
+      for (const info of Object.values(schedule)) {
+        if (info.result === 'win' || info.result === 'lose' || info.result === 'draw') {
+          const opp = info.opponent;
+          // KT 기준 결과 반영
+          if (stats['kt wiz']) {
+            stats['kt wiz'].games++;
+            if (info.result === 'win') stats['kt wiz'].win++;
+            else if (info.result === 'lose') stats['kt wiz'].lose++;
+            else if (info.result === 'draw') stats['kt wiz'].draw++;
+          }
+          if (stats[opp]) {
+            stats[opp].games++;
+            if (info.result === 'win') stats[opp].lose++;
+            else if (info.result === 'lose') stats[opp].win++;
+            else if (info.result === 'draw') stats[opp].draw++;
+          }
+        }
+      }
+
+      const rankingArray = teams.map(t => {
+        const s = stats[t];
+        const wra = (s.win + s.lose) > 0 ? (s.win / (s.win + s.lose)).toFixed(3) : '0.000';
+        return {
+          teamName: t,
+          games: s.games,
+          win: s.win,
+          draw: s.draw,
+          lose: s.lose,
+          wra: wra
+        };
+      }).sort((a, b) => parseFloat(b.wra) - parseFloat(a.wra) || b.win - a.win);
+
+      const rankings = rankingArray.map((r, idx) => ({
+        rank: idx + 1,
+        ...r,
+        gameDiff: '0.0'
+      }));
+
+      renderRankingsAndMagic(rankings);
+    }
+
+    function renderRankingsAndMagic(rankings) {
+      const tbody = document.getElementById('rankingTableBody');
+      if (!rankings || rankings.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="padding:20px 0;">순위 데이터를 불러오는 중...</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = rankings.map(r => `
+        <tr class="${r.teamName && (r.teamName.includes('KT') || r.teamName.includes('kt')) ? 'kt-row' : ''}">
+          <td><b>${r.rank}</b></td>
+          <td>${r.teamName}</td>
+          <td>${r.games}</td>
+          <td>${r.win}</td>
+          <td>${r.draw || 0}</td>
+          <td>${r.lose}</td>
+          <td>${r.wra}</td>
+          <td>${r.gameDiff}</td>
+        </tr>
+      `).join('');
+
+      calculateMagicNumbers(rankings);
+    }
+
+    function calculateMagicNumbers(rankings) {
+      if (!rankings || rankings.length === 0) return;
+      const TOTAL_SEASON_GAMES = 144;
+      
+      const parsedRankings = rankings.map(r => ({
+        rank: parseInt(r.rank) || 0,
+        teamName: r.teamName,
+        games: parseInt(r.games) || 0,
+        win: parseInt(r.win) || 0,
+        draw: parseInt(r.draw) || 0,
+        lose: parseInt(r.lose) || 0,
+        wra: parseFloat(r.wra) || 0.0,
+        gameDiff: r.gameDiff
+      })).sort((a, b) => a.rank - b.rank);
+
+      const ktIndex = parsedRankings.findIndex(r => r.teamName && (r.teamName.includes('KT') || r.teamName.includes('kt')));
+      if (ktIndex === -1) return;
+
+      const kt = parsedRankings[ktIndex];
+      const ktRemain = TOTAL_SEASON_GAMES - kt.games;
+
+      document.getElementById('valKtRank').innerText = `${kt.rank}위`;
+      document.getElementById('valRemainGames').innerText = `${ktRemain}경기`;
+
+      let titleMagicTxt = '-';
+      let titleSubTxt = '자력 우승까지 필요 승수';
+      let explainTxt = '';
+
+      if (kt.rank === 1) {
+        const secondTeam = parsedRankings[1];
+        if (secondTeam) {
+          const secondRemain = TOTAL_SEASON_GAMES - secondTeam.games;
+          const secondMaxWins = secondTeam.win + secondRemain;
+          const magic1 = secondMaxWins + 1 - kt.win;
+
+          if (magic1 <= 0) {
+            titleMagicTxt = '우승 확정 🏆';
+            explainTxt = `kt wiz가 정규시즌 1위 우승을 최종 확정지었습니다! 🎉`;
+          } else if (magic1 > ktRemain) {
+            titleMagicTxt = '점등 전';
+            explainTxt = `아직 자력 우승 매직넘버가 점등되지 않았습니다.`;
+          } else {
+            titleMagicTxt = `${magic1}`;
+            explainTxt = `<b>1위 매직넘버 ${magic1}</b> — kt가 <b>${magic1}승</b>만 추가하면 정규 1위가 확정됩니다.`;
+          }
+          document.getElementById('valLeadDiff').innerText = `+${secondTeam.gameDiff || '0.0'}`;
+          document.getElementById('lblLeadDiff').innerText = `2위 리드`;
+        }
+      } else {
+        const firstTeam = parsedRankings[0];
+        titleMagicTxt = `+${kt.gameDiff || '0.0'}`;
+        titleSubTxt = `1위와 게임차`;
+        document.getElementById('valLeadDiff').innerText = `-${kt.gameDiff || '0.0'}`;
+        document.getElementById('lblLeadDiff').innerText = `1위와 게임차`;
+        explainTxt = `현재 1위 ${firstTeam.teamName}를 추격 중입니다. 파이팅! 🔥`;
+      }
+      document.getElementById('valTitleMagic').innerHTML = titleMagicTxt;
+      document.getElementById('txtTitleSub').innerText = titleSubTxt;
+
+      let psMagicTxt = '-';
+      const sixthTeam = parsedRankings[5];
+      if (sixthTeam) {
+        const sixthRemain = TOTAL_SEASON_GAMES - sixthTeam.games;
+        const sixthMaxWins = sixthTeam.win + sixthRemain;
+        const magicPs = sixthMaxWins + 1 - kt.win;
+        psMagicTxt = magicPs <= 0 ? 'PS 확정 🎟️' : `${magicPs}`;
+      }
+      document.getElementById('valPsMagic').innerText = psMagicTxt;
+      document.getElementById('magicExplainTxt').innerHTML = explainTxt;
     }
 
     baseballCollection.onSnapshot((snapshot) => {
@@ -462,7 +905,7 @@
 
     function openAddModal() {
       const todayStr = new Date().toISOString().split('T')[0];
-      document.getElementById('gameDate.value') = todayStr;
+      document.getElementById('gameDate').value = todayStr;
       document.getElementById('addModal').classList.add('active');
       matchKtGame(todayStr);
     }
