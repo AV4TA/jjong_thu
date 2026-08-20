@@ -526,7 +526,7 @@
   <button class="fab" id="mainFab" onclick="openAddModal()"><i class="fa-solid fa-plus"></i></button>
 
   <nav class="bottom-nav">
-    <button class="nav-item active" onclick="switchNav('checklist', this)"><i class="fa-solid fa-backpack"></i><span>준비물</span></button>
+    <button class="nav-item active" onclick="switchNav('checklist', this)"><span style="font-size:1.15rem;">🧳</span><span>준비물</span></button>
     <button class="nav-item" onclick="switchNav('docs', this)"><i class="fa-solid fa-file-lines"></i><span>필요서류</span></button>
     <button class="nav-item" onclick="switchNav('travel', this)"><i class="fa-solid fa-plane-departure"></i><span>여행일정</span></button>
     <button class="nav-item" onclick="switchNav('places', this)"><i class="fa-solid fa-utensils"></i><span>맛집/가볼곳</span></button>
@@ -633,7 +633,6 @@
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // ★ 서류 전용 독립 컬렉션 경로 정의 (문서별 1개 이미지 구조로 용량 문제 원천 해결)
     const docsCollection = db.collection("couple_space").doc("shared_data").collection("travel_documents");
 
     const initialChecklistThu = [
@@ -683,7 +682,7 @@
     };
 
     let appData = initialKobeData;
-    let documentsList = []; // 서류 리스트 별도 관리
+    let documentsList = [];
     let currentDay = 1;
     let activeNav = 'checklist';
     let selectedPlaceRegion = 'kobe';
@@ -698,7 +697,6 @@
     const syncDot = document.getElementById('syncDot');
     const syncText = document.getElementById('syncStatusText');
 
-    // 1. 일반 여행 데이터 실시간 동기화
     db.collection("couple_space").doc("shared_data").onSnapshot({ includeMetadataChanges: true }, (doc) => {
       if (doc.exists) {
         const remoteData = doc.data();
@@ -715,7 +713,6 @@
       }
     });
 
-    // 2. 서류(티켓) 전용 컬렉션 실시간 동기화 (개별 문서 구조로 용량 문제 해결)
     docsCollection.onSnapshot((snapshot) => {
       const list = [];
       snapshot.forEach(doc => {
@@ -919,7 +916,7 @@
           img.onload = function() {
             const canvas = document.createElement('canvas');
             let w = img.width, h = img.height;
-            const maxD = 1000; // 용량 최적화 (1MB 이하로 철저히 제한)
+            const maxD = 1000;
             if (w > h && w > maxD) { h = Math.round((h * maxD) / w); w = maxD; }
             else if (h > maxD) { w = Math.round((w * maxD) / h); h = maxD; }
             canvas.width = w; canvas.height = h;
