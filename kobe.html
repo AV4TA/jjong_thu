@@ -21,6 +21,9 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
+  <!-- Panzoom (모바일 핀치 줌 라이브러리) -->
+  <script src="https://unpkg.com/@panzoom/panzoom/dist/panzoom.min.js"></script>
+
   <style>
     :root {
       --primary: #ff5e7e;
@@ -241,50 +244,42 @@
     .check-row.checked .check-text { text-decoration: line-through; color: #a4b0be; }
     .btn-del-check { background: none; border: none; color: #ff7675; font-size: 0.85rem; cursor: pointer; padding: 4px 6px; }
 
-    /* 서류 / 티켓 다운로드 중심 카드 스타일 */
-    .doc-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 14px; }
+    /* 서류 / 티켓 카드 스타일 (이미지 썸네일형) */
+    .doc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; }
     .doc-card {
       background: white;
       border-radius: 16px;
-      padding: 16px;
+      overflow: hidden;
       box-shadow: var(--shadow);
       border: 1px solid var(--border);
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      flex-direction: column;
+      position: relative;
     }
-    .doc-info { flex: 1; }
-    .doc-title { font-size: 1rem; font-weight: 800; color: #2d3436; margin-bottom: 4px; }
-    .doc-memo { font-size: 0.8rem; color: var(--text-sub); line-height: 1.3; }
-    .doc-actions { display: flex; gap: 6px; align-items: center; }
-    .btn-doc-download {
-      background: var(--primary-soft);
-      color: var(--primary);
-      border: none;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 0.82rem;
-      font-weight: 800;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
-    }
-    .btn-doc-del {
-      background: #f1f2f6;
-      border: none;
-      color: #ff7675;
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
+    .doc-img-wrap {
+      height: 135px;
+      background: #f8f9fc;
+      position: relative;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
+      padding: 6px;
     }
+    .doc-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    .doc-body { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .doc-title { font-size: 0.92rem; font-weight: 800; color: #2d3436; margin-bottom: 3px; line-height: 1.3; }
+    .doc-memo { font-size: 0.75rem; color: var(--text-sub); margin-bottom: 10px; line-height: 1.3; }
+    .doc-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+    .btn-doc-action { background: #f1f2f6; border: none; color: #57606f; font-size: 0.75rem; font-weight: 700; padding: 6px 10px; border-radius: 8px; cursor: pointer; }
+    .btn-doc-action.del { color: #ff7675; }
+    .btn-doc-action.view { background: var(--primary-soft); color: var(--primary); }
 
     .timeline-item { display: flex; gap: 14px; position: relative; padding-bottom: 20px; }
     .timeline-item:last-child { padding-bottom: 0; }
@@ -349,6 +344,73 @@
     .btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-size: 0.95rem; font-weight: 700; cursor: pointer; }
     .btn-primary { background: var(--primary); color: white; }
     .btn-secondary { background: #f1f2f6; color: #57606f; }
+
+    /* 서류 원본 확대 및 다운로드 모달 */
+    .doc-view-card {
+      background: white;
+      border-radius: 24px;
+      padding: 16px 14px 14px;
+      width: 96%;
+      max-width: 460px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+    }
+    .doc-modal-close-btn {
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      width: 36px;
+      height: 36px;
+      background: #2d3436;
+      color: white;
+      border: 2px solid white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    .doc-view-img-box {
+      width: 100%;
+      height: 62vh;
+      max-height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      background: #fafafa;
+      overflow: hidden;
+      position: relative;
+    }
+    .doc-view-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .btn-download-doc {
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      border: 1px solid #ffc2d1;
+      font-size: 0.92rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
   </style>
 </head>
 <body>
@@ -401,7 +463,7 @@
     <div id="view-docs" class="tab-view">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
         <h4 style="font-size: 1.05rem; font-weight: 800; color: #2d3436;"><i class="fa-solid fa-file-lines" style="color:var(--primary);"></i> 티켓 및 예약증 보관함</h4>
-        <span style="font-size:0.75rem; color:var(--text-sub);">버튼을 눌러 바로 다운로드 가능 📥</span>
+        <span style="font-size:0.75rem; color:var(--text-sub);">사진을 누르면 확대 및 저장 가능 ✨</span>
       </div>
       <div class="doc-grid" id="documentGridContainer"></div>
     </div>
@@ -478,7 +540,7 @@
       <div class="form-group">
         <label>추가할 위치 (분류)</label>
         <select class="form-control" id="itemType" onchange="toggleFormFields()">
-          <option value="doc">📄 필요서류 / 티켓 파일 (PDF/이미지)</option>
+          <option value="doc">📄 필요서류 / 티켓 캡처 사진</option>
           <option value="travel">✈️ 여행 일정 (시간표)</option>
           <option value="place">🍽️ 맛집 / 가볼 곳 보관</option>
         </select>
@@ -487,8 +549,8 @@
       <!-- 서류/티켓 업로드 필드 -->
       <div id="docFields">
         <div class="form-group">
-          <label>티켓 또는 예약증 파일 첨부</label>
-          <input type="file" class="form-control" id="docFileInput" accept="image/*,.pdf" onchange="handleDocFileSelect(this)">
+          <label>티켓 또는 예약증 이미지 첨부</label>
+          <input type="file" class="form-control" id="docFileInput" accept="image/*" onchange="handleDocFileSelect(this)">
         </div>
       </div>
 
@@ -545,6 +607,19 @@
     </div>
   </div>
 
+  <!-- 이미지 확대 및 다운로드 모달 -->
+  <div class="modal-overlay" id="docViewModal" onclick="closeDocModal()">
+    <div class="doc-view-card" onclick="event.stopPropagation()">
+      <button class="doc-modal-close-btn" onclick="closeDocModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div class="doc-view-img-box">
+        <img id="enlargedDocImg" src="" alt="서류 확대">
+      </div>
+      <button class="btn-download-doc" onclick="downloadCurrentDocImage()">
+        <i class="fa-solid fa-download"></i> 서류 이미지 저장하기
+      </button>
+    </div>
+  </div>
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
@@ -577,8 +652,8 @@
     ];
 
     const initialDocuments = [
-      { id: 1, title: '고속버스 티켓 (서울-고베)', memo: '산노미야행 직행 버스 바우처', fileData: '', fileName: 'bus_ticket.pdf' },
-      { id: 2, title: '토요코인 호텔 예약증', memo: '체크인 바우처 및 예약번호 확인', fileData: '', fileName: 'hotel_voucher.pdf' }
+      { id: 1, title: '고속버스 티켓 (서울-고베)', memo: '산노미야행 직행 버스 바우처', fileData: '', fileName: 'bus_ticket.jpg' },
+      { id: 2, title: '토요코인 호텔 예약증', memo: '체크인 바우처 및 예약번호 확인', fileData: '', fileName: 'hotel_voucher.jpg' }
     ];
 
     const initialKobeData = {
@@ -603,7 +678,7 @@
       ],
       places: [
         { id: 1, region: 'kobe', category: '맛집', title: '고베 타다', desc: '1일차 저녁 예정 맛집 🥩', query: 'Kobe Tada, Kobe, Japan' },
-        { id: 2, region: 'kobe', category: '숙소', title: '토요코인 고베 산노미야 에키마エ', desc: '역 앞 편리한 숙소 (東横INN神戸三宮駅前)', query: 'Toyoko Inn Kobe Sannomiya Ekimae, Kobe' },
+        { id: 2, region: 'kobe', category: '숙소', title: '토요코인 고베 산노미야 에키마에', desc: '역 앞 편리한 숙소 (東横INN神戸三宮駅前)', query: 'Toyoko Inn Kobe Sannomiya Ekimae, Kobe' },
         { id: 3, region: 'kobe', category: '카페', title: '스타벅스 기타노이진칸점', desc: '등록유형문화재 서양식 주택 카페', query: 'Starbucks Coffee Kobe Kitano Ijinkan' },
         { id: 4, region: 'arima', category: '볼거리', title: '아리마 온천 킨노유', desc: '적갈색 철분 천연 온천수 족욕장 ♨️', query: 'Arima Onsen Kin no Yu, Kobe' },
         { id: 5, region: 'arima', category: '쇼핑', title: '아리마 탄산센베 본점', desc: '바삭바삭 전통 온천 탄산과자 선물', query: 'Arima Onsen Tansan Senbei' }
@@ -619,6 +694,8 @@
     let currentPerson = 'thu';
     let tempUploadedFileBase64 = '';
     let tempUploadedFileName = '';
+    let panzoomInstance = null;
+    let currentViewingDoc = null;
 
     const syncDot = document.getElementById('syncDot');
     const syncText = document.getElementById('syncStatusText');
@@ -732,22 +809,77 @@
       const docs = appData.documents || [];
 
       if (docs.length === 0) {
-        container.innerHTML = `<div style="text-align:center; color:#a4b0be; padding:40px 10px;">등록된 티켓/서류가 없습니다.<br>우측 하단의 <b>+</b> 버튼을 눌러 추가해보세요!</div>`;
+        container.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; color:#a4b0be; padding:40px 10px;">등록된 티켓/서류가 없습니다.<br>우측 하단의 <b>+</b> 버튼을 눌러 추가해보세요!</div>`;
         return;
       }
 
-      container.innerHTML = docs.map(d => `
-        <div class="doc-card">
-          <div class="doc-info">
-            <div class="doc-title"><i class="fa-solid fa-file-pdf" style="color:var(--primary); margin-right:6px;"></i>${d.title}</div>
-            <div class="doc-memo">${d.memo || '설명 없음'}</div>
+      container.innerHTML = docs.map(d => {
+        const displayImg = d.fileData || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400';
+        return `
+          <div class="doc-card">
+            <div class="doc-img-wrap" onclick="viewDocImage(${d.id})">
+              <img src="${displayImg}" alt="서류">
+            </div>
+            <div class="doc-body">
+              <div>
+                <div class="doc-title">${d.title}</div>
+                <div class="doc-memo">${d.memo || '설명 없음'}</div>
+              </div>
+              <div class="doc-footer">
+                <button class="btn-doc-action del" onclick="deleteDocument(${d.id})">삭제</button>
+                <button class="btn-doc-action view" onclick="viewDocImage(${d.id})">확대보기</button>
+              </div>
+            </div>
           </div>
-          <div class="doc-actions">
-            ${d.fileData ? `<a class="btn-doc-download" href="${d.fileData}" download="${d.fileName || 'travel_doc'}"><i class="fa-solid fa-download"></i> 다운로드</a>` : `<span style="font-size:0.75rem; color:#a4b0be;">파일없음</span>`}
-            <button class="btn-doc-del" onclick="deleteDocument(${d.id})"><i class="fa-solid fa-trash-can"></i></button>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
+    }
+
+    function initPanzoom() {
+      const elem = document.getElementById('enlargedDocImg');
+      if (panzoomInstance) {
+        panzoomInstance.destroy();
+        panzoomInstance = null;
+      }
+      panzoomInstance = Panzoom(elem, {
+        maxScale: 4.5,
+        minScale: 1,
+        contain: 'outside',
+        startScale: 1
+      });
+      elem.parentElement.addEventListener('wheel', panzoomInstance.zoomWithWheel);
+    }
+
+    function viewDocImage(id) {
+      const target = (appData.documents || []).find(d => d.id === id);
+      if (target && target.fileData) {
+        currentViewingDoc = target;
+        document.getElementById('enlargedDocImg').src = target.fileData;
+        document.getElementById('docViewModal').classList.add('active');
+        setTimeout(() => { initPanzoom(); }, 50);
+      } else {
+        alert('저장된 이미지 파일이 없습니다.');
+      }
+    }
+
+    function closeDocModal() {
+      document.getElementById('docViewModal').classList.remove('active');
+      currentViewingDoc = null;
+      if (panzoomInstance) {
+        panzoomInstance.reset();
+        panzoomInstance.destroy();
+        panzoomInstance = null;
+      }
+    }
+
+    function downloadCurrentDocImage() {
+      if (!currentViewingDoc || !currentViewingDoc.fileData) return;
+      const link = document.createElement('a');
+      link.href = currentViewingDoc.fileData;
+      link.download = (currentViewingDoc.title || '여행서류') + '_바우처.jpg';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
 
     function deleteDocument(id) {
@@ -764,7 +896,19 @@
         tempUploadedFileName = file.name;
         const reader = new FileReader();
         reader.onload = function(e) {
-          tempUploadedFileBase64 = e.target.result; // PDF 및 모든 파일 바이너리/Base64 저장
+          const img = new Image();
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            let w = img.width, h = img.height;
+            const maxD = 1200; // 용량 초과 방지용 리사이징
+            if (w > h && w > maxD) { h = Math.round((h * maxD) / w); w = maxD; }
+            else if (h > maxD) { w = Math.round((w * maxD) / h); h = maxD; }
+            canvas.width = w; canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+            tempUploadedFileBase64 = canvas.toDataURL('image/jpeg', 0.85);
+          };
+          img.src = e.target.result;
         };
         reader.readAsDataURL(file);
       }
@@ -1076,7 +1220,7 @@
           title: name,
           memo: memo,
           fileData: tempUploadedFileBase64,
-          fileName: tempUploadedFileName || 'document.pdf'
+          fileName: tempUploadedFileName || 'document.jpg'
         });
         saveData();
         renderDocuments();
