@@ -1,4 +1,4 @@
-// KBO 라이브 데이터 수집 & ktwiz_data.json 호환 통합 스크립트
+// KBO 라이브 데이터 수집 & 시즌 전체 경기 일정 호환 통합 스크립트
 const fs = require('fs');
 const path = require('path');
 
@@ -11,9 +11,6 @@ function kstNow() {
 function ymd(d) {
   return d.toISOString().slice(0, 10);
 }
-function addDays(d, n) {
-  return new Date(d.getTime() + n * 86400000);
-}
 
 async function j(url) {
   const r = await fetch(url, { headers: UA, signal: AbortSignal.timeout(15000) });
@@ -22,7 +19,7 @@ async function j(url) {
 }
 
 async function games(from, to, size) {
-  const u = `${API}/schedule/games?fields=basic,stadium,statusNum,homeStarterName,awayStarterName,winPitcherName,losePitcherName&upperCategoryId=kbaseball&categoryId=kbo&fromDate=${from}&toDate=${to}&size=${size || 200}`;
+  const u = `${API}/schedule/games?fields=basic,stadium,statusNum,homeStarterName,awayStarterName,winPitcherName,losePitcherName&upperCategoryId=kbaseball&categoryId=kbo&fromDate=${from}&toDate=${to}&size=${size || 500}`;
   const d = await j(u);
   return (d.result && d.result.games) || [];
 }
@@ -53,48 +50,6 @@ function mapLineup(lu) {
   return { starter: starter ? starter.playerName : '', batters };
 }
 
-// KBO 공식 일정 — 취소 경기 목록
-async function fetchCancelledList(yearMonths) {
-  const out = [];
-  for (const ym of yearMonths) {
-    const [season, month] = ym.split('-');
-    const r = await fetch('https://www.koreabaseball.com/ws/Schedule.asmx/GetScheduleList', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36',
-        'Referer': 'https://www.koreabaseball.com/Schedule/Schedule.aspx',
-        'X-Requested-With': 'XMLHttpRequest'
-      },
-      body: `leId=1&srIdList=0%2C9%2C6&seasonId=${season}&gameMonth=${month}&teamId=`,
-      signal: AbortSignal.timeout(15000)
-    });
-    if (!r.ok) continue;
-    const d = await r.json();
-    let curDate = null;
-    for (const row of d.rows || []) {
-      let cells = row.row || [];
-      if (cells[0] && cells[0].Class === 'day') {
-        const m = (cells[0].Text || '').match(/(\d{2})\.(\d{2})/);
-        if (m) curDate = `${season}-${m[1]}-${m[2]}`;
-        cells = cells.slice(1);
-      }
-      if (!curDate || cells.length < 2) continue;
-      const play = cells.find(c => c.Class === 'play');
-      const remark = (cells[cells.length - 1].Text || '').replace(/<[^>]+>/g, '').trim();
-      if (!play || !remark.includes('취소')) continue;
-      const txt = (play.Text || '').replace(/<em>[\s\S]*?<\/em>/, '|');
-      const [awayRaw, homeRaw] = txt.split('|');
-      const clean = s => (s || '').replace(/<[^>]+>/g, '').replace(/\d+/g, '').trim();
-      const away = clean(awayRaw), home = clean(homeRaw);
-      const stadium = cells.length >= 2 ? (cells[cells.length - 2].Text || '').replace(/<[^>]+>/g, '').trim() : '';
-      if (away && home) out.push({ date: curDate, away, home, stadium, reason: remark });
-    }
-  }
-  return out;
-}
-
-// 자체 순위 계산 (경기 종료 즉시 갱신)
 const KBO_TEAMS = ['KT', 'LG', '삼성', '두산', 'KIA', '롯데', 'SSG', 'NC', '키움', '한화'];
 
 async function selfStandings(today) {
@@ -102,7 +57,7 @@ async function selfStandings(today) {
   const agg = {};
   for (const [f, t] of ranges) {
     if (f > today) break;
-    const gs = await games(f, t, 500);
+    const gs = await games(f.replace(/-/g, ''), t.replace(/-/g, ''), 500);
     for (const g of gs) {
       if (g.statusCode !== 'RESULT' && g.statusCode !== 'ENDED') continue;
       if (!KBO_TEAMS.includes(g.homeTeamName) || !KBO_TEAMS.includes(g.awayTeamName)) continue;
@@ -124,12 +79,17 @@ async function selfStandings(today) {
 (async () => {
   const now = kstNow();
   const today = ymd(now);
+  const todayCompact = today.replace(/-/g, '');
 
   const file = path.join(__dirname, 'ktwiz_data.json');
   let prev = null;
   try { prev = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) {}
 
-  const todayGames = (await games(today, today)).map(mapGame);
+  // 💡 2026년 정규시즌 개막일(03-28)부터 오늘까지의 시즌 전체 경기 일정 조회
+  const allSeasonGamesRaw = await games('20260328', todayCompact, 1000);
+  const mappedGames = allSeasonGamesRaw.map(mapGame);
+  
+  const todayGames = mappedGames.filter(g => g.date === today);
   
   const standings = {};
   let ktLineup = null, oppLineup = null, ktGameId = null, ktStarters = null;
@@ -182,7 +142,6 @@ async function selfStandings(today) {
       : ((prev && prev.rankings) || []);
   }
 
-  // 💡 기존 HTML(인덱스)이 호환되도록 데이터 매핑 변환
   const ktGame = todayGames.find(g => g.home === 'KT' || g.away === 'KT');
   let todayMatch = null;
   if (ktGame) {
@@ -240,7 +199,7 @@ async function selfStandings(today) {
     todayH2H: prev ? prev.todayH2H : { text: "올 시즌 상대 전적", record: "0승 0패" },
     todayLineup: todayLineup,
     rankings: rankings,
-    games: todayGames,
+    games: mappedGames, // 👈 시즌 전체 경기 일정이 들어가도록 설정 완료!
     kt: {
       gameId: ktGameId,
       lineup: ktLineup,
@@ -250,5 +209,5 @@ async function selfStandings(today) {
   };
 
   fs.writeFileSync(file, JSON.stringify(out, null, 2), 'utf-8');
-  console.log(`🎯 ktwiz_data.json 통합 저장 완료: games=${todayGames.length}, rankings=${rankings.length}`);
+  console.log(`🎯 ktwiz_data.json 저장 완료: 총 시즌 경기수=${mappedGames.length}, rankings=${rankings.length}`);
 })().catch(e => { console.error(e); process.exit(1); });
