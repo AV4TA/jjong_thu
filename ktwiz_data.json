@@ -1,18 +1,18 @@
 {
   "todayMatch": {
-    "date": "2026-08-20",
+    "date": "2026-08-21",
     "time": "19:00",
-    "stadium": "잠실",
-    "opponent": "LG",
+    "stadium": "문학",
+    "opponent": "SSG",
     "isHome": false,
-    "score": "KT 16 : 4 LG",
-    "ktPitcher": "고영표",
-    "oppPitcher": "박시원"
+    "score": "VS",
+    "ktPitcher": "배제성",
+    "oppPitcher": "김건우"
   },
   "todayLineup": {
-    "ktPitcher": "고영표",
-    "oppPitcher": "박시원",
-    "pitcher": "고영표",
+    "ktPitcher": "배제성",
+    "oppPitcher": "김건우",
+    "pitcher": "배제성",
     "batters": [
       {
         "order": "1",
@@ -165,187 +165,138 @@
   ],
   "games": [
     {
-      "id": "20260820HTHH02026",
-      "date": "2026-08-20",
+      "id": "20260821HTWO02026",
+      "date": "2026-08-21",
+      "time": "19:00",
+      "stadium": "고척",
+      "away": "KIA",
+      "home": "키움",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "양현종",
+      "hp": "하영민",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260821KTSK02026",
+      "date": "2026-08-21",
+      "time": "19:00",
+      "stadium": "문학",
+      "away": "KT",
+      "home": "SSG",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "배제성",
+      "hp": "김건우",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260821LGHH02026",
+      "date": "2026-08-21",
       "time": "19:00",
       "stadium": "대전",
-      "away": "KIA",
+      "away": "LG",
       "home": "한화",
-      "as": 10,
-      "hs": 6,
-      "status": "9회말",
-      "code": "RESULT",
-      "ap": "황동하",
-      "hp": "류현진",
-      "wp": "최지민",
-      "lp": "정우주"
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "송승기",
+      "hp": "짐머맨",
+      "wp": "",
+      "lp": ""
     },
     {
-      "id": "20260820KTLG02026",
-      "date": "2026-08-20",
+      "id": "20260821LTOB02026",
+      "date": "2026-08-21",
       "time": "19:00",
       "stadium": "잠실",
-      "away": "KT",
-      "home": "LG",
-      "as": 16,
-      "hs": 4,
-      "status": "9회말",
-      "code": "RESULT",
-      "ap": "고영표",
-      "hp": "박시원",
-      "wp": "고영표",
-      "lp": "케네디"
+      "away": "롯데",
+      "home": "두산",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "김진욱",
+      "hp": "최승용",
+      "wp": "",
+      "lp": ""
     },
     {
-      "id": "20260820OBNC02026",
-      "date": "2026-08-20",
+      "id": "20260821SSNC02026",
+      "date": "2026-08-21",
       "time": "19:00",
       "stadium": "창원",
-      "away": "두산",
+      "away": "삼성",
       "home": "NC",
-      "as": 4,
-      "hs": 5,
-      "status": "9회말",
-      "code": "RESULT",
-      "ap": "잭로그",
-      "hp": "구창모",
-      "wp": "전사민",
-      "lp": "김택연"
-    },
-    {
-      "id": "20260820SKSS02026",
-      "date": "2026-08-20",
-      "time": "19:00",
-      "stadium": "대구",
-      "away": "SSG",
-      "home": "삼성",
-      "as": 6,
-      "hs": 4,
-      "status": "9회말",
-      "code": "RESULT",
-      "ap": "최민준",
-      "hp": "최원태",
-      "wp": "노경은",
-      "lp": "사토시"
-    },
-    {
-      "id": "20260820WOLT02026",
-      "date": "2026-08-20",
-      "time": "19:00",
-      "stadium": "사직",
-      "away": "키움",
-      "home": "롯데",
-      "as": 1,
-      "hs": 7,
-      "status": "9회초",
-      "code": "RESULT",
-      "ap": "박준현",
-      "hp": "나균안",
-      "wp": "나균안",
-      "lp": "박준현"
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "원태인",
+      "hp": "토다",
+      "wp": "",
+      "lp": ""
     }
   ],
   "kt": {
-    "gameId": "20260820KTLG02026",
-    "lineup": {
-      "starter": "고영표",
-      "batters": [
-        {
-          "o": 1,
-          "name": "최원준",
-          "pos": "중견수"
-        },
-        {
-          "o": 2,
-          "name": "김현수",
-          "pos": "1루수"
-        },
-        {
-          "o": 3,
-          "name": "안현민",
-          "pos": "우익수"
-        },
-        {
-          "o": 4,
-          "name": "힐리어드",
-          "pos": "좌익수"
-        },
-        {
-          "o": 5,
-          "name": "허경민",
-          "pos": "3루수"
-        },
-        {
-          "o": 6,
-          "name": "류현인",
-          "pos": "2루수"
-        },
-        {
-          "o": 7,
-          "name": "이정범",
-          "pos": "지명타자"
-        },
-        {
-          "o": 8,
-          "name": "한승택",
-          "pos": "포수"
-        },
-        {
-          "o": 9,
-          "name": "권동진",
-          "pos": "유격수"
-        }
-      ]
-    },
+    "gameId": "20260821KTSK02026",
+    "lineup": null,
     "starters": {
       "kt": {
-        "name": "고영표",
-        "era": "3.70",
-        "w": 9,
-        "l": 6,
-        "pitches": [
-          {
-            "type": "CHUP",
-            "rt": 43.20000076293945,
-            "spd": 118
-          },
-          {
-            "type": "TWOS",
-            "rt": 30.100000381469727,
-            "spd": 134
-          },
-          {
-            "type": "SWEE",
-            "rt": 10.600000381469727,
-            "spd": 117
-          }
-        ]
-      },
-      "opp": {
-        "name": "박시원",
-        "era": "3.98",
-        "w": 0,
+        "name": "배제성",
+        "era": "4.30",
+        "w": 1,
         "l": 2,
         "pitches": [
           {
             "type": "FAST",
-            "rt": 58.29999923706055,
-            "spd": 147
+            "rt": 50.400001525878906,
+            "spd": 145
           },
           {
             "type": "SLID",
-            "rt": 25.5,
-            "spd": 137
+            "rt": 39.099998474121094,
+            "spd": 132
           },
           {
-            "type": "CURV",
-            "rt": 10,
-            "spd": 124
+            "type": "FORK",
+            "rt": 6.5,
+            "spd": 134
           }
         ]
       },
-      "oppName": "LG"
+      "opp": {
+        "name": "김건우",
+        "era": "6.22",
+        "w": 7,
+        "l": 9,
+        "pitches": [
+          {
+            "type": "FAST",
+            "rt": 51.79999923706055,
+            "spd": 143
+          },
+          {
+            "type": "CHUP",
+            "rt": 18.600000381469727,
+            "spd": 129
+          },
+          {
+            "type": "SLID",
+            "rt": 18.200000762939453,
+            "spd": 134
+          }
+        ]
+      },
+      "oppName": "SSG"
     }
   },
-  "updated": "2026-08-20T14:05:23.681Z"
+  "updated": "2026-08-20T15:21:46.405Z"
 }
