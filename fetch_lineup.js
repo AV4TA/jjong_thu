@@ -55,7 +55,7 @@ function mapLineup(lu) {
   const today = ymd(now);
 
   // 데이터 파일 경로 (필요에 따라 파일명 변경 가능)
-  const file = path.join(__dirname, 'data', 'live.json');
+  const file = path.join(__dirname, 'ktwiz_data.json');
   let prev = null;
   try { prev = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) {}
 
