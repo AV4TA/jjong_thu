@@ -365,6 +365,14 @@
       line-height: 1.35;
     }
 
+    .lineup-box { background: #f8f9fa; border-radius: 14px; padding: 14px; margin-top: 14px; }
+    .lineup-title { font-size: 0.85rem; font-weight: 800; color: #57606f; margin-bottom: 10px; display: flex; justify-content: space-between; }
+    .lineup-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .lineup-item { background: white; border: 1px solid #eef0f4; border-radius: 8px; padding: 7px 6px; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; }
+    .order-num { font-weight: 900; color: var(--kt-red); margin-right: 4px; }
+    .player-name { font-weight: 700; color: #2f3542; }
+    .player-pos { font-size: 0.7rem; color: var(--text-sub); }
+
     /* 카드 리스트 */
     .game-list { display: flex; flex-direction: column; gap: 12px; }
     .game-card {
@@ -460,7 +468,7 @@
     </div>
   </header>
 
-  <!-- 3개 메인 탭 -->
+  <!-- 상단 3개 탭 -->
   <div class="tab-bar">
     <button class="tab-btn active" onclick="switchTab('tab-diary', this)"><i class="fa-solid fa-ticket"></i> 직관 다이어리</button>
     <button class="tab-btn" onclick="switchTab('tab-today', this)"><i class="fa-solid fa-calendar-day"></i> 오늘 경기</button>
@@ -519,6 +527,18 @@
             <span class="pitcher-duel-label">상대 선발 투수</span>
             <span class="pitcher-duel-name" id="todayOppPitcher">미정</span>
             <div class="pitcher-pitches" id="oppPitcherPitches">구종 데이터 대기 중</div>
+          </div>
+        </div>
+        
+        <div class="lineup-box">
+          <div class="lineup-title">
+            <span>📋 선발 타순 (1~9번)</span>
+            <span style="font-size:0.75rem; color:var(--text-sub); font-weight:600;">경기 시작 1시간 전 발표</span>
+          </div>
+          <div class="lineup-grid" id="todayLineupGrid">
+            <div style="grid-column: span 3; text-align: center; color: var(--text-sub); font-size: 0.8rem; padding: 10px 0;">
+              선발 라인업 등록 대기 중입니다.
+            </div>
           </div>
         </div>
       </div>
@@ -608,6 +628,34 @@
   </div>
 
   <script>
+    const teamFullMap = {
+      'LG': 'LG 트윈스', 'SSG': 'SSG 랜더스', '두산': '두산 베어스', 'KIA': 'KIA 타이거즈',
+      '삼성': '삼성 라이온즈', '롯데': '롯데 자이언츠', '한화': '한화 이글스', 'NC': 'NC 다이노스', '키움': '키움 히어로즈', 'KT': 'kt wiz'
+    };
+
+    function normalizeTeam(name) {
+      if (!name) return '상대팀';
+      for (const [k, v] of Object.entries(teamFullMap)) {
+        if (name.includes(k)) return v;
+      }
+      return name;
+    }
+
+    function normalizeScore(score, oppName) {
+      if (!score) return 'VS';
+      if (score.includes('KT') || score.includes('VS') || score.includes('취소')) return score;
+      const parts = score.split(':').map(s => s.trim());
+      if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+        return `KT ${parts[0]} : ${parts[1]} ${normalizeTeam(oppName).split(' ')[0]}`;
+      }
+      return score;
+    }
+
+    function normalizeStadium(stadium) {
+      if (!stadium || stadium === '수원') return '수원 위즈파크 (홈)';
+      return stadium;
+    }
+
     const firebaseConfig = {
       apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
       authDomain: "kobe-couple-app.firebaseapp.com",
@@ -622,6 +670,7 @@
     const baseballCollection = db.collection("couple_space").doc("data").collection("baseball_games");
 
     let gameList = [];
+    let serverKboData = {};
     let serverBaseballData = {};
 
     function switchTab(tabId, el) {
@@ -631,63 +680,75 @@
       document.getElementById(tabId).classList.add('active');
     }
 
-    // 💡 baseball.json 로드 및 데이터 연동
+    // 💡 1. ktwiz_data.json 로드 (순위, 라인업, 투수 구종 담당)
+    async function loadKboJson() {
+      try {
+        const res = await fetch('./ktwiz_data.json?t=' + Date.now());
+        if (res.ok) {
+          serverKboData = await res.json();
+          renderTodayMatchInfo(serverKboData);
+          renderRankingsAndMagic(serverKboData.rankings);
+        }
+      } catch(e){ console.warn("ktwiz_data.json 로드 대기", e); }
+    }
+    loadKboJson();
+
+    // 💡 2. baseball.json 로드 (직관 다이어리 및 올시즌 상대전적 담당)
     async function loadBaseballJson() {
       try {
         const res = await fetch('./baseball.json?t=' + Date.now());
         if (res.ok) {
           serverBaseballData = await res.json();
-          renderTodayMatch(serverBaseballData.todayMatch);
+          renderTodayMatchScore(serverBaseballData.todayMatch);
           calculateH2H(serverBaseballData.schedule, serverBaseballData.todayMatch);
-          
-          if (serverBaseballData.schedule) {
-            generateRankingsFromSchedule(serverBaseballData.schedule);
-          }
         }
-      } catch(e){ console.warn("baseball.json 로드 대기 중", e); }
+      } catch(e){ console.warn("baseball.json 로드 대기", e); }
     }
     loadBaseballJson();
 
-    function renderTodayMatch(todayMatch) {
-      if (!todayMatch) {
-        document.getElementById('todayDateTxt').innerText = '📅 오늘 경기 일정 없음';
-        document.getElementById('todayStadiumTxt').innerText = '휴식일 🏖️';
-        document.getElementById('todayScoreOrVs').innerText = '-';
-        document.getElementById('todayOpponentTxt').innerText = '-';
-        document.getElementById('todayH2hTxt').innerText = '휴식일';
-        document.getElementById('todayKtPitcher').innerText = '-';
-        document.getElementById('todayOppPitcher').innerText = '-';
-        document.getElementById('ktPitcherPitches').innerText = '정보 없음';
-        document.getElementById('oppPitcherPitches').innerText = '정보 없음';
-        return;
+    function renderTodayMatchInfo(data) {
+      const todayMatch = data.todayMatch;
+      const todayLineup = data.todayLineup;
+
+      if (todayMatch) {
+        document.getElementById('todayDateTxt').innerText = `📅 ${todayMatch.date} (${todayMatch.time || '18:30'})`;
+        document.getElementById('todayStadiumTxt').innerText = `📍 ${normalizeStadium(todayMatch.stadium)}`;
+        document.getElementById('todayOpponentTxt').innerText = normalizeTeam(todayMatch.opponent);
       }
 
-      document.getElementById('todayDateTxt').innerText = `📅 ${todayMatch.date} (${todayMatch.time || '18:30'})`;
-      document.getElementById('todayStadiumTxt').innerText = `📍 ${todayMatch.stadium}`;
-      document.getElementById('todayScoreOrVs').innerText = todayMatch.score;
-      document.getElementById('todayOpponentTxt').innerText = todayMatch.opponent;
+      // 선발 투수 이름 및 구종 비교
+      document.getElementById('todayKtPitcher').innerText = (todayLineup && todayLineup.ktPitcher) || (todayMatch && todayMatch.ktPitcher) || '미정';
+      document.getElementById('todayOppPitcher').innerText = (todayLineup && todayLineup.oppPitcher) || (todayMatch && todayMatch.oppPitcher) || '미정';
 
-      // 선발 투수 이름 및 구종 비교 반영 (데이터가 있는 경우 표시)
-      const ktP = todayMatch.ktPitcher || '미정';
-      const oppP = todayMatch.oppPitcher || '미정';
-      document.getElementById('todayKtPitcher').innerText = ktP;
-      document.getElementById('todayOppPitcher').innerText = oppP;
-
-      // 구종/구속 데이터가 있으면 렌더링, 없으면 안내문구
-      if (todayMatch.ktPitches && todayMatch.ktPitches.length > 0) {
-        document.getElementById('ktPitcherPitches').innerHTML = todayMatch.ktPitches.map(p => `• ${p.type}: ${p.rt}% (평균 ${p.spd}km)`).join('<br>');
-      } else {
-        document.getElementById('ktPitcherPitches').innerText = '구종 통계 준비 중';
+      if (data.kt && data.kt.starters) {
+        const s = data.kt.starters;
+        if (s.kt && s.kt.pitches) {
+          document.getElementById('ktPitcherPitches').innerHTML = s.kt.pitches.map(p => `• ${p.type}: ${p.rt}% (평균 ${p.spd}km)`).join('<br>');
+        }
+        if (s.opp && s.opp.pitches) {
+          document.getElementById('oppPitcherPitches').innerHTML = s.opp.pitches.map(p => `• ${p.type}: ${p.rt}% (평균 ${p.spd}km)`).join('<br>');
+        }
       }
 
-      if (todayMatch.oppPitches && todayMatch.oppPitches.length > 0) {
-        document.getElementById('oppPitcherPitches').innerHTML = todayMatch.oppPitches.map(p => `• ${p.type}: ${p.rt}% (평균 ${p.spd}km)`).join('<br>');
-      } else {
-        document.getElementById('oppPitcherPitches').innerText = '구종 통계 준비 중';
+      // 선발 라인업 (1~9번)
+      if (todayLineup && todayLineup.batters && todayLineup.batters.length > 0) {
+        const grid = document.getElementById('todayLineupGrid');
+        grid.innerHTML = todayLineup.batters.map(b => `
+          <div class="lineup-item">
+            <div><span class="order-num">${b.order || b.o}</span><span class="player-name">${b.name}</span></div>
+            <span class="player-pos">${b.pos}</span>
+          </div>
+        `).join('');
       }
     }
 
-    // ⚔️ 올시즌 상대 전적 계산
+    function renderTodayMatchScore(todayMatch) {
+      if (todayMatch && todayMatch.score) {
+        document.getElementById('todayScoreOrVs').innerText = todayMatch.score;
+      }
+    }
+
+    // ⚔️ 올시즌 상대 전적 계산 (baseball.json의 schedule 활용)
     function calculateH2H(schedule, todayMatch) {
       if (!schedule || !todayMatch || !todayMatch.opponent) {
         document.getElementById('todayH2hTxt').innerText = "올 시즌 상대 전적 없음";
@@ -698,7 +759,7 @@
       let wins = 0, losses = 0, draws = 0;
 
       for (const [date, info] of Object.entries(schedule)) {
-        if (date < todayMatch.date && info.opponent === opp) {
+        if (date < todayMatch.date && (info.opponent === opp || opp.includes(info.opponent))) {
           if (info.result === 'win') wins++;
           else if (info.result === 'lose') losses++;
           else if (info.result === 'draw') draws++;
@@ -712,52 +773,6 @@
         h2hText = `올시즌 ${total}전 ${wins}승 ${drawTxt}${losses}패`;
       }
       document.getElementById('todayH2hTxt').innerText = h2hText;
-    }
-
-    // 📊 순위표 자동 생성 및 매직넘버 계산
-    function generateRankingsFromSchedule(schedule) {
-      const teams = ['kt wiz', 'LG 트윈스', '삼성 라이온즈', '두산 베어스', 'KIA 타이거즈', '롯데 자이언츠', 'SSG 랜더스', 'NC 다이노스', '한화 이글스', '키움 히어로즈'];
-      const stats = {};
-      teams.forEach(t => stats[t] = { win: 0, lose: 0, draw: 0, games: 0 });
-
-      for (const info of Object.values(schedule)) {
-        if (info.result === 'win' || info.result === 'lose' || info.result === 'draw') {
-          const opp = info.opponent;
-          if (stats['kt wiz']) {
-            stats['kt wiz'].games++;
-            if (info.result === 'win') stats['kt wiz'].win++;
-            else if (info.result === 'lose') stats['kt wiz'].lose++;
-            else if (info.result === 'draw') stats['kt wiz'].draw++;
-          }
-          if (stats[opp]) {
-            stats[opp].games++;
-            if (info.result === 'win') stats[opp].lose++;
-            else if (info.result === 'lose') stats[opp].win++;
-            else if (info.result === 'draw') stats[opp].draw++;
-          }
-        }
-      }
-
-      const rankingArray = teams.map(t => {
-        const s = stats[t];
-        const wra = (s.win + s.lose) > 0 ? (s.win / (s.win + s.lose)).toFixed(3) : '0.000';
-        return {
-          teamName: t,
-          games: s.games,
-          win: s.win,
-          draw: s.draw,
-          lose: s.lose,
-          wra: wra
-        };
-      }).sort((a, b) => parseFloat(b.wra) - parseFloat(a.wra) || b.win - a.win);
-
-      const rankings = rankingArray.map((r, idx) => ({
-        rank: idx + 1,
-        ...r,
-        gameDiff: '0.0'
-      }));
-
-      renderRankingsAndMagic(rankings);
     }
 
     function renderRankingsAndMagic(rankings) {
@@ -776,7 +791,7 @@
           <td>${r.draw || 0}</td>
           <td>${r.lose}</td>
           <td>${r.wra}</td>
-          <td>${r.gameDiff}</td>
+          <td>${r.gameDiff || '0.0'}</td>
         </tr>
       `).join('');
 
@@ -908,6 +923,10 @@
 
       const resText = { win: 'WIN 🔴', lose: 'LOSE ⚫', draw: 'DRAW 🟡', scheduled: '직관 예정 ⚪', canceled: '취소 🌧️' };
       container.innerHTML = list.map(g => {
+        const fullOpponent = normalizeTeam(g.opponent);
+        const formattedScore = normalizeScore(g.score, fullOpponent);
+        const formattedStadium = normalizeStadium(g.stadium);
+
         return `
           <div class="game-card">
             <div class="game-card-header">
@@ -917,10 +936,10 @@
             <div class="game-card-body">
               <div class="matchup-box">
                 <div class="team-col"><span class="team-name kt">kt wiz</span></div>
-                <span class="score-text">${g.score || 'VS'}</span>
-                <div class="team-col"><span class="team-name">${g.opponent}</span></div>
+                <span class="score-text">${formattedScore}</span>
+                <div class="team-col"><span class="team-name">${fullOpponent}</span></div>
               </div>
-              <div class="game-stadium-tag">📍 ${g.stadium}</div>
+              <div class="game-stadium-tag">📍 ${formattedStadium}</div>
             </div>
             <div class="game-card-footer">
               <button class="btn-del-game" onclick="deleteGame('${g.id}')"><i class="fa-solid fa-trash-can"></i></button>
@@ -942,9 +961,9 @@
         document.getElementById('autoStadium').value = gameInfo.stadium;
 
         const resLabels = { win: '🔴 승리', lose: '⚫ 패배', draw: '🟡 무승부', scheduled: '⚪ 직관 예정', canceled: '🌧️ 취소' };
-        document.getElementById('txtOpponent').innerText = `${gameInfo.opponent} (${gameInfo.isHome ? '홈' : '원정'})`;
+        document.getElementById('txtOpponent').innerText = `${normalizeTeam(gameInfo.opponent)} (${gameInfo.isHome ? '홈' : '원정'})`;
         document.getElementById('txtResult').innerText = resLabels[gameInfo.result] || '⚪ 직관 예정';
-        document.getElementById('txtStadium').innerText = gameInfo.stadium;
+        document.getElementById('txtStadium').innerText = normalizeStadium(gameInfo.stadium);
       } else {
         document.getElementById('autoOpponent').value = '';
         document.getElementById('txtOpponent').innerText = '해당 날짜 경기 없음 (3/28 개막 이후)';
