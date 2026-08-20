@@ -1,14 +1,13 @@
-name: Update Lineup Data
+name: update-lineup
 
 on:
   workflow_dispatch:
   schedule:
-    # 한국 시간 기준: 00:00, 04:00, 11:30, 16:30, 17:30, 18:00
+    # 한국 시간 기준 스케줄
     - cron: '0 15,19 * * *'
     - cron: '30 2,7,8 * * *'
     - cron: '0 9 * * *'
 
-# 💡 쓰기 권한 명시적 부여 (403 에러 방지)
 permissions:
   contents: write
 
@@ -21,14 +20,14 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          python-version: '3.10'
+          node-version: '18'
 
       - name: Run Lineup Updater
         run: |
-          python fetch_lineup.py || echo "Script finished with non-fatal warning"
+          node fetch_lineup.js || echo "Script finished with non-fatal warning"
 
       - name: Commit and Push
         run: |
