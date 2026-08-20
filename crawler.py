@@ -1,6 +1,7 @@
 import json
 import datetime
 import urllib.request
+import os
 
 def fetch_json(url):
     req = urllib.request.Request(
@@ -22,7 +23,6 @@ def fetch_kt_wiz_games_and_results():
     year = today_kst.year
     today_str = today_kst.strftime("%Y-%m-%d")
     
-    # 📌 3월 28일 정규시즌 시작일
     regular_season_start = f"{year}-03-28"
 
     team_map = {
@@ -34,8 +34,7 @@ def fetch_kt_wiz_games_and_results():
     def get_team_name(code_or_name):
         return team_map.get(code_or_name, code_or_name or "알수없음")
 
-    # 3월 28일부터 전체 일정 수집
-    sched_url = f"https://api-gw.sports.naver.com/schedule/games?upperCategoryId=kbaseball&fromDate={regular_season_start}&toDate={year}-12-31&size=1000"
+    sched_url = f"https://api-gw.sports.naver.com/schedule/games?upperCategoryId=kbaseball&categoryId=kbo&fromDate={regular_season_start}&toDate={year}-12-31&size=1000"
     s_data = fetch_json(sched_url)
 
     kt_schedule = {}
@@ -47,7 +46,6 @@ def fetch_kt_wiz_games_and_results():
             raw_dt = g.get("gameDateTime", "")
             game_date = raw_dt.split("T")[0] if "T" in raw_dt else raw_dt[:10]
 
-            # 3월 28일 이전 및 시범경기 제외
             if game_date < regular_season_start or "시범" in str(g.get("categoryName", "")) or str(g.get("leagueType", "")) == "DEMONSTRATION":
                 continue
 
@@ -65,7 +63,6 @@ def fetch_kt_wiz_games_and_results():
             is_really_finished = (status_code in ['RESULT', 'END'] or "종료" in status) and not is_canceled
             has_valid_scores = (home_score is not None and away_score is not None and str(home_score) != "" and str(away_score) != "")
 
-            # KT 위즈 경기 분기
             is_kt_home = (home == 'kt wiz' or "KT" in str(home_raw))
             is_kt_away = (away == 'kt wiz' or "KT" in str(away_raw))
 
@@ -109,17 +106,20 @@ def fetch_kt_wiz_games_and_results():
                 if game_date == today_str:
                     today_game_info = game_obj
 
-    # baseball.json 파일로 저장
     final_payload = {
         "updatedAt": today_kst.strftime("%Y-%m-%d %H:%M:%S (KST)"),
         "todayMatch": today_game_info,
         "schedule": kt_schedule
     }
 
-    with open("baseball.json", "w", encoding="utf-8") as f:
+    # 💡 현재 파이썬 파일이 있는 정확한 경로에 baseball.json 생성
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(base_dir, "baseball.json")
+
+    with open(file_path, "w", encoding="utf-8") as f:
         json.dump(final_payload, f, ensure_ascii=False, indent=2)
 
-    print(f"✅ KT wiz 전체 일정 및 결과 수집 완료! 총 경기 수: {len(kt_schedule)}개 (저장 파일: baseball.json)")
+    print(f"✅ KT wiz 전체 일정 수집 완료! (저장 경로: {file_path})")
 
 if __name__ == "__main__":
     fetch_kt_wiz_games_and_results()
