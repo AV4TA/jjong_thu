@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2026-08-21 22:47:12 (KST)",
+  "updatedAt": "2026-08-22 00:17:54 (KST)",
   "todayMatch": {
-    "gameId": "20260821KTSK02026",
-    "date": "2026-08-21",
+    "gameId": "20260822KTSK02026",
+    "date": "2026-08-22",
     "time": "19:00",
     "opponent": "SSG 랜더스",
     "isHome": false,
@@ -1218,8 +1218,8 @@
       "opponent": "SSG 랜더스",
       "isHome": false,
       "stadium": "원정구장 (원정)",
-      "result": "scheduled",
-      "score": "VS"
+      "result": "draw",
+      "score": "KT 3 : 3 SSG"
     },
     "2026-08-22": {
       "gameId": "20260822KTSK02026",
