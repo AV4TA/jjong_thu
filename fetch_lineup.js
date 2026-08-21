@@ -182,7 +182,7 @@ async function selfStandings(today) {
       : ((prev && prev.rankings) || []);
   }
 
-  // 💡 기존 HTML(인덱스)이 호환되도록 데이터 매핑 변환
+  // 기존 HTML(인덱스)이 호환되도록 데이터 매핑 변환
   const ktGame = todayGames.find(g => g.home === 'KT' || g.away === 'KT');
   let todayMatch = null;
   if (ktGame) {
@@ -213,8 +213,9 @@ async function selfStandings(today) {
       name: b.name,
       pos: b.pos
     }));
-  } else if (prev && prev.todayLineup && prev.todayLineup.batters) {
-    batters = prev.todayLineup.batters;
+  } else {
+    // 오늘 라인업이 아직 발표되지 않은 경우 어제 데이터를 재사용하지 않고 비웁니다.
+    batters = [];
   }
 
   const todayLineup = {
