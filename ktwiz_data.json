@@ -1,11 +1,11 @@
 {
   "todayMatch": {
-    "date": "2026-08-22",
+    "date": "2026-08-23",
     "time": "19:00",
     "stadium": "문학",
     "opponent": "SSG",
     "isHome": false,
-    "score": "경기 취소",
+    "score": "VS",
     "ktPitcher": "로건",
     "oppPitcher": "아빌라"
   },
@@ -29,21 +29,21 @@
     {
       "rank": 2,
       "teamName": "삼성",
-      "games": 109,
-      "win": 63,
+      "games": 110,
+      "win": 64,
       "draw": 2,
       "lose": 44,
-      "wra": 0.589,
+      "wra": 0.593,
       "gameDiff": "0.0"
     },
     {
       "rank": 3,
       "teamName": "KIA",
-      "games": 110,
+      "games": 111,
       "win": 60,
       "draw": 2,
-      "lose": 48,
-      "wra": 0.556,
+      "lose": 49,
+      "wra": 0.55,
       "gameDiff": "0.0"
     },
     {
@@ -68,16 +68,6 @@
     },
     {
       "rank": 6,
-      "teamName": "NC",
-      "games": 104,
-      "win": 48,
-      "draw": 2,
-      "lose": 54,
-      "wra": 0.471,
-      "gameDiff": "0.0"
-    },
-    {
-      "rank": 7,
       "teamName": "롯데",
       "games": 109,
       "win": 50,
@@ -87,13 +77,23 @@
       "gameDiff": "0.0"
     },
     {
-      "rank": 8,
+      "rank": 7,
       "teamName": "한화",
       "games": 108,
       "win": 49,
       "draw": 3,
       "lose": 56,
       "wra": 0.467,
+      "gameDiff": "0.0"
+    },
+    {
+      "rank": 8,
+      "teamName": "NC",
+      "games": 105,
+      "win": 48,
+      "draw": 2,
+      "lose": 55,
+      "wra": 0.466,
       "gameDiff": "0.0"
     },
     {
@@ -109,82 +109,82 @@
     {
       "rank": 10,
       "teamName": "키움",
-      "games": 114,
-      "win": 40,
+      "games": 115,
+      "win": 41,
       "draw": 2,
       "lose": 72,
-      "wra": 0.357,
+      "wra": 0.363,
       "gameDiff": "0.0"
     }
   ],
   "games": [
     {
-      "id": "20260822HTWO02026",
-      "date": "2026-08-22",
-      "time": "18:00",
+      "id": "20260823HTWO02026",
+      "date": "2026-08-23",
+      "time": "14:00",
       "stadium": "고척",
       "away": "KIA",
       "home": "키움",
       "as": 0,
       "hs": 0,
-      "status": "2회초",
-      "code": "STARTED",
-      "ap": "올러",
-      "hp": "안우진",
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "네일",
+      "hp": "전준표",
       "wp": "",
       "lp": ""
     },
     {
-      "id": "20260822KTSK02026",
-      "date": "2026-08-22",
+      "id": "20260823KTSK02026",
+      "date": "2026-08-23",
       "time": "19:00",
       "stadium": "문학",
       "away": "KT",
       "home": "SSG",
       "as": 0,
       "hs": 0,
-      "status": "취소",
-      "code": "CANCEL",
+      "status": "경기전",
+      "code": "BEFORE",
       "ap": "로건",
       "hp": "아빌라",
       "wp": "",
       "lp": ""
     },
     {
-      "id": "20260822LGHH02026",
-      "date": "2026-08-22",
+      "id": "20260823LGHH02026",
+      "date": "2026-08-23",
       "time": "19:00",
       "stadium": "대전",
       "away": "LG",
       "home": "한화",
       "as": 0,
       "hs": 0,
-      "status": "취소",
-      "code": "CANCEL",
+      "status": "경기전",
+      "code": "BEFORE",
       "ap": "카라스코",
       "hp": "박준영",
       "wp": "",
       "lp": ""
     },
     {
-      "id": "20260822LTOB02026",
-      "date": "2026-08-22",
+      "id": "20260823LTOB02026",
+      "date": "2026-08-23",
       "time": "19:00",
       "stadium": "잠실",
       "away": "롯데",
       "home": "두산",
       "as": 0,
       "hs": 0,
-      "status": "취소",
-      "code": "CANCEL",
+      "status": "경기전",
+      "code": "BEFORE",
       "ap": "박세웅",
       "hp": "곽빈",
       "wp": "",
       "lp": ""
     },
     {
-      "id": "20260822SSNC02026",
-      "date": "2026-08-22",
+      "id": "20260823SSNC02026",
+      "date": "2026-08-23",
       "time": "19:00",
       "stadium": "창원",
       "away": "삼성",
@@ -192,15 +192,15 @@
       "as": 0,
       "hs": 0,
       "status": "경기전",
-      "code": "READY",
-      "ap": "이승현",
-      "hp": "원종해",
+      "code": "BEFORE",
+      "ap": "페덱",
+      "hp": "라일리",
       "wp": "",
       "lp": ""
     }
   ],
   "kt": {
-    "gameId": "20260822KTSK02026",
+    "gameId": "20260823KTSK02026",
     "lineup": null,
     "starters": {
       "kt": {
@@ -252,5 +252,5 @@
       "oppName": "SSG"
     }
   },
-  "updated": "2026-08-22T09:18:09.736Z"
+  "updated": "2026-08-22T15:08:55.672Z"
 }
