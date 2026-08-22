@@ -128,7 +128,7 @@
       "as": 0,
       "hs": 0,
       "status": "경기전",
-      "code": "BEFORE",
+      "code": "READY",
       "ap": "올러",
       "hp": "안우진",
       "wp": "",
@@ -159,8 +159,8 @@
       "home": "한화",
       "as": 0,
       "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "status": "취소",
+      "code": "CANCEL",
       "ap": "카라스코",
       "hp": "박준영",
       "wp": "",
@@ -252,5 +252,5 @@
       "oppName": "SSG"
     }
   },
-  "updated": "2026-08-22T07:54:23.110Z"
+  "updated": "2026-08-22T08:56:56.197Z"
 }
