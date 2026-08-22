@@ -127,8 +127,8 @@
       "home": "키움",
       "as": 0,
       "hs": 0,
-      "status": "경기전",
-      "code": "READY",
+      "status": "2회초",
+      "code": "STARTED",
       "ap": "올러",
       "hp": "안우진",
       "wp": "",
@@ -192,7 +192,7 @@
       "as": 0,
       "hs": 0,
       "status": "경기전",
-      "code": "BEFORE",
+      "code": "READY",
       "ap": "이승현",
       "hp": "원종해",
       "wp": "",
@@ -252,5 +252,5 @@
       "oppName": "SSG"
     }
   },
-  "updated": "2026-08-22T08:56:56.197Z"
+  "updated": "2026-08-22T09:18:09.736Z"
 }
