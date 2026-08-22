@@ -5,7 +5,7 @@
     "stadium": "문학",
     "opponent": "SSG",
     "isHome": false,
-    "score": "VS",
+    "score": "경기 취소",
     "ktPitcher": "로건",
     "oppPitcher": "아빌라"
   },
@@ -143,8 +143,8 @@
       "home": "SSG",
       "as": 0,
       "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "status": "취소",
+      "code": "CANCEL",
       "ap": "로건",
       "hp": "아빌라",
       "wp": "",
@@ -175,8 +175,8 @@
       "home": "두산",
       "as": 0,
       "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "status": "취소",
+      "code": "CANCEL",
       "ap": "박세웅",
       "hp": "곽빈",
       "wp": "",
@@ -252,5 +252,5 @@
       "oppName": "SSG"
     }
   },
-  "updated": "2026-08-22T03:20:52.141Z"
+  "updated": "2026-08-22T07:54:23.110Z"
 }
