@@ -125,10 +125,10 @@
       "stadium": "고척",
       "away": "KIA",
       "home": "키움",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 7,
+      "hs": 2,
+      "status": "9회초",
+      "code": "STARTED",
       "ap": "네일",
       "hp": "전준표",
       "wp": "",
@@ -252,5 +252,5 @@
       "oppName": "SSG"
     }
   },
-  "updated": "2026-08-23T03:29:14.220Z"
+  "updated": "2026-08-23T07:56:28.977Z"
 }
