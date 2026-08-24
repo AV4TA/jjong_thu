@@ -1,9 +1,18 @@
 {
-  "todayMatch": null,
+  "todayMatch": {
+    "date": "2026-08-25",
+    "time": "18:30",
+    "stadium": "수원",
+    "opponent": "두산",
+    "isHome": true,
+    "score": "VS",
+    "ktPitcher": "소형준",
+    "oppPitcher": "최민석"
+  },
   "todayLineup": {
-    "ktPitcher": "미정",
-    "oppPitcher": "미정",
-    "pitcher": "미정",
+    "ktPitcher": "소형준",
+    "oppPitcher": "최민석",
+    "pitcher": "소형준",
     "batters": []
   },
   "rankings": [
@@ -108,11 +117,140 @@
       "gameDiff": "0.0"
     }
   ],
-  "games": [],
+  "games": [
+    {
+      "id": "20260825HHSK02026",
+      "date": "2026-08-25",
+      "time": "18:30",
+      "stadium": "문학",
+      "away": "한화",
+      "home": "SSG",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "화이트",
+      "hp": "김민준",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260825LTHT02026",
+      "date": "2026-08-25",
+      "time": "18:30",
+      "stadium": "광주",
+      "away": "롯데",
+      "home": "KIA",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "비슬리",
+      "hp": "시라카와",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260825NCLG02026",
+      "date": "2026-08-25",
+      "time": "18:30",
+      "stadium": "잠실",
+      "away": "NC",
+      "home": "LG",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "테일러",
+      "hp": "톨허스트",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260825OBKT02026",
+      "date": "2026-08-25",
+      "time": "18:30",
+      "stadium": "수원",
+      "away": "두산",
+      "home": "KT",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "최민석",
+      "hp": "소형준",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260825SSWO02026",
+      "date": "2026-08-25",
+      "time": "18:30",
+      "stadium": "고척",
+      "away": "삼성",
+      "home": "키움",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "보스",
+      "hp": "알칸타라",
+      "wp": "",
+      "lp": ""
+    }
+  ],
   "kt": {
-    "gameId": null,
+    "gameId": "20260825OBKT02026",
     "lineup": null,
-    "starters": null
+    "starters": {
+      "kt": {
+        "name": "소형준",
+        "era": "3.39",
+        "w": 6,
+        "l": 2,
+        "pitches": [
+          {
+            "type": "TWOS",
+            "rt": 48.900001525878906,
+            "spd": 144
+          },
+          {
+            "type": "CUTT",
+            "rt": 22.299999237060547,
+            "spd": 139
+          },
+          {
+            "type": "CHUP",
+            "rt": 18.799999237060547,
+            "spd": 130
+          }
+        ]
+      },
+      "opp": {
+        "name": "최민석",
+        "era": "2.72",
+        "w": 11,
+        "l": 3,
+        "pitches": [
+          {
+            "type": "TWOS",
+            "rt": 46.599998474121094,
+            "spd": 143
+          },
+          {
+            "type": "CUTT",
+            "rt": 27.899999618530273,
+            "spd": 139
+          },
+          {
+            "type": "SWEE",
+            "rt": 12.100000381469727,
+            "spd": 126
+          }
+        ]
+      },
+      "oppName": "두산"
+    }
   },
-  "updated": "2026-08-24T09:37:01.906Z"
+  "updated": "2026-08-24T15:26:39.949Z"
 }
