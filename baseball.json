@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-25 13:40:27 (KST)",
+  "updatedAt": "2026-08-25 18:37:03 (KST)",
   "todayMatch": {
     "gameId": "20260825OBKT02026",
     "date": "2026-08-25",
@@ -1358,6 +1358,246 @@
       "opponent": "KIA 타이거즈",
       "isHome": false,
       "stadium": "원정구장 (원정)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-08": {
+      "gameId": "20260908SKKT02026",
+      "date": "2026-09-08",
+      "time": "18:30",
+      "opponent": "SSG 랜더스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-09": {
+      "gameId": "20260909KTSS02026",
+      "date": "2026-09-09",
+      "time": "18:30",
+      "opponent": "삼성 라이온즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-10": {
+      "gameId": "20260910KTLT02026",
+      "date": "2026-09-10",
+      "time": "18:30",
+      "opponent": "롯데 자이언츠",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-11": {
+      "gameId": "20260911KTLT02026",
+      "date": "2026-09-11",
+      "time": "18:30",
+      "opponent": "롯데 자이언츠",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-12": {
+      "gameId": "20260912HTKT02026",
+      "date": "2026-09-12",
+      "time": "17:00",
+      "opponent": "KIA 타이거즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-13": {
+      "gameId": "20260913LTKT02026",
+      "date": "2026-09-13",
+      "time": "17:00",
+      "opponent": "롯데 자이언츠",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-15": {
+      "gameId": "20260915KTHH02026",
+      "date": "2026-09-15",
+      "time": "18:30",
+      "opponent": "한화 이글스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-16": {
+      "gameId": "20260916KTHH02026",
+      "date": "2026-09-16",
+      "time": "18:30",
+      "opponent": "한화 이글스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-18": {
+      "gameId": "20260918LGKT02026",
+      "date": "2026-09-18",
+      "time": "18:30",
+      "opponent": "LG 트윈스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-19": {
+      "gameId": "20260919OBKT02026",
+      "date": "2026-09-19",
+      "time": "17:00",
+      "opponent": "두산 베어스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-20": {
+      "gameId": "20260920OBKT02026",
+      "date": "2026-09-20",
+      "time": "14:00",
+      "opponent": "두산 베어스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-22": {
+      "gameId": "20260922KTSK02026",
+      "date": "2026-09-22",
+      "time": "18:30",
+      "opponent": "SSG 랜더스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-23": {
+      "gameId": "20260923NCKT02026",
+      "date": "2026-09-23",
+      "time": "18:30",
+      "opponent": "NC 다이노스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-24": {
+      "gameId": "20260924NCKT02026",
+      "date": "2026-09-24",
+      "time": "17:00",
+      "opponent": "NC 다이노스",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-26": {
+      "gameId": "20260926WOKT02026",
+      "date": "2026-09-26",
+      "time": "17:00",
+      "opponent": "키움 히어로즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-27": {
+      "gameId": "20260927KTOB02026",
+      "date": "2026-09-27",
+      "time": "17:00",
+      "opponent": "두산 베어스",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-29": {
+      "gameId": "20260929KTHT02026",
+      "date": "2026-09-29",
+      "time": "18:30",
+      "opponent": "KIA 타이거즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-09-30": {
+      "gameId": "20260930KTHT02026",
+      "date": "2026-09-30",
+      "time": "18:30",
+      "opponent": "KIA 타이거즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-10-01": {
+      "gameId": "20261001KTHT02026",
+      "date": "2026-10-01",
+      "time": "18:30",
+      "opponent": "KIA 타이거즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-10-03": {
+      "gameId": "20261003LTKT02026",
+      "date": "2026-10-03",
+      "time": "14:00",
+      "opponent": "롯데 자이언츠",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-10-04": {
+      "gameId": "20261004LTKT02026",
+      "date": "2026-10-04",
+      "time": "14:00",
+      "opponent": "롯데 자이언츠",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-10-05": {
+      "gameId": "20261005LTKT02026",
+      "date": "2026-10-05",
+      "time": "14:00",
+      "opponent": "롯데 자이언츠",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-10-06": {
+      "gameId": "20261006KTWO02026",
+      "date": "2026-10-06",
+      "time": "18:30",
+      "opponent": "키움 히어로즈",
+      "isHome": false,
+      "stadium": "원정구장 (원정)",
+      "result": "scheduled",
+      "score": "VS"
+    },
+    "2026-10-07": {
+      "gameId": "20261007SSKT02026",
+      "date": "2026-10-07",
+      "time": "18:30",
+      "opponent": "삼성 라이온즈",
+      "isHome": true,
+      "stadium": "수원 위즈파크 (홈)",
       "result": "scheduled",
       "score": "VS"
     }
