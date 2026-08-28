@@ -1,18 +1,18 @@
 {
   "todayMatch": {
-    "date": "2026-08-28",
-    "time": "18:30",
+    "date": "2026-08-29",
+    "time": "18:00",
     "stadium": "대구",
     "opponent": "삼성",
     "isHome": false,
-    "score": "경기 취소",
-    "ktPitcher": "오원석",
-    "oppPitcher": "김백산"
+    "score": "VS",
+    "ktPitcher": "로건",
+    "oppPitcher": "페덱"
   },
   "todayLineup": {
-    "ktPitcher": "오원석",
-    "oppPitcher": "김백산",
-    "pitcher": "오원석",
+    "ktPitcher": "로건",
+    "oppPitcher": "페덱",
+    "pitcher": "로건",
     "batters": []
   },
   "rankings": [
@@ -119,138 +119,138 @@
   ],
   "games": [
     {
-      "id": "20260828KTSS02026",
-      "date": "2026-08-28",
-      "time": "18:30",
+      "id": "20260829KTSS02026",
+      "date": "2026-08-29",
+      "time": "18:00",
       "stadium": "대구",
       "away": "KT",
       "home": "삼성",
       "as": 0,
       "hs": 0,
-      "status": "취소",
-      "code": "CANCEL",
-      "ap": "오원석",
-      "hp": "김백산",
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "로건",
+      "hp": "페덱",
       "wp": "",
       "lp": ""
     },
     {
-      "id": "20260828LGLT02026",
-      "date": "2026-08-28",
-      "time": "18:30",
+      "id": "20260829LGLT02026",
+      "date": "2026-08-29",
+      "time": "18:00",
       "stadium": "사직",
       "away": "LG",
       "home": "롯데",
       "as": 0,
       "hs": 0,
-      "status": "취소",
-      "code": "CANCEL",
-      "ap": "김윤식",
-      "hp": "나균안",
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "카라스코",
+      "hp": "김진욱",
       "wp": "",
       "lp": ""
     },
     {
-      "id": "20260828NCHH02026",
-      "date": "2026-08-28",
-      "time": "18:30",
+      "id": "20260829NCHH02026",
+      "date": "2026-08-29",
+      "time": "18:00",
       "stadium": "대전",
       "away": "NC",
       "home": "한화",
       "as": 0,
       "hs": 0,
-      "status": "취소",
-      "code": "CANCEL",
-      "ap": "이재학",
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "라일리",
       "hp": "박준영",
       "wp": "",
       "lp": ""
     },
     {
-      "id": "20260828SKHT02026",
-      "date": "2026-08-28",
-      "time": "18:30",
+      "id": "20260829SKHT02026",
+      "date": "2026-08-29",
+      "time": "18:00",
       "stadium": "광주",
       "away": "SSG",
       "home": "KIA",
       "as": 0,
       "hs": 0,
-      "status": "취소",
-      "code": "CANCEL",
-      "ap": "이준기",
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "아빌라",
       "hp": "올러",
       "wp": "",
       "lp": ""
     },
     {
-      "id": "20260828WOOB02026",
-      "date": "2026-08-28",
-      "time": "18:30",
+      "id": "20260829WOOB02026",
+      "date": "2026-08-29",
+      "time": "18:00",
       "stadium": "잠실",
       "away": "키움",
       "home": "두산",
       "as": 0,
       "hs": 0,
-      "status": "취소",
-      "code": "CANCEL",
+      "status": "경기전",
+      "code": "BEFORE",
       "ap": "안우진",
-      "hp": "박신지",
+      "hp": "곽빈",
       "wp": "",
       "lp": ""
     }
   ],
   "kt": {
-    "gameId": "20260828KTSS02026",
+    "gameId": "20260829KTSS02026",
     "lineup": null,
     "starters": {
       "kt": {
-        "name": "오원석",
-        "era": "6.25",
+        "name": "로건",
+        "era": "2.91",
         "w": 5,
-        "l": 7,
-        "pitches": [
-          {
-            "type": "FAST",
-            "rt": 51,
-            "spd": 142
-          },
-          {
-            "type": "CHUP",
-            "rt": 28.600000381469727,
-            "spd": 130
-          },
-          {
-            "type": "CURV",
-            "rt": 10.100000381469727,
-            "spd": 116
-          }
-        ]
-      },
-      "opp": {
-        "name": "김백산",
-        "era": "3.38",
-        "w": 1,
         "l": 1,
         "pitches": [
           {
             "type": "FAST",
-            "rt": 43.900001525878906,
-            "spd": 145
-          },
-          {
-            "type": "SWEE",
-            "rt": 19.899999618530273,
-            "spd": 126
+            "rt": 46.29999923706055,
+            "spd": 147
           },
           {
             "type": "SLID",
-            "rt": 18.700000762939453,
-            "spd": 133
+            "rt": 19.100000381469727,
+            "spd": 131
+          },
+          {
+            "type": "CHUP",
+            "rt": 16.600000381469727,
+            "spd": 135
+          }
+        ]
+      },
+      "opp": {
+        "name": "페덱",
+        "era": "2.61",
+        "w": 3,
+        "l": 2,
+        "pitches": [
+          {
+            "type": "FAST",
+            "rt": 35.29999923706055,
+            "spd": 148
+          },
+          {
+            "type": "CUTT",
+            "rt": 20.600000381469727,
+            "spd": 140
+          },
+          {
+            "type": "CHUP",
+            "rt": 19.5,
+            "spd": 134
           }
         ]
       },
       "oppName": "삼성"
     }
   },
-  "updated": "2026-08-28T14:29:53.196Z"
+  "updated": "2026-08-28T20:29:31.130Z"
 }
