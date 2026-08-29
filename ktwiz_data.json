@@ -5,7 +5,7 @@
     "stadium": "대구",
     "opponent": "삼성",
     "isHome": false,
-    "score": "VS",
+    "score": "KT 2 : 4 삼성",
     "ktPitcher": "로건",
     "oppPitcher": "페덱"
   },
@@ -64,102 +64,102 @@
   "rankings": [
     {
       "rank": 1,
-      "teamName": "KT",
-      "games": 111,
-      "win": 66,
+      "teamName": "삼성",
+      "games": 115,
+      "win": 68,
       "draw": 3,
-      "lose": 42,
-      "wra": 0.611,
+      "lose": 44,
+      "wra": 0.607,
       "gameDiff": "0.0"
     },
     {
       "rank": 2,
-      "teamName": "삼성",
-      "games": 114,
-      "win": 67,
+      "teamName": "KT",
+      "games": 112,
+      "win": 66,
       "draw": 3,
-      "lose": 44,
-      "wra": 0.604,
+      "lose": 43,
+      "wra": 0.606,
       "gameDiff": "0.0"
     },
     {
       "rank": 3,
       "teamName": "KIA",
-      "games": 114,
-      "win": 62,
+      "games": 115,
+      "win": 63,
       "draw": 2,
       "lose": 50,
-      "wra": 0.554,
+      "wra": 0.558,
       "gameDiff": "0.0"
     },
     {
       "rank": 4,
       "teamName": "LG",
-      "games": 115,
-      "win": 63,
+      "games": 116,
+      "win": 64,
       "draw": 1,
       "lose": 51,
-      "wra": 0.553,
+      "wra": 0.557,
       "gameDiff": "0.0"
     },
     {
       "rank": 5,
       "teamName": "두산",
-      "games": 115,
-      "win": 59,
+      "games": 116,
+      "win": 60,
       "draw": 4,
       "lose": 52,
-      "wra": 0.532,
+      "wra": 0.536,
       "gameDiff": "0.0"
     },
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 109,
-      "win": 49,
+      "games": 110,
+      "win": 50,
       "draw": 2,
       "lose": 58,
-      "wra": 0.458,
+      "wra": 0.463,
       "gameDiff": "0.0"
     },
     {
       "rank": 7,
       "teamName": "롯데",
-      "games": 112,
+      "games": 113,
       "win": 50,
       "draw": 2,
-      "lose": 60,
-      "wra": 0.455,
+      "lose": 61,
+      "wra": 0.45,
       "gameDiff": "0.0"
     },
     {
       "rank": 8,
       "teamName": "한화",
-      "games": 112,
+      "games": 113,
       "win": 49,
       "draw": 3,
-      "lose": 60,
-      "wra": 0.45,
+      "lose": 61,
+      "wra": 0.445,
       "gameDiff": "0.0"
     },
     {
       "rank": 9,
       "teamName": "SSG",
-      "games": 117,
+      "games": 118,
       "win": 48,
       "draw": 5,
-      "lose": 64,
-      "wra": 0.429,
+      "lose": 65,
+      "wra": 0.425,
       "gameDiff": "0.0"
     },
     {
       "rank": 10,
       "teamName": "키움",
-      "games": 119,
+      "games": 120,
       "win": 42,
       "draw": 3,
-      "lose": 74,
-      "wra": 0.362,
+      "lose": 75,
+      "wra": 0.359,
       "gameDiff": "0.0"
     }
   ],
@@ -171,14 +171,14 @@
       "stadium": "대구",
       "away": "KT",
       "home": "삼성",
-      "as": 0,
-      "hs": 0,
-      "status": "1회초",
-      "code": "STARTED",
+      "as": 2,
+      "hs": 4,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "로건",
       "hp": "페덱",
-      "wp": "",
-      "lp": ""
+      "wp": "페덱",
+      "lp": "로건"
     },
     {
       "id": "20260829LGLT02026",
@@ -187,14 +187,14 @@
       "stadium": "사직",
       "away": "LG",
       "home": "롯데",
-      "as": 0,
-      "hs": 0,
-      "status": "1회말",
-      "code": "STARTED",
+      "as": 8,
+      "hs": 3,
+      "status": "7회말",
+      "code": "RESULT",
       "ap": "카라스코",
       "hp": "김진욱",
-      "wp": "",
-      "lp": ""
+      "wp": "카라스코",
+      "lp": "김진욱"
     },
     {
       "id": "20260829NCHH02026",
@@ -203,14 +203,14 @@
       "stadium": "대전",
       "away": "NC",
       "home": "한화",
-      "as": 0,
-      "hs": 0,
-      "status": "2회초",
-      "code": "STARTED",
+      "as": 11,
+      "hs": 4,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "라일리",
       "hp": "박준영",
-      "wp": "",
-      "lp": ""
+      "wp": "라일리",
+      "lp": "박준영"
     },
     {
       "id": "20260829SKHT02026",
@@ -219,14 +219,14 @@
       "stadium": "광주",
       "away": "SSG",
       "home": "KIA",
-      "as": 0,
-      "hs": 0,
-      "status": "2회초",
-      "code": "STARTED",
+      "as": 1,
+      "hs": 2,
+      "status": "10회말",
+      "code": "RESULT",
       "ap": "아빌라",
       "hp": "올러",
-      "wp": "",
-      "lp": ""
+      "wp": "조상우",
+      "lp": "문승원"
     },
     {
       "id": "20260829WOOB02026",
@@ -235,14 +235,14 @@
       "stadium": "잠실",
       "away": "키움",
       "home": "두산",
-      "as": 0,
-      "hs": 1,
-      "status": "1회말",
-      "code": "STARTED",
+      "as": 2,
+      "hs": 7,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "안우진",
       "hp": "곽빈",
-      "wp": "",
-      "lp": ""
+      "wp": "곽빈",
+      "lp": "안우진"
     }
   ],
   "kt": {
@@ -347,5 +347,5 @@
       "oppName": "삼성"
     }
   },
-  "updated": "2026-08-29T09:16:35.990Z"
+  "updated": "2026-08-29T14:04:51.113Z"
 }
