@@ -1,18 +1,9 @@
 {
-  "todayMatch": {
-    "date": "2026-08-30",
-    "time": "18:00",
-    "stadium": "대구",
-    "opponent": "삼성",
-    "isHome": false,
-    "score": "경기 취소",
-    "ktPitcher": "오원석",
-    "oppPitcher": "보스"
-  },
+  "todayMatch": null,
   "todayLineup": {
-    "ktPitcher": "오원석",
-    "oppPitcher": "보스",
-    "pitcher": "오원석",
+    "ktPitcher": "미정",
+    "oppPitcher": "미정",
+    "pitcher": "미정",
     "batters": []
   },
   "rankings": [
@@ -117,140 +108,11 @@
       "gameDiff": "0.0"
     }
   ],
-  "games": [
-    {
-      "id": "20260830KTSS02026",
-      "date": "2026-08-30",
-      "time": "18:00",
-      "stadium": "대구",
-      "away": "KT",
-      "home": "삼성",
-      "as": 0,
-      "hs": 0,
-      "status": "취소",
-      "code": "CANCEL",
-      "ap": "오원석",
-      "hp": "보스",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260830LGLT02026",
-      "date": "2026-08-30",
-      "time": "18:00",
-      "stadium": "사직",
-      "away": "LG",
-      "home": "롯데",
-      "as": 0,
-      "hs": 0,
-      "status": "취소",
-      "code": "CANCEL",
-      "ap": "톨허스트",
-      "hp": "나균안",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260830SKHT02026",
-      "date": "2026-08-30",
-      "time": "18:00",
-      "stadium": "광주",
-      "away": "SSG",
-      "home": "KIA",
-      "as": 0,
-      "hs": 0,
-      "status": "취소",
-      "code": "CANCEL",
-      "ap": "이준기",
-      "hp": "네일",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260830NCHH02026",
-      "date": "2026-08-30",
-      "time": "18:00",
-      "stadium": "대전",
-      "away": "NC",
-      "home": "한화",
-      "as": 10,
-      "hs": 7,
-      "status": "10회말",
-      "code": "RESULT",
-      "ap": "테일러",
-      "hp": "황준서",
-      "wp": "전사민",
-      "lp": "김서현"
-    },
-    {
-      "id": "20260830WOOB02026",
-      "date": "2026-08-30",
-      "time": "18:00",
-      "stadium": "잠실",
-      "away": "키움",
-      "home": "두산",
-      "as": 1,
-      "hs": 15,
-      "status": "9회초",
-      "code": "RESULT",
-      "ap": "전준표",
-      "hp": "최민석",
-      "wp": "최민석",
-      "lp": "전준표"
-    }
-  ],
+  "games": [],
   "kt": {
-    "gameId": "20260830KTSS02026",
+    "gameId": null,
     "lineup": null,
-    "starters": {
-      "kt": {
-        "name": "오원석",
-        "era": "6.25",
-        "w": 5,
-        "l": 7,
-        "pitches": [
-          {
-            "type": "FAST",
-            "rt": 51,
-            "spd": 142
-          },
-          {
-            "type": "CHUP",
-            "rt": 28.600000381469727,
-            "spd": 130
-          },
-          {
-            "type": "CURV",
-            "rt": 10.100000381469727,
-            "spd": 116
-          }
-        ]
-      },
-      "opp": {
-        "name": "보스",
-        "era": "6.26",
-        "w": 1,
-        "l": 3,
-        "pitches": [
-          {
-            "type": "SWEE",
-            "rt": 28.799999237060547,
-            "spd": 127
-          },
-          {
-            "type": "CUTT",
-            "rt": 22.899999618530273,
-            "spd": 140
-          },
-          {
-            "type": "CURV",
-            "rt": 14.600000381469727,
-            "spd": 120
-          }
-        ]
-      },
-      "oppName": "삼성"
-    }
+    "starters": null
   },
-  "updated": "2026-08-30T14:06:19.922Z"
+  "updated": "2026-08-30T18:13:17.612Z"
 }
