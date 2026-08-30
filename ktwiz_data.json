@@ -5,7 +5,7 @@
     "stadium": "대구",
     "opponent": "삼성",
     "isHome": false,
-    "score": "VS",
+    "score": "경기 취소",
     "ktPitcher": "오원석",
     "oppPitcher": "보스"
   },
@@ -127,10 +127,26 @@
       "home": "삼성",
       "as": 0,
       "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "status": "취소",
+      "code": "CANCEL",
       "ap": "오원석",
       "hp": "보스",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260830SKHT02026",
+      "date": "2026-08-30",
+      "time": "18:00",
+      "stadium": "광주",
+      "away": "SSG",
+      "home": "KIA",
+      "as": 0,
+      "hs": 0,
+      "status": "취소",
+      "code": "CANCEL",
+      "ap": "이준기",
+      "hp": "네일",
       "wp": "",
       "lp": ""
     },
@@ -144,7 +160,7 @@
       "as": 0,
       "hs": 0,
       "status": "경기전",
-      "code": "BEFORE",
+      "code": "READY",
       "ap": "톨허스트",
       "hp": "나균안",
       "wp": "",
@@ -160,25 +176,9 @@
       "as": 0,
       "hs": 0,
       "status": "경기전",
-      "code": "BEFORE",
+      "code": "READY",
       "ap": "테일러",
       "hp": "황준서",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260830SKHT02026",
-      "date": "2026-08-30",
-      "time": "18:00",
-      "stadium": "광주",
-      "away": "SSG",
-      "home": "KIA",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
-      "ap": "이준기",
-      "hp": "네일",
       "wp": "",
       "lp": ""
     },
@@ -192,7 +192,7 @@
       "as": 0,
       "hs": 0,
       "status": "경기전",
-      "code": "BEFORE",
+      "code": "READY",
       "ap": "전준표",
       "hp": "최민석",
       "wp": "",
@@ -252,5 +252,5 @@
       "oppName": "삼성"
     }
   },
-  "updated": "2026-08-29T21:21:39.891Z"
+  "updated": "2026-08-30T08:28:12.141Z"
 }
