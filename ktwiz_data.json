@@ -59,21 +59,21 @@
     {
       "rank": 5,
       "teamName": "두산",
-      "games": 116,
-      "win": 60,
+      "games": 117,
+      "win": 61,
       "draw": 4,
       "lose": 52,
-      "wra": 0.536,
+      "wra": 0.54,
       "gameDiff": "0.0"
     },
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 110,
-      "win": 50,
+      "games": 111,
+      "win": 51,
       "draw": 2,
       "lose": 58,
-      "wra": 0.463,
+      "wra": 0.468,
       "gameDiff": "0.0"
     },
     {
@@ -89,11 +89,11 @@
     {
       "rank": 8,
       "teamName": "한화",
-      "games": 113,
+      "games": 114,
       "win": 49,
       "draw": 3,
-      "lose": 61,
-      "wra": 0.445,
+      "lose": 62,
+      "wra": 0.441,
       "gameDiff": "0.0"
     },
     {
@@ -109,11 +109,11 @@
     {
       "rank": 10,
       "teamName": "키움",
-      "games": 120,
+      "games": 121,
       "win": 42,
       "draw": 3,
-      "lose": 75,
-      "wra": 0.359,
+      "lose": 76,
+      "wra": 0.356,
       "gameDiff": "0.0"
     }
   ],
@@ -135,6 +135,22 @@
       "lp": ""
     },
     {
+      "id": "20260830LGLT02026",
+      "date": "2026-08-30",
+      "time": "18:00",
+      "stadium": "사직",
+      "away": "LG",
+      "home": "롯데",
+      "as": 0,
+      "hs": 0,
+      "status": "취소",
+      "code": "CANCEL",
+      "ap": "톨허스트",
+      "hp": "나균안",
+      "wp": "",
+      "lp": ""
+    },
+    {
       "id": "20260830SKHT02026",
       "date": "2026-08-30",
       "time": "18:00",
@@ -151,36 +167,20 @@
       "lp": ""
     },
     {
-      "id": "20260830LGLT02026",
-      "date": "2026-08-30",
-      "time": "18:00",
-      "stadium": "사직",
-      "away": "LG",
-      "home": "롯데",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
-      "ap": "톨허스트",
-      "hp": "나균안",
-      "wp": "",
-      "lp": ""
-    },
-    {
       "id": "20260830NCHH02026",
       "date": "2026-08-30",
       "time": "18:00",
       "stadium": "대전",
       "away": "NC",
       "home": "한화",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
+      "as": 10,
+      "hs": 7,
+      "status": "10회말",
+      "code": "RESULT",
       "ap": "테일러",
       "hp": "황준서",
-      "wp": "",
-      "lp": ""
+      "wp": "전사민",
+      "lp": "김서현"
     },
     {
       "id": "20260830WOOB02026",
@@ -189,14 +189,14 @@
       "stadium": "잠실",
       "away": "키움",
       "home": "두산",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
+      "as": 1,
+      "hs": 15,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "전준표",
       "hp": "최민석",
-      "wp": "",
-      "lp": ""
+      "wp": "최민석",
+      "lp": "전준표"
     }
   ],
   "kt": {
@@ -252,5 +252,5 @@
       "oppName": "삼성"
     }
   },
-  "updated": "2026-08-30T08:28:12.141Z"
+  "updated": "2026-08-30T13:57:31.052Z"
 }
