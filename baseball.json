@@ -1,6 +1,15 @@
 {
-  "updatedAt": "2026-08-31 19:39:12 (KST)",
-  "todayMatch": null,
+  "updatedAt": "2026-09-01 04:25:43 (KST)",
+  "todayMatch": {
+    "gameId": "20260901HHKT02026",
+    "date": "2026-09-01",
+    "time": "18:30",
+    "opponent": "한화 이글스",
+    "isHome": true,
+    "stadium": "수원 위즈파크 (홈)",
+    "result": "scheduled",
+    "score": "VS"
+  },
   "schedule": {
     "2026-03-28": {
       "gameId": "20260328KTLG02026",
