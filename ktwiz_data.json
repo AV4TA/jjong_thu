@@ -1,9 +1,18 @@
 {
-  "todayMatch": null,
+  "todayMatch": {
+    "date": "2026-09-01",
+    "time": "18:30",
+    "stadium": "수원",
+    "opponent": "한화",
+    "isHome": true,
+    "score": "VS",
+    "ktPitcher": "대니엘",
+    "oppPitcher": "화이트"
+  },
   "todayLineup": {
-    "ktPitcher": "미정",
-    "oppPitcher": "미정",
-    "pitcher": "미정",
+    "ktPitcher": "대니엘",
+    "oppPitcher": "화이트",
+    "pitcher": "대니엘",
     "batters": []
   },
   "rankings": [
@@ -108,11 +117,140 @@
       "gameDiff": "0.0"
     }
   ],
-  "games": [],
+  "games": [
+    {
+      "id": "20260901HHKT02026",
+      "date": "2026-09-01",
+      "time": "18:30",
+      "stadium": "수원",
+      "away": "한화",
+      "home": "KT",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "화이트",
+      "hp": "대니엘",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260901HTNC02026",
+      "date": "2026-09-01",
+      "time": "18:30",
+      "stadium": "창원",
+      "away": "KIA",
+      "home": "NC",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "네일",
+      "hp": "구창모",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260901LGOB02026",
+      "date": "2026-09-01",
+      "time": "18:30",
+      "stadium": "잠실",
+      "away": "LG",
+      "home": "두산",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "임찬규",
+      "hp": "잭로그",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260901LTSS02026",
+      "date": "2026-09-01",
+      "time": "18:30",
+      "stadium": "대구",
+      "away": "롯데",
+      "home": "삼성",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "로드리게스",
+      "hp": "보스",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260901SKWO02026",
+      "date": "2026-09-01",
+      "time": "18:30",
+      "stadium": "고척",
+      "away": "SSG",
+      "home": "키움",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "최민준",
+      "hp": "알칸타라",
+      "wp": "",
+      "lp": ""
+    }
+  ],
   "kt": {
-    "gameId": null,
+    "gameId": "20260901HHKT02026",
     "lineup": null,
-    "starters": null
+    "starters": {
+      "kt": {
+        "name": "대니엘",
+        "era": "2.81",
+        "w": 0,
+        "l": 1,
+        "pitches": [
+          {
+            "type": "TWOS",
+            "rt": 32.599998474121094,
+            "spd": 144
+          },
+          {
+            "type": "CHUP",
+            "rt": 22.700000762939453,
+            "spd": 135
+          },
+          {
+            "type": "FAST",
+            "rt": 17.700000762939453,
+            "spd": 144
+          }
+        ]
+      },
+      "opp": {
+        "name": "화이트",
+        "era": "3.31",
+        "w": 6,
+        "l": 8,
+        "pitches": [
+          {
+            "type": "FAST",
+            "rt": 42.20000076293945,
+            "spd": 148
+          },
+          {
+            "type": "SWEE",
+            "rt": 18.100000381469727,
+            "spd": 130
+          },
+          {
+            "type": "CUTT",
+            "rt": 11,
+            "spd": 139
+          }
+        ]
+      },
+      "oppName": "한화"
+    }
   },
-  "updated": "2026-08-31T08:48:52.071Z"
+  "updated": "2026-08-31T16:31:57.464Z"
 }
