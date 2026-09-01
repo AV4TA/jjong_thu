@@ -5,7 +5,7 @@
     "stadium": "수원",
     "opponent": "한화",
     "isHome": true,
-    "score": "VS",
+    "score": "KT 6 : 1 한화",
     "ktPitcher": "대니엘",
     "oppPitcher": "화이트"
   },
@@ -13,107 +13,153 @@
     "ktPitcher": "대니엘",
     "oppPitcher": "화이트",
     "pitcher": "대니엘",
-    "batters": []
+    "batters": [
+      {
+        "order": "1",
+        "name": "최원준",
+        "pos": "우익수"
+      },
+      {
+        "order": "2",
+        "name": "김현수",
+        "pos": "1루수"
+      },
+      {
+        "order": "3",
+        "name": "안현민",
+        "pos": "지명타자"
+      },
+      {
+        "order": "4",
+        "name": "힐리어드",
+        "pos": "중견수"
+      },
+      {
+        "order": "5",
+        "name": "김상수",
+        "pos": "2루수"
+      },
+      {
+        "order": "6",
+        "name": "허경민",
+        "pos": "3루수"
+      },
+      {
+        "order": "7",
+        "name": "장진혁",
+        "pos": "좌익수"
+      },
+      {
+        "order": "8",
+        "name": "한승택",
+        "pos": "포수"
+      },
+      {
+        "order": "9",
+        "name": "장준원",
+        "pos": "유격수"
+      }
+    ]
   },
   "rankings": [
     {
       "rank": 1,
       "teamName": "삼성",
-      "games": 115,
-      "win": 68,
+      "games": 116,
+      "win": 69,
       "draw": 3,
       "lose": 44,
-      "wra": 0.607,
+      "wra": 0.611,
       "gameDiff": "0.0"
     },
     {
       "rank": 2,
       "teamName": "KT",
-      "games": 112,
-      "win": 66,
+      "games": 113,
+      "win": 67,
       "draw": 3,
       "lose": 43,
-      "wra": 0.606,
+      "wra": 0.609,
       "gameDiff": "0.0"
     },
     {
       "rank": 3,
-      "teamName": "KIA",
-      "games": 115,
-      "win": 63,
-      "draw": 2,
-      "lose": 50,
-      "wra": 0.558,
+      "teamName": "LG",
+      "games": 117,
+      "win": 65,
+      "draw": 1,
+      "lose": 51,
+      "wra": 0.56,
       "gameDiff": "0.0"
     },
     {
       "rank": 4,
-      "teamName": "LG",
+      "teamName": "KIA",
       "games": 116,
-      "win": 64,
-      "draw": 1,
+      "win": 63,
+      "draw": 2,
       "lose": 51,
-      "wra": 0.557,
+      "wra": 0.553,
       "gameDiff": "0.0"
     },
     {
       "rank": 5,
       "teamName": "두산",
-      "games": 117,
+      "games": 118,
       "win": 61,
       "draw": 4,
-      "lose": 52,
-      "wra": 0.54,
+      "lose": 53,
+      "wra": 0.535,
       "gameDiff": "0.0"
     },
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 111,
-      "win": 51,
+      "games": 112,
+      "win": 52,
       "draw": 2,
       "lose": 58,
-      "wra": 0.468,
+      "wra": 0.473,
       "gameDiff": "0.0"
     },
     {
       "rank": 7,
       "teamName": "롯데",
-      "games": 113,
+      "games": 114,
       "win": 50,
       "draw": 2,
-      "lose": 61,
-      "wra": 0.45,
+      "lose": 62,
+      "wra": 0.446,
       "gameDiff": "0.0"
     },
     {
       "rank": 8,
       "teamName": "한화",
-      "games": 114,
+      "games": 115,
       "win": 49,
       "draw": 3,
-      "lose": 62,
-      "wra": 0.441,
+      "lose": 63,
+      "wra": 0.438,
       "gameDiff": "0.0"
     },
     {
       "rank": 9,
       "teamName": "SSG",
-      "games": 118,
-      "win": 48,
+      "games": 119,
+      "win": 49,
       "draw": 5,
       "lose": 65,
-      "wra": 0.425,
+      "wra": 0.43,
       "gameDiff": "0.0"
     },
     {
       "rank": 10,
       "teamName": "키움",
-      "games": 121,
+      "games": 122,
       "win": 42,
       "draw": 3,
-      "lose": 76,
-      "wra": 0.356,
+      "lose": 77,
+      "wra": 0.353,
       "gameDiff": "0.0"
     }
   ],
@@ -125,14 +171,14 @@
       "stadium": "수원",
       "away": "한화",
       "home": "KT",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 1,
+      "hs": 6,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "화이트",
       "hp": "대니엘",
-      "wp": "",
-      "lp": ""
+      "wp": "대니엘",
+      "lp": "화이트"
     },
     {
       "id": "20260901HTNC02026",
@@ -141,14 +187,14 @@
       "stadium": "창원",
       "away": "KIA",
       "home": "NC",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 2,
+      "hs": 7,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "네일",
       "hp": "구창모",
-      "wp": "",
-      "lp": ""
+      "wp": "김진호",
+      "lp": "네일"
     },
     {
       "id": "20260901LGOB02026",
@@ -157,14 +203,14 @@
       "stadium": "잠실",
       "away": "LG",
       "home": "두산",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 3,
+      "hs": 1,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "임찬규",
       "hp": "잭로그",
-      "wp": "",
-      "lp": ""
+      "wp": "임찬규",
+      "lp": "잭로그"
     },
     {
       "id": "20260901LTSS02026",
@@ -174,13 +220,13 @@
       "away": "롯데",
       "home": "삼성",
       "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "hs": 3,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "로드리게스",
       "hp": "보스",
-      "wp": "",
-      "lp": ""
+      "wp": "보스",
+      "lp": "로드리게스"
     },
     {
       "id": "20260901SKWO02026",
@@ -189,19 +235,68 @@
       "stadium": "고척",
       "away": "SSG",
       "home": "키움",
-      "as": 0,
+      "as": 4,
       "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "최민준",
       "hp": "알칸타라",
-      "wp": "",
-      "lp": ""
+      "wp": "최민준",
+      "lp": "알칸타라"
     }
   ],
   "kt": {
     "gameId": "20260901HHKT02026",
-    "lineup": null,
+    "lineup": {
+      "starter": "대니엘",
+      "batters": [
+        {
+          "o": 1,
+          "name": "최원준",
+          "pos": "우익수"
+        },
+        {
+          "o": 2,
+          "name": "김현수",
+          "pos": "1루수"
+        },
+        {
+          "o": 3,
+          "name": "안현민",
+          "pos": "지명타자"
+        },
+        {
+          "o": 4,
+          "name": "힐리어드",
+          "pos": "중견수"
+        },
+        {
+          "o": 5,
+          "name": "김상수",
+          "pos": "2루수"
+        },
+        {
+          "o": 6,
+          "name": "허경민",
+          "pos": "3루수"
+        },
+        {
+          "o": 7,
+          "name": "장진혁",
+          "pos": "좌익수"
+        },
+        {
+          "o": 8,
+          "name": "한승택",
+          "pos": "포수"
+        },
+        {
+          "o": 9,
+          "name": "장준원",
+          "pos": "유격수"
+        }
+      ]
+    },
     "starters": {
       "kt": {
         "name": "대니엘",
@@ -252,5 +347,5 @@
       "oppName": "한화"
     }
   },
-  "updated": "2026-09-01T07:55:44.433Z"
+  "updated": "2026-09-01T13:36:49.843Z"
 }
