@@ -13,7 +13,53 @@
     "ktPitcher": "소형준",
     "oppPitcher": "류현진",
     "pitcher": "소형준",
-    "batters": []
+    "batters": [
+      {
+        "order": "1",
+        "name": "최원준",
+        "pos": "중견수"
+      },
+      {
+        "order": "2",
+        "name": "김현수",
+        "pos": "1루수"
+      },
+      {
+        "order": "3",
+        "name": "안현민",
+        "pos": "우익수"
+      },
+      {
+        "order": "4",
+        "name": "힐리어드",
+        "pos": "좌익수"
+      },
+      {
+        "order": "5",
+        "name": "김민혁",
+        "pos": "지명타자"
+      },
+      {
+        "order": "6",
+        "name": "김상수",
+        "pos": "2루수"
+      },
+      {
+        "order": "7",
+        "name": "허경민",
+        "pos": "3루수"
+      },
+      {
+        "order": "8",
+        "name": "조대현",
+        "pos": "포수"
+      },
+      {
+        "order": "9",
+        "name": "장준원",
+        "pos": "유격수"
+      }
+    ]
   },
   "rankings": [
     {
@@ -125,10 +171,10 @@
       "stadium": "수원",
       "away": "한화",
       "home": "KT",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 4,
+      "hs": 6,
+      "status": "7회말",
+      "code": "STARTED",
       "ap": "류현진",
       "hp": "소형준",
       "wp": "",
@@ -141,10 +187,10 @@
       "stadium": "창원",
       "away": "KIA",
       "home": "NC",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 2,
+      "hs": 2,
+      "status": "9회초",
+      "code": "STARTED",
       "ap": "시라카와",
       "hp": "토다",
       "wp": "",
@@ -157,10 +203,10 @@
       "stadium": "잠실",
       "away": "LG",
       "home": "두산",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 5,
+      "hs": 1,
+      "status": "9회초",
+      "code": "STARTED",
       "ap": "김윤식",
       "hp": "최승용",
       "wp": "",
@@ -173,10 +219,10 @@
       "stadium": "대구",
       "away": "롯데",
       "home": "삼성",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 4,
+      "hs": 8,
+      "status": "8회말",
+      "code": "STARTED",
       "ap": "박세웅",
       "hp": "최원태",
       "wp": "",
@@ -189,10 +235,10 @@
       "stadium": "고척",
       "away": "SSG",
       "home": "키움",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 5,
+      "hs": 6,
+      "status": "8회초",
+      "code": "STARTED",
       "ap": "김건우",
       "hp": "하영민",
       "wp": "",
@@ -201,7 +247,56 @@
   ],
   "kt": {
     "gameId": "20260902HHKT02026",
-    "lineup": null,
+    "lineup": {
+      "starter": "소형준",
+      "batters": [
+        {
+          "o": 1,
+          "name": "최원준",
+          "pos": "중견수"
+        },
+        {
+          "o": 2,
+          "name": "김현수",
+          "pos": "1루수"
+        },
+        {
+          "o": 3,
+          "name": "안현민",
+          "pos": "우익수"
+        },
+        {
+          "o": 4,
+          "name": "힐리어드",
+          "pos": "좌익수"
+        },
+        {
+          "o": 5,
+          "name": "김민혁",
+          "pos": "지명타자"
+        },
+        {
+          "o": 6,
+          "name": "김상수",
+          "pos": "2루수"
+        },
+        {
+          "o": 7,
+          "name": "허경민",
+          "pos": "3루수"
+        },
+        {
+          "o": 8,
+          "name": "조대현",
+          "pos": "포수"
+        },
+        {
+          "o": 9,
+          "name": "장준원",
+          "pos": "유격수"
+        }
+      ]
+    },
     "starters": {
       "kt": {
         "name": "소형준",
@@ -252,5 +347,5 @@
       "oppName": "한화"
     }
   },
-  "updated": "2026-09-02T07:15:28.277Z"
+  "updated": "2026-09-02T12:13:58.344Z"
 }
