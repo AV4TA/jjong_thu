@@ -64,16 +64,6 @@
   "rankings": [
     {
       "rank": 1,
-      "teamName": "삼성",
-      "games": 117,
-      "win": 70,
-      "draw": 3,
-      "lose": 44,
-      "wra": 0.614,
-      "gameDiff": "0.0"
-    },
-    {
-      "rank": 2,
       "teamName": "KT",
       "games": 114,
       "win": 68,
@@ -83,13 +73,23 @@
       "gameDiff": "0.0"
     },
     {
+      "rank": 2,
+      "teamName": "삼성",
+      "games": 118,
+      "win": 70,
+      "draw": 3,
+      "lose": 45,
+      "wra": 0.609,
+      "gameDiff": "0.0"
+    },
+    {
       "rank": 3,
       "teamName": "LG",
-      "games": 118,
-      "win": 66,
+      "games": 119,
+      "win": 67,
       "draw": 1,
       "lose": 51,
-      "wra": 0.564,
+      "wra": 0.568,
       "gameDiff": "0.0"
     },
     {
@@ -105,11 +105,11 @@
     {
       "rank": 5,
       "teamName": "두산",
-      "games": 119,
+      "games": 120,
       "win": 61,
       "draw": 4,
-      "lose": 54,
-      "wra": 0.53,
+      "lose": 55,
+      "wra": 0.526,
       "gameDiff": "0.0"
     },
     {
@@ -125,25 +125,15 @@
     {
       "rank": 7,
       "teamName": "롯데",
-      "games": 115,
-      "win": 50,
+      "games": 116,
+      "win": 51,
       "draw": 2,
       "lose": 63,
-      "wra": 0.442,
+      "wra": 0.447,
       "gameDiff": "0.0"
     },
     {
       "rank": 8,
-      "teamName": "SSG",
-      "games": 120,
-      "win": 50,
-      "draw": 5,
-      "lose": 65,
-      "wra": 0.435,
-      "gameDiff": "0.0"
-    },
-    {
-      "rank": 9,
       "teamName": "한화",
       "games": 116,
       "win": 49,
@@ -153,13 +143,23 @@
       "gameDiff": "0.0"
     },
     {
+      "rank": 9,
+      "teamName": "SSG",
+      "games": 121,
+      "win": 50,
+      "draw": 5,
+      "lose": 66,
+      "wra": 0.431,
+      "gameDiff": "0.0"
+    },
+    {
       "rank": 10,
       "teamName": "키움",
-      "games": 123,
-      "win": 42,
+      "games": 124,
+      "win": 43,
       "draw": 3,
       "lose": 78,
-      "wra": 0.35,
+      "wra": 0.355,
       "gameDiff": "0.0"
     }
   ],
@@ -187,12 +187,28 @@
       "stadium": "수원",
       "away": "한화",
       "home": "KT",
-      "as": 7,
-      "hs": 10,
-      "status": "7회초",
+      "as": 11,
+      "hs": 13,
+      "status": "9회초",
       "code": "STARTED",
       "ap": "왕옌청",
       "hp": "고영표",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260903SKWO02026",
+      "date": "2026-09-03",
+      "time": "18:30",
+      "stadium": "고척",
+      "away": "SSG",
+      "home": "키움",
+      "as": 2,
+      "hs": 3,
+      "status": "9회말",
+      "code": "ENDED",
+      "ap": "이로운",
+      "hp": "박준현",
       "wp": "",
       "lp": ""
     },
@@ -206,11 +222,11 @@
       "as": 1,
       "hs": 0,
       "status": "9회말",
-      "code": "STARTED",
+      "code": "RESULT",
       "ap": "박시원",
       "hp": "곽빈",
-      "wp": "",
-      "lp": ""
+      "wp": "박시원",
+      "lp": "곽빈"
     },
     {
       "id": "20260903LTSS02026",
@@ -222,27 +238,11 @@
       "as": 3,
       "hs": 2,
       "status": "9회말",
-      "code": "STARTED",
+      "code": "RESULT",
       "ap": "비슬리",
       "hp": "원태인",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260903SKWO02026",
-      "date": "2026-09-03",
-      "time": "18:30",
-      "stadium": "고척",
-      "away": "SSG",
-      "home": "키움",
-      "as": 1,
-      "hs": 2,
-      "status": "7회말",
-      "code": "STARTED",
-      "ap": "이로운",
-      "hp": "박준현",
-      "wp": "",
-      "lp": ""
+      "wp": "비슬리",
+      "lp": "장찬희"
     }
   ],
   "kt": {
@@ -347,5 +347,5 @@
       "oppName": "한화"
     }
   },
-  "updated": "2026-09-03T12:12:21.008Z"
+  "updated": "2026-09-03T13:07:31.356Z"
 }
