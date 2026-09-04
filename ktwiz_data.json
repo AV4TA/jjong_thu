@@ -75,21 +75,21 @@
     {
       "rank": 2,
       "teamName": "삼성",
-      "games": 118,
+      "games": 119,
       "win": 70,
       "draw": 3,
-      "lose": 45,
-      "wra": 0.609,
+      "lose": 46,
+      "wra": 0.603,
       "gameDiff": "0.0"
     },
     {
       "rank": 3,
       "teamName": "LG",
-      "games": 119,
-      "win": 67,
+      "games": 120,
+      "win": 68,
       "draw": 1,
       "lose": 51,
-      "wra": 0.568,
+      "wra": 0.571,
       "gameDiff": "0.0"
     },
     {
@@ -115,11 +115,11 @@
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 113,
-      "win": 53,
+      "games": 114,
+      "win": 54,
       "draw": 2,
       "lose": 58,
-      "wra": 0.477,
+      "wra": 0.482,
       "gameDiff": "0.0"
     },
     {
@@ -155,11 +155,11 @@
     {
       "rank": 10,
       "teamName": "키움",
-      "games": 124,
+      "games": 125,
       "win": 43,
       "draw": 3,
-      "lose": 78,
-      "wra": 0.355,
+      "lose": 79,
+      "wra": 0.352,
       "gameDiff": "0.0"
     }
   ],
@@ -171,9 +171,9 @@
       "stadium": "사직",
       "away": "한화",
       "home": "롯데",
-      "as": 6,
-      "hs": 3,
-      "status": "7회초",
+      "as": 9,
+      "hs": 4,
+      "status": "9회초",
       "code": "STARTED",
       "ap": "박준영",
       "hp": "김진욱",
@@ -188,8 +188,8 @@
       "away": "KT",
       "home": "KIA",
       "as": 2,
-      "hs": 0,
-      "status": "8회말",
+      "hs": 3,
+      "status": "9회초",
       "code": "STARTED",
       "ap": "배제성",
       "hp": "올러",
@@ -205,28 +205,12 @@
       "home": "키움",
       "as": 6,
       "hs": 1,
-      "status": "9회초",
-      "code": "STARTED",
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "라일리",
       "hp": "안우진",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260904SSLG02026",
-      "date": "2026-09-04",
-      "time": "18:30",
-      "stadium": "잠실",
-      "away": "삼성",
-      "home": "LG",
-      "as": 3,
-      "hs": 4,
-      "status": "8회초",
-      "code": "STARTED",
-      "ap": "페덱",
-      "hp": "카라스코",
-      "wp": "",
-      "lp": ""
+      "wp": "라일리",
+      "lp": "안우진"
     },
     {
       "id": "20260904OBSK02026",
@@ -243,6 +227,22 @@
       "hp": "아빌라",
       "wp": "아빌라",
       "lp": "박신지"
+    },
+    {
+      "id": "20260904SSLG02026",
+      "date": "2026-09-04",
+      "time": "18:30",
+      "stadium": "잠실",
+      "away": "삼성",
+      "home": "LG",
+      "as": 3,
+      "hs": 4,
+      "status": "9회초",
+      "code": "RESULT",
+      "ap": "페덱",
+      "hp": "카라스코",
+      "wp": "카라스코",
+      "lp": "이승민"
     }
   ],
   "kt": {
@@ -347,5 +347,5 @@
       "oppName": "KIA"
     }
   },
-  "updated": "2026-09-04T12:12:58.849Z"
+  "updated": "2026-09-04T13:01:15.684Z"
 }
