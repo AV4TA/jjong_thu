@@ -13,7 +13,53 @@
     "ktPitcher": "배제성",
     "oppPitcher": "올러",
     "pitcher": "배제성",
-    "batters": []
+    "batters": [
+      {
+        "order": "1",
+        "name": "최원준",
+        "pos": "우익수"
+      },
+      {
+        "order": "2",
+        "name": "김현수",
+        "pos": "1루수"
+      },
+      {
+        "order": "3",
+        "name": "안현민",
+        "pos": "지명타자"
+      },
+      {
+        "order": "4",
+        "name": "힐리어드",
+        "pos": "중견수"
+      },
+      {
+        "order": "5",
+        "name": "허경민",
+        "pos": "3루수"
+      },
+      {
+        "order": "6",
+        "name": "장진혁",
+        "pos": "좌익수"
+      },
+      {
+        "order": "7",
+        "name": "오윤석",
+        "pos": "2루수"
+      },
+      {
+        "order": "8",
+        "name": "조대현",
+        "pos": "포수"
+      },
+      {
+        "order": "9",
+        "name": "권동진",
+        "pos": "유격수"
+      }
+    ]
   },
   "rankings": [
     {
@@ -59,11 +105,11 @@
     {
       "rank": 5,
       "teamName": "두산",
-      "games": 120,
+      "games": 121,
       "win": 61,
       "draw": 4,
-      "lose": 55,
-      "wra": 0.526,
+      "lose": 56,
+      "wra": 0.521,
       "gameDiff": "0.0"
     },
     {
@@ -89,11 +135,11 @@
     {
       "rank": 8,
       "teamName": "SSG",
-      "games": 121,
-      "win": 50,
+      "games": 122,
+      "win": 51,
       "draw": 5,
       "lose": 66,
-      "wra": 0.431,
+      "wra": 0.436,
       "gameDiff": "0.0"
     },
     {
@@ -125,10 +171,10 @@
       "stadium": "사직",
       "away": "한화",
       "home": "롯데",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 6,
+      "hs": 3,
+      "status": "7회초",
+      "code": "STARTED",
       "ap": "박준영",
       "hp": "김진욱",
       "wp": "",
@@ -141,10 +187,10 @@
       "stadium": "광주",
       "away": "KT",
       "home": "KIA",
-      "as": 0,
+      "as": 2,
       "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "status": "8회말",
+      "code": "STARTED",
       "ap": "배제성",
       "hp": "올러",
       "wp": "",
@@ -157,12 +203,28 @@
       "stadium": "고척",
       "away": "NC",
       "home": "키움",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 6,
+      "hs": 1,
+      "status": "9회초",
+      "code": "STARTED",
       "ap": "라일리",
       "hp": "안우진",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260904SSLG02026",
+      "date": "2026-09-04",
+      "time": "18:30",
+      "stadium": "잠실",
+      "away": "삼성",
+      "home": "LG",
+      "as": 3,
+      "hs": 4,
+      "status": "8회초",
+      "code": "STARTED",
+      "ap": "페덱",
+      "hp": "카라스코",
       "wp": "",
       "lp": ""
     },
@@ -174,34 +236,67 @@
       "away": "두산",
       "home": "SSG",
       "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "hs": 4,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "박신지",
       "hp": "아빌라",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260904SSLG02026",
-      "date": "2026-09-04",
-      "time": "18:30",
-      "stadium": "잠실",
-      "away": "삼성",
-      "home": "LG",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
-      "ap": "페덱",
-      "hp": "카라스코",
-      "wp": "",
-      "lp": ""
+      "wp": "아빌라",
+      "lp": "박신지"
     }
   ],
   "kt": {
     "gameId": "20260904KTHT02026",
-    "lineup": null,
+    "lineup": {
+      "starter": "배제성",
+      "batters": [
+        {
+          "o": 1,
+          "name": "최원준",
+          "pos": "우익수"
+        },
+        {
+          "o": 2,
+          "name": "김현수",
+          "pos": "1루수"
+        },
+        {
+          "o": 3,
+          "name": "안현민",
+          "pos": "지명타자"
+        },
+        {
+          "o": 4,
+          "name": "힐리어드",
+          "pos": "중견수"
+        },
+        {
+          "o": 5,
+          "name": "허경민",
+          "pos": "3루수"
+        },
+        {
+          "o": 6,
+          "name": "장진혁",
+          "pos": "좌익수"
+        },
+        {
+          "o": 7,
+          "name": "오윤석",
+          "pos": "2루수"
+        },
+        {
+          "o": 8,
+          "name": "조대현",
+          "pos": "포수"
+        },
+        {
+          "o": 9,
+          "name": "권동진",
+          "pos": "유격수"
+        }
+      ]
+    },
     "starters": {
       "kt": {
         "name": "배제성",
@@ -252,5 +347,5 @@
       "oppName": "KIA"
     }
   },
-  "updated": "2026-09-04T07:21:12.808Z"
+  "updated": "2026-09-04T12:12:58.849Z"
 }
