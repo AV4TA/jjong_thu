@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-09-04 22:14:27 (KST)",
+  "updatedAt": "2026-09-05 03:10:54 (KST)",
   "todayMatch": {
-    "gameId": "20260904KTHT02026",
-    "date": "2026-09-04",
-    "time": "18:30",
+    "gameId": "20260905KTHT02026",
+    "date": "2026-09-05",
+    "time": "17:00",
     "opponent": "KIA 타이거즈",
     "isHome": false,
     "stadium": "원정구장 (원정)",
@@ -1338,8 +1338,8 @@
       "opponent": "KIA 타이거즈",
       "isHome": false,
       "stadium": "원정구장 (원정)",
-      "result": "scheduled",
-      "score": "VS"
+      "result": "lose",
+      "score": "KT 3 : 4 KIA"
     },
     "2026-09-05": {
       "gameId": "20260905KTHT02026",
