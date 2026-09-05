@@ -5,7 +5,7 @@
     "stadium": "광주",
     "opponent": "KIA",
     "isHome": false,
-    "score": "VS",
+    "score": "KT 3 : 6 KIA",
     "ktPitcher": "로건",
     "oppPitcher": "양현종"
   },
@@ -13,17 +13,63 @@
     "ktPitcher": "로건",
     "oppPitcher": "양현종",
     "pitcher": "로건",
-    "batters": []
+    "batters": [
+      {
+        "order": "1",
+        "name": "최원준",
+        "pos": "중견수"
+      },
+      {
+        "order": "2",
+        "name": "김현수",
+        "pos": "1루수"
+      },
+      {
+        "order": "3",
+        "name": "안현민",
+        "pos": "우익수"
+      },
+      {
+        "order": "4",
+        "name": "힐리어드",
+        "pos": "좌익수"
+      },
+      {
+        "order": "5",
+        "name": "김민혁",
+        "pos": "지명타자"
+      },
+      {
+        "order": "6",
+        "name": "허경민",
+        "pos": "3루수"
+      },
+      {
+        "order": "7",
+        "name": "김상수",
+        "pos": "2루수"
+      },
+      {
+        "order": "8",
+        "name": "한승택",
+        "pos": "포수"
+      },
+      {
+        "order": "9",
+        "name": "손민석",
+        "pos": "유격수"
+      }
+    ]
   },
   "rankings": [
     {
       "rank": 1,
       "teamName": "KT",
-      "games": 116,
+      "games": 117,
       "win": 69,
       "draw": 3,
-      "lose": 44,
-      "wra": 0.611,
+      "lose": 45,
+      "wra": 0.605,
       "gameDiff": "0.0"
     },
     {
@@ -49,21 +95,21 @@
     {
       "rank": 4,
       "teamName": "KIA",
-      "games": 118,
-      "win": 64,
+      "games": 119,
+      "win": 65,
       "draw": 2,
       "lose": 52,
-      "wra": 0.552,
+      "wra": 0.556,
       "gameDiff": "0.0"
     },
     {
       "rank": 5,
       "teamName": "두산",
-      "games": 121,
+      "games": 122,
       "win": 61,
       "draw": 4,
-      "lose": 56,
-      "wra": 0.521,
+      "lose": 57,
+      "wra": 0.517,
       "gameDiff": "0.0"
     },
     {
@@ -89,11 +135,11 @@
     {
       "rank": 8,
       "teamName": "SSG",
-      "games": 122,
-      "win": 51,
+      "games": 123,
+      "win": 52,
       "draw": 5,
       "lose": 66,
-      "wra": 0.436,
+      "wra": 0.441,
       "gameDiff": "0.0"
     },
     {
@@ -125,28 +171,12 @@
       "stadium": "사직",
       "away": "한화",
       "home": "롯데",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 11,
+      "hs": 4,
+      "status": "9회말",
+      "code": "STARTED",
       "ap": "황준서",
       "hp": "나균안",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260905KTHT02026",
-      "date": "2026-09-05",
-      "time": "17:00",
-      "stadium": "광주",
-      "away": "KT",
-      "home": "KIA",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
-      "ap": "로건",
-      "hp": "양현종",
       "wp": "",
       "lp": ""
     },
@@ -157,28 +187,12 @@
       "stadium": "고척",
       "away": "NC",
       "home": "키움",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 2,
+      "hs": 1,
+      "status": "9회말",
+      "code": "STARTED",
       "ap": "이재학",
       "hp": "전준표",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260905OBSK02026",
-      "date": "2026-09-05",
-      "time": "17:00",
-      "stadium": "문학",
-      "away": "두산",
-      "home": "SSG",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
-      "ap": "최민석",
-      "hp": "김민준",
       "wp": "",
       "lp": ""
     },
@@ -189,19 +203,100 @@
       "stadium": "잠실",
       "away": "삼성",
       "home": "LG",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 3,
+      "hs": 3,
+      "status": "9회말",
+      "code": "STARTED",
       "ap": "이승현",
       "hp": "톨허스트",
       "wp": "",
       "lp": ""
+    },
+    {
+      "id": "20260905KTHT02026",
+      "date": "2026-09-05",
+      "time": "17:00",
+      "stadium": "광주",
+      "away": "KT",
+      "home": "KIA",
+      "as": 3,
+      "hs": 6,
+      "status": "9회초",
+      "code": "RESULT",
+      "ap": "로건",
+      "hp": "양현종",
+      "wp": "양현종",
+      "lp": "로건"
+    },
+    {
+      "id": "20260905OBSK02026",
+      "date": "2026-09-05",
+      "time": "17:00",
+      "stadium": "문학",
+      "away": "두산",
+      "home": "SSG",
+      "as": 2,
+      "hs": 3,
+      "status": "9회초",
+      "code": "RESULT",
+      "ap": "최민석",
+      "hp": "김민준",
+      "wp": "김민준",
+      "lp": "최민석"
     }
   ],
   "kt": {
     "gameId": "20260905KTHT02026",
-    "lineup": null,
+    "lineup": {
+      "starter": "로건",
+      "batters": [
+        {
+          "o": 1,
+          "name": "최원준",
+          "pos": "중견수"
+        },
+        {
+          "o": 2,
+          "name": "김현수",
+          "pos": "1루수"
+        },
+        {
+          "o": 3,
+          "name": "안현민",
+          "pos": "우익수"
+        },
+        {
+          "o": 4,
+          "name": "힐리어드",
+          "pos": "좌익수"
+        },
+        {
+          "o": 5,
+          "name": "김민혁",
+          "pos": "지명타자"
+        },
+        {
+          "o": 6,
+          "name": "허경민",
+          "pos": "3루수"
+        },
+        {
+          "o": 7,
+          "name": "김상수",
+          "pos": "2루수"
+        },
+        {
+          "o": 8,
+          "name": "한승택",
+          "pos": "포수"
+        },
+        {
+          "o": 9,
+          "name": "손민석",
+          "pos": "유격수"
+        }
+      ]
+    },
     "starters": {
       "kt": {
         "name": "로건",
@@ -252,5 +347,5 @@
       "oppName": "KIA"
     }
   },
-  "updated": "2026-09-05T07:03:27.367Z"
+  "updated": "2026-09-05T11:21:25.728Z"
 }
