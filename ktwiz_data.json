@@ -115,25 +115,15 @@
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 114,
-      "win": 54,
+      "games": 115,
+      "win": 55,
       "draw": 2,
       "lose": 58,
-      "wra": 0.482,
+      "wra": 0.487,
       "gameDiff": "0.0"
     },
     {
       "rank": 7,
-      "teamName": "롯데",
-      "games": 117,
-      "win": 51,
-      "draw": 2,
-      "lose": 64,
-      "wra": 0.443,
-      "gameDiff": "0.0"
-    },
-    {
-      "rank": 8,
       "teamName": "SSG",
       "games": 123,
       "win": 52,
@@ -143,27 +133,53 @@
       "gameDiff": "0.0"
     },
     {
+      "rank": 8,
+      "teamName": "롯데",
+      "games": 118,
+      "win": 51,
+      "draw": 2,
+      "lose": 65,
+      "wra": 0.44,
+      "gameDiff": "0.0"
+    },
+    {
       "rank": 9,
       "teamName": "한화",
-      "games": 118,
-      "win": 50,
+      "games": 119,
+      "win": 51,
       "draw": 3,
       "lose": 65,
-      "wra": 0.435,
+      "wra": 0.44,
       "gameDiff": "0.0"
     },
     {
       "rank": 10,
       "teamName": "키움",
-      "games": 125,
+      "games": 126,
       "win": 43,
       "draw": 3,
-      "lose": 79,
-      "wra": 0.352,
+      "lose": 80,
+      "wra": 0.35,
       "gameDiff": "0.0"
     }
   ],
   "games": [
+    {
+      "id": "20260905SSLG02026",
+      "date": "2026-09-05",
+      "time": "17:00",
+      "stadium": "잠실",
+      "away": "삼성",
+      "home": "LG",
+      "as": 4,
+      "hs": 3,
+      "status": "11회말",
+      "code": "STARTED",
+      "ap": "이승현",
+      "hp": "톨허스트",
+      "wp": "",
+      "lp": ""
+    },
     {
       "id": "20260905HHLT02026",
       "date": "2026-09-05",
@@ -172,45 +188,13 @@
       "away": "한화",
       "home": "롯데",
       "as": 11,
-      "hs": 4,
+      "hs": 6,
       "status": "9회말",
-      "code": "STARTED",
+      "code": "RESULT",
       "ap": "황준서",
       "hp": "나균안",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260905NCWO02026",
-      "date": "2026-09-05",
-      "time": "17:00",
-      "stadium": "고척",
-      "away": "NC",
-      "home": "키움",
-      "as": 2,
-      "hs": 1,
-      "status": "9회말",
-      "code": "STARTED",
-      "ap": "이재학",
-      "hp": "전준표",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260905SSLG02026",
-      "date": "2026-09-05",
-      "time": "17:00",
-      "stadium": "잠실",
-      "away": "삼성",
-      "home": "LG",
-      "as": 3,
-      "hs": 3,
-      "status": "9회말",
-      "code": "STARTED",
-      "ap": "이승현",
-      "hp": "톨허스트",
-      "wp": "",
-      "lp": ""
+      "wp": "장유호",
+      "lp": "박정민"
     },
     {
       "id": "20260905KTHT02026",
@@ -227,6 +211,22 @@
       "hp": "양현종",
       "wp": "양현종",
       "lp": "로건"
+    },
+    {
+      "id": "20260905NCWO02026",
+      "date": "2026-09-05",
+      "time": "17:00",
+      "stadium": "고척",
+      "away": "NC",
+      "home": "키움",
+      "as": 2,
+      "hs": 1,
+      "status": "9회말",
+      "code": "RESULT",
+      "ap": "이재학",
+      "hp": "전준표",
+      "wp": "배재환",
+      "lp": "전준표"
     },
     {
       "id": "20260905OBSK02026",
@@ -347,5 +347,5 @@
       "oppName": "KIA"
     }
   },
-  "updated": "2026-09-05T11:21:25.728Z"
+  "updated": "2026-09-05T12:13:45.594Z"
 }
