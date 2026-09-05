@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>뚜❣️쫑 - 데이트 룰렛</title>
+
+  <!-- PWA & 모바일 홈 화면 설정 -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="뚜❣️쫑" />
+  <meta name="theme-color" content="#ff5e7e" />
+
+  <!-- FontAwesome & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #ff5e7e;
+      --primary-soft: #fff0f3;
+      --bg: #f4f6fb;
+      --card: #ffffff;
+      --text: #2d3436;
+      --text-sub: #8395a7;
+      --border: #edf2f7;
+      --shadow: 0 10px 25px rgba(255, 94, 126, 0.08);
+      --shadow-hover: 0 15px 30px rgba(255, 94, 126, 0.15);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 50px; min-height: 100vh; }
+
+    /* 상단 네비게이션 헤더 */
+    .app-header {
+      background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+      color: white;
+      padding: 24px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 0 0 24px 24px;
+      box-shadow: 0 8px 20px rgba(255, 117, 140, 0.2);
+    }
+    .back-btn {
+      color: white;
+      font-size: 1.2rem;
+      text-decoration: none;
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+    }
+    .header-title { font-size: 1.1rem; font-weight: 800; text-align: center; }
+    .header-space { width: 40px; }
+
+    /* 컨테이너 */
+    .container { max-width: 480px; margin: 0 auto; padding: 20px 16px; }
+
+    .section-title {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding-left: 4px;
+    }
+
+    /* 카드 박스 */
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    /* 룰렛 캔버스 영역 */
+    .roulette-wrapper {
+      position: relative;
+      width: 280px;
+      height: 280px;
+      margin: 0 auto 20px auto;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    /* 룰렛 화살표 지시자 */
+    .roulette-pointer {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-top: 22px solid #ff5e7e;
+      z-index: 10;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+
+    /* 돌리기 버튼 */
+    .spin-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 16px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(255, 94, 126, 0.3);
+      transition: transform 0.1s;
+    }
+    .spin-btn:active { transform: scale(0.97); }
+    .spin-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* 결과 팝업/텍스트 */
+    .result-display {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--primary);
+      min-height: 30px;
+    }
+
+    /* 항목 편집 영역 */
+    .item-input-box {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .item-input-box input {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 0.9rem;
+      outline: none;
+      font-weight: 600;
+    }
+    .item-input-box input:focus { border-color: var(--primary); background: white; }
+    .add-btn {
+      background: var(--text);
+      color: white;
+      border: none;
+      padding: 0 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* 항목 리스트 칩 */
+    .items-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      max-height: 150px;
+      overflow-y: auto;
+      padding-top: 4px;
+    }
+    .item-chip {
+      background: var(--primary-soft);
+      color: var(--primary);
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .item-chip i { cursor: pointer; opacity: 0.7; }
+    .item-chip i:hover { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- 상단 헤더 -->
+  <header class="app-header">
+    <a href="index.html" class="back-btn"><i class="fa-solid fa-chevron-left"></i></a>
+    <div class="header-title">🎲 데이트 룰렛 내기</div>
+    <div class="header-space"></div>
+  </header>
+
+  <div class="container">
+    
+    <!-- 룰렛 판 카드 -->
+    <div class="card" style="text-align: center;">
+      <div class="roulette-wrapper">
+        <div class="roulette-pointer"></div>
+        <canvas id="rouletteCanvas" width="300" height="300"></canvas>
+      </div>
+      
+      <button type="button" class="spin-btn" id="spinBtn" onclick="startSpin()">룰렛 돌리기! 🎯</button>
+      <div class="result-display" id="resultText">무엇이 걸릴까요? 두근두근 💓</div>
+    </div>
+
+    <!-- 항목 관리 카드 -->
+    <div class="card">
+      <div class="section-title">
+        <i class="fa-solid fa-list-check"></i>
+        <span>내기 항목 편집하기</span>
+      </div>
+
+      <div class="item-input-box">
+        <input type="text" id="newItemInput" placeholder="예: 오늘 커피 쏘기" onkeypress="if(event.key==='The EnterKey'||event.keyCode===13) addItem();" />
+        <button type="button" class="add-btn" onclick="addItem()">추가</button>
+      </div>
+
+      <div class="items-list" id="itemsContainer">
+        <!-- 자바스크립트로 동적 생성 -->
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // 기본 내기 항목 리스트
+    let items = JSON.parse(localStorage.getItem('ddo_roulette_items')) || [
+      "오늘 커피 쏘기 ☕",
+      "설거지 담당 🍽️",
+      "다음 데이트 코스 짜기 🗺️",
+      "발마사지 10분 💆‍♂️",
+      "영화 고를 권리 🎬",
+      "간식 사오기 🍿"
+    ];
+
+    const colors = [
+      "#ff5e7e", "#ffa502", "#2ed573", "#1e90ff", 
+      "#9b59b6", "#ff4757", "#2f3542", "#70a1ff"
+    ];
+
+    const canvas = document.getElementById("rouletteCanvas");
+    const ctx = canvas.getContext("2d");
+    let currentAngle = 0;
+    let isSpinning = false;
+
+    // 초기 렌더링
+    drawRoulette();
+    renderItemsList();
+
+    function drawRoulette(angle = 0) {
+      const numItems = items.length;
+      if (numItems === 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+      }
+
+      const arc = (2 * Math.PI) / numItems;
+      const center = canvas.width / 2;
+      const radius = center - 10;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.save();
+      ctx.translate(center, center);
+      ctx.rotate(angle);
+
+      for (let i = 0; i < numItems; i++) {
+        const startAngle = i * arc;
+        const endAngle = (i + 1) * arc;
+
+        // 부채꼴 그리기
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, radius, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.fill();
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // 텍스트 적기
+        ctx.save();
+        ctx.rotate(startAngle + arc / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 14px Pretendard";
+        ctx.shadowColor = "rgba(0,0,0,0.3)";
+        ctx.shadowBlur = 4;
+        
+        // 글자가 너무 길면 줄임 처리 등
+        let text = items[i];
+        if (text.length > 8) text = text.substring(0, 7) + "..";
+        ctx.fillText(text, radius - 20, 6);
+        ctx.restore();
+      }
+
+      ctx.restore();
+
+      // 중앙 고정 원
+      ctx.beginPath();
+      ctx.arc(center, center, 22, 0, 2 * Math.PI);
+      ctx.fillStyle = "#ffffff";
+      ctx.fill();
+      ctx.shadowColor = "rgba(0,0,0,0.15)";
+      ctx.shadowBlur = 6;
+      ctx.stroke();
+    }
+
+    function startSpin() {
+      if (isSpinning || items.length === 0) return;
+      isSpinning = true;
+      document.getElementById("spinBtn").disabled = true;
+      document.getElementById("resultText").innerText = "돌아가는 중... 🌀";
+
+      const numItems = items.length;
+      const arc = (2 * Math.PI) / numItems;
+
+      // 랜덤 회전수 (최소 5바퀴 ~ 10바퀴 + 랜덤 각도)
+      const randomSpin = Math.floor(Math.random() * 5 + 5) * 2 * Math.PI;
+      const extraAngle = Math.random() * (2 * Math.PI);
+      const targetAngle = currentAngle + randomSpin + extraAngle;
+
+      const duration = 3000; // 3초 동안 회전
+      const startTime = performance.now();
+
+      function animateSpin(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // 이징 함수 (점점 느려지게)
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const currentRot = currentAngle + (targetAngle - currentAngle) * easeOut;
+
+        drawRoulette(currentRot);
+
+        if (progress < 1) {
+          requestAnimationFrame(animateSpin);
+        } else {
+          currentAngle = targetAngle % (2 * Math.PI);
+          isSpinning = false;
+          document.getElementById("spinBtn").disabled = false;
+
+          // 당첨 항목 계산 (화살표는 상단 12시 방향 = -Math.PI/2)
+          const normalizedAngle = (2 * Math.PI - (currentAngle % (2 * Math.PI)) - Math.PI / 2 + 2 * Math.PI) % (2 * Math.PI);
+          const winningIndex = Math.floor(normalizedAngle / arc) % numItems;
+          
+          document.getElementById("resultText").innerHTML = `🎉 당첨: <span style="color:#2d3436;">${items[winningIndex]}</span>`;
+        }
+      }
+
+      requestAnimationFrame(animateSpin);
+    }
+
+    function addItem() {
+      const input = document.getElementById("newItemInput");
+      const val = input.value.trim();
+      if (!val) return;
+
+      items.push(val);
+      input.value = "";
+      saveAndRefresh();
+    }
+
+    function removeItem(index) {
+      if (items.length <= 2) {
+        alert("최소 2개 이상의 항목이 있어야 합니다!");
+        return;
+      }
+      items.splice(index, 1);
+      saveAndRefresh();
+    }
+
+    function saveAndRefresh() {
+      localStorage.setItem('ddo_roulette_items', JSON.stringify(items));
+      drawRoulette(currentAngle);
+      renderItemsList();
+    }
+
+    function renderItemsList() {
+      const container = document.getElementById("itemsContainer");
+      container.innerHTML = "";
+
+      items.forEach((item, idx) => {
+        const chip = document.createElement("div");
+        chip.className = "item-chip";
+        chip.innerHTML = `${item} <i class="fa-solid fa-xmark" onclick="removeItem(${idx})"></i>`;
+        container.appendChild(chip);
+      });
+    }
+  </script>
+</body>
+</html>
