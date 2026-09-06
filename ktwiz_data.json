@@ -5,7 +5,7 @@
     "stadium": "광주",
     "opponent": "KIA",
     "isHome": false,
-    "score": "VS",
+    "score": "KT 3 : 8 KIA",
     "ktPitcher": "대니엘",
     "oppPitcher": "네일"
   },
@@ -65,101 +65,101 @@
     {
       "rank": 1,
       "teamName": "삼성",
-      "games": 120,
-      "win": 71,
+      "games": 121,
+      "win": 72,
       "draw": 3,
       "lose": 46,
-      "wra": 0.607,
+      "wra": 0.61,
       "gameDiff": "0.0"
     },
     {
       "rank": 2,
       "teamName": "KT",
-      "games": 117,
+      "games": 118,
       "win": 69,
       "draw": 3,
-      "lose": 45,
-      "wra": 0.605,
+      "lose": 46,
+      "wra": 0.6,
       "gameDiff": "0.0"
     },
     {
       "rank": 3,
       "teamName": "LG",
-      "games": 121,
+      "games": 122,
       "win": 68,
       "draw": 1,
-      "lose": 52,
-      "wra": 0.567,
+      "lose": 53,
+      "wra": 0.562,
       "gameDiff": "0.0"
     },
     {
       "rank": 4,
       "teamName": "KIA",
-      "games": 119,
-      "win": 65,
+      "games": 120,
+      "win": 66,
       "draw": 2,
       "lose": 52,
-      "wra": 0.556,
+      "wra": 0.559,
       "gameDiff": "0.0"
     },
     {
       "rank": 5,
       "teamName": "두산",
-      "games": 122,
-      "win": 61,
+      "games": 123,
+      "win": 62,
       "draw": 4,
       "lose": 57,
-      "wra": 0.517,
+      "wra": 0.521,
       "gameDiff": "0.0"
     },
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 115,
+      "games": 116,
       "win": 55,
       "draw": 2,
-      "lose": 58,
-      "wra": 0.487,
+      "lose": 59,
+      "wra": 0.482,
       "gameDiff": "0.0"
     },
     {
       "rank": 7,
-      "teamName": "SSG",
-      "games": 123,
+      "teamName": "한화",
+      "games": 120,
       "win": 52,
-      "draw": 5,
-      "lose": 66,
-      "wra": 0.441,
+      "draw": 3,
+      "lose": 65,
+      "wra": 0.444,
       "gameDiff": "0.0"
     },
     {
       "rank": 8,
-      "teamName": "롯데",
-      "games": 118,
-      "win": 51,
-      "draw": 2,
-      "lose": 65,
-      "wra": 0.44,
+      "teamName": "SSG",
+      "games": 124,
+      "win": 52,
+      "draw": 5,
+      "lose": 67,
+      "wra": 0.437,
       "gameDiff": "0.0"
     },
     {
       "rank": 9,
-      "teamName": "한화",
+      "teamName": "롯데",
       "games": 119,
       "win": 51,
-      "draw": 3,
-      "lose": 65,
-      "wra": 0.44,
+      "draw": 2,
+      "lose": 66,
+      "wra": 0.436,
       "gameDiff": "0.0"
     },
     {
       "rank": 10,
       "teamName": "키움",
-      "games": 126,
-      "win": 43,
+      "games": 127,
+      "win": 44,
       "draw": 3,
       "lose": 80,
-      "wra": 0.35,
+      "wra": 0.355,
       "gameDiff": "0.0"
     }
   ],
@@ -172,13 +172,13 @@
       "away": "NC",
       "home": "키움",
       "as": 2,
-      "hs": 3,
-      "status": "8회말",
-      "code": "STARTED",
+      "hs": 4,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "구창모",
       "hp": "알칸타라",
-      "wp": "",
-      "lp": ""
+      "wp": "알칸타라",
+      "lp": "구창모"
     },
     {
       "id": "20260906HHLT02026",
@@ -187,14 +187,14 @@
       "stadium": "사직",
       "away": "한화",
       "home": "롯데",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
+      "as": 8,
+      "hs": 2,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "화이트",
       "hp": "로드리게스",
-      "wp": "",
-      "lp": ""
+      "wp": "화이트",
+      "lp": "로드리게스"
     },
     {
       "id": "20260906KTHT02026",
@@ -203,14 +203,14 @@
       "stadium": "광주",
       "away": "KT",
       "home": "KIA",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
+      "as": 3,
+      "hs": 8,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "대니엘",
       "hp": "네일",
-      "wp": "",
-      "lp": ""
+      "wp": "네일",
+      "lp": "대니엘"
     },
     {
       "id": "20260906OBSK02026",
@@ -219,14 +219,14 @@
       "stadium": "문학",
       "away": "두산",
       "home": "SSG",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
+      "as": 16,
+      "hs": 9,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "잭로그",
       "hp": "최민준",
-      "wp": "",
-      "lp": ""
+      "wp": "잭로그",
+      "lp": "최민준"
     },
     {
       "id": "20260906SSLG02026",
@@ -235,14 +235,14 @@
       "stadium": "잠실",
       "away": "삼성",
       "home": "LG",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
+      "as": 10,
+      "hs": 4,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "후라도",
       "hp": "임찬규",
-      "wp": "",
-      "lp": ""
+      "wp": "후라도",
+      "lp": "임찬규"
     }
   ],
   "kt": {
@@ -347,5 +347,5 @@
       "oppName": "KIA"
     }
   },
-  "updated": "2026-09-06T07:14:47.489Z"
+  "updated": "2026-09-06T11:43:21.145Z"
 }
