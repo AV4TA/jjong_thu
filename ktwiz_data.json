@@ -1,9 +1,18 @@
 {
-  "todayMatch": null,
+  "todayMatch": {
+    "date": "2026-09-08",
+    "time": "18:30",
+    "stadium": "수원",
+    "opponent": "SSG",
+    "isHome": true,
+    "score": "VS",
+    "ktPitcher": "소형준",
+    "oppPitcher": "김건우"
+  },
   "todayLineup": {
-    "ktPitcher": "미정",
-    "oppPitcher": "미정",
-    "pitcher": "미정",
+    "ktPitcher": "소형준",
+    "oppPitcher": "김건우",
+    "pitcher": "소형준",
     "batters": []
   },
   "rankings": [
@@ -108,11 +117,140 @@
       "gameDiff": "0.0"
     }
   ],
-  "games": [],
+  "games": [
+    {
+      "id": "20260908HTSS02026",
+      "date": "2026-09-08",
+      "time": "18:30",
+      "stadium": "대구",
+      "away": "KIA",
+      "home": "삼성",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "시라카와",
+      "hp": "최원태",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260908LTNC02026",
+      "date": "2026-09-08",
+      "time": "18:30",
+      "stadium": "창원",
+      "away": "롯데",
+      "home": "NC",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "박세웅",
+      "hp": "토다",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260908OBHH02026",
+      "date": "2026-09-08",
+      "time": "18:30",
+      "stadium": "대전",
+      "away": "두산",
+      "home": "한화",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "최승용",
+      "hp": "류현진",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260908SKKT02026",
+      "date": "2026-09-08",
+      "time": "18:30",
+      "stadium": "수원",
+      "away": "SSG",
+      "home": "KT",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "김건우",
+      "hp": "소형준",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260908WOLG02026",
+      "date": "2026-09-08",
+      "time": "18:30",
+      "stadium": "잠실",
+      "away": "키움",
+      "home": "LG",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "하영민",
+      "hp": "박시원",
+      "wp": "",
+      "lp": ""
+    }
+  ],
   "kt": {
-    "gameId": null,
+    "gameId": "20260908SKKT02026",
     "lineup": null,
-    "starters": null
+    "starters": {
+      "kt": {
+        "name": "소형준",
+        "era": "3.55",
+        "w": 6,
+        "l": 3,
+        "pitches": [
+          {
+            "type": "TWOS",
+            "rt": 48.70000076293945,
+            "spd": 144
+          },
+          {
+            "type": "CUTT",
+            "rt": 22.200000762939453,
+            "spd": 140
+          },
+          {
+            "type": "CHUP",
+            "rt": 18.700000762939453,
+            "spd": 130
+          }
+        ]
+      },
+      "opp": {
+        "name": "김건우",
+        "era": "6.06",
+        "w": 8,
+        "l": 9,
+        "pitches": [
+          {
+            "type": "FAST",
+            "rt": 52.20000076293945,
+            "spd": 144
+          },
+          {
+            "type": "CHUP",
+            "rt": 19.100000381469727,
+            "spd": 129
+          },
+          {
+            "type": "SLID",
+            "rt": 16.700000762939453,
+            "spd": 134
+          }
+        ]
+      },
+      "oppName": "SSG"
+    }
   },
-  "updated": "2026-09-07T14:36:14.269Z"
+  "updated": "2026-09-07T18:54:07.600Z"
 }
