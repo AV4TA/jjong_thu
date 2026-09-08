@@ -65,11 +65,11 @@
     {
       "rank": 1,
       "teamName": "삼성",
-      "games": 121,
-      "win": 72,
+      "games": 122,
+      "win": 73,
       "draw": 3,
       "lose": 46,
-      "wra": 0.61,
+      "wra": 0.613,
       "gameDiff": "0.0"
     },
     {
@@ -85,21 +85,21 @@
     {
       "rank": 3,
       "teamName": "LG",
-      "games": 122,
+      "games": 123,
       "win": 68,
       "draw": 1,
-      "lose": 53,
-      "wra": 0.562,
+      "lose": 54,
+      "wra": 0.557,
       "gameDiff": "0.0"
     },
     {
       "rank": 4,
       "teamName": "KIA",
-      "games": 120,
+      "games": 121,
       "win": 66,
       "draw": 2,
-      "lose": 52,
-      "wra": 0.559,
+      "lose": 53,
+      "wra": 0.555,
       "gameDiff": "0.0"
     },
     {
@@ -115,11 +115,11 @@
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 116,
+      "games": 117,
       "win": 55,
       "draw": 2,
-      "lose": 59,
-      "wra": 0.482,
+      "lose": 60,
+      "wra": 0.478,
       "gameDiff": "0.0"
     },
     {
@@ -135,11 +135,11 @@
     {
       "rank": 8,
       "teamName": "롯데",
-      "games": 119,
-      "win": 51,
+      "games": 120,
+      "win": 52,
       "draw": 2,
       "lose": 66,
-      "wra": 0.436,
+      "wra": 0.441,
       "gameDiff": "0.0"
     },
     {
@@ -155,11 +155,11 @@
     {
       "rank": 10,
       "teamName": "키움",
-      "games": 127,
-      "win": 44,
+      "games": 128,
+      "win": 45,
       "draw": 3,
       "lose": 80,
-      "wra": 0.355,
+      "wra": 0.36,
       "gameDiff": "0.0"
     }
   ],
@@ -171,14 +171,14 @@
       "stadium": "대구",
       "away": "KIA",
       "home": "삼성",
-      "as": 2,
+      "as": 4,
       "hs": 6,
-      "status": "8회초",
-      "code": "STARTED",
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "시라카와",
       "hp": "최원태",
-      "wp": "",
-      "lp": ""
+      "wp": "최원태",
+      "lp": "시라카와"
     },
     {
       "id": "20260908LTNC02026",
@@ -187,30 +187,14 @@
       "stadium": "창원",
       "away": "롯데",
       "home": "NC",
-      "as": 5,
+      "as": 6,
       "hs": 3,
-      "status": "7회말",
-      "code": "STARTED",
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "박세웅",
       "hp": "토다",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260908WOLG02026",
-      "date": "2026-09-08",
-      "time": "18:30",
-      "stadium": "잠실",
-      "away": "키움",
-      "home": "LG",
-      "as": 8,
-      "hs": 0,
-      "status": "8회초",
-      "code": "STARTED",
-      "ap": "하영민",
-      "hp": "박시원",
-      "wp": "",
-      "lp": ""
+      "wp": "박세웅",
+      "lp": "토다"
     },
     {
       "id": "20260908OBHH02026",
@@ -222,11 +206,11 @@
       "as": 1,
       "hs": 6,
       "status": "9회초",
-      "code": "ENDED",
+      "code": "RESULT",
       "ap": "최승용",
       "hp": "류현진",
-      "wp": "",
-      "lp": ""
+      "wp": "류현진",
+      "lp": "최승용"
     },
     {
       "id": "20260908SKKT02026",
@@ -238,11 +222,27 @@
       "as": 1,
       "hs": 3,
       "status": "9회초",
-      "code": "ENDED",
+      "code": "RESULT",
       "ap": "김건우",
       "hp": "소형준",
-      "wp": "",
-      "lp": ""
+      "wp": "소형준",
+      "lp": "김건우"
+    },
+    {
+      "id": "20260908WOLG02026",
+      "date": "2026-09-08",
+      "time": "18:30",
+      "stadium": "잠실",
+      "away": "키움",
+      "home": "LG",
+      "as": 8,
+      "hs": 3,
+      "status": "9회말",
+      "code": "RESULT",
+      "ap": "하영민",
+      "hp": "박시원",
+      "wp": "하영민",
+      "lp": "박시원"
     }
   ],
   "kt": {
@@ -347,5 +347,5 @@
       "oppName": "SSG"
     }
   },
-  "updated": "2026-09-08T12:14:28.510Z"
+  "updated": "2026-09-08T13:10:17.537Z"
 }
