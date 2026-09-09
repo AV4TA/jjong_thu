@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-09-09 22:31:53 (KST)",
+  "updatedAt": "2026-09-10 03:21:48 (KST)",
   "todayMatch": {
-    "gameId": "20260909KTSS02026",
-    "date": "2026-09-09",
+    "gameId": "20260910KTLT02026",
+    "date": "2026-09-10",
     "time": "18:30",
-    "opponent": "삼성 라이온즈",
+    "opponent": "롯데 자이언츠",
     "isHome": false,
     "stadium": "원정구장 (원정)",
-    "result": "win",
-    "score": "KT 2 : 0 삼성"
+    "result": "scheduled",
+    "score": "VS"
   },
   "schedule": {
     "2026-03-28": {
