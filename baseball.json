@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-10 17:44:31 (KST)",
+  "updatedAt": "2026-09-10 22:22:16 (KST)",
   "todayMatch": {
     "gameId": "20260910KTLT02026",
     "date": "2026-09-10",
@@ -7,8 +7,8 @@
     "opponent": "롯데 자이언츠",
     "isHome": false,
     "stadium": "원정구장 (원정)",
-    "result": "scheduled",
-    "score": "VS"
+    "result": "win",
+    "score": "KT 16 : 3 롯데"
   },
   "schedule": {
     "2026-03-28": {
@@ -1388,8 +1388,8 @@
       "opponent": "롯데 자이언츠",
       "isHome": false,
       "stadium": "원정구장 (원정)",
-      "result": "scheduled",
-      "score": "VS"
+      "result": "win",
+      "score": "KT 16 : 3 롯데"
     },
     "2026-09-11": {
       "gameId": "20260911KTLT02026",
