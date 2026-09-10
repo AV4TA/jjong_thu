@@ -5,7 +5,7 @@
     "stadium": "사직",
     "opponent": "롯데",
     "isHome": false,
-    "score": "VS",
+    "score": "KT 16 : 3 롯데",
     "ktPitcher": "배제성",
     "oppPitcher": "비슬리"
   },
@@ -64,22 +64,22 @@
   "rankings": [
     {
       "rank": 1,
+      "teamName": "KT",
+      "games": 121,
+      "win": 72,
+      "draw": 3,
+      "lose": 46,
+      "wra": 0.61,
+      "gameDiff": "0.0"
+    },
+    {
+      "rank": 2,
       "teamName": "삼성",
       "games": 123,
       "win": 73,
       "draw": 3,
       "lose": 47,
       "wra": 0.608,
-      "gameDiff": "0.0"
-    },
-    {
-      "rank": 2,
-      "teamName": "KT",
-      "games": 120,
-      "win": 71,
-      "draw": 3,
-      "lose": 46,
-      "wra": 0.607,
       "gameDiff": "0.0"
     },
     {
@@ -95,11 +95,11 @@
     {
       "rank": 4,
       "teamName": "KIA",
-      "games": 122,
+      "games": 123,
       "win": 66,
       "draw": 2,
-      "lose": 54,
-      "wra": 0.55,
+      "lose": 55,
+      "wra": 0.545,
       "gameDiff": "0.0"
     },
     {
@@ -115,11 +115,11 @@
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 118,
-      "win": 56,
+      "games": 119,
+      "win": 57,
       "draw": 2,
       "lose": 60,
-      "wra": 0.483,
+      "wra": 0.487,
       "gameDiff": "0.0"
     },
     {
@@ -145,11 +145,11 @@
     {
       "rank": 9,
       "teamName": "롯데",
-      "games": 120,
+      "games": 121,
       "win": 52,
       "draw": 2,
-      "lose": 66,
-      "wra": 0.441,
+      "lose": 67,
+      "wra": 0.437,
       "gameDiff": "0.0"
     },
     {
@@ -165,38 +165,6 @@
   ],
   "games": [
     {
-      "id": "20260910KTLT02026",
-      "date": "2026-09-10",
-      "time": "18:30",
-      "stadium": "사직",
-      "away": "KT",
-      "home": "롯데",
-      "as": 15,
-      "hs": 0,
-      "status": "8회말",
-      "code": "STARTED",
-      "ap": "배제성",
-      "hp": "비슬리",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260910NCHT02026",
-      "date": "2026-09-10",
-      "time": "18:30",
-      "stadium": "광주",
-      "away": "NC",
-      "home": "KIA",
-      "as": 1,
-      "hs": 1,
-      "status": "10회초",
-      "code": "STARTED",
-      "ap": "라일리",
-      "hp": "올러",
-      "wp": "",
-      "lp": ""
-    },
-    {
       "id": "20260910HHSK02026",
       "date": "2026-09-10",
       "time": "18:30",
@@ -206,11 +174,43 @@
       "as": 3,
       "hs": 4,
       "status": "9회초",
-      "code": "ENDED",
+      "code": "RESULT",
       "ap": "박준영",
       "hp": "아빌라",
-      "wp": "",
-      "lp": ""
+      "wp": "아빌라",
+      "lp": "박준영"
+    },
+    {
+      "id": "20260910KTLT02026",
+      "date": "2026-09-10",
+      "time": "18:30",
+      "stadium": "사직",
+      "away": "KT",
+      "home": "롯데",
+      "as": 16,
+      "hs": 3,
+      "status": "9회말",
+      "code": "RESULT",
+      "ap": "배제성",
+      "hp": "비슬리",
+      "wp": "배제성",
+      "lp": "비슬리"
+    },
+    {
+      "id": "20260910NCHT02026",
+      "date": "2026-09-10",
+      "time": "18:30",
+      "stadium": "광주",
+      "away": "NC",
+      "home": "KIA",
+      "as": 2,
+      "hs": 1,
+      "status": "11회말",
+      "code": "RESULT",
+      "ap": "라일리",
+      "hp": "올러",
+      "wp": "손주환",
+      "lp": "조상우"
     },
     {
       "id": "20260910WOOB02026",
@@ -331,5 +331,5 @@
       "oppName": "롯데"
     }
   },
-  "updated": "2026-09-10T12:19:54.940Z"
+  "updated": "2026-09-10T13:13:06.897Z"
 }
