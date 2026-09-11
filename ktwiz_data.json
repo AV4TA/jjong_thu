@@ -5,7 +5,7 @@
     "stadium": "사직",
     "opponent": "롯데",
     "isHome": false,
-    "score": "VS",
+    "score": "KT 7 : 1 롯데",
     "ktPitcher": "로건",
     "oppPitcher": "김진욱"
   },
@@ -65,21 +65,21 @@
     {
       "rank": 1,
       "teamName": "KT",
-      "games": 121,
-      "win": 72,
+      "games": 122,
+      "win": 73,
       "draw": 3,
       "lose": 46,
-      "wra": 0.61,
+      "wra": 0.613,
       "gameDiff": "0.0"
     },
     {
       "rank": 2,
       "teamName": "삼성",
-      "games": 123,
-      "win": 73,
+      "games": 124,
+      "win": 74,
       "draw": 3,
       "lose": 47,
-      "wra": 0.608,
+      "wra": 0.612,
       "gameDiff": "0.0"
     },
     {
@@ -95,11 +95,11 @@
     {
       "rank": 4,
       "teamName": "KIA",
-      "games": 123,
-      "win": 66,
+      "games": 124,
+      "win": 67,
       "draw": 2,
       "lose": 55,
-      "wra": 0.545,
+      "wra": 0.549,
       "gameDiff": "0.0"
     },
     {
@@ -135,51 +135,35 @@
     {
       "rank": 8,
       "teamName": "SSG",
-      "games": 127,
+      "games": 128,
       "win": 54,
       "draw": 5,
-      "lose": 68,
-      "wra": 0.443,
+      "lose": 69,
+      "wra": 0.439,
       "gameDiff": "0.0"
     },
     {
       "rank": 9,
       "teamName": "롯데",
-      "games": 121,
+      "games": 122,
       "win": 52,
       "draw": 2,
-      "lose": 67,
-      "wra": 0.437,
+      "lose": 68,
+      "wra": 0.433,
       "gameDiff": "0.0"
     },
     {
       "rank": 10,
       "teamName": "키움",
-      "games": 129,
+      "games": 130,
       "win": 45,
       "draw": 3,
-      "lose": 81,
-      "wra": 0.357,
+      "lose": 82,
+      "wra": 0.354,
       "gameDiff": "0.0"
     }
   ],
   "games": [
-    {
-      "id": "20260911KTLT02026",
-      "date": "2026-09-11",
-      "time": "18:30",
-      "stadium": "사직",
-      "away": "KT",
-      "home": "롯데",
-      "as": 5,
-      "hs": 1,
-      "status": "8회말",
-      "code": "STARTED",
-      "ap": "로건",
-      "hp": "김진욱",
-      "wp": "",
-      "lp": ""
-    },
     {
       "id": "20260911NCHH02026",
       "date": "2026-09-11",
@@ -187,14 +171,30 @@
       "stadium": "대전",
       "away": "NC",
       "home": "한화",
-      "as": 6,
-      "hs": 6,
-      "status": "7회말",
+      "as": 9,
+      "hs": 7,
+      "status": "9회말",
       "code": "STARTED",
       "ap": "이재학",
       "hp": "황준서",
       "wp": "",
       "lp": ""
+    },
+    {
+      "id": "20260911KTLT02026",
+      "date": "2026-09-11",
+      "time": "18:30",
+      "stadium": "사직",
+      "away": "KT",
+      "home": "롯데",
+      "as": 7,
+      "hs": 1,
+      "status": "9회말",
+      "code": "RESULT",
+      "ap": "로건",
+      "hp": "김진욱",
+      "wp": "로건",
+      "lp": "김진욱"
     },
     {
       "id": "20260911SKHT02026",
@@ -204,13 +204,13 @@
       "away": "SSG",
       "home": "KIA",
       "as": 2,
-      "hs": 4,
-      "status": "8회말",
-      "code": "STARTED",
+      "hs": 5,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "이준기",
       "hp": "양현종",
-      "wp": "",
-      "lp": ""
+      "wp": "양현종",
+      "lp": "박시후"
     },
     {
       "id": "20260911WOSS02026",
@@ -222,11 +222,11 @@
       "as": 4,
       "hs": 6,
       "status": "9회초",
-      "code": "STARTED",
+      "code": "RESULT",
       "ap": "전준표",
       "hp": "페덱",
-      "wp": "",
-      "lp": ""
+      "wp": "페덱",
+      "lp": "전준표"
     }
   ],
   "kt": {
@@ -331,5 +331,5 @@
       "oppName": "롯데"
     }
   },
-  "updated": "2026-09-11T12:18:03.339Z"
+  "updated": "2026-09-11T13:07:15.307Z"
 }
