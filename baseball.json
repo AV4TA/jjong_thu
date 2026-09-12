@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-09-12 21:42:43 (KST)",
+  "updatedAt": "2026-09-13 01:04:11 (KST)",
   "todayMatch": {
-    "gameId": "20260912HTKT02026",
-    "date": "2026-09-12",
+    "gameId": "20260913LTKT02026",
+    "date": "2026-09-13",
     "time": "17:00",
-    "opponent": "KIA 타이거즈",
+    "opponent": "롯데 자이언츠",
     "isHome": true,
     "stadium": "수원 위즈파크 (홈)",
-    "result": "win",
-    "score": "KT 6 : 2 KIA"
+    "result": "scheduled",
+    "score": "VS"
   },
   "schedule": {
     "2026-03-28": {
