@@ -5,7 +5,7 @@
     "stadium": "수원",
     "opponent": "KIA",
     "isHome": true,
-    "score": "VS",
+    "score": "KT 6 : 2 KIA",
     "ktPitcher": "대니엘",
     "oppPitcher": "네일"
   },
@@ -65,41 +65,41 @@
     {
       "rank": 1,
       "teamName": "KT",
-      "games": 122,
-      "win": 73,
+      "games": 123,
+      "win": 74,
       "draw": 3,
       "lose": 46,
-      "wra": 0.613,
+      "wra": 0.617,
       "gameDiff": "0.0"
     },
     {
       "rank": 2,
       "teamName": "삼성",
-      "games": 124,
+      "games": 125,
       "win": 74,
       "draw": 3,
-      "lose": 47,
-      "wra": 0.612,
+      "lose": 48,
+      "wra": 0.607,
       "gameDiff": "0.0"
     },
     {
       "rank": 3,
       "teamName": "LG",
-      "games": 124,
-      "win": 68,
+      "games": 125,
+      "win": 69,
       "draw": 1,
       "lose": 55,
-      "wra": 0.553,
+      "wra": 0.556,
       "gameDiff": "0.0"
     },
     {
       "rank": 4,
       "teamName": "KIA",
-      "games": 124,
+      "games": 125,
       "win": 67,
       "draw": 2,
-      "lose": 55,
-      "wra": 0.549,
+      "lose": 56,
+      "wra": 0.545,
       "gameDiff": "0.0"
     },
     {
@@ -145,25 +145,41 @@
     {
       "rank": 9,
       "teamName": "롯데",
-      "games": 122,
-      "win": 52,
+      "games": 123,
+      "win": 53,
       "draw": 2,
       "lose": 68,
-      "wra": 0.433,
+      "wra": 0.438,
       "gameDiff": "0.0"
     },
     {
       "rank": 10,
       "teamName": "키움",
-      "games": 130,
+      "games": 131,
       "win": 45,
       "draw": 3,
-      "lose": 82,
-      "wra": 0.354,
+      "lose": 83,
+      "wra": 0.352,
       "gameDiff": "0.0"
     }
   ],
   "games": [
+    {
+      "id": "20260912NCOB02026",
+      "date": "2026-09-12",
+      "time": "17:00",
+      "stadium": "잠실",
+      "away": "NC",
+      "home": "두산",
+      "as": 10,
+      "hs": 9,
+      "status": "9회말",
+      "code": "STARTED",
+      "ap": "구창모",
+      "hp": "잭로그",
+      "wp": "",
+      "lp": ""
+    },
     {
       "id": "20260912HTKT02026",
       "date": "2026-09-12",
@@ -171,14 +187,14 @@
       "stadium": "수원",
       "away": "KIA",
       "home": "KT",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
+      "as": 2,
+      "hs": 6,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "네일",
       "hp": "대니엘",
-      "wp": "",
-      "lp": ""
+      "wp": "대니엘",
+      "lp": "네일"
     },
     {
       "id": "20260912LGSS02026",
@@ -187,14 +203,14 @@
       "stadium": "대구",
       "away": "LG",
       "home": "삼성",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
+      "as": 4,
+      "hs": 3,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "톨허스트",
       "hp": "후라도",
-      "wp": "",
-      "lp": ""
+      "wp": "고우석",
+      "lp": "이승민"
     },
     {
       "id": "20260912LTWO02026",
@@ -203,30 +219,14 @@
       "stadium": "고척",
       "away": "롯데",
       "home": "키움",
-      "as": 0,
+      "as": 8,
       "hs": 0,
-      "status": "경기전",
-      "code": "READY",
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "로드리게스",
       "hp": "알칸타라",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260912NCOB02026",
-      "date": "2026-09-12",
-      "time": "17:00",
-      "stadium": "잠실",
-      "away": "NC",
-      "home": "두산",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
-      "ap": "구창모",
-      "hp": "잭로그",
-      "wp": "",
-      "lp": ""
+      "wp": "로드리게스",
+      "lp": "알칸타라"
     }
   ],
   "kt": {
@@ -331,5 +331,5 @@
       "oppName": "KIA"
     }
   },
-  "updated": "2026-09-12T07:17:18.979Z"
+  "updated": "2026-09-12T11:41:18.445Z"
 }
