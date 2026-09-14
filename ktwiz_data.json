@@ -1,9 +1,18 @@
 {
-  "todayMatch": null,
+  "todayMatch": {
+    "date": "2026-09-15",
+    "time": "18:30",
+    "stadium": "대전",
+    "opponent": "한화",
+    "isHome": false,
+    "score": "VS",
+    "ktPitcher": "고영표",
+    "oppPitcher": "왕옌청"
+  },
   "todayLineup": {
-    "ktPitcher": "미정",
-    "oppPitcher": "미정",
-    "pitcher": "미정",
+    "ktPitcher": "고영표",
+    "oppPitcher": "왕옌청",
+    "pitcher": "고영표",
     "batters": []
   },
   "rankings": [
@@ -108,11 +117,124 @@
       "gameDiff": "0.0"
     }
   ],
-  "games": [],
+  "games": [
+    {
+      "id": "20260915HTSK02026",
+      "date": "2026-09-15",
+      "time": "18:30",
+      "stadium": "문학",
+      "away": "KIA",
+      "home": "SSG",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "김태형",
+      "hp": "김민준",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260915KTHH02026",
+      "date": "2026-09-15",
+      "time": "18:30",
+      "stadium": "대전",
+      "away": "KT",
+      "home": "한화",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "고영표",
+      "hp": "왕옌청",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260915LGNC02026",
+      "date": "2026-09-15",
+      "time": "18:30",
+      "stadium": "창원",
+      "away": "LG",
+      "home": "NC",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "카라스코",
+      "hp": "송명기",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260915LTSS02026",
+      "date": "2026-09-15",
+      "time": "18:30",
+      "stadium": "대구",
+      "away": "롯데",
+      "home": "삼성",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "박세웅",
+      "hp": "원태인",
+      "wp": "",
+      "lp": ""
+    }
+  ],
   "kt": {
-    "gameId": null,
+    "gameId": "20260915KTHH02026",
     "lineup": null,
-    "starters": null
+    "starters": {
+      "kt": {
+        "name": "고영표",
+        "era": "3.80",
+        "w": 11,
+        "l": 6,
+        "pitches": [
+          {
+            "type": "CHUP",
+            "rt": 41.70000076293945,
+            "spd": 119
+          },
+          {
+            "type": "TWOS",
+            "rt": 32.5,
+            "spd": 134
+          },
+          {
+            "type": "SWEE",
+            "rt": 12.399999618530273,
+            "spd": 118
+          }
+        ]
+      },
+      "opp": {
+        "name": "왕옌청",
+        "era": "3.75",
+        "w": 11,
+        "l": 5,
+        "pitches": [
+          {
+            "type": "FAST",
+            "rt": 42.900001525878906,
+            "spd": 145
+          },
+          {
+            "type": "TWOS",
+            "rt": 19.100000381469727,
+            "spd": 144
+          },
+          {
+            "type": "SLID",
+            "rt": 15.600000381469727,
+            "spd": 125
+          }
+        ]
+      },
+      "oppName": "한화"
+    }
   },
-  "updated": "2026-09-14T08:02:12.158Z"
+  "updated": "2026-09-14T15:10:03.902Z"
 }
