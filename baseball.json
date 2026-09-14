@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14 07:58:04 (KST)",
+  "updatedAt": "2026-09-14 18:40:14 (KST)",
   "todayMatch": null,
   "schedule": {
     "2026-03-28": {
@@ -1555,7 +1555,7 @@
     "2026-10-04": {
       "gameId": "20261004LTKT02026",
       "date": "2026-10-04",
-      "time": "14:00",
+      "time": "17:00",
       "opponent": "롯데 자이언츠",
       "isHome": true,
       "stadium": "수원 위즈파크 (홈)",
