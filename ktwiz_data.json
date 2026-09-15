@@ -5,7 +5,7 @@
     "stadium": "대전",
     "opponent": "한화",
     "isHome": false,
-    "score": "VS",
+    "score": "KT 13 : 3 한화",
     "ktPitcher": "고영표",
     "oppPitcher": "왕옌청"
   },
@@ -13,47 +13,93 @@
     "ktPitcher": "고영표",
     "oppPitcher": "왕옌청",
     "pitcher": "고영표",
-    "batters": []
+    "batters": [
+      {
+        "order": "1",
+        "name": "최원준",
+        "pos": "중견수"
+      },
+      {
+        "order": "2",
+        "name": "김민혁",
+        "pos": "지명타자"
+      },
+      {
+        "order": "3",
+        "name": "안현민",
+        "pos": "우익수"
+      },
+      {
+        "order": "4",
+        "name": "힐리어드",
+        "pos": "좌익수"
+      },
+      {
+        "order": "5",
+        "name": "김현수",
+        "pos": "1루수"
+      },
+      {
+        "order": "6",
+        "name": "김상수",
+        "pos": "2루수"
+      },
+      {
+        "order": "7",
+        "name": "허경민",
+        "pos": "3루수"
+      },
+      {
+        "order": "8",
+        "name": "한승택",
+        "pos": "포수"
+      },
+      {
+        "order": "9",
+        "name": "장준원",
+        "pos": "유격수"
+      }
+    ]
   },
   "rankings": [
     {
       "rank": 1,
       "teamName": "KT",
-      "games": 124,
-      "win": 75,
+      "games": 125,
+      "win": 76,
       "draw": 3,
       "lose": 46,
-      "wra": 0.62,
+      "wra": 0.623,
       "gameDiff": "0.0"
     },
     {
       "rank": 2,
       "teamName": "삼성",
-      "games": 126,
-      "win": 74,
+      "games": 127,
+      "win": 75,
       "draw": 3,
       "lose": 49,
-      "wra": 0.602,
+      "wra": 0.605,
       "gameDiff": "0.0"
     },
     {
       "rank": 3,
       "teamName": "LG",
-      "games": 126,
-      "win": 70,
+      "games": 127,
+      "win": 71,
       "draw": 1,
       "lose": 55,
-      "wra": 0.56,
+      "wra": 0.563,
       "gameDiff": "0.0"
     },
     {
       "rank": 4,
       "teamName": "KIA",
-      "games": 126,
+      "games": 127,
       "win": 68,
       "draw": 2,
-      "lose": 56,
-      "wra": 0.548,
+      "lose": 57,
+      "wra": 0.544,
       "gameDiff": "0.0"
     },
     {
@@ -69,29 +115,29 @@
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 122,
+      "games": 123,
       "win": 59,
       "draw": 2,
-      "lose": 61,
-      "wra": 0.492,
+      "lose": 62,
+      "wra": 0.488,
       "gameDiff": "0.0"
     },
     {
       "rank": 7,
-      "teamName": "한화",
-      "games": 125,
-      "win": 54,
-      "draw": 3,
-      "lose": 68,
-      "wra": 0.443,
+      "teamName": "SSG",
+      "games": 129,
+      "win": 55,
+      "draw": 5,
+      "lose": 69,
+      "wra": 0.444,
       "gameDiff": "0.0"
     },
     {
       "rank": 8,
-      "teamName": "SSG",
-      "games": 128,
+      "teamName": "한화",
+      "games": 126,
       "win": 54,
-      "draw": 5,
+      "draw": 3,
       "lose": 69,
       "wra": 0.439,
       "gameDiff": "0.0"
@@ -99,11 +145,11 @@
     {
       "rank": 9,
       "teamName": "롯데",
-      "games": 124,
+      "games": 125,
       "win": 53,
       "draw": 2,
-      "lose": 69,
-      "wra": 0.434,
+      "lose": 70,
+      "wra": 0.431,
       "gameDiff": "0.0"
     },
     {
@@ -125,14 +171,14 @@
       "stadium": "문학",
       "away": "KIA",
       "home": "SSG",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 3,
+      "hs": 6,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "김태형",
       "hp": "김민준",
-      "wp": "",
-      "lp": ""
+      "wp": "김민준",
+      "lp": "김태형"
     },
     {
       "id": "20260915KTHH02026",
@@ -141,14 +187,14 @@
       "stadium": "대전",
       "away": "KT",
       "home": "한화",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 13,
+      "hs": 3,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "고영표",
       "hp": "왕옌청",
-      "wp": "",
-      "lp": ""
+      "wp": "고영표",
+      "lp": "왕옌청"
     },
     {
       "id": "20260915LGNC02026",
@@ -157,14 +203,14 @@
       "stadium": "창원",
       "away": "LG",
       "home": "NC",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 3,
+      "hs": 2,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "카라스코",
       "hp": "송명기",
-      "wp": "",
-      "lp": ""
+      "wp": "카라스코",
+      "lp": "송명기"
     },
     {
       "id": "20260915LTSS02026",
@@ -173,19 +219,68 @@
       "stadium": "대구",
       "away": "롯데",
       "home": "삼성",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 3,
+      "hs": 7,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "박세웅",
       "hp": "원태인",
-      "wp": "",
-      "lp": ""
+      "wp": "사토시",
+      "lp": "박정민"
     }
   ],
   "kt": {
     "gameId": "20260915KTHH02026",
-    "lineup": null,
+    "lineup": {
+      "starter": "고영표",
+      "batters": [
+        {
+          "o": 1,
+          "name": "최원준",
+          "pos": "중견수"
+        },
+        {
+          "o": 2,
+          "name": "김민혁",
+          "pos": "지명타자"
+        },
+        {
+          "o": 3,
+          "name": "안현민",
+          "pos": "우익수"
+        },
+        {
+          "o": 4,
+          "name": "힐리어드",
+          "pos": "좌익수"
+        },
+        {
+          "o": 5,
+          "name": "김현수",
+          "pos": "1루수"
+        },
+        {
+          "o": 6,
+          "name": "김상수",
+          "pos": "2루수"
+        },
+        {
+          "o": 7,
+          "name": "허경민",
+          "pos": "3루수"
+        },
+        {
+          "o": 8,
+          "name": "한승택",
+          "pos": "포수"
+        },
+        {
+          "o": 9,
+          "name": "장준원",
+          "pos": "유격수"
+        }
+      ]
+    },
     "starters": {
       "kt": {
         "name": "고영표",
@@ -236,5 +331,5 @@
       "oppName": "한화"
     }
   },
-  "updated": "2026-09-15T07:56:54.517Z"
+  "updated": "2026-09-15T13:46:11.948Z"
 }
