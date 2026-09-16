@@ -5,7 +5,7 @@
     "stadium": "대전",
     "opponent": "한화",
     "isHome": false,
-    "score": "VS",
+    "score": "KT 4 : 4 한화",
     "ktPitcher": "배제성",
     "oppPitcher": "류현진"
   },
@@ -65,9 +65,9 @@
     {
       "rank": 1,
       "teamName": "KT",
-      "games": 125,
+      "games": 126,
       "win": 76,
-      "draw": 3,
+      "draw": 4,
       "lose": 46,
       "wra": 0.623,
       "gameDiff": "0.0"
@@ -135,9 +135,9 @@
     {
       "rank": 8,
       "teamName": "한화",
-      "games": 126,
+      "games": 127,
       "win": 54,
-      "draw": 3,
+      "draw": 4,
       "lose": 69,
       "wra": 0.439,
       "gameDiff": "0.0"
@@ -174,7 +174,7 @@
       "as": 4,
       "hs": 4,
       "status": "11회말",
-      "code": "STARTED",
+      "code": "RESULT",
       "ap": "배제성",
       "hp": "류현진",
       "wp": "",
@@ -331,5 +331,5 @@
       "oppName": "한화"
     }
   },
-  "updated": "2026-09-16T13:38:52.338Z"
+  "updated": "2026-09-16T13:53:22.998Z"
 }
