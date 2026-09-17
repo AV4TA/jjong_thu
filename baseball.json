@@ -1,6 +1,15 @@
 {
-  "updatedAt": "2026-09-17 18:17:21 (KST)",
-  "todayMatch": null,
+  "updatedAt": "2026-09-18 02:31:17 (KST)",
+  "todayMatch": {
+    "gameId": "20260918LGKT02026",
+    "date": "2026-09-18",
+    "time": "18:30",
+    "opponent": "LG 트윈스",
+    "isHome": true,
+    "stadium": "수원 위즈파크 (홈)",
+    "result": "scheduled",
+    "score": "VS"
+  },
   "schedule": {
     "2026-03-28": {
       "gameId": "20260328KTLG02026",
