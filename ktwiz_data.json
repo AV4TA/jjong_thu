@@ -40,11 +40,11 @@
     {
       "rank": 4,
       "teamName": "KIA",
-      "games": 127,
-      "win": 68,
+      "games": 128,
+      "win": 69,
       "draw": 2,
       "lose": 57,
-      "wra": 0.544,
+      "wra": 0.548,
       "gameDiff": "0.0"
     },
     {
@@ -60,21 +60,21 @@
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 124,
+      "games": 125,
       "win": 59,
       "draw": 2,
-      "lose": 63,
-      "wra": 0.484,
+      "lose": 64,
+      "wra": 0.48,
       "gameDiff": "0.0"
     },
     {
       "rank": 7,
       "teamName": "SSG",
-      "games": 130,
-      "win": 56,
+      "games": 131,
+      "win": 57,
       "draw": 5,
       "lose": 69,
-      "wra": 0.448,
+      "wra": 0.452,
       "gameDiff": "0.0"
     },
     {
@@ -100,11 +100,11 @@
     {
       "rank": 10,
       "teamName": "키움",
-      "games": 131,
+      "games": 132,
       "win": 45,
       "draw": 3,
-      "lose": 83,
-      "wra": 0.352,
+      "lose": 84,
+      "wra": 0.349,
       "gameDiff": "0.0"
     }
   ],
@@ -116,14 +116,14 @@
       "stadium": "창원",
       "away": "SSG",
       "home": "NC",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 2,
+      "hs": 1,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "이로운",
       "hp": "라일리",
-      "wp": "",
-      "lp": ""
+      "wp": "이로운",
+      "lp": "손주환"
     },
     {
       "id": "20260917WOHT02026",
@@ -133,13 +133,13 @@
       "away": "키움",
       "home": "KIA",
       "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "hs": 2,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "안우진",
       "hp": "올러",
-      "wp": "",
-      "lp": ""
+      "wp": "곽도규",
+      "lp": "박준현"
     }
   ],
   "kt": {
@@ -147,5 +147,5 @@
     "lineup": null,
     "starters": null
   },
-  "updated": "2026-09-17T07:54:31.930Z"
+  "updated": "2026-09-17T13:41:15.041Z"
 }
