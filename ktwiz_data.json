@@ -1,9 +1,18 @@
 {
-  "todayMatch": null,
+  "todayMatch": {
+    "date": "2026-09-18",
+    "time": "18:30",
+    "stadium": "수원",
+    "opponent": "LG",
+    "isHome": true,
+    "score": "VS",
+    "ktPitcher": "로건",
+    "oppPitcher": "톨허스트"
+  },
   "todayLineup": {
-    "ktPitcher": "미정",
-    "oppPitcher": "미정",
-    "pitcher": "미정",
+    "ktPitcher": "로건",
+    "oppPitcher": "톨허스트",
+    "pitcher": "로건",
     "batters": []
   },
   "rankings": [
@@ -110,42 +119,122 @@
   ],
   "games": [
     {
-      "id": "20260917SKNC02026",
-      "date": "2026-09-17",
+      "id": "20260918LGKT02026",
+      "date": "2026-09-18",
       "time": "18:30",
-      "stadium": "창원",
-      "away": "SSG",
-      "home": "NC",
-      "as": 2,
-      "hs": 1,
-      "status": "9회말",
-      "code": "RESULT",
-      "ap": "이로운",
-      "hp": "라일리",
-      "wp": "이로운",
-      "lp": "손주환"
+      "stadium": "수원",
+      "away": "LG",
+      "home": "KT",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "톨허스트",
+      "hp": "로건",
+      "wp": "",
+      "lp": ""
     },
     {
-      "id": "20260917WOHT02026",
-      "date": "2026-09-17",
+      "id": "20260918NCLT02026",
+      "date": "2026-09-18",
       "time": "18:30",
-      "stadium": "광주",
-      "away": "키움",
-      "home": "KIA",
+      "stadium": "사직",
+      "away": "NC",
+      "home": "롯데",
       "as": 0,
-      "hs": 2,
-      "status": "9회초",
-      "code": "RESULT",
-      "ap": "안우진",
-      "hp": "올러",
-      "wp": "곽도규",
-      "lp": "박준현"
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "이재학",
+      "hp": "로드리게스",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260918SSHH02026",
+      "date": "2026-09-18",
+      "time": "18:30",
+      "stadium": "대전",
+      "away": "삼성",
+      "home": "한화",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "후라도",
+      "hp": "박준영",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260918WOOB02026",
+      "date": "2026-09-18",
+      "time": "18:30",
+      "stadium": "잠실",
+      "away": "키움",
+      "home": "두산",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "알칸타라",
+      "hp": "잭로그",
+      "wp": "",
+      "lp": ""
     }
   ],
   "kt": {
-    "gameId": null,
+    "gameId": "20260918LGKT02026",
     "lineup": null,
-    "starters": null
+    "starters": {
+      "kt": {
+        "name": "로건",
+        "era": "2.97",
+        "w": 6,
+        "l": 3,
+        "pitches": [
+          {
+            "type": "FAST",
+            "rt": 45.79999923706055,
+            "spd": 147
+          },
+          {
+            "type": "CUTT",
+            "rt": 17.299999237060547,
+            "spd": 139
+          },
+          {
+            "type": "SLID",
+            "rt": 16.5,
+            "spd": 131
+          }
+        ]
+      },
+      "opp": {
+        "name": "톨허스트",
+        "era": "4.19",
+        "w": 11,
+        "l": 9,
+        "pitches": [
+          {
+            "type": "FAST",
+            "rt": 44.599998474121094,
+            "spd": 148
+          },
+          {
+            "type": "CUTT",
+            "rt": 24.399999618530273,
+            "spd": 137
+          },
+          {
+            "type": "CURV",
+            "rt": 16.399999618530273,
+            "spd": 125
+          }
+        ]
+      },
+      "oppName": "LG"
+    }
   },
-  "updated": "2026-09-17T13:57:09.294Z"
+  "updated": "2026-09-17T18:39:06.667Z"
 }
