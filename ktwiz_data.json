@@ -5,7 +5,7 @@
     "stadium": "수원",
     "opponent": "LG",
     "isHome": true,
-    "score": "VS",
+    "score": "KT 1 : 12 LG",
     "ktPitcher": "로건",
     "oppPitcher": "톨허스트"
   },
@@ -13,37 +13,83 @@
     "ktPitcher": "로건",
     "oppPitcher": "톨허스트",
     "pitcher": "로건",
-    "batters": []
+    "batters": [
+      {
+        "order": "1",
+        "name": "최원준",
+        "pos": "중견수"
+      },
+      {
+        "order": "2",
+        "name": "김민혁",
+        "pos": "지명타자"
+      },
+      {
+        "order": "3",
+        "name": "안현민",
+        "pos": "우익수"
+      },
+      {
+        "order": "4",
+        "name": "힐리어드",
+        "pos": "좌익수"
+      },
+      {
+        "order": "5",
+        "name": "김현수",
+        "pos": "1루수"
+      },
+      {
+        "order": "6",
+        "name": "김상수",
+        "pos": "2루수"
+      },
+      {
+        "order": "7",
+        "name": "허경민",
+        "pos": "3루수"
+      },
+      {
+        "order": "8",
+        "name": "한승택",
+        "pos": "포수"
+      },
+      {
+        "order": "9",
+        "name": "권동진",
+        "pos": "유격수"
+      }
+    ]
   },
   "rankings": [
     {
       "rank": 1,
       "teamName": "KT",
-      "games": 126,
+      "games": 127,
       "win": 76,
       "draw": 4,
-      "lose": 46,
-      "wra": 0.623,
+      "lose": 47,
+      "wra": 0.618,
       "gameDiff": "0.0"
     },
     {
       "rank": 2,
       "teamName": "삼성",
-      "games": 128,
-      "win": 75,
+      "games": 129,
+      "win": 76,
       "draw": 3,
       "lose": 50,
-      "wra": 0.6,
+      "wra": 0.603,
       "gameDiff": "0.0"
     },
     {
       "rank": 3,
       "teamName": "LG",
-      "games": 128,
-      "win": 72,
+      "games": 129,
+      "win": 73,
       "draw": 1,
       "lose": 55,
-      "wra": 0.567,
+      "wra": 0.57,
       "gameDiff": "0.0"
     },
     {
@@ -69,11 +115,11 @@
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 125,
+      "games": 126,
       "win": 59,
       "draw": 2,
-      "lose": 64,
-      "wra": 0.48,
+      "lose": 65,
+      "wra": 0.476,
       "gameDiff": "0.0"
     },
     {
@@ -89,21 +135,21 @@
     {
       "rank": 8,
       "teamName": "한화",
-      "games": 127,
+      "games": 128,
       "win": 54,
       "draw": 4,
-      "lose": 69,
-      "wra": 0.439,
+      "lose": 70,
+      "wra": 0.435,
       "gameDiff": "0.0"
     },
     {
       "rank": 9,
       "teamName": "롯데",
-      "games": 126,
-      "win": 53,
+      "games": 127,
+      "win": 54,
       "draw": 2,
       "lose": 71,
-      "wra": 0.427,
+      "wra": 0.432,
       "gameDiff": "0.0"
     },
     {
@@ -119,16 +165,32 @@
   ],
   "games": [
     {
+      "id": "20260918WOOB02026",
+      "date": "2026-09-18",
+      "time": "18:30",
+      "stadium": "잠실",
+      "away": "키움",
+      "home": "두산",
+      "as": 6,
+      "hs": 6,
+      "status": "10회초",
+      "code": "STARTED",
+      "ap": "알칸타라",
+      "hp": "잭로그",
+      "wp": "",
+      "lp": ""
+    },
+    {
       "id": "20260918LGKT02026",
       "date": "2026-09-18",
       "time": "18:30",
       "stadium": "수원",
       "away": "LG",
       "home": "KT",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 12,
+      "hs": 1,
+      "status": "9회말",
+      "code": "ENDED",
       "ap": "톨허스트",
       "hp": "로건",
       "wp": "",
@@ -141,14 +203,14 @@
       "stadium": "사직",
       "away": "NC",
       "home": "롯데",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 6,
+      "hs": 9,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "이재학",
       "hp": "로드리게스",
-      "wp": "",
-      "lp": ""
+      "wp": "로드리게스",
+      "lp": "이재학"
     },
     {
       "id": "20260918SSHH02026",
@@ -157,35 +219,68 @@
       "stadium": "대전",
       "away": "삼성",
       "home": "한화",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 10,
+      "hs": 4,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "후라도",
       "hp": "박준영",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260918WOOB02026",
-      "date": "2026-09-18",
-      "time": "18:30",
-      "stadium": "잠실",
-      "away": "키움",
-      "home": "두산",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
-      "ap": "알칸타라",
-      "hp": "잭로그",
-      "wp": "",
-      "lp": ""
+      "wp": "후라도",
+      "lp": "박준영"
     }
   ],
   "kt": {
     "gameId": "20260918LGKT02026",
-    "lineup": null,
+    "lineup": {
+      "starter": "로건",
+      "batters": [
+        {
+          "o": 1,
+          "name": "최원준",
+          "pos": "중견수"
+        },
+        {
+          "o": 2,
+          "name": "김민혁",
+          "pos": "지명타자"
+        },
+        {
+          "o": 3,
+          "name": "안현민",
+          "pos": "우익수"
+        },
+        {
+          "o": 4,
+          "name": "힐리어드",
+          "pos": "좌익수"
+        },
+        {
+          "o": 5,
+          "name": "김현수",
+          "pos": "1루수"
+        },
+        {
+          "o": 6,
+          "name": "김상수",
+          "pos": "2루수"
+        },
+        {
+          "o": 7,
+          "name": "허경민",
+          "pos": "3루수"
+        },
+        {
+          "o": 8,
+          "name": "한승택",
+          "pos": "포수"
+        },
+        {
+          "o": 9,
+          "name": "권동진",
+          "pos": "유격수"
+        }
+      ]
+    },
     "starters": {
       "kt": {
         "name": "로건",
@@ -236,5 +331,5 @@
       "oppName": "LG"
     }
   },
-  "updated": "2026-09-18T07:32:50.944Z"
+  "updated": "2026-09-18T13:04:22.483Z"
 }
