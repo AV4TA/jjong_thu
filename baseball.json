@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-09-19 21:57:18 (KST)",
+  "updatedAt": "2026-09-20 01:21:21 (KST)",
   "todayMatch": {
-    "gameId": "20260919OBKT02026",
-    "date": "2026-09-19",
-    "time": "17:00",
+    "gameId": "20260920OBKT02026",
+    "date": "2026-09-20",
+    "time": "14:00",
     "opponent": "두산 베어스",
     "isHome": true,
     "stadium": "수원 위즈파크 (홈)",
-    "result": "win",
-    "score": "KT 15 : 3 두산"
+    "result": "scheduled",
+    "score": "VS"
   },
   "schedule": {
     "2026-03-28": {
