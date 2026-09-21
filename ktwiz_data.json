@@ -1,9 +1,18 @@
 {
-  "todayMatch": null,
+  "todayMatch": {
+    "date": "2026-09-22",
+    "time": "18:30",
+    "stadium": "문학",
+    "opponent": "SSG",
+    "isHome": false,
+    "score": "VS",
+    "ktPitcher": "배제성",
+    "oppPitcher": "아빌라"
+  },
   "todayLineup": {
-    "ktPitcher": "미정",
-    "oppPitcher": "미정",
-    "pitcher": "미정",
+    "ktPitcher": "배제성",
+    "oppPitcher": "아빌라",
+    "pitcher": "배제성",
     "batters": []
   },
   "rankings": [
@@ -108,11 +117,124 @@
       "gameDiff": "0.0"
     }
   ],
-  "games": [],
+  "games": [
+    {
+      "id": "20260922KTSK02026",
+      "date": "2026-09-22",
+      "time": "18:30",
+      "stadium": "문학",
+      "away": "KT",
+      "home": "SSG",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "배제성",
+      "hp": "아빌라",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260922LTHH02026",
+      "date": "2026-09-22",
+      "time": "18:30",
+      "stadium": "대전",
+      "away": "롯데",
+      "home": "한화",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "비슬리",
+      "hp": "류현진",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260922NCSS02026",
+      "date": "2026-09-22",
+      "time": "18:30",
+      "stadium": "대구",
+      "away": "NC",
+      "home": "삼성",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "클레빈저",
+      "hp": "페덱",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260922OBWO02026",
+      "date": "2026-09-22",
+      "time": "18:30",
+      "stadium": "고척",
+      "away": "두산",
+      "home": "키움",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "벤자민",
+      "hp": "전준표",
+      "wp": "",
+      "lp": ""
+    }
+  ],
   "kt": {
-    "gameId": null,
+    "gameId": "20260922KTSK02026",
     "lineup": null,
-    "starters": null
+    "starters": {
+      "kt": {
+        "name": "배제성",
+        "era": "3.38",
+        "w": 2,
+        "l": 2,
+        "pitches": [
+          {
+            "type": "FAST",
+            "rt": 53,
+            "spd": 145
+          },
+          {
+            "type": "SLID",
+            "rt": 37.5,
+            "spd": 133
+          },
+          {
+            "type": "FORK",
+            "rt": 6.699999809265137,
+            "spd": 134
+          }
+        ]
+      },
+      "opp": {
+        "name": "아빌라",
+        "era": "1.39",
+        "w": 7,
+        "l": 1,
+        "pitches": [
+          {
+            "type": "TWOS",
+            "rt": 38.400001525878906,
+            "spd": 151
+          },
+          {
+            "type": "CUTT",
+            "rt": 23.100000381469727,
+            "spd": 147
+          },
+          {
+            "type": "CHUP",
+            "rt": 15.300000190734863,
+            "spd": 136
+          }
+        ]
+      },
+      "oppName": "SSG"
+    }
   },
-  "updated": "2026-09-21T08:07:14.967Z"
+  "updated": "2026-09-21T15:15:18.131Z"
 }
