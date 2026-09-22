@@ -1,65 +1,19 @@
 {
   "todayMatch": {
-    "date": "2026-09-22",
+    "date": "2026-09-23",
     "time": "18:30",
-    "stadium": "문학",
-    "opponent": "SSG",
-    "isHome": false,
-    "score": "KT 8 : 2 SSG",
-    "ktPitcher": "배제성",
-    "oppPitcher": "아빌라"
+    "stadium": "수원",
+    "opponent": "NC",
+    "isHome": true,
+    "score": "VS",
+    "ktPitcher": "로건",
+    "oppPitcher": "라일리"
   },
   "todayLineup": {
-    "ktPitcher": "배제성",
-    "oppPitcher": "아빌라",
-    "pitcher": "배제성",
-    "batters": [
-      {
-        "order": "1",
-        "name": "최원준",
-        "pos": "중견수"
-      },
-      {
-        "order": "2",
-        "name": "김민혁",
-        "pos": "지명타자"
-      },
-      {
-        "order": "3",
-        "name": "안현민",
-        "pos": "우익수"
-      },
-      {
-        "order": "4",
-        "name": "힐리어드",
-        "pos": "좌익수"
-      },
-      {
-        "order": "5",
-        "name": "김현수",
-        "pos": "1루수"
-      },
-      {
-        "order": "6",
-        "name": "류현인",
-        "pos": "2루수"
-      },
-      {
-        "order": "7",
-        "name": "허경민",
-        "pos": "3루수"
-      },
-      {
-        "order": "8",
-        "name": "한승택",
-        "pos": "포수"
-      },
-      {
-        "order": "9",
-        "name": "권동진",
-        "pos": "유격수"
-      }
-    ]
+    "ktPitcher": "로건",
+    "oppPitcher": "라일리",
+    "pitcher": "로건",
+    "batters": []
   },
   "rankings": [
     {
@@ -165,171 +119,106 @@
   ],
   "games": [
     {
-      "id": "20260922KTSK02026",
-      "date": "2026-09-22",
+      "id": "20260923HTOB02026",
+      "date": "2026-09-23",
       "time": "18:30",
-      "stadium": "문학",
-      "away": "KT",
-      "home": "SSG",
-      "as": 8,
-      "hs": 2,
-      "status": "9회말",
-      "code": "RESULT",
-      "ap": "배제성",
-      "hp": "아빌라",
-      "wp": "전용주",
-      "lp": "아빌라"
+      "stadium": "잠실",
+      "away": "KIA",
+      "home": "두산",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "올러",
+      "hp": "잭로그",
+      "wp": "",
+      "lp": ""
     },
     {
-      "id": "20260922LTHH02026",
-      "date": "2026-09-22",
+      "id": "20260923LTHH02026",
+      "date": "2026-09-23",
       "time": "18:30",
       "stadium": "대전",
       "away": "롯데",
       "home": "한화",
-      "as": 7,
+      "as": 0,
       "hs": 0,
-      "status": "9회말",
-      "code": "RESULT",
-      "ap": "비슬리",
-      "hp": "류현진",
-      "wp": "비슬리",
-      "lp": "류현진"
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "박세웅",
+      "hp": "박준영",
+      "wp": "",
+      "lp": ""
     },
     {
-      "id": "20260922NCSS02026",
-      "date": "2026-09-22",
+      "id": "20260923NCKT02026",
+      "date": "2026-09-23",
       "time": "18:30",
-      "stadium": "대구",
+      "stadium": "수원",
       "away": "NC",
-      "home": "삼성",
-      "as": 5,
-      "hs": 8,
-      "status": "9회초",
-      "code": "RESULT",
-      "ap": "클레빈저",
-      "hp": "페덱",
-      "wp": "페덱",
-      "lp": "신영우"
-    },
-    {
-      "id": "20260922OBWO02026",
-      "date": "2026-09-22",
-      "time": "18:30",
-      "stadium": "고척",
-      "away": "두산",
-      "home": "키움",
-      "as": 5,
-      "hs": 3,
-      "status": "9회말",
-      "code": "RESULT",
-      "ap": "벤자민",
-      "hp": "전준표",
-      "wp": "벤자민",
-      "lp": "전준표"
+      "home": "KT",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "라일리",
+      "hp": "로건",
+      "wp": "",
+      "lp": ""
     }
   ],
   "kt": {
-    "gameId": "20260922KTSK02026",
-    "lineup": {
-      "starter": "배제성",
-      "batters": [
-        {
-          "o": 1,
-          "name": "최원준",
-          "pos": "중견수"
-        },
-        {
-          "o": 2,
-          "name": "김민혁",
-          "pos": "지명타자"
-        },
-        {
-          "o": 3,
-          "name": "안현민",
-          "pos": "우익수"
-        },
-        {
-          "o": 4,
-          "name": "힐리어드",
-          "pos": "좌익수"
-        },
-        {
-          "o": 5,
-          "name": "김현수",
-          "pos": "1루수"
-        },
-        {
-          "o": 6,
-          "name": "류현인",
-          "pos": "2루수"
-        },
-        {
-          "o": 7,
-          "name": "허경민",
-          "pos": "3루수"
-        },
-        {
-          "o": 8,
-          "name": "한승택",
-          "pos": "포수"
-        },
-        {
-          "o": 9,
-          "name": "권동진",
-          "pos": "유격수"
-        }
-      ]
-    },
+    "gameId": "20260923NCKT02026",
+    "lineup": null,
     "starters": {
       "kt": {
-        "name": "배제성",
-        "era": "3.38",
-        "w": 2,
-        "l": 2,
+        "name": "로건",
+        "era": "3.17",
+        "w": 6,
+        "l": 4,
         "pitches": [
           {
             "type": "FAST",
-            "rt": 53,
-            "spd": 145
+            "rt": 46.599998474121094,
+            "spd": 147
+          },
+          {
+            "type": "CUTT",
+            "rt": 17.899999618530273,
+            "spd": 139
           },
           {
             "type": "SLID",
-            "rt": 37.5,
-            "spd": 133
-          },
-          {
-            "type": "FORK",
-            "rt": 6.699999809265137,
-            "spd": 134
+            "rt": 15.5,
+            "spd": 131
           }
         ]
       },
       "opp": {
-        "name": "아빌라",
-        "era": "1.39",
+        "name": "라일리",
+        "era": "2.59",
         "w": 7,
         "l": 1,
         "pitches": [
           {
-            "type": "TWOS",
-            "rt": 38.400001525878906,
-            "spd": 151
+            "type": "FAST",
+            "rt": 36.29999923706055,
+            "spd": 148
           },
           {
-            "type": "CUTT",
-            "rt": 23.100000381469727,
-            "spd": 147
+            "type": "SLID",
+            "rt": 23.899999618530273,
+            "spd": 137
           },
           {
-            "type": "CHUP",
-            "rt": 15.300000190734863,
-            "spd": 136
+            "type": "FORK",
+            "rt": 22.5,
+            "spd": 133
           }
         ]
       },
-      "oppName": "SSG"
+      "oppName": "NC"
     }
   },
-  "updated": "2026-09-22T13:46:46.004Z"
+  "updated": "2026-09-22T18:23:02.042Z"
 }
