@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-09-22 18:08:58 (KST)",
+  "updatedAt": "2026-09-23 02:33:03 (KST)",
   "todayMatch": {
-    "gameId": "20260922KTSK02026",
-    "date": "2026-09-22",
+    "gameId": "20260923NCKT02026",
+    "date": "2026-09-23",
     "time": "18:30",
-    "opponent": "SSG 랜더스",
-    "isHome": false,
-    "stadium": "원정구장 (원정)",
+    "opponent": "NC 다이노스",
+    "isHome": true,
+    "stadium": "수원 위즈파크 (홈)",
     "result": "scheduled",
     "score": "VS"
   },
@@ -1478,8 +1478,8 @@
       "opponent": "SSG 랜더스",
       "isHome": false,
       "stadium": "원정구장 (원정)",
-      "result": "scheduled",
-      "score": "VS"
+      "result": "win",
+      "score": "KT 8 : 2 SSG"
     },
     "2026-09-23": {
       "gameId": "20260923NCKT02026",
