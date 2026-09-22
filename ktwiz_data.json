@@ -5,7 +5,7 @@
     "stadium": "문학",
     "opponent": "SSG",
     "isHome": false,
-    "score": "VS",
+    "score": "KT 8 : 2 SSG",
     "ktPitcher": "배제성",
     "oppPitcher": "아빌라"
   },
@@ -13,27 +13,73 @@
     "ktPitcher": "배제성",
     "oppPitcher": "아빌라",
     "pitcher": "배제성",
-    "batters": []
+    "batters": [
+      {
+        "order": "1",
+        "name": "최원준",
+        "pos": "중견수"
+      },
+      {
+        "order": "2",
+        "name": "김민혁",
+        "pos": "지명타자"
+      },
+      {
+        "order": "3",
+        "name": "안현민",
+        "pos": "우익수"
+      },
+      {
+        "order": "4",
+        "name": "힐리어드",
+        "pos": "좌익수"
+      },
+      {
+        "order": "5",
+        "name": "김현수",
+        "pos": "1루수"
+      },
+      {
+        "order": "6",
+        "name": "류현인",
+        "pos": "2루수"
+      },
+      {
+        "order": "7",
+        "name": "허경민",
+        "pos": "3루수"
+      },
+      {
+        "order": "8",
+        "name": "한승택",
+        "pos": "포수"
+      },
+      {
+        "order": "9",
+        "name": "권동진",
+        "pos": "유격수"
+      }
+    ]
   },
   "rankings": [
     {
       "rank": 1,
       "teamName": "KT",
-      "games": 129,
-      "win": 78,
+      "games": 130,
+      "win": 79,
       "draw": 4,
       "lose": 47,
-      "wra": 0.624,
+      "wra": 0.627,
       "gameDiff": "0.0"
     },
     {
       "rank": 2,
       "teamName": "삼성",
-      "games": 131,
-      "win": 76,
+      "games": 132,
+      "win": 77,
       "draw": 3,
       "lose": 52,
-      "wra": 0.594,
+      "wra": 0.597,
       "gameDiff": "0.0"
     },
     {
@@ -59,61 +105,61 @@
     {
       "rank": 5,
       "teamName": "두산",
-      "games": 132,
-      "win": 65,
+      "games": 133,
+      "win": 66,
       "draw": 5,
       "lose": 62,
-      "wra": 0.512,
+      "wra": 0.516,
       "gameDiff": "0.0"
     },
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 128,
+      "games": 129,
       "win": 59,
       "draw": 2,
-      "lose": 67,
-      "wra": 0.468,
+      "lose": 68,
+      "wra": 0.465,
       "gameDiff": "0.0"
     },
     {
       "rank": 7,
       "teamName": "SSG",
-      "games": 132,
+      "games": 133,
       "win": 58,
       "draw": 5,
-      "lose": 69,
-      "wra": 0.457,
+      "lose": 70,
+      "wra": 0.453,
       "gameDiff": "0.0"
     },
     {
       "rank": 8,
       "teamName": "롯데",
-      "games": 129,
-      "win": 56,
+      "games": 130,
+      "win": 57,
       "draw": 2,
       "lose": 71,
-      "wra": 0.441,
+      "wra": 0.445,
       "gameDiff": "0.0"
     },
     {
       "rank": 9,
       "teamName": "한화",
-      "games": 130,
+      "games": 131,
       "win": 54,
       "draw": 4,
-      "lose": 72,
-      "wra": 0.429,
+      "lose": 73,
+      "wra": 0.425,
       "gameDiff": "0.0"
     },
     {
       "rank": 10,
       "teamName": "키움",
-      "games": 134,
+      "games": 135,
       "win": 45,
       "draw": 4,
-      "lose": 85,
-      "wra": 0.346,
+      "lose": 86,
+      "wra": 0.344,
       "gameDiff": "0.0"
     }
   ],
@@ -125,14 +171,14 @@
       "stadium": "문학",
       "away": "KT",
       "home": "SSG",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 8,
+      "hs": 2,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "배제성",
       "hp": "아빌라",
-      "wp": "",
-      "lp": ""
+      "wp": "전용주",
+      "lp": "아빌라"
     },
     {
       "id": "20260922LTHH02026",
@@ -141,14 +187,14 @@
       "stadium": "대전",
       "away": "롯데",
       "home": "한화",
-      "as": 0,
+      "as": 7,
       "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "비슬리",
       "hp": "류현진",
-      "wp": "",
-      "lp": ""
+      "wp": "비슬리",
+      "lp": "류현진"
     },
     {
       "id": "20260922NCSS02026",
@@ -157,14 +203,14 @@
       "stadium": "대구",
       "away": "NC",
       "home": "삼성",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 5,
+      "hs": 8,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "클레빈저",
       "hp": "페덱",
-      "wp": "",
-      "lp": ""
+      "wp": "페덱",
+      "lp": "신영우"
     },
     {
       "id": "20260922OBWO02026",
@@ -173,19 +219,68 @@
       "stadium": "고척",
       "away": "두산",
       "home": "키움",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 5,
+      "hs": 3,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "벤자민",
       "hp": "전준표",
-      "wp": "",
-      "lp": ""
+      "wp": "벤자민",
+      "lp": "전준표"
     }
   ],
   "kt": {
     "gameId": "20260922KTSK02026",
-    "lineup": null,
+    "lineup": {
+      "starter": "배제성",
+      "batters": [
+        {
+          "o": 1,
+          "name": "최원준",
+          "pos": "중견수"
+        },
+        {
+          "o": 2,
+          "name": "김민혁",
+          "pos": "지명타자"
+        },
+        {
+          "o": 3,
+          "name": "안현민",
+          "pos": "우익수"
+        },
+        {
+          "o": 4,
+          "name": "힐리어드",
+          "pos": "좌익수"
+        },
+        {
+          "o": 5,
+          "name": "김현수",
+          "pos": "1루수"
+        },
+        {
+          "o": 6,
+          "name": "류현인",
+          "pos": "2루수"
+        },
+        {
+          "o": 7,
+          "name": "허경민",
+          "pos": "3루수"
+        },
+        {
+          "o": 8,
+          "name": "한승택",
+          "pos": "포수"
+        },
+        {
+          "o": 9,
+          "name": "권동진",
+          "pos": "유격수"
+        }
+      ]
+    },
     "starters": {
       "kt": {
         "name": "배제성",
@@ -236,5 +331,5 @@
       "oppName": "SSG"
     }
   },
-  "updated": "2026-09-22T07:52:17.363Z"
+  "updated": "2026-09-22T13:34:32.421Z"
 }
