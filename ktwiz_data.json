@@ -5,7 +5,7 @@
     "stadium": "수원",
     "opponent": "NC",
     "isHome": true,
-    "score": "VS",
+    "score": "KT 3 : 10 NC",
     "ktPitcher": "로건",
     "oppPitcher": "라일리"
   },
@@ -13,17 +13,63 @@
     "ktPitcher": "로건",
     "oppPitcher": "라일리",
     "pitcher": "로건",
-    "batters": []
+    "batters": [
+      {
+        "order": "1",
+        "name": "최원준",
+        "pos": "중견수"
+      },
+      {
+        "order": "2",
+        "name": "김민혁",
+        "pos": "지명타자"
+      },
+      {
+        "order": "3",
+        "name": "안현민",
+        "pos": "우익수"
+      },
+      {
+        "order": "4",
+        "name": "힐리어드",
+        "pos": "좌익수"
+      },
+      {
+        "order": "5",
+        "name": "김현수",
+        "pos": "1루수"
+      },
+      {
+        "order": "6",
+        "name": "류현인",
+        "pos": "2루수"
+      },
+      {
+        "order": "7",
+        "name": "허경민",
+        "pos": "3루수"
+      },
+      {
+        "order": "8",
+        "name": "한승택",
+        "pos": "포수"
+      },
+      {
+        "order": "9",
+        "name": "장준원",
+        "pos": "유격수"
+      }
+    ]
   },
   "rankings": [
     {
       "rank": 1,
       "teamName": "KT",
-      "games": 130,
+      "games": 131,
       "win": 79,
       "draw": 4,
-      "lose": 47,
-      "wra": 0.627,
+      "lose": 48,
+      "wra": 0.622,
       "gameDiff": "0.0"
     },
     {
@@ -49,31 +95,31 @@
     {
       "rank": 4,
       "teamName": "KIA",
-      "games": 130,
+      "games": 131,
       "win": 71,
       "draw": 2,
-      "lose": 57,
-      "wra": 0.555,
+      "lose": 58,
+      "wra": 0.55,
       "gameDiff": "0.0"
     },
     {
       "rank": 5,
       "teamName": "두산",
-      "games": 133,
-      "win": 66,
+      "games": 134,
+      "win": 67,
       "draw": 5,
       "lose": 62,
-      "wra": 0.516,
+      "wra": 0.519,
       "gameDiff": "0.0"
     },
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 129,
-      "win": 59,
+      "games": 130,
+      "win": 60,
       "draw": 2,
       "lose": 68,
-      "wra": 0.465,
+      "wra": 0.469,
       "gameDiff": "0.0"
     },
     {
@@ -89,21 +135,21 @@
     {
       "rank": 8,
       "teamName": "롯데",
-      "games": 130,
-      "win": 57,
+      "games": 131,
+      "win": 58,
       "draw": 2,
       "lose": 71,
-      "wra": 0.445,
+      "wra": 0.45,
       "gameDiff": "0.0"
     },
     {
       "rank": 9,
       "teamName": "한화",
-      "games": 131,
+      "games": 132,
       "win": 54,
       "draw": 4,
-      "lose": 73,
-      "wra": 0.425,
+      "lose": 74,
+      "wra": 0.422,
       "gameDiff": "0.0"
     },
     {
@@ -125,14 +171,14 @@
       "stadium": "잠실",
       "away": "KIA",
       "home": "두산",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 2,
+      "hs": 3,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "올러",
       "hp": "잭로그",
-      "wp": "",
-      "lp": ""
+      "wp": "이영하",
+      "lp": "이의리"
     },
     {
       "id": "20260923LTHH02026",
@@ -141,14 +187,14 @@
       "stadium": "대전",
       "away": "롯데",
       "home": "한화",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 9,
+      "hs": 5,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "박세웅",
       "hp": "박준영",
-      "wp": "",
-      "lp": ""
+      "wp": "박정민",
+      "lp": "조동욱"
     },
     {
       "id": "20260923NCKT02026",
@@ -157,19 +203,68 @@
       "stadium": "수원",
       "away": "NC",
       "home": "KT",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 10,
+      "hs": 3,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "라일리",
       "hp": "로건",
-      "wp": "",
-      "lp": ""
+      "wp": "라일리",
+      "lp": "로건"
     }
   ],
   "kt": {
     "gameId": "20260923NCKT02026",
-    "lineup": null,
+    "lineup": {
+      "starter": "로건",
+      "batters": [
+        {
+          "o": 1,
+          "name": "최원준",
+          "pos": "중견수"
+        },
+        {
+          "o": 2,
+          "name": "김민혁",
+          "pos": "지명타자"
+        },
+        {
+          "o": 3,
+          "name": "안현민",
+          "pos": "우익수"
+        },
+        {
+          "o": 4,
+          "name": "힐리어드",
+          "pos": "좌익수"
+        },
+        {
+          "o": 5,
+          "name": "김현수",
+          "pos": "1루수"
+        },
+        {
+          "o": 6,
+          "name": "류현인",
+          "pos": "2루수"
+        },
+        {
+          "o": 7,
+          "name": "허경민",
+          "pos": "3루수"
+        },
+        {
+          "o": 8,
+          "name": "한승택",
+          "pos": "포수"
+        },
+        {
+          "o": 9,
+          "name": "장준원",
+          "pos": "유격수"
+        }
+      ]
+    },
     "starters": {
       "kt": {
         "name": "로건",
@@ -220,5 +315,5 @@
       "oppName": "NC"
     }
   },
-  "updated": "2026-09-23T07:54:03.053Z"
+  "updated": "2026-09-23T13:46:37.236Z"
 }
