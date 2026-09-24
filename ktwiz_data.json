@@ -5,7 +5,7 @@
     "stadium": "수원",
     "opponent": "NC",
     "isHome": true,
-    "score": "VS",
+    "score": "KT 3 : 2 NC",
     "ktPitcher": "대니엘",
     "oppPitcher": "송명기"
   },
@@ -65,31 +65,31 @@
     {
       "rank": 1,
       "teamName": "KT",
-      "games": 131,
-      "win": 79,
+      "games": 132,
+      "win": 80,
       "draw": 4,
       "lose": 48,
-      "wra": 0.622,
+      "wra": 0.625,
       "gameDiff": "0.0"
     },
     {
       "rank": 2,
       "teamName": "삼성",
-      "games": 132,
-      "win": 77,
+      "games": 133,
+      "win": 78,
       "draw": 3,
       "lose": 52,
-      "wra": 0.597,
+      "wra": 0.6,
       "gameDiff": "0.0"
     },
     {
       "rank": 3,
       "teamName": "LG",
-      "games": 131,
+      "games": 132,
       "win": 75,
       "draw": 1,
-      "lose": 55,
-      "wra": 0.577,
+      "lose": 56,
+      "wra": 0.573,
       "gameDiff": "0.0"
     },
     {
@@ -115,29 +115,29 @@
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 130,
+      "games": 131,
       "win": 60,
       "draw": 2,
-      "lose": 68,
-      "wra": 0.469,
+      "lose": 69,
+      "wra": 0.465,
       "gameDiff": "0.0"
     },
     {
       "rank": 7,
-      "teamName": "SSG",
-      "games": 133,
-      "win": 58,
-      "draw": 5,
-      "lose": 70,
-      "wra": 0.453,
+      "teamName": "롯데",
+      "games": 132,
+      "win": 59,
+      "draw": 2,
+      "lose": 71,
+      "wra": 0.454,
       "gameDiff": "0.0"
     },
     {
       "rank": 8,
-      "teamName": "롯데",
-      "games": 131,
+      "teamName": "SSG",
+      "games": 134,
       "win": 58,
-      "draw": 2,
+      "draw": 5,
       "lose": 71,
       "wra": 0.45,
       "gameDiff": "0.0"
@@ -171,14 +171,14 @@
       "stadium": "잠실",
       "away": "롯데",
       "home": "LG",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
+      "as": 6,
+      "hs": 4,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "로드리게스",
       "hp": "톨허스트",
-      "wp": "",
-      "lp": ""
+      "wp": "로드리게스",
+      "lp": "톨허스트"
     },
     {
       "id": "20260924NCKT02026",
@@ -187,14 +187,14 @@
       "stadium": "수원",
       "away": "NC",
       "home": "KT",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
+      "as": 2,
+      "hs": 3,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "송명기",
       "hp": "대니엘",
-      "wp": "",
-      "lp": ""
+      "wp": "대니엘",
+      "lp": "송명기"
     },
     {
       "id": "20260924SSSK02026",
@@ -203,14 +203,14 @@
       "stadium": "문학",
       "away": "삼성",
       "home": "SSG",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
+      "as": 5,
+      "hs": 4,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "후라도",
       "hp": "김민준",
-      "wp": "",
-      "lp": ""
+      "wp": "후라도",
+      "lp": "김민준"
     }
   ],
   "kt": {
@@ -315,5 +315,5 @@
       "oppName": "NC"
     }
   },
-  "updated": "2026-09-24T07:44:12.821Z"
+  "updated": "2026-09-24T13:41:41.488Z"
 }
