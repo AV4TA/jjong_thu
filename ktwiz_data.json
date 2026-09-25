@@ -110,22 +110,6 @@
   ],
   "games": [
     {
-      "id": "20260925HHNC02026",
-      "date": "2026-09-25",
-      "time": "17:00",
-      "stadium": "창원",
-      "away": "한화",
-      "home": "NC",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
-      "ap": "화이트",
-      "hp": "구창모",
-      "wp": "",
-      "lp": ""
-    },
-    {
       "id": "20260925LTOB02026",
       "date": "2026-09-25",
       "time": "17:00",
@@ -134,8 +118,8 @@
       "home": "두산",
       "as": 0,
       "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "status": "취소",
+      "code": "CANCEL",
       "ap": "나균안",
       "hp": "최승용",
       "wp": "",
@@ -150,10 +134,26 @@
       "home": "SSG",
       "as": 0,
       "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "status": "취소",
+      "code": "CANCEL",
       "ap": "김백산",
       "hp": "이로운",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260925HHNC02026",
+      "date": "2026-09-25",
+      "time": "17:00",
+      "stadium": "창원",
+      "away": "한화",
+      "home": "NC",
+      "as": 0,
+      "hs": 0,
+      "status": "1회초",
+      "code": "STARTED",
+      "ap": "화이트",
+      "hp": "구창모",
       "wp": "",
       "lp": ""
     }
@@ -163,5 +163,5 @@
     "lineup": null,
     "starters": null
   },
-  "updated": "2026-09-24T21:52:18.916Z"
+  "updated": "2026-09-25T08:04:32.502Z"
 }
