@@ -1,9 +1,18 @@
 {
-  "todayMatch": null,
+  "todayMatch": {
+    "date": "2026-09-26",
+    "time": "17:00",
+    "stadium": "수원",
+    "opponent": "키움",
+    "isHome": true,
+    "score": "VS",
+    "ktPitcher": "고영표",
+    "oppPitcher": "안우진"
+  },
   "todayLineup": {
-    "ktPitcher": "미정",
-    "oppPitcher": "미정",
-    "pitcher": "미정",
+    "ktPitcher": "고영표",
+    "oppPitcher": "안우진",
+    "pitcher": "고영표",
     "batters": []
   },
   "rankings": [
@@ -110,58 +119,106 @@
   ],
   "games": [
     {
-      "id": "20260925LTOB02026",
-      "date": "2026-09-25",
-      "time": "17:00",
-      "stadium": "잠실",
-      "away": "롯데",
-      "home": "두산",
-      "as": 0,
-      "hs": 0,
-      "status": "취소",
-      "code": "CANCEL",
-      "ap": "나균안",
-      "hp": "최승용",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260925SSSK02026",
-      "date": "2026-09-25",
-      "time": "17:00",
-      "stadium": "문학",
-      "away": "삼성",
-      "home": "SSG",
-      "as": 0,
-      "hs": 0,
-      "status": "취소",
-      "code": "CANCEL",
-      "ap": "김백산",
-      "hp": "이로운",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260925HHNC02026",
-      "date": "2026-09-25",
+      "id": "20260926HHNC02026",
+      "date": "2026-09-26",
       "time": "17:00",
       "stadium": "창원",
       "away": "한화",
       "home": "NC",
-      "as": 7,
-      "hs": 8,
-      "status": "9회초",
-      "code": "RESULT",
-      "ap": "화이트",
-      "hp": "구창모",
-      "wp": "구창모",
-      "lp": "화이트"
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "황준서",
+      "hp": "토다",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260926LGHT02026",
+      "date": "2026-09-26",
+      "time": "17:00",
+      "stadium": "광주",
+      "away": "LG",
+      "home": "KIA",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "임찬규",
+      "hp": "네일",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260926WOKT02026",
+      "date": "2026-09-26",
+      "time": "17:00",
+      "stadium": "수원",
+      "away": "키움",
+      "home": "KT",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "안우진",
+      "hp": "고영표",
+      "wp": "",
+      "lp": ""
     }
   ],
   "kt": {
-    "gameId": null,
+    "gameId": "20260926WOKT02026",
     "lineup": null,
-    "starters": null
+    "starters": {
+      "kt": {
+        "name": "고영표",
+        "era": "3.54",
+        "w": 13,
+        "l": 6,
+        "pitches": [
+          {
+            "type": "CHUP",
+            "rt": 41.79999923706055,
+            "spd": 119
+          },
+          {
+            "type": "TWOS",
+            "rt": 33.70000076293945,
+            "spd": 134
+          },
+          {
+            "type": "SWEE",
+            "rt": 12.100000381469727,
+            "spd": 118
+          }
+        ]
+      },
+      "opp": {
+        "name": "안우진",
+        "era": "3.65",
+        "w": 3,
+        "l": 8,
+        "pitches": [
+          {
+            "type": "FAST",
+            "rt": 42.099998474121094,
+            "spd": 152
+          },
+          {
+            "type": "SLID",
+            "rt": 27.200000762939453,
+            "spd": 141
+          },
+          {
+            "type": "CURV",
+            "rt": 18.700000762939453,
+            "spd": 126
+          }
+        ]
+      },
+      "oppName": "키움"
+    }
   },
-  "updated": "2026-09-25T14:18:39.846Z"
+  "updated": "2026-09-25T18:59:09.005Z"
 }
