@@ -1,6 +1,15 @@
 {
-  "updatedAt": "2026-09-25 18:27:44 (KST)",
-  "todayMatch": null,
+  "updatedAt": "2026-09-26 02:48:30 (KST)",
+  "todayMatch": {
+    "gameId": "20260926WOKT02026",
+    "date": "2026-09-26",
+    "time": "17:00",
+    "opponent": "키움 히어로즈",
+    "isHome": true,
+    "stadium": "수원 위즈파크 (홈)",
+    "result": "scheduled",
+    "score": "VS"
+  },
   "schedule": {
     "2026-03-28": {
       "gameId": "20260328KTLG02026",
