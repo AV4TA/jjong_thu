@@ -60,11 +60,11 @@
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 131,
-      "win": 60,
+      "games": 132,
+      "win": 61,
       "draw": 2,
       "lose": 69,
-      "wra": 0.465,
+      "wra": 0.469,
       "gameDiff": "0.0"
     },
     {
@@ -90,11 +90,11 @@
     {
       "rank": 9,
       "teamName": "한화",
-      "games": 132,
+      "games": 133,
       "win": 54,
       "draw": 4,
-      "lose": 74,
-      "wra": 0.422,
+      "lose": 75,
+      "wra": 0.419,
       "gameDiff": "0.0"
     },
     {
@@ -148,14 +148,14 @@
       "stadium": "창원",
       "away": "한화",
       "home": "NC",
-      "as": 0,
-      "hs": 0,
-      "status": "1회초",
-      "code": "STARTED",
+      "as": 7,
+      "hs": 8,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "화이트",
       "hp": "구창모",
-      "wp": "",
-      "lp": ""
+      "wp": "구창모",
+      "lp": "화이트"
     }
   ],
   "kt": {
@@ -163,5 +163,5 @@
     "lineup": null,
     "starters": null
   },
-  "updated": "2026-09-25T08:04:32.502Z"
+  "updated": "2026-09-25T14:03:26.071Z"
 }
