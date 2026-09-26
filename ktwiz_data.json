@@ -5,7 +5,7 @@
     "stadium": "수원",
     "opponent": "키움",
     "isHome": true,
-    "score": "VS",
+    "score": "KT 1 : 10 키움",
     "ktPitcher": "고영표",
     "oppPitcher": "안우진"
   },
@@ -65,11 +65,11 @@
     {
       "rank": 1,
       "teamName": "KT",
-      "games": 132,
+      "games": 133,
       "win": 80,
       "draw": 4,
-      "lose": 48,
-      "wra": 0.625,
+      "lose": 49,
+      "wra": 0.62,
       "gameDiff": "0.0"
     },
     {
@@ -85,21 +85,21 @@
     {
       "rank": 3,
       "teamName": "LG",
-      "games": 132,
+      "games": 133,
       "win": 75,
       "draw": 1,
-      "lose": 56,
-      "wra": 0.573,
+      "lose": 57,
+      "wra": 0.568,
       "gameDiff": "0.0"
     },
     {
       "rank": 4,
       "teamName": "KIA",
-      "games": 131,
-      "win": 71,
+      "games": 132,
+      "win": 72,
       "draw": 2,
       "lose": 58,
-      "wra": 0.55,
+      "wra": 0.554,
       "gameDiff": "0.0"
     },
     {
@@ -115,11 +115,11 @@
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 132,
-      "win": 61,
+      "games": 133,
+      "win": 62,
       "draw": 2,
       "lose": 69,
-      "wra": 0.469,
+      "wra": 0.473,
       "gameDiff": "0.0"
     },
     {
@@ -145,21 +145,21 @@
     {
       "rank": 9,
       "teamName": "한화",
-      "games": 133,
+      "games": 134,
       "win": 54,
       "draw": 4,
-      "lose": 75,
-      "wra": 0.419,
+      "lose": 76,
+      "wra": 0.415,
       "gameDiff": "0.0"
     },
     {
       "rank": 10,
       "teamName": "키움",
-      "games": 135,
-      "win": 45,
+      "games": 136,
+      "win": 46,
       "draw": 4,
       "lose": 86,
-      "wra": 0.344,
+      "wra": 0.348,
       "gameDiff": "0.0"
     }
   ],
@@ -171,14 +171,14 @@
       "stadium": "창원",
       "away": "한화",
       "home": "NC",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
+      "as": 2,
+      "hs": 3,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "황준서",
       "hp": "토다",
-      "wp": "",
-      "lp": ""
+      "wp": "토다",
+      "lp": "황준서"
     },
     {
       "id": "20260926LGHT02026",
@@ -187,14 +187,14 @@
       "stadium": "광주",
       "away": "LG",
       "home": "KIA",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
+      "as": 1,
+      "hs": 5,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "임찬규",
       "hp": "네일",
-      "wp": "",
-      "lp": ""
+      "wp": "네일",
+      "lp": "임찬규"
     },
     {
       "id": "20260926WOKT02026",
@@ -203,14 +203,14 @@
       "stadium": "수원",
       "away": "키움",
       "home": "KT",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
+      "as": 10,
+      "hs": 1,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "안우진",
       "hp": "고영표",
-      "wp": "",
-      "lp": ""
+      "wp": "안우진",
+      "lp": "고영표"
     }
   ],
   "kt": {
@@ -315,5 +315,5 @@
       "oppName": "키움"
     }
   },
-  "updated": "2026-09-26T07:55:25.659Z"
+  "updated": "2026-09-26T13:18:12.065Z"
 }
