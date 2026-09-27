@@ -5,7 +5,7 @@
     "stadium": "잠실",
     "opponent": "두산",
     "isHome": false,
-    "score": "VS",
+    "score": "KT 12 : 6 두산",
     "ktPitcher": "배제성",
     "oppPitcher": "최승용"
   },
@@ -65,11 +65,11 @@
     {
       "rank": 1,
       "teamName": "KT",
-      "games": 133,
-      "win": 80,
+      "games": 134,
+      "win": 81,
       "draw": 4,
       "lose": 49,
-      "wra": 0.62,
+      "wra": 0.623,
       "gameDiff": "0.0"
     },
     {
@@ -105,31 +105,31 @@
     {
       "rank": 5,
       "teamName": "두산",
-      "games": 134,
+      "games": 135,
       "win": 67,
       "draw": 5,
-      "lose": 62,
-      "wra": 0.519,
+      "lose": 63,
+      "wra": 0.515,
       "gameDiff": "0.0"
     },
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 133,
+      "games": 134,
       "win": 62,
       "draw": 2,
-      "lose": 69,
-      "wra": 0.473,
+      "lose": 70,
+      "wra": 0.47,
       "gameDiff": "0.0"
     },
     {
       "rank": 7,
       "teamName": "롯데",
-      "games": 132,
+      "games": 133,
       "win": 59,
       "draw": 2,
-      "lose": 71,
-      "wra": 0.454,
+      "lose": 72,
+      "wra": 0.45,
       "gameDiff": "0.0"
     },
     {
@@ -145,25 +145,41 @@
     {
       "rank": 9,
       "teamName": "한화",
-      "games": 134,
-      "win": 54,
+      "games": 135,
+      "win": 55,
       "draw": 4,
       "lose": 76,
-      "wra": 0.415,
+      "wra": 0.42,
       "gameDiff": "0.0"
     },
     {
       "rank": 10,
       "teamName": "키움",
-      "games": 136,
-      "win": 46,
+      "games": 137,
+      "win": 47,
       "draw": 4,
       "lose": 86,
-      "wra": 0.348,
+      "wra": 0.353,
       "gameDiff": "0.0"
     }
   ],
   "games": [
+    {
+      "id": "20260927LGHT02026",
+      "date": "2026-09-27",
+      "time": "17:00",
+      "stadium": "광주",
+      "away": "LG",
+      "home": "KIA",
+      "as": 0,
+      "hs": 0,
+      "status": "취소",
+      "code": "CANCEL",
+      "ap": "카라스코",
+      "hp": "시라카와",
+      "wp": "",
+      "lp": ""
+    },
     {
       "id": "20260927HHLT02026",
       "date": "2026-09-27",
@@ -171,14 +187,14 @@
       "stadium": "사직",
       "away": "한화",
       "home": "롯데",
-      "as": 3,
-      "hs": 0,
-      "status": "1회말",
-      "code": "STARTED",
+      "as": 6,
+      "hs": 2,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "이상규",
       "hp": "나균안",
-      "wp": "",
-      "lp": ""
+      "wp": "주현상",
+      "lp": "나균안"
     },
     {
       "id": "20260927KTOB02026",
@@ -187,30 +203,14 @@
       "stadium": "잠실",
       "away": "KT",
       "home": "두산",
-      "as": 3,
-      "hs": 0,
-      "status": "2회초",
-      "code": "STARTED",
+      "as": 12,
+      "hs": 6,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "배제성",
       "hp": "최승용",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20260927LGHT02026",
-      "date": "2026-09-27",
-      "time": "17:00",
-      "stadium": "광주",
-      "away": "LG",
-      "home": "KIA",
-      "as": 1,
-      "hs": 0,
-      "status": "2회말",
-      "code": "STARTED",
-      "ap": "카라스코",
-      "hp": "시라카와",
-      "wp": "",
-      "lp": ""
+      "wp": "배제성",
+      "lp": "최승용"
     },
     {
       "id": "20260927WONC02026",
@@ -219,14 +219,14 @@
       "stadium": "창원",
       "away": "키움",
       "home": "NC",
-      "as": 1,
-      "hs": 0,
-      "status": "2회초",
-      "code": "STARTED",
+      "as": 8,
+      "hs": 4,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "하영민",
       "hp": "클레빈저",
-      "wp": "",
-      "lp": ""
+      "wp": "하영민",
+      "lp": "이준혁"
     }
   ],
   "kt": {
@@ -331,5 +331,5 @@
       "oppName": "두산"
     }
   },
-  "updated": "2026-09-27T08:27:19.685Z"
+  "updated": "2026-09-27T14:12:53.823Z"
 }
