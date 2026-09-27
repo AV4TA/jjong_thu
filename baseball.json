@@ -1,15 +1,6 @@
 {
-  "updatedAt": "2026-09-27 18:52:50 (KST)",
-  "todayMatch": {
-    "gameId": "20260927KTOB02026",
-    "date": "2026-09-27",
-    "time": "17:00",
-    "opponent": "두산 베어스",
-    "isHome": false,
-    "stadium": "원정구장 (원정)",
-    "result": "scheduled",
-    "score": "VS"
-  },
+  "updatedAt": "2026-09-28 02:34:58 (KST)",
+  "todayMatch": null,
   "schedule": {
     "2026-03-28": {
       "gameId": "20260328KTLG02026",
@@ -1518,8 +1509,8 @@
       "opponent": "두산 베어스",
       "isHome": false,
       "stadium": "원정구장 (원정)",
-      "result": "scheduled",
-      "score": "VS"
+      "result": "win",
+      "score": "KT 12 : 6 두산"
     },
     "2026-09-29": {
       "gameId": "20260929KTHT02026",
