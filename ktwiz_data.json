@@ -1,9 +1,18 @@
 {
-  "todayMatch": null,
+  "todayMatch": {
+    "date": "2026-09-29",
+    "time": "18:30",
+    "stadium": "광주",
+    "opponent": "KIA",
+    "isHome": false,
+    "score": "VS",
+    "ktPitcher": "로건",
+    "oppPitcher": "올러"
+  },
   "todayLineup": {
-    "ktPitcher": "미정",
-    "oppPitcher": "미정",
-    "pitcher": "미정",
+    "ktPitcher": "로건",
+    "oppPitcher": "올러",
+    "pitcher": "로건",
     "batters": []
   },
   "rankings": [
@@ -108,11 +117,140 @@
       "gameDiff": "0.0"
     }
   ],
-  "games": [],
+  "games": [
+    {
+      "id": "20260929HHSS02026",
+      "date": "2026-09-29",
+      "time": "18:30",
+      "stadium": "대구",
+      "away": "한화",
+      "home": "삼성",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "박준영",
+      "hp": "페덱",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260929KTHT02026",
+      "date": "2026-09-29",
+      "time": "18:30",
+      "stadium": "광주",
+      "away": "KT",
+      "home": "KIA",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "로건",
+      "hp": "올러",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260929LGSK02026",
+      "date": "2026-09-29",
+      "time": "18:30",
+      "stadium": "문학",
+      "away": "LG",
+      "home": "SSG",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "톨허스트",
+      "hp": "아빌라",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260929NCOB02026",
+      "date": "2026-09-29",
+      "time": "18:30",
+      "stadium": "잠실",
+      "away": "NC",
+      "home": "두산",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "이재학",
+      "hp": "벤자민",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20260929WOLT02026",
+      "date": "2026-09-29",
+      "time": "18:30",
+      "stadium": "사직",
+      "away": "키움",
+      "home": "롯데",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "전준표",
+      "hp": "박세웅",
+      "wp": "",
+      "lp": ""
+    }
+  ],
   "kt": {
-    "gameId": null,
+    "gameId": "20260929KTHT02026",
     "lineup": null,
-    "starters": null
+    "starters": {
+      "kt": {
+        "name": "로건",
+        "era": "3.53",
+        "w": 6,
+        "l": 5,
+        "pitches": [
+          {
+            "type": "FAST",
+            "rt": 46.29999923706055,
+            "spd": 147
+          },
+          {
+            "type": "CUTT",
+            "rt": 18.299999237060547,
+            "spd": 139
+          },
+          {
+            "type": "CHUP",
+            "rt": 15.300000190734863,
+            "spd": 135
+          }
+        ]
+      },
+      "opp": {
+        "name": "올러",
+        "era": "2.81",
+        "w": 11,
+        "l": 9,
+        "pitches": [
+          {
+            "type": "FAST",
+            "rt": 45.29999923706055,
+            "spd": 148
+          },
+          {
+            "type": "SLID",
+            "rt": 30.799999237060547,
+            "spd": 133
+          },
+          {
+            "type": "CHUP",
+            "rt": 11.300000190734863,
+            "spd": 137
+          }
+        ]
+      },
+      "oppName": "KIA"
+    }
   },
-  "updated": "2026-09-28T08:52:16.130Z"
+  "updated": "2026-09-28T17:10:59.287Z"
 }
