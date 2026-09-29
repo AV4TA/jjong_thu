@@ -1,172 +1,126 @@
 {
   "todayMatch": {
-    "date": "2026-09-29",
+    "date": "2026-09-30",
     "time": "18:30",
     "stadium": "광주",
     "opponent": "KIA",
     "isHome": false,
     "score": "VS",
-    "ktPitcher": "로건",
-    "oppPitcher": "올러"
+    "ktPitcher": "대니엘",
+    "oppPitcher": "김태형"
   },
   "todayLineup": {
-    "ktPitcher": "로건",
-    "oppPitcher": "올러",
-    "pitcher": "로건",
-    "batters": [
-      {
-        "order": "1",
-        "name": "최원준",
-        "pos": "중견수"
-      },
-      {
-        "order": "2",
-        "name": "김현수",
-        "pos": "1루수"
-      },
-      {
-        "order": "3",
-        "name": "안현민",
-        "pos": "우익수"
-      },
-      {
-        "order": "4",
-        "name": "힐리어드",
-        "pos": "좌익수"
-      },
-      {
-        "order": "5",
-        "name": "장성우",
-        "pos": "지명타자"
-      },
-      {
-        "order": "6",
-        "name": "류현인",
-        "pos": "2루수"
-      },
-      {
-        "order": "7",
-        "name": "허경민",
-        "pos": "3루수"
-      },
-      {
-        "order": "8",
-        "name": "한승택",
-        "pos": "포수"
-      },
-      {
-        "order": "9",
-        "name": "장준원",
-        "pos": "유격수"
-      }
-    ]
+    "ktPitcher": "대니엘",
+    "oppPitcher": "김태형",
+    "pitcher": "대니엘",
+    "batters": []
   },
   "rankings": [
     {
       "rank": 1,
       "teamName": "KT",
-      "games": 134,
-      "win": 81,
+      "games": 135,
+      "win": 82,
       "draw": 4,
       "lose": 49,
-      "wra": 0.623,
+      "wra": 0.626,
       "gameDiff": "0.0"
     },
     {
       "rank": 2,
       "teamName": "삼성",
-      "games": 133,
-      "win": 78,
+      "games": 134,
+      "win": 79,
       "draw": 3,
       "lose": 52,
-      "wra": 0.6,
+      "wra": 0.603,
       "gameDiff": "0.0"
     },
     {
       "rank": 3,
       "teamName": "LG",
-      "games": 133,
+      "games": 134,
       "win": 75,
       "draw": 1,
-      "lose": 57,
-      "wra": 0.568,
+      "lose": 58,
+      "wra": 0.564,
       "gameDiff": "0.0"
     },
     {
       "rank": 4,
       "teamName": "KIA",
-      "games": 132,
+      "games": 133,
       "win": 72,
       "draw": 2,
-      "lose": 58,
-      "wra": 0.554,
+      "lose": 59,
+      "wra": 0.55,
       "gameDiff": "0.0"
     },
     {
       "rank": 5,
       "teamName": "두산",
-      "games": 135,
-      "win": 67,
+      "games": 136,
+      "win": 68,
       "draw": 5,
       "lose": 63,
-      "wra": 0.515,
+      "wra": 0.519,
       "gameDiff": "0.0"
     },
     {
       "rank": 6,
       "teamName": "NC",
-      "games": 134,
+      "games": 135,
       "win": 62,
       "draw": 2,
-      "lose": 70,
-      "wra": 0.47,
+      "lose": 71,
+      "wra": 0.466,
       "gameDiff": "0.0"
     },
     {
       "rank": 7,
       "teamName": "롯데",
-      "games": 133,
-      "win": 59,
+      "games": 134,
+      "win": 60,
       "draw": 2,
       "lose": 72,
-      "wra": 0.45,
+      "wra": 0.455,
       "gameDiff": "0.0"
     },
     {
       "rank": 8,
       "teamName": "SSG",
-      "games": 134,
-      "win": 58,
+      "games": 135,
+      "win": 59,
       "draw": 5,
       "lose": 71,
-      "wra": 0.45,
+      "wra": 0.454,
       "gameDiff": "0.0"
     },
     {
       "rank": 9,
       "teamName": "한화",
-      "games": 135,
+      "games": 136,
       "win": 55,
       "draw": 4,
-      "lose": 76,
-      "wra": 0.42,
+      "lose": 77,
+      "wra": 0.417,
       "gameDiff": "0.0"
     },
     {
       "rank": 10,
       "teamName": "키움",
-      "games": 137,
+      "games": 138,
       "win": 47,
       "draw": 4,
-      "lose": 86,
-      "wra": 0.353,
+      "lose": 87,
+      "wra": 0.351,
       "gameDiff": "0.0"
     }
   ],
   "games": [
     {
-      "id": "20260929HHSS02026",
-      "date": "2026-09-29",
+      "id": "20260930HHSS02026",
+      "date": "2026-09-30",
       "time": "18:30",
       "stadium": "대구",
       "away": "한화",
@@ -174,15 +128,15 @@
       "as": 0,
       "hs": 0,
       "status": "경기전",
-      "code": "READY",
-      "ap": "박준영",
-      "hp": "페덱",
+      "code": "BEFORE",
+      "ap": "화이트",
+      "hp": "후라도",
       "wp": "",
       "lp": ""
     },
     {
-      "id": "20260929KTHT02026",
-      "date": "2026-09-29",
+      "id": "20260930KTHT02026",
+      "date": "2026-09-30",
       "time": "18:30",
       "stadium": "광주",
       "away": "KT",
@@ -190,15 +144,15 @@
       "as": 0,
       "hs": 0,
       "status": "경기전",
-      "code": "READY",
-      "ap": "로건",
-      "hp": "올러",
+      "code": "BEFORE",
+      "ap": "대니엘",
+      "hp": "김태형",
       "wp": "",
       "lp": ""
     },
     {
-      "id": "20260929LGSK02026",
-      "date": "2026-09-29",
+      "id": "20260930LGSK02026",
+      "date": "2026-09-30",
       "time": "18:30",
       "stadium": "문학",
       "away": "LG",
@@ -206,15 +160,15 @@
       "as": 0,
       "hs": 0,
       "status": "경기전",
-      "code": "READY",
-      "ap": "톨허스트",
-      "hp": "아빌라",
+      "code": "BEFORE",
+      "ap": "박시원",
+      "hp": "김건우",
       "wp": "",
       "lp": ""
     },
     {
-      "id": "20260929NCOB02026",
-      "date": "2026-09-29",
+      "id": "20260930NCOB02026",
+      "date": "2026-09-30",
       "time": "18:30",
       "stadium": "잠실",
       "away": "NC",
@@ -222,15 +176,15 @@
       "as": 0,
       "hs": 0,
       "status": "경기전",
-      "code": "READY",
-      "ap": "이재학",
-      "hp": "벤자민",
+      "code": "BEFORE",
+      "ap": "라일리",
+      "hp": "잭로그",
       "wp": "",
       "lp": ""
     },
     {
-      "id": "20260929WOLT02026",
-      "date": "2026-09-29",
+      "id": "20260930WOLT02026",
+      "date": "2026-09-30",
       "time": "18:30",
       "stadium": "사직",
       "away": "키움",
@@ -238,114 +192,65 @@
       "as": 0,
       "hs": 0,
       "status": "경기전",
-      "code": "READY",
-      "ap": "전준표",
-      "hp": "박세웅",
+      "code": "BEFORE",
+      "ap": "김성진",
+      "hp": "로드리게스",
       "wp": "",
       "lp": ""
     }
   ],
   "kt": {
-    "gameId": "20260929KTHT02026",
-    "lineup": {
-      "starter": "로건",
-      "batters": [
-        {
-          "o": 1,
-          "name": "최원준",
-          "pos": "중견수"
-        },
-        {
-          "o": 2,
-          "name": "김현수",
-          "pos": "1루수"
-        },
-        {
-          "o": 3,
-          "name": "안현민",
-          "pos": "우익수"
-        },
-        {
-          "o": 4,
-          "name": "힐리어드",
-          "pos": "좌익수"
-        },
-        {
-          "o": 5,
-          "name": "장성우",
-          "pos": "지명타자"
-        },
-        {
-          "o": 6,
-          "name": "류현인",
-          "pos": "2루수"
-        },
-        {
-          "o": 7,
-          "name": "허경민",
-          "pos": "3루수"
-        },
-        {
-          "o": 8,
-          "name": "한승택",
-          "pos": "포수"
-        },
-        {
-          "o": 9,
-          "name": "장준원",
-          "pos": "유격수"
-        }
-      ]
-    },
+    "gameId": "20260930KTHT02026",
+    "lineup": null,
     "starters": {
       "kt": {
-        "name": "로건",
-        "era": "3.53",
-        "w": 6,
-        "l": 5,
+        "name": "대니엘",
+        "era": "2.05",
+        "w": 4,
+        "l": 2,
         "pitches": [
           {
             "type": "FAST",
-            "rt": 46.29999923706055,
-            "spd": 147
+            "rt": 25,
+            "spd": 145
           },
           {
-            "type": "CUTT",
-            "rt": 18.299999237060547,
-            "spd": 139
+            "type": "TWOS",
+            "rt": 24.200000762939453,
+            "spd": 145
           },
           {
             "type": "CHUP",
-            "rt": 15.300000190734863,
-            "spd": 135
+            "rt": 20.700000762939453,
+            "spd": 136
           }
         ]
       },
       "opp": {
-        "name": "올러",
-        "era": "2.81",
-        "w": 11,
-        "l": 9,
+        "name": "김태형",
+        "era": "5.40",
+        "w": 3,
+        "l": 4,
         "pitches": [
           {
             "type": "FAST",
-            "rt": 45.29999923706055,
-            "spd": 148
+            "rt": 47.29999923706055,
+            "spd": 147
           },
           {
             "type": "SLID",
-            "rt": 30.799999237060547,
-            "spd": 133
+            "rt": 21,
+            "spd": 137
           },
           {
-            "type": "CHUP",
-            "rt": 11.300000190734863,
-            "spd": 137
+            "type": "SWEE",
+            "rt": 16.899999618530273,
+            "spd": 127
           }
         ]
       },
       "oppName": "KIA"
     }
   },
-  "updated": "2026-09-29T08:51:50.361Z"
+  "updated": "2026-09-29T15:14:17.276Z"
 }
