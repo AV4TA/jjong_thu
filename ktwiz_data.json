@@ -1,9 +1,18 @@
 {
-  "todayMatch": null,
+  "todayMatch": {
+    "date": "2026-10-03",
+    "time": "14:00",
+    "stadium": "수원",
+    "opponent": "롯데",
+    "isHome": true,
+    "score": "VS",
+    "ktPitcher": "고영표",
+    "oppPitcher": "비슬리"
+  },
   "todayLineup": {
-    "ktPitcher": "미정",
-    "oppPitcher": "미정",
-    "pitcher": "미정",
+    "ktPitcher": "고영표",
+    "oppPitcher": "비슬리",
+    "pitcher": "고영표",
     "batters": []
   },
   "rankings": [
@@ -108,11 +117,140 @@
       "gameDiff": "0.0"
     }
   ],
-  "games": [],
+  "games": [
+    {
+      "id": "20261003HTLG02026",
+      "date": "2026-10-03",
+      "time": "14:00",
+      "stadium": "잠실",
+      "away": "KIA",
+      "home": "LG",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "네일",
+      "hp": "카라스코",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20261003LTKT02026",
+      "date": "2026-10-03",
+      "time": "14:00",
+      "stadium": "수원",
+      "away": "롯데",
+      "home": "KT",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "비슬리",
+      "hp": "고영표",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20261003OBSS02026",
+      "date": "2026-10-03",
+      "time": "14:00",
+      "stadium": "대구",
+      "away": "두산",
+      "home": "삼성",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "최승용",
+      "hp": "최원태",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20261003SKNC02026",
+      "date": "2026-10-03",
+      "time": "14:00",
+      "stadium": "창원",
+      "away": "SSG",
+      "home": "NC",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "이로운",
+      "hp": "구창모",
+      "wp": "",
+      "lp": ""
+    },
+    {
+      "id": "20261003WOHH02026",
+      "date": "2026-10-03",
+      "time": "14:00",
+      "stadium": "대전",
+      "away": "키움",
+      "home": "한화",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "하영민",
+      "hp": "이상규",
+      "wp": "",
+      "lp": ""
+    }
+  ],
   "kt": {
-    "gameId": null,
+    "gameId": "20261003LTKT02026",
     "lineup": null,
-    "starters": null
+    "starters": {
+      "kt": {
+        "name": "고영표",
+        "era": "3.57",
+        "w": 13,
+        "l": 7,
+        "pitches": [
+          {
+            "type": "CHUP",
+            "rt": 41.900001525878906,
+            "spd": 119
+          },
+          {
+            "type": "TWOS",
+            "rt": 34.29999923706055,
+            "spd": 134
+          },
+          {
+            "type": "SWEE",
+            "rt": 12.199999809265137,
+            "spd": 118
+          }
+        ]
+      },
+      "opp": {
+        "name": "비슬리",
+        "era": "4.81",
+        "w": 10,
+        "l": 7,
+        "pitches": [
+          {
+            "type": "FAST",
+            "rt": 32.599998474121094,
+            "spd": 150
+          },
+          {
+            "type": "SWEE",
+            "rt": 32.400001525878906,
+            "spd": 133
+          },
+          {
+            "type": "CUTT",
+            "rt": 19.299999237060547,
+            "spd": 143
+          }
+        ]
+      },
+      "oppName": "롯데"
+    }
   },
-  "updated": "2026-10-02T08:49:12.598Z"
+  "updated": "2026-10-02T15:11:54.329Z"
 }
