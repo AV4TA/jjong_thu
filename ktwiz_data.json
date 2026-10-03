@@ -5,7 +5,7 @@
     "stadium": "수원",
     "opponent": "롯데",
     "isHome": true,
-    "score": "VS",
+    "score": "KT 5 : 0 롯데",
     "ktPitcher": "고영표",
     "oppPitcher": "비슬리"
   },
@@ -13,27 +13,73 @@
     "ktPitcher": "고영표",
     "oppPitcher": "비슬리",
     "pitcher": "고영표",
-    "batters": []
+    "batters": [
+      {
+        "order": "1",
+        "name": "최원준",
+        "pos": "우익수"
+      },
+      {
+        "order": "2",
+        "name": "김민혁",
+        "pos": "좌익수"
+      },
+      {
+        "order": "3",
+        "name": "안현민",
+        "pos": "지명타자"
+      },
+      {
+        "order": "4",
+        "name": "힐리어드",
+        "pos": "중견수"
+      },
+      {
+        "order": "5",
+        "name": "김현수",
+        "pos": "1루수"
+      },
+      {
+        "order": "6",
+        "name": "류현인",
+        "pos": "2루수"
+      },
+      {
+        "order": "7",
+        "name": "허경민",
+        "pos": "3루수"
+      },
+      {
+        "order": "8",
+        "name": "한승택",
+        "pos": "포수"
+      },
+      {
+        "order": "9",
+        "name": "권동진",
+        "pos": "유격수"
+      }
+    ]
   },
   "rankings": [
     {
       "rank": 1,
       "teamName": "KT",
-      "games": 137,
-      "win": 84,
+      "games": 138,
+      "win": 85,
       "draw": 4,
       "lose": 49,
-      "wra": 0.632,
+      "wra": 0.634,
       "gameDiff": "0.0"
     },
     {
       "rank": 2,
       "teamName": "삼성",
-      "games": 136,
-      "win": 81,
+      "games": 137,
+      "win": 82,
       "draw": 3,
       "lose": 52,
-      "wra": 0.609,
+      "wra": 0.612,
       "gameDiff": "0.0"
     },
     {
@@ -59,61 +105,61 @@
     {
       "rank": 5,
       "teamName": "두산",
-      "games": 138,
+      "games": 139,
       "win": 70,
       "draw": 5,
-      "lose": 63,
-      "wra": 0.526,
+      "lose": 64,
+      "wra": 0.522,
       "gameDiff": "0.0"
     },
     {
       "rank": 6,
-      "teamName": "SSG",
-      "games": 137,
-      "win": 61,
-      "draw": 5,
-      "lose": 71,
-      "wra": 0.462,
+      "teamName": "NC",
+      "games": 138,
+      "win": 63,
+      "draw": 2,
+      "lose": 73,
+      "wra": 0.463,
       "gameDiff": "0.0"
     },
     {
       "rank": 7,
-      "teamName": "NC",
-      "games": 137,
-      "win": 62,
-      "draw": 2,
-      "lose": 73,
+      "teamName": "SSG",
+      "games": 138,
+      "win": 61,
+      "draw": 5,
+      "lose": 72,
       "wra": 0.459,
       "gameDiff": "0.0"
     },
     {
       "rank": 8,
       "teamName": "롯데",
-      "games": 135,
+      "games": 136,
       "win": 61,
       "draw": 2,
-      "lose": 72,
-      "wra": 0.459,
+      "lose": 73,
+      "wra": 0.455,
       "gameDiff": "0.0"
     },
     {
       "rank": 9,
       "teamName": "한화",
-      "games": 138,
+      "games": 139,
       "win": 55,
       "draw": 4,
-      "lose": 79,
-      "wra": 0.41,
+      "lose": 80,
+      "wra": 0.407,
       "gameDiff": "0.0"
     },
     {
       "rank": 10,
       "teamName": "키움",
-      "games": 139,
-      "win": 47,
+      "games": 140,
+      "win": 48,
       "draw": 4,
       "lose": 88,
-      "wra": 0.348,
+      "wra": 0.353,
       "gameDiff": "0.0"
     }
   ],
@@ -125,10 +171,10 @@
       "stadium": "잠실",
       "away": "KIA",
       "home": "LG",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 5,
+      "hs": 4,
+      "status": "9회초",
+      "code": "STARTED",
       "ap": "네일",
       "hp": "카라스코",
       "wp": "",
@@ -142,13 +188,13 @@
       "away": "롯데",
       "home": "KT",
       "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "hs": 5,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "비슬리",
       "hp": "고영표",
-      "wp": "",
-      "lp": ""
+      "wp": "고영표",
+      "lp": "비슬리"
     },
     {
       "id": "20261003OBSS02026",
@@ -157,14 +203,14 @@
       "stadium": "대구",
       "away": "두산",
       "home": "삼성",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 4,
+      "hs": 6,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "최승용",
       "hp": "최원태",
-      "wp": "",
-      "lp": ""
+      "wp": "백정현",
+      "lp": "최승용"
     },
     {
       "id": "20261003SKNC02026",
@@ -173,14 +219,14 @@
       "stadium": "창원",
       "away": "SSG",
       "home": "NC",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 1,
+      "hs": 13,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "이로운",
       "hp": "구창모",
-      "wp": "",
-      "lp": ""
+      "wp": "구창모",
+      "lp": "이로운"
     },
     {
       "id": "20261003WOHH02026",
@@ -189,19 +235,68 @@
       "stadium": "대전",
       "away": "키움",
       "home": "한화",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 7,
+      "hs": 2,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "하영민",
       "hp": "이상규",
-      "wp": "",
-      "lp": ""
+      "wp": "하영민",
+      "lp": "이상규"
     }
   ],
   "kt": {
     "gameId": "20261003LTKT02026",
-    "lineup": null,
+    "lineup": {
+      "starter": "고영표",
+      "batters": [
+        {
+          "o": 1,
+          "name": "최원준",
+          "pos": "우익수"
+        },
+        {
+          "o": 2,
+          "name": "김민혁",
+          "pos": "좌익수"
+        },
+        {
+          "o": 3,
+          "name": "안현민",
+          "pos": "지명타자"
+        },
+        {
+          "o": 4,
+          "name": "힐리어드",
+          "pos": "중견수"
+        },
+        {
+          "o": 5,
+          "name": "김현수",
+          "pos": "1루수"
+        },
+        {
+          "o": 6,
+          "name": "류현인",
+          "pos": "2루수"
+        },
+        {
+          "o": 7,
+          "name": "허경민",
+          "pos": "3루수"
+        },
+        {
+          "o": 8,
+          "name": "한승택",
+          "pos": "포수"
+        },
+        {
+          "o": 9,
+          "name": "권동진",
+          "pos": "유격수"
+        }
+      ]
+    },
     "starters": {
       "kt": {
         "name": "고영표",
@@ -252,5 +347,5 @@
       "oppName": "롯데"
     }
   },
-  "updated": "2026-10-02T19:36:33.445Z"
+  "updated": "2026-10-03T08:26:25.932Z"
 }
