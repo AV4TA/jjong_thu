@@ -85,21 +85,21 @@
     {
       "rank": 3,
       "teamName": "LG",
-      "games": 136,
+      "games": 137,
       "win": 75,
       "draw": 1,
-      "lose": 60,
-      "wra": 0.556,
+      "lose": 61,
+      "wra": 0.551,
       "gameDiff": "0.0"
     },
     {
       "rank": 4,
       "teamName": "KIA",
-      "games": 135,
-      "win": 72,
+      "games": 136,
+      "win": 73,
       "draw": 2,
       "lose": 61,
-      "wra": 0.541,
+      "wra": 0.545,
       "gameDiff": "0.0"
     },
     {
@@ -173,12 +173,12 @@
       "home": "LG",
       "as": 5,
       "hs": 4,
-      "status": "9회초",
-      "code": "STARTED",
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "네일",
       "hp": "카라스코",
-      "wp": "",
-      "lp": ""
+      "wp": "전상현",
+      "lp": "손주영"
     },
     {
       "id": "20261003LTKT02026",
@@ -347,5 +347,5 @@
       "oppName": "롯데"
     }
   },
-  "updated": "2026-10-03T08:26:25.932Z"
+  "updated": "2026-10-03T13:36:48.582Z"
 }
