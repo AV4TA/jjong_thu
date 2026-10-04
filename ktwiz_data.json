@@ -5,7 +5,7 @@
     "stadium": "수원",
     "opponent": "롯데",
     "isHome": true,
-    "score": "VS",
+    "score": "KT 2 : 2 롯데",
     "ktPitcher": "배제성",
     "oppPitcher": "나균안"
   },
@@ -65,9 +65,9 @@
     {
       "rank": 1,
       "teamName": "KT",
-      "games": 138,
+      "games": 139,
       "win": 85,
-      "draw": 4,
+      "draw": 5,
       "lose": 49,
       "wra": 0.634,
       "gameDiff": "0.0"
@@ -84,22 +84,22 @@
     },
     {
       "rank": 3,
-      "teamName": "LG",
+      "teamName": "KIA",
       "games": 137,
-      "win": 75,
-      "draw": 1,
+      "win": 74,
+      "draw": 2,
       "lose": 61,
-      "wra": 0.551,
+      "wra": 0.548,
       "gameDiff": "0.0"
     },
     {
       "rank": 4,
-      "teamName": "KIA",
-      "games": 136,
-      "win": 73,
-      "draw": 2,
-      "lose": 61,
-      "wra": 0.545,
+      "teamName": "LG",
+      "games": 138,
+      "win": 75,
+      "draw": 1,
+      "lose": 62,
+      "wra": 0.547,
       "gameDiff": "0.0"
     },
     {
@@ -135,9 +135,9 @@
     {
       "rank": 8,
       "teamName": "롯데",
-      "games": 136,
+      "games": 137,
       "win": 61,
-      "draw": 2,
+      "draw": 3,
       "lose": 73,
       "wra": 0.455,
       "gameDiff": "0.0"
@@ -174,27 +174,11 @@
       "as": 6,
       "hs": 5,
       "status": "9회말",
-      "code": "STARTED",
+      "code": "RESULT",
       "ap": "시라카와",
       "hp": "김윤식",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20261004SKNC02026",
-      "date": "2026-10-04",
-      "time": "14:00",
-      "stadium": "창원",
-      "away": "SSG",
-      "home": "NC",
-      "as": 6,
-      "hs": 2,
-      "status": "9회말",
-      "code": "ENDED",
-      "ap": "최민준",
-      "hp": "클레빈저",
-      "wp": "",
-      "lp": ""
+      "wp": "정해영",
+      "lp": "우강훈"
     },
     {
       "id": "20261004OBSS02026",
@@ -211,6 +195,22 @@
       "hp": "이승현",
       "wp": "벤자민",
       "lp": "이승현"
+    },
+    {
+      "id": "20261004SKNC02026",
+      "date": "2026-10-04",
+      "time": "14:00",
+      "stadium": "창원",
+      "away": "SSG",
+      "home": "NC",
+      "as": 6,
+      "hs": 2,
+      "status": "9회말",
+      "code": "RESULT",
+      "ap": "최민준",
+      "hp": "클레빈저",
+      "wp": "김민",
+      "lp": "배재환"
     },
     {
       "id": "20261004WOHH02026",
@@ -235,10 +235,10 @@
       "stadium": "수원",
       "away": "롯데",
       "home": "KT",
-      "as": 0,
+      "as": 2,
       "hs": 2,
-      "status": "3회초",
-      "code": "STARTED",
+      "status": "11회말",
+      "code": "RESULT",
       "ap": "나균안",
       "hp": "배제성",
       "wp": "",
@@ -347,5 +347,5 @@
       "oppName": "롯데"
     }
   },
-  "updated": "2026-10-04T08:39:11.185Z"
+  "updated": "2026-10-04T14:30:37.093Z"
 }
