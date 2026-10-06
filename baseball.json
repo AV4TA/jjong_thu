@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-10-05 20:15:03 (KST)",
+  "updatedAt": "2026-10-06 20:04:39 (KST)",
   "todayMatch": {
-    "gameId": "20261005LTKT02026",
-    "date": "2026-10-05",
-    "time": "14:00",
-    "opponent": "롯데 자이언츠",
-    "isHome": true,
-    "stadium": "수원 위즈파크 (홈)",
-    "result": "win",
-    "score": "KT 9 : 0 롯데"
+    "gameId": "20261006KTWO02026",
+    "date": "2026-10-06",
+    "time": "18:30",
+    "opponent": "키움 히어로즈",
+    "isHome": false,
+    "stadium": "원정구장 (원정)",
+    "result": "scheduled",
+    "score": "VS"
   },
   "schedule": {
     "2026-03-28": {
