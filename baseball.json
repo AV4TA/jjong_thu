@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06 20:04:39 (KST)",
+  "updatedAt": "2026-10-06 22:13:03 (KST)",
   "todayMatch": {
     "gameId": "20261006KTWO02026",
     "date": "2026-10-06",
@@ -7,8 +7,8 @@
     "opponent": "키움 히어로즈",
     "isHome": false,
     "stadium": "원정구장 (원정)",
-    "result": "scheduled",
-    "score": "VS"
+    "result": "win",
+    "score": "KT 10 : 1 키움"
   },
   "schedule": {
     "2026-03-28": {
@@ -1588,8 +1588,8 @@
       "opponent": "키움 히어로즈",
       "isHome": false,
       "stadium": "원정구장 (원정)",
-      "result": "scheduled",
-      "score": "VS"
+      "result": "win",
+      "score": "KT 10 : 1 키움"
     },
     "2026-10-07": {
       "gameId": "20261007SSKT02026",
