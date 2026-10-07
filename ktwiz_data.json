@@ -1,351 +1,118 @@
 {
-  "todayMatch": {
-    "date": "2026-10-07",
-    "time": "18:30",
-    "stadium": "수원",
-    "opponent": "삼성",
-    "isHome": true,
-    "score": "VS",
-    "ktPitcher": "소형준",
-    "oppPitcher": "원태인"
-  },
+  "todayMatch": null,
   "todayLineup": {
-    "ktPitcher": "소형준",
-    "oppPitcher": "원태인",
-    "pitcher": "소형준",
-    "batters": [
-      {
-        "order": "1",
-        "name": "최원준",
-        "pos": "지명타자"
-      },
-      {
-        "order": "2",
-        "name": "김민혁",
-        "pos": "좌익수"
-      },
-      {
-        "order": "3",
-        "name": "안현민",
-        "pos": "우익수"
-      },
-      {
-        "order": "4",
-        "name": "힐리어드",
-        "pos": "중견수"
-      },
-      {
-        "order": "5",
-        "name": "김현수",
-        "pos": "1루수"
-      },
-      {
-        "order": "6",
-        "name": "류현인",
-        "pos": "2루수"
-      },
-      {
-        "order": "7",
-        "name": "허경민",
-        "pos": "3루수"
-      },
-      {
-        "order": "8",
-        "name": "조대현",
-        "pos": "포수"
-      },
-      {
-        "order": "9",
-        "name": "권동진",
-        "pos": "유격수"
-      }
-    ]
+    "ktPitcher": "미정",
+    "oppPitcher": "미정",
+    "pitcher": "미정",
+    "batters": []
   },
   "rankings": [
     {
       "rank": 1,
       "teamName": "KT",
-      "games": 141,
-      "win": 87,
+      "games": 142,
+      "win": 88,
       "draw": 5,
       "lose": 49,
-      "wra": 0.64,
+      "wra": 0.642,
       "gameDiff": "0.0"
     },
     {
       "rank": 2,
       "teamName": "삼성",
-      "games": 140,
+      "games": 141,
       "win": 83,
       "draw": 3,
-      "lose": 54,
-      "wra": 0.606,
+      "lose": 55,
+      "wra": 0.601,
       "gameDiff": "0.0"
     },
     {
       "rank": 3,
       "teamName": "KIA",
-      "games": 139,
-      "win": 75,
+      "games": 140,
+      "win": 76,
       "draw": 2,
       "lose": 62,
-      "wra": 0.547,
+      "wra": 0.551,
       "gameDiff": "0.0"
     },
     {
       "rank": 4,
       "teamName": "LG",
-      "games": 140,
-      "win": 76,
+      "games": 141,
+      "win": 77,
       "draw": 1,
       "lose": 63,
-      "wra": 0.547,
+      "wra": 0.55,
       "gameDiff": "0.0"
     },
     {
       "rank": 5,
       "teamName": "두산",
-      "games": 142,
+      "games": 143,
       "win": 73,
       "draw": 5,
-      "lose": 64,
-      "wra": 0.533,
+      "lose": 65,
+      "wra": 0.529,
       "gameDiff": "0.0"
     },
     {
       "rank": 6,
       "teamName": "SSG",
-      "games": 141,
-      "win": 63,
+      "games": 142,
+      "win": 64,
       "draw": 5,
       "lose": 73,
-      "wra": 0.463,
+      "wra": 0.467,
       "gameDiff": "0.0"
     },
     {
       "rank": 7,
       "teamName": "NC",
-      "games": 141,
+      "games": 142,
       "win": 63,
       "draw": 2,
-      "lose": 76,
-      "wra": 0.453,
+      "lose": 77,
+      "wra": 0.45,
       "gameDiff": "0.0"
     },
     {
       "rank": 8,
       "teamName": "롯데",
-      "games": 139,
+      "games": 140,
       "win": 61,
       "draw": 3,
-      "lose": 75,
-      "wra": 0.449,
+      "lose": 76,
+      "wra": 0.445,
       "gameDiff": "0.0"
     },
     {
       "rank": 9,
       "teamName": "한화",
-      "games": 142,
+      "games": 143,
       "win": 57,
       "draw": 4,
-      "lose": 81,
-      "wra": 0.413,
+      "lose": 82,
+      "wra": 0.41,
       "gameDiff": "0.0"
     },
     {
       "rank": 10,
       "teamName": "키움",
-      "games": 143,
-      "win": 49,
+      "games": 144,
+      "win": 50,
       "draw": 4,
       "lose": 90,
-      "wra": 0.353,
+      "wra": 0.357,
       "gameDiff": "0.0"
     }
   ],
-  "games": [
-    {
-      "id": "20261007HHWO02026",
-      "date": "2026-10-07",
-      "time": "18:30",
-      "stadium": "고척",
-      "away": "한화",
-      "home": "키움",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
-      "ap": "정우주",
-      "hp": "김성진",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20261007HTLT02026",
-      "date": "2026-10-07",
-      "time": "18:30",
-      "stadium": "사직",
-      "away": "KIA",
-      "home": "롯데",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
-      "ap": "양현종",
-      "hp": "김태균",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20261007NCSK02026",
-      "date": "2026-10-07",
-      "time": "18:30",
-      "stadium": "문학",
-      "away": "NC",
-      "home": "SSG",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
-      "ap": "송명기",
-      "hp": "김민준",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20261007OBLG02026",
-      "date": "2026-10-07",
-      "time": "18:30",
-      "stadium": "잠실",
-      "away": "두산",
-      "home": "LG",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
-      "ap": "최민석",
-      "hp": "임찬규",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20261007SSKT02026",
-      "date": "2026-10-07",
-      "time": "18:30",
-      "stadium": "수원",
-      "away": "삼성",
-      "home": "KT",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "READY",
-      "ap": "원태인",
-      "hp": "소형준",
-      "wp": "",
-      "lp": ""
-    }
-  ],
+  "games": [],
   "kt": {
-    "gameId": "20261007SSKT02026",
-    "lineup": {
-      "starter": "소형준",
-      "batters": [
-        {
-          "o": 1,
-          "name": "최원준",
-          "pos": "지명타자"
-        },
-        {
-          "o": 2,
-          "name": "김민혁",
-          "pos": "좌익수"
-        },
-        {
-          "o": 3,
-          "name": "안현민",
-          "pos": "우익수"
-        },
-        {
-          "o": 4,
-          "name": "힐리어드",
-          "pos": "중견수"
-        },
-        {
-          "o": 5,
-          "name": "김현수",
-          "pos": "1루수"
-        },
-        {
-          "o": 6,
-          "name": "류현인",
-          "pos": "2루수"
-        },
-        {
-          "o": 7,
-          "name": "허경민",
-          "pos": "3루수"
-        },
-        {
-          "o": 8,
-          "name": "조대현",
-          "pos": "포수"
-        },
-        {
-          "o": 9,
-          "name": "권동진",
-          "pos": "유격수"
-        }
-      ]
-    },
-    "starters": {
-      "kt": {
-        "name": "소형준",
-        "era": "3.37",
-        "w": 8,
-        "l": 3,
-        "pitches": [
-          {
-            "type": "TWOS",
-            "rt": 47.900001525878906,
-            "spd": 144
-          },
-          {
-            "type": "CUTT",
-            "rt": 23.600000381469727,
-            "spd": 140
-          },
-          {
-            "type": "CHUP",
-            "rt": 18.600000381469727,
-            "spd": 131
-          }
-        ]
-      },
-      "opp": {
-        "name": "원태인",
-        "era": "4.55",
-        "w": 7,
-        "l": 8,
-        "pitches": [
-          {
-            "type": "FAST",
-            "rt": 39,
-            "spd": 145
-          },
-          {
-            "type": "CHUP",
-            "rt": 24.200000762939453,
-            "spd": 128
-          },
-          {
-            "type": "SLID",
-            "rt": 16.5,
-            "spd": 131
-          }
-        ]
-      },
-      "oppName": "삼성"
-    }
+    "gameId": null,
+    "lineup": null,
+    "starters": null
   },
-  "updated": "2026-10-07T09:03:44.084Z"
+  "updated": "2026-10-07T15:54:53.689Z"
 }
