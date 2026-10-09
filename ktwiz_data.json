@@ -20,31 +20,31 @@
     {
       "rank": 2,
       "teamName": "삼성",
-      "games": 141,
+      "games": 142,
       "win": 83,
       "draw": 3,
-      "lose": 55,
-      "wra": 0.601,
+      "lose": 56,
+      "wra": 0.597,
       "gameDiff": "0.0"
     },
     {
       "rank": 3,
       "teamName": "KIA",
-      "games": 140,
-      "win": 76,
+      "games": 141,
+      "win": 77,
       "draw": 2,
       "lose": 62,
-      "wra": 0.551,
+      "wra": 0.554,
       "gameDiff": "0.0"
     },
     {
       "rank": 4,
       "teamName": "LG",
-      "games": 141,
+      "games": 142,
       "win": 77,
       "draw": 1,
-      "lose": 63,
-      "wra": 0.55,
+      "lose": 64,
+      "wra": 0.546,
       "gameDiff": "0.0"
     },
     {
@@ -60,31 +60,31 @@
     {
       "rank": 6,
       "teamName": "SSG",
-      "games": 142,
-      "win": 64,
+      "games": 143,
+      "win": 65,
       "draw": 5,
       "lose": 73,
-      "wra": 0.467,
+      "wra": 0.471,
       "gameDiff": "0.0"
     },
     {
       "rank": 7,
-      "teamName": "NC",
-      "games": 142,
-      "win": 63,
-      "draw": 2,
-      "lose": 77,
-      "wra": 0.45,
+      "teamName": "롯데",
+      "games": 141,
+      "win": 62,
+      "draw": 3,
+      "lose": 76,
+      "wra": 0.449,
       "gameDiff": "0.0"
     },
     {
       "rank": 8,
-      "teamName": "롯데",
-      "games": 140,
-      "win": 61,
-      "draw": 3,
-      "lose": 76,
-      "wra": 0.445,
+      "teamName": "NC",
+      "games": 143,
+      "win": 63,
+      "draw": 2,
+      "lose": 78,
+      "wra": 0.447,
       "gameDiff": "0.0"
     },
     {
@@ -116,14 +116,14 @@
       "stadium": "창원",
       "away": "KIA",
       "home": "NC",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 7,
+      "hs": 2,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "네일",
       "hp": "구창모",
-      "wp": "",
-      "lp": ""
+      "wp": "네일",
+      "lp": "구창모"
     },
     {
       "id": "20261009LGLT02026",
@@ -132,14 +132,14 @@
       "stadium": "사직",
       "away": "LG",
       "home": "롯데",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 1,
+      "hs": 9,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "카라스코",
       "hp": "김한결",
-      "wp": "",
-      "lp": ""
+      "wp": "최준용",
+      "lp": "카라스코"
     },
     {
       "id": "20261009SSSK02026",
@@ -148,14 +148,14 @@
       "stadium": "문학",
       "away": "삼성",
       "home": "SSG",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 1,
+      "hs": 3,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "사토시",
       "hp": "이로운",
-      "wp": "",
-      "lp": ""
+      "wp": "이로운",
+      "lp": "사토시"
     }
   ],
   "kt": {
@@ -163,5 +163,5 @@
     "lineup": null,
     "starters": null
   },
-  "updated": "2026-10-08T20:17:59.077Z"
+  "updated": "2026-10-09T09:26:12.637Z"
 }
