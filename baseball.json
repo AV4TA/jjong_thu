@@ -1,6 +1,15 @@
 {
-  "updatedAt": "2026-10-10 19:27:51 (KST)",
-  "todayMatch": null,
+  "updatedAt": "2026-10-11 02:40:35 (KST)",
+  "todayMatch": {
+    "gameId": "20261011KTSS02026",
+    "date": "2026-10-11",
+    "time": "14:00",
+    "opponent": "삼성 라이온즈",
+    "isHome": false,
+    "stadium": "원정구장 (원정)",
+    "result": "scheduled",
+    "score": "VS"
+  },
   "schedule": {
     "2026-03-28": {
       "gameId": "20260328KTLG02026",
