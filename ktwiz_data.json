@@ -30,21 +30,21 @@
     {
       "rank": 3,
       "teamName": "KIA",
-      "games": 141,
-      "win": 77,
+      "games": 142,
+      "win": 78,
       "draw": 2,
       "lose": 62,
-      "wra": 0.554,
+      "wra": 0.557,
       "gameDiff": "0.0"
     },
     {
       "rank": 4,
       "teamName": "LG",
-      "games": 142,
-      "win": 77,
+      "games": 143,
+      "win": 78,
       "draw": 1,
       "lose": 64,
-      "wra": 0.546,
+      "wra": 0.549,
       "gameDiff": "0.0"
     },
     {
@@ -60,41 +60,41 @@
     {
       "rank": 6,
       "teamName": "SSG",
-      "games": 143,
+      "games": 144,
       "win": 65,
       "draw": 5,
-      "lose": 73,
-      "wra": 0.471,
+      "lose": 74,
+      "wra": 0.468,
       "gameDiff": "0.0"
     },
     {
       "rank": 7,
-      "teamName": "롯데",
-      "games": 141,
-      "win": 62,
-      "draw": 3,
-      "lose": 76,
-      "wra": 0.449,
+      "teamName": "NC",
+      "games": 144,
+      "win": 64,
+      "draw": 2,
+      "lose": 78,
+      "wra": 0.451,
       "gameDiff": "0.0"
     },
     {
       "rank": 8,
-      "teamName": "NC",
-      "games": 143,
-      "win": 63,
-      "draw": 2,
-      "lose": 78,
-      "wra": 0.447,
+      "teamName": "롯데",
+      "games": 142,
+      "win": 62,
+      "draw": 3,
+      "lose": 77,
+      "wra": 0.446,
       "gameDiff": "0.0"
     },
     {
       "rank": 9,
       "teamName": "한화",
-      "games": 143,
+      "games": 144,
       "win": 57,
       "draw": 4,
-      "lose": 82,
-      "wra": 0.41,
+      "lose": 83,
+      "wra": 0.407,
       "gameDiff": "0.0"
     },
     {
@@ -119,11 +119,11 @@
       "as": 4,
       "hs": 3,
       "status": "10회말",
-      "code": "STARTED",
+      "code": "RESULT",
       "ap": "톨허스트",
       "hp": "나균안",
-      "wp": "",
-      "lp": ""
+      "wp": "이우찬",
+      "lp": "이이무라"
     },
     {
       "id": "20261010NCHH02026",
@@ -132,14 +132,14 @@
       "stadium": "대전",
       "away": "NC",
       "home": "한화",
-      "as": 0,
-      "hs": 1,
-      "status": "3회초",
-      "code": "STARTED",
+      "as": 9,
+      "hs": 8,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "클레빈저",
       "hp": "황준서",
-      "wp": "",
-      "lp": ""
+      "wp": "클레빈저",
+      "lp": "황준서"
     },
     {
       "id": "20261010SKHT02026",
@@ -148,14 +148,14 @@
       "stadium": "광주",
       "away": "SSG",
       "home": "KIA",
-      "as": 2,
-      "hs": 2,
-      "status": "3회초",
-      "code": "STARTED",
+      "as": 5,
+      "hs": 8,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "최민준",
       "hp": "시라카와",
-      "wp": "",
-      "lp": ""
+      "wp": "이의리",
+      "lp": "최민준"
     }
   ],
   "kt": {
@@ -163,5 +163,5 @@
     "lineup": null,
     "starters": null
   },
-  "updated": "2026-10-10T08:47:37.077Z"
+  "updated": "2026-10-10T14:54:50.203Z"
 }
