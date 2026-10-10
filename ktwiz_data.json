@@ -1,9 +1,18 @@
 {
-  "todayMatch": null,
+  "todayMatch": {
+    "date": "2026-10-11",
+    "time": "14:00",
+    "stadium": "대구",
+    "opponent": "삼성",
+    "isHome": false,
+    "score": "VS",
+    "ktPitcher": "고영표",
+    "oppPitcher": "후라도"
+  },
   "todayLineup": {
-    "ktPitcher": "미정",
-    "oppPitcher": "미정",
-    "pitcher": "미정",
+    "ktPitcher": "고영표",
+    "oppPitcher": "후라도",
+    "pitcher": "고영표",
     "batters": []
   },
   "rankings": [
@@ -110,58 +119,90 @@
   ],
   "games": [
     {
-      "id": "20261010LGLT02026",
-      "date": "2026-10-10",
+      "id": "20261011KTSS02026",
+      "date": "2026-10-11",
       "time": "14:00",
-      "stadium": "사직",
-      "away": "LG",
-      "home": "롯데",
-      "as": 4,
-      "hs": 3,
-      "status": "10회말",
-      "code": "RESULT",
-      "ap": "톨허스트",
-      "hp": "나균안",
-      "wp": "이우찬",
-      "lp": "이이무라"
+      "stadium": "대구",
+      "away": "KT",
+      "home": "삼성",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "고영표",
+      "hp": "후라도",
+      "wp": "",
+      "lp": ""
     },
     {
-      "id": "20261010NCHH02026",
-      "date": "2026-10-10",
-      "time": "17:00",
-      "stadium": "대전",
-      "away": "NC",
-      "home": "한화",
-      "as": 9,
-      "hs": 8,
-      "status": "9회말",
-      "code": "RESULT",
-      "ap": "클레빈저",
-      "hp": "황준서",
-      "wp": "클레빈저",
-      "lp": "황준서"
-    },
-    {
-      "id": "20261010SKHT02026",
-      "date": "2026-10-10",
-      "time": "17:00",
+      "id": "20261011LTHT02026",
+      "date": "2026-10-11",
+      "time": "14:00",
       "stadium": "광주",
-      "away": "SSG",
+      "away": "롯데",
       "home": "KIA",
-      "as": 5,
-      "hs": 8,
-      "status": "9회초",
-      "code": "RESULT",
-      "ap": "최민준",
-      "hp": "시라카와",
-      "wp": "이의리",
-      "lp": "최민준"
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "김진욱",
+      "hp": "올러",
+      "wp": "",
+      "lp": ""
     }
   ],
   "kt": {
-    "gameId": null,
+    "gameId": "20261011KTSS02026",
     "lineup": null,
-    "starters": null
+    "starters": {
+      "kt": {
+        "name": "고영표",
+        "era": "3.38",
+        "w": 14,
+        "l": 7,
+        "pitches": [
+          {
+            "type": "CHUP",
+            "rt": 41.900001525878906,
+            "spd": 119
+          },
+          {
+            "type": "TWOS",
+            "rt": 34.70000076293945,
+            "spd": 134
+          },
+          {
+            "type": "SWEE",
+            "rt": 12.199999809265137,
+            "spd": 118
+          }
+        ]
+      },
+      "opp": {
+        "name": "후라도",
+        "era": "3.27",
+        "w": 9,
+        "l": 2,
+        "pitches": [
+          {
+            "type": "TWOS",
+            "rt": 25,
+            "spd": 143
+          },
+          {
+            "type": "CHUP",
+            "rt": 22.600000381469727,
+            "spd": 134
+          },
+          {
+            "type": "SLID",
+            "rt": 19.5,
+            "spd": 132
+          }
+        ]
+      },
+      "oppName": "삼성"
+    }
   },
-  "updated": "2026-10-10T14:54:50.203Z"
+  "updated": "2026-10-10T18:59:44.290Z"
 }
