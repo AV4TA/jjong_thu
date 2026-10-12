@@ -1,115 +1,60 @@
 {
-  "todayMatch": {
-    "date": "2026-10-12",
-    "time": "18:30",
-    "stadium": "대구",
-    "opponent": "삼성",
-    "isHome": false,
-    "score": "VS",
-    "ktPitcher": "소형준",
-    "oppPitcher": "양창섭"
-  },
+  "todayMatch": null,
   "todayLineup": {
-    "ktPitcher": "소형준",
-    "oppPitcher": "양창섭",
-    "pitcher": "소형준",
-    "batters": [
-      {
-        "order": "1",
-        "name": "최원준",
-        "pos": "우익수"
-      },
-      {
-        "order": "2",
-        "name": "류현인",
-        "pos": "2루수"
-      },
-      {
-        "order": "3",
-        "name": "안현민",
-        "pos": "지명타자"
-      },
-      {
-        "order": "4",
-        "name": "힐리어드",
-        "pos": "좌익수"
-      },
-      {
-        "order": "5",
-        "name": "김현수",
-        "pos": "1루수"
-      },
-      {
-        "order": "6",
-        "name": "허경민",
-        "pos": "3루수"
-      },
-      {
-        "order": "7",
-        "name": "배정대",
-        "pos": "중견수"
-      },
-      {
-        "order": "8",
-        "name": "조대현",
-        "pos": "포수"
-      },
-      {
-        "order": "9",
-        "name": "장준원",
-        "pos": "유격수"
-      }
-    ]
+    "ktPitcher": "미정",
+    "oppPitcher": "미정",
+    "pitcher": "미정",
+    "batters": []
   },
   "rankings": [
     {
       "rank": 1,
       "teamName": "KT",
-      "games": 143,
-      "win": 89,
+      "games": 144,
+      "win": 90,
       "draw": 5,
       "lose": 49,
-      "wra": 0.645,
+      "wra": 0.647,
       "gameDiff": "0.0"
     },
     {
       "rank": 2,
       "teamName": "삼성",
-      "games": 143,
+      "games": 144,
       "win": 83,
       "draw": 3,
-      "lose": 57,
-      "wra": 0.593,
+      "lose": 58,
+      "wra": 0.589,
       "gameDiff": "0.0"
     },
     {
       "rank": 3,
       "teamName": "KIA",
-      "games": 143,
-      "win": 78,
+      "games": 144,
+      "win": 79,
       "draw": 2,
       "lose": 63,
-      "wra": 0.553,
+      "wra": 0.556,
       "gameDiff": "0.0"
     },
     {
       "rank": 4,
       "teamName": "LG",
-      "games": 143,
+      "games": 144,
       "win": 78,
       "draw": 1,
-      "lose": 64,
-      "wra": 0.549,
+      "lose": 65,
+      "wra": 0.545,
       "gameDiff": "0.0"
     },
     {
       "rank": 5,
       "teamName": "두산",
-      "games": 143,
+      "games": 144,
       "win": 73,
       "draw": 5,
-      "lose": 65,
-      "wra": 0.529,
+      "lose": 66,
+      "wra": 0.525,
       "gameDiff": "0.0"
     },
     {
@@ -124,22 +69,22 @@
     },
     {
       "rank": 7,
+      "teamName": "롯데",
+      "games": 144,
+      "win": 64,
+      "draw": 3,
+      "lose": 77,
+      "wra": 0.454,
+      "gameDiff": "0.0"
+    },
+    {
+      "rank": 8,
       "teamName": "NC",
       "games": 144,
       "win": 64,
       "draw": 2,
       "lose": 78,
       "wra": 0.451,
-      "gameDiff": "0.0"
-    },
-    {
-      "rank": 8,
-      "teamName": "롯데",
-      "games": 143,
-      "win": 63,
-      "draw": 3,
-      "lose": 77,
-      "wra": 0.45,
       "gameDiff": "0.0"
     },
     {
@@ -163,157 +108,11 @@
       "gameDiff": "0.0"
     }
   ],
-  "games": [
-    {
-      "id": "20261012KTSS02026",
-      "date": "2026-10-12",
-      "time": "18:30",
-      "stadium": "대구",
-      "away": "KT",
-      "home": "삼성",
-      "as": 1,
-      "hs": 0,
-      "status": "1회초",
-      "code": "STARTED",
-      "ap": "소형준",
-      "hp": "양창섭",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20261012LGHT02026",
-      "date": "2026-10-12",
-      "time": "18:30",
-      "stadium": "광주",
-      "away": "LG",
-      "home": "KIA",
-      "as": 0,
-      "hs": 0,
-      "status": "1회초",
-      "code": "STARTED",
-      "ap": "임찬규",
-      "hp": "양현종",
-      "wp": "",
-      "lp": ""
-    },
-    {
-      "id": "20261012LTOB02026",
-      "date": "2026-10-12",
-      "time": "18:30",
-      "stadium": "잠실",
-      "away": "롯데",
-      "home": "두산",
-      "as": 0,
-      "hs": 0,
-      "status": "1회초",
-      "code": "STARTED",
-      "ap": "박세웅",
-      "hp": "이용찬",
-      "wp": "",
-      "lp": ""
-    }
-  ],
+  "games": [],
   "kt": {
-    "gameId": "20261012KTSS02026",
-    "lineup": {
-      "starter": "소형준",
-      "batters": [
-        {
-          "o": 1,
-          "name": "최원준",
-          "pos": "우익수"
-        },
-        {
-          "o": 2,
-          "name": "류현인",
-          "pos": "2루수"
-        },
-        {
-          "o": 3,
-          "name": "안현민",
-          "pos": "지명타자"
-        },
-        {
-          "o": 4,
-          "name": "힐리어드",
-          "pos": "좌익수"
-        },
-        {
-          "o": 5,
-          "name": "김현수",
-          "pos": "1루수"
-        },
-        {
-          "o": 6,
-          "name": "허경민",
-          "pos": "3루수"
-        },
-        {
-          "o": 7,
-          "name": "배정대",
-          "pos": "중견수"
-        },
-        {
-          "o": 8,
-          "name": "조대현",
-          "pos": "포수"
-        },
-        {
-          "o": 9,
-          "name": "장준원",
-          "pos": "유격수"
-        }
-      ]
-    },
-    "starters": {
-      "kt": {
-        "name": "소형준",
-        "era": "3.23",
-        "w": 9,
-        "l": 3,
-        "pitches": [
-          {
-            "type": "TWOS",
-            "rt": 47.599998474121094,
-            "spd": 144
-          },
-          {
-            "type": "CUTT",
-            "rt": 24.200000762939453,
-            "spd": 140
-          },
-          {
-            "type": "CHUP",
-            "rt": 18.299999237060547,
-            "spd": 131
-          }
-        ]
-      },
-      "opp": {
-        "name": "양창섭",
-        "era": "5.01",
-        "w": 8,
-        "l": 2,
-        "pitches": [
-          {
-            "type": "FAST",
-            "rt": 27.600000381469727,
-            "spd": 145
-          },
-          {
-            "type": "SLID",
-            "rt": 23.799999237060547,
-            "spd": 130
-          },
-          {
-            "type": "TWOS",
-            "rt": 21.399999618530273,
-            "spd": 142
-          }
-        ]
-      },
-      "oppName": "삼성"
-    }
+    "gameId": null,
+    "lineup": null,
+    "starters": null
   },
-  "updated": "2026-10-12T09:34:47.438Z"
+  "updated": "2026-10-12T18:22:06.894Z"
 }
