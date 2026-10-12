@@ -13,7 +13,53 @@
     "ktPitcher": "소형준",
     "oppPitcher": "양창섭",
     "pitcher": "소형준",
-    "batters": []
+    "batters": [
+      {
+        "order": "1",
+        "name": "최원준",
+        "pos": "우익수"
+      },
+      {
+        "order": "2",
+        "name": "류현인",
+        "pos": "2루수"
+      },
+      {
+        "order": "3",
+        "name": "안현민",
+        "pos": "지명타자"
+      },
+      {
+        "order": "4",
+        "name": "힐리어드",
+        "pos": "좌익수"
+      },
+      {
+        "order": "5",
+        "name": "김현수",
+        "pos": "1루수"
+      },
+      {
+        "order": "6",
+        "name": "허경민",
+        "pos": "3루수"
+      },
+      {
+        "order": "7",
+        "name": "배정대",
+        "pos": "중견수"
+      },
+      {
+        "order": "8",
+        "name": "조대현",
+        "pos": "포수"
+      },
+      {
+        "order": "9",
+        "name": "장준원",
+        "pos": "유격수"
+      }
+    ]
   },
   "rankings": [
     {
@@ -125,10 +171,10 @@
       "stadium": "대구",
       "away": "KT",
       "home": "삼성",
-      "as": 0,
+      "as": 1,
       "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "status": "1회초",
+      "code": "STARTED",
       "ap": "소형준",
       "hp": "양창섭",
       "wp": "",
@@ -143,8 +189,8 @@
       "home": "KIA",
       "as": 0,
       "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "status": "1회초",
+      "code": "STARTED",
       "ap": "임찬규",
       "hp": "양현종",
       "wp": "",
@@ -159,8 +205,8 @@
       "home": "두산",
       "as": 0,
       "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "status": "1회초",
+      "code": "STARTED",
       "ap": "박세웅",
       "hp": "이용찬",
       "wp": "",
@@ -169,7 +215,56 @@
   ],
   "kt": {
     "gameId": "20261012KTSS02026",
-    "lineup": null,
+    "lineup": {
+      "starter": "소형준",
+      "batters": [
+        {
+          "o": 1,
+          "name": "최원준",
+          "pos": "우익수"
+        },
+        {
+          "o": 2,
+          "name": "류현인",
+          "pos": "2루수"
+        },
+        {
+          "o": 3,
+          "name": "안현민",
+          "pos": "지명타자"
+        },
+        {
+          "o": 4,
+          "name": "힐리어드",
+          "pos": "좌익수"
+        },
+        {
+          "o": 5,
+          "name": "김현수",
+          "pos": "1루수"
+        },
+        {
+          "o": 6,
+          "name": "허경민",
+          "pos": "3루수"
+        },
+        {
+          "o": 7,
+          "name": "배정대",
+          "pos": "중견수"
+        },
+        {
+          "o": 8,
+          "name": "조대현",
+          "pos": "포수"
+        },
+        {
+          "o": 9,
+          "name": "장준원",
+          "pos": "유격수"
+        }
+      ]
+    },
     "starters": {
       "kt": {
         "name": "소형준",
@@ -220,5 +315,5 @@
       "oppName": "삼성"
     }
   },
-  "updated": "2026-10-11T19:14:46.617Z"
+  "updated": "2026-10-12T09:34:47.438Z"
 }
