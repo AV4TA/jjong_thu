@@ -108,28 +108,11 @@
       "gameDiff": "0.0"
     }
   ],
-  "games": [
-    {
-      "id": "44441014OBLG02026",
-      "date": "2026-10-14",
-      "time": "18:30",
-      "stadium": "잠실",
-      "away": "두산",
-      "home": "LG",
-      "as": 1,
-      "hs": 4,
-      "status": "9회초",
-      "code": "RESULT",
-      "ap": "곽빈",
-      "hp": "카라스코",
-      "wp": "카라스코",
-      "lp": "곽빈"
-    }
-  ],
+  "games": [],
   "kt": {
     "gameId": null,
     "lineup": null,
     "starters": null
   },
-  "updated": "2026-10-14T14:11:55.611Z"
+  "updated": "2026-10-14T19:00:02.766Z"
 }
