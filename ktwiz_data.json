@@ -40,21 +40,21 @@
     {
       "rank": 4,
       "teamName": "LG",
-      "games": 144,
-      "win": 78,
+      "games": 145,
+      "win": 79,
       "draw": 1,
       "lose": 65,
-      "wra": 0.545,
+      "wra": 0.549,
       "gameDiff": "0.0"
     },
     {
       "rank": 5,
       "teamName": "두산",
-      "games": 144,
+      "games": 145,
       "win": 73,
       "draw": 5,
-      "lose": 66,
-      "wra": 0.525,
+      "lose": 67,
+      "wra": 0.521,
       "gameDiff": "0.0"
     },
     {
@@ -116,14 +116,14 @@
       "stadium": "잠실",
       "away": "두산",
       "home": "LG",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 1,
+      "hs": 4,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "곽빈",
       "hp": "카라스코",
-      "wp": "",
-      "lp": ""
+      "wp": "카라스코",
+      "lp": "곽빈"
     }
   ],
   "kt": {
@@ -131,5 +131,5 @@
     "lineup": null,
     "starters": null
   },
-  "updated": "2026-10-14T07:53:53.853Z"
+  "updated": "2026-10-14T13:55:49.318Z"
 }
