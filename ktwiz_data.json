@@ -108,11 +108,28 @@
       "gameDiff": "0.0"
     }
   ],
-  "games": [],
+  "games": [
+    {
+      "id": "33331017LGHT02026",
+      "date": "2026-10-17",
+      "time": "14:00",
+      "stadium": "광주",
+      "away": "LG",
+      "home": "KIA",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "톨허스트",
+      "hp": "네일",
+      "wp": "",
+      "lp": ""
+    }
+  ],
   "kt": {
     "gameId": null,
     "lineup": null,
     "starters": null
   },
-  "updated": "2026-10-16T13:37:50.839Z"
+  "updated": "2026-10-16T18:29:04.908Z"
 }
