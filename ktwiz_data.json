@@ -116,10 +116,10 @@
       "stadium": "광주",
       "away": "LG",
       "home": "KIA",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 1,
+      "hs": 3,
+      "status": "7회말",
+      "code": "STARTED",
       "ap": "톨허스트",
       "hp": "네일",
       "wp": "",
@@ -131,5 +131,5 @@
     "lineup": null,
     "starters": null
   },
-  "updated": "2026-10-16T21:47:59.904Z"
+  "updated": "2026-10-17T07:06:53.351Z"
 }
