@@ -432,7 +432,7 @@
     <!-- 4. 맛집/가볼곳 탭 -->
     <div id="view-places" class="tab-view">
       <div class="region-switch-row">
-        <button class="region-btn active" id="btnRegionKannawa" onclick="switchPlaceRegion('kannawa')">♨️ 지옥 온천</button>
+        <button class="region-btn active" id="btnRegionKannawa" onclick="switchPlaceRegion('kannawa')">🌋 지옥 온천</button>
         <button class="region-btn" id="btnRegionBeppu" onclick="switchPlaceRegion('beppu')">🏙️ 벳푸 시내</button>
       </div>
 
@@ -450,7 +450,7 @@
     <!-- 5. 날씨 탭 -->
     <div id="view-weather" class="tab-view">
       <div class="sub-tabs">
-        <button class="sub-tab-btn active" onclick="switchWeatherCity('kannawa', this)">♨️ 지옥 온천</button>
+        <button class="sub-tab-btn active" onclick="switchWeatherCity('kannawa', this)">🌋 지옥 온천</button>
         <button class="sub-tab-btn" onclick="switchWeatherCity('beppu', this)">🏙️ 벳푸 시내</button>
       </div>
       <div class="weather-hero" id="weatherHeroBox">
@@ -468,7 +468,7 @@
       </div>
       <h4 style="font-size: 0.92rem; margin: 16px 0 10px; color: #2d3436;">📅 주간 일기예보</h4>
       <div class="weather-forecast-row" id="weatherForecastContainer"></div>
-      <div class="cloth-tip-box" id="clothTipBox"><b>💡 11월 벳푸 옷차림 팁:</b><br>11월 초 가을 환절기 날씨 정보를 준비 중입니다.</div>
+      <div class="cloth-tip-box" id="clothTipBox"><b>💡 11월 벳푸 옷차림 팁:</b><br>11월 초 가월 환절기 날씨 정보를 준비 중입니다.</div>
     </div>
   </div>
 
@@ -521,7 +521,7 @@
         <div class="form-group">
           <label>지역 선택 📍</label>
           <select class="form-control" id="placeRegion">
-            <option value="kannawa">♨️ 지옥 온천</option>
+            <option value="kannawa">🌋 지옥 온천</option>
             <option value="beppu">🏙️ 벳푸 시내</option>
           </select>
         </div>
@@ -564,7 +564,6 @@
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // 💡 고베 페이지와 동일한 안전한 Firestore 경로 사용 (문서 이름만 beppu_data로 분리)
     const dbRef = db.collection("couple_space").doc("beppu_data");
     const docsCollection = dbRef.collection("travel_documents");
 
@@ -589,7 +588,6 @@
     const syncDot = document.getElementById('syncDot');
     const syncText = document.getElementById('syncStatusText');
 
-    // 실시간 데이터 동기화 리스너
     dbRef.onSnapshot({ includeMetadataChanges: true }, (doc) => {
       if (doc.exists) {
         const remoteData = doc.data();
@@ -922,7 +920,7 @@
       const finalFiltered = selectedPlaceCategory === 'all' ? regionFiltered : regionFiltered.filter(p => p.category === selectedPlaceCategory);
 
       if (finalFiltered.length === 0) {
-        const regionName = selectedPlaceRegion === 'kannawa' ? 지옥 온천' : '벳푸 시내';
+        const regionName = selectedPlaceRegion === 'kannawa' ? '지옥 온천' : '벳푸 시내';
         container.innerHTML = `<div style="text-align:center; color:#a4b0be; padding:40px 10px;">등록된 ${regionName} 장소가 없습니다.<br>우측 하단의 <b>+</b> 버튼을 눌러 추가해보세요!</div>`;
         return;
       }
@@ -939,7 +937,7 @@
           <div class="place-card">
             <div class="place-category-icon"><i class="fa-solid ${getPlaceCategoryIcon(p.category)}"></i></div>
             <div style="flex:1;">
-              <span style="font-size:0.75rem; color:var(--primary); font-weight:800;">#${selectedPlaceRegion === 'kannawa' ? '칸나와' : '벳푸역전'} #${p.category}</span>
+              <span style="font-size:0.75rem; color:var(--primary); font-weight:800;">#${selectedPlaceRegion === 'kannawa' ? '지옥온천' : '벳푸시내'} #${p.category}</span>
               <div style="font-size:1rem; font-weight:800; margin:2px 0;">${p.title}</div>
               <div style="font-size:0.82rem; color:var(--text-sub); line-height:1.35;">${p.desc || ''}</div>
             </div>
@@ -953,8 +951,8 @@
     }
 
     const CITY_COORDS = {
-      kannawa: { name: '칸나와 온천마을', lat: 33.3134, lon: 131.4745 },
-      beppu: { name: '벳푸 역전 (시내)', lat: 33.2783, lon: 131.5023 }
+      kannawa: { name: '지옥 온천마을', lat: 33.3134, lon: 131.4745 },
+      beppu: { name: '벳푸 시내', lat: 33.2783, lon: 131.5023 }
     };
 
     function switchWeatherCity(city, btn) {
