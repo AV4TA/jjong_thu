@@ -554,9 +554,9 @@
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
-      authDomain: "beppu-couple-app.firebaseapp.com",
-      projectId: "beppu-couple-app",
-      storageBucket: "beppu-couple-app.firebasestorage.app",
+      authDomain: "kobe-couple-app.firebaseapp.com",
+      projectId: "kobe-couple-app",
+      storageBucket: "kobe-couple-app.firebasestorage.app",
       messagingSenderId: "755701956140",
       appId: "1:755701956140:web:ea39d7d1e00bd83ade1b89"
     };
@@ -564,17 +564,18 @@
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    const docsCollection = db.collection("beppu_space").doc("shared_data").collection("travel_documents");
+    // 💡 고베 페이지와 동일한 안전한 Firestore 경로 사용 (문서 이름만 beppu_data로 분리)
+    const dbRef = db.collection("couple_space").doc("beppu_data");
+    const docsCollection = dbRef.collection("travel_documents");
 
-    // 기본 준비물 및 계획 모두 빈 배열([])로 초기화
-    const initialBeppuData = {
+    const emptyData = {
       checklistThu: [],
       checklistJjong: [],
       travel: [],
       places: []
     };
 
-    let appData = initialBeppuData;
+    let appData = JSON.parse(JSON.stringify(emptyData));
     let documentsList = [];
     let currentDay = 1;
     let activeNav = 'checklist';
@@ -588,7 +589,8 @@
     const syncDot = document.getElementById('syncDot');
     const syncText = document.getElementById('syncStatusText');
 
-    db.collection("beppu_space").doc("shared_data").onSnapshot({ includeMetadataChanges: true }, (doc) => {
+    // 실시간 데이터 동기화 리스너
+    dbRef.onSnapshot({ includeMetadataChanges: true }, (doc) => {
       if (doc.exists) {
         const remoteData = doc.data();
         appData = {
@@ -600,8 +602,12 @@
         setOnlineStatus();
         renderAll();
       } else {
-        db.collection("beppu_space").doc("shared_data").set(initialBeppuData, { merge: true });
+        dbRef.set(emptyData, { merge: true });
       }
+    }, error => {
+      console.error("데이터 동기화 오류:", error);
+      if (syncDot) syncDot.className = 'sync-dot';
+      if (syncText) syncText.innerText = '동기화 오류 발생';
     });
 
     docsCollection.onSnapshot((snapshot) => {
@@ -610,10 +616,9 @@
         list.push({ id: doc.id, ...doc.data() });
       });
       documentsList = list;
-      setOnlineStatus();
       if (activeNav === 'docs') renderDocuments();
     }, error => {
-      console.error("Docs sync error:", error);
+      console.error("서류 동기화 오류:", error);
     });
 
     function setOnlineStatus() {
@@ -628,8 +633,12 @@
 
     function saveData() {
       setSyncingStatus();
-      db.collection("beppu_space").doc("shared_data").set(appData, { merge: true })
-        .then(() => { setOnlineStatus(); });
+      dbRef.set(appData, { merge: true })
+        .then(() => { setOnlineStatus(); })
+        .catch(err => {
+          console.error("저장 실패:", err);
+          if (syncText) syncText.innerText = '저장 실패';
+        });
     }
 
     function renderAll() {
@@ -683,8 +692,13 @@
     }
 
     function toggleCheckItem(id) {
-      const item = getActiveChecklist().find(i => i.id === id);
-      if (item) { item.checked = !item.checked; saveData(); renderChecklist(); }
+      const list = getActiveChecklist();
+      const item = list.find(i => i.id === id);
+      if (item) {
+        item.checked = !item.checked;
+        saveData();
+        renderChecklist();
+      }
     }
 
     function addCheckItem() {
@@ -692,6 +706,7 @@
       const text = input.value.trim();
       if (!text) return;
       const newItem = { id: Date.now(), text: text, checked: false };
+      
       if (currentPerson === 'thu') {
         if (!appData.checklistThu) appData.checklistThu = [];
         appData.checklistThu.push(newItem);
@@ -705,8 +720,11 @@
     }
 
     function deleteCheckItem(id) {
-      if (currentPerson === 'thu') appData.checklistThu = (appData.checklistThu || []).filter(i => i.id !== id);
-      else appData.checklistJjong = (appData.checklistJjong || []).filter(i => i.id !== id);
+      if (currentPerson === 'thu') {
+        appData.checklistThu = (appData.checklistThu || []).filter(i => i.id !== id);
+      } else {
+        appData.checklistJjong = (appData.checklistJjong || []).filter(i => i.id !== id);
+      }
       saveData();
       renderChecklist();
     }
@@ -765,6 +783,7 @@
       today.setHours(0,0,0,0);
       const diff = Math.ceil((tripDate - today) / (1000 * 60 * 60 * 24));
       const el = document.getElementById('ddayText');
+      if (!el) return;
       if (diff > 0) el.innerText = `D-${diff}`;
       else if (diff === 0) el.innerText = `D-Day! ♨️`;
       else el.innerText = `벳푸 추억 💖`;
