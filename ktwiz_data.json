@@ -108,28 +108,11 @@
       "gameDiff": "0.0"
     }
   ],
-  "games": [
-    {
-      "id": "33331018LGHT02026",
-      "date": "2026-10-18",
-      "time": "14:00",
-      "stadium": "광주",
-      "away": "LG",
-      "home": "KIA",
-      "as": 3,
-      "hs": 6,
-      "status": "9회초",
-      "code": "RESULT",
-      "ap": "임찬규",
-      "hp": "올러",
-      "wp": "올러",
-      "lp": "임찬규"
-    }
-  ],
+  "games": [],
   "kt": {
     "gameId": null,
     "lineup": null,
     "starters": null
   },
-  "updated": "2026-10-18T12:52:46.732Z"
+  "updated": "2026-10-18T17:37:25.668Z"
 }
