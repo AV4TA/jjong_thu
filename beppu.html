@@ -521,8 +521,8 @@
         <div class="form-group">
           <label>지역 선택 📍</label>
           <select class="form-control" id="placeRegion">
-            <option value="kannawa">♨️ 칸나와 온천</option>
-            <option value="beppu">🏙️ 벳푸 시내 / 역전</option>
+            <option value="kannawa">♨️ 지옥 온천</option>
+            <option value="beppu">🏙️ 벳푸 시내</option>
           </select>
         </div>
         <div class="form-group">
@@ -530,8 +530,8 @@
           <select class="form-control" id="placeCategory">
             <option value="맛집">🍣 맛집</option>
             <option value="카페">☕ 카페</option>
-            <option value="숙소">🏨 료칸 / 호텔</option>
-            <option value="볼거리">🌋 온천 / 지옥순례 명소</option>
+            <option value="숙소">🏨 호텔</option>
+            <option value="볼거리">🌋 명소</option>
           </select>
         </div>
       </div>
@@ -922,7 +922,7 @@
       const finalFiltered = selectedPlaceCategory === 'all' ? regionFiltered : regionFiltered.filter(p => p.category === selectedPlaceCategory);
 
       if (finalFiltered.length === 0) {
-        const regionName = selectedPlaceRegion === 'kannawa' ? '칸나와 온천' : '벳푸 시내';
+        const regionName = selectedPlaceRegion === 'kannawa' ? 지옥 온천' : '벳푸 시내';
         container.innerHTML = `<div style="text-align:center; color:#a4b0be; padding:40px 10px;">등록된 ${regionName} 장소가 없습니다.<br>우측 하단의 <b>+</b> 버튼을 눌러 추가해보세요!</div>`;
         return;
       }
