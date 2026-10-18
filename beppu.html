@@ -432,16 +432,16 @@
     <!-- 4. 맛집/가볼곳 탭 -->
     <div id="view-places" class="tab-view">
       <div class="region-switch-row">
-        <button class="region-btn active" id="btnRegionKannawa" onclick="switchPlaceRegion('kannawa')">♨️ 칸나와 온천</button>
-        <button class="region-btn" id="btnRegionBeppu" onclick="switchPlaceRegion('beppu')">🏙️ 벳푸 시내 / 역전</button>
+        <button class="region-btn active" id="btnRegionKannawa" onclick="switchPlaceRegion('kannawa')">♨️ 지옥 온천</button>
+        <button class="region-btn" id="btnRegionBeppu" onclick="switchPlaceRegion('beppu')">🏙️ 벳푸 시내</button>
       </div>
 
       <div class="category-sub-tabs" id="placeCategoryTabs">
         <button class="cat-chip-btn active" onclick="filterPlaceCategory('all', this)">전체</button>
         <button class="cat-chip-btn" onclick="filterPlaceCategory('맛집', this)">🍣 맛집</button>
         <button class="cat-chip-btn" onclick="filterPlaceCategory('카페', this)">☕ 카페</button>
-        <button class="cat-chip-btn" onclick="filterPlaceCategory('숙소', this)">🏨 료칸/호텔</button>
-        <button class="cat-chip-btn" onclick="filterPlaceCategory('볼거리', this)">🌋 온천/명소</button>
+        <button class="cat-chip-btn" onclick="filterPlaceCategory('숙소', this)">🏨 호텔</button>
+        <button class="cat-chip-btn" onclick="filterPlaceCategory('볼거리', this)">🌋 명소</button>
       </div>
 
       <div id="placesContainer"></div>
@@ -450,12 +450,12 @@
     <!-- 5. 날씨 탭 -->
     <div id="view-weather" class="tab-view">
       <div class="sub-tabs">
-        <button class="sub-tab-btn active" onclick="switchWeatherCity('kannawa', this)">♨️ 칸나와 온천</button>
-        <button class="sub-tab-btn" onclick="switchWeatherCity('beppu', this)">🏙️ 벳푸 역전</button>
+        <button class="sub-tab-btn active" onclick="switchWeatherCity('kannawa', this)">♨️ 지옥 온천</button>
+        <button class="sub-tab-btn" onclick="switchWeatherCity('beppu', this)">🏙️ 벳푸 시내</button>
       </div>
       <div class="weather-hero" id="weatherHeroBox">
         <div class="weather-hero-top">
-          <div class="weather-city-name" id="weatherCityName"><i class="fa-solid fa-location-dot"></i> 칸나와 온천</div>
+          <div class="weather-city-name" id="weatherCityName"><i class="fa-solid fa-location-dot"></i> 지옥 온천</div>
           <div style="font-size:0.75rem; opacity:0.85;">실시간 기준</div>
         </div>
         <div class="weather-main-temp" id="weatherCurrentTemp">--°</div>
