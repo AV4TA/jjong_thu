@@ -30,21 +30,21 @@
     {
       "rank": 3,
       "teamName": "KIA",
-      "games": 145,
-      "win": 80,
+      "games": 146,
+      "win": 81,
       "draw": 2,
       "lose": 63,
-      "wra": 0.559,
+      "wra": 0.563,
       "gameDiff": "0.0"
     },
     {
       "rank": 4,
       "teamName": "LG",
-      "games": 146,
+      "games": 147,
       "win": 79,
       "draw": 1,
-      "lose": 66,
-      "wra": 0.545,
+      "lose": 67,
+      "wra": 0.541,
       "gameDiff": "0.0"
     },
     {
@@ -116,14 +116,14 @@
       "stadium": "광주",
       "away": "LG",
       "home": "KIA",
-      "as": 2,
-      "hs": 5,
-      "status": "7회말",
-      "code": "STARTED",
+      "as": 3,
+      "hs": 6,
+      "status": "9회초",
+      "code": "RESULT",
       "ap": "임찬규",
       "hp": "올러",
-      "wp": "",
-      "lp": ""
+      "wp": "올러",
+      "lp": "임찬규"
     }
   ],
   "kt": {
@@ -131,5 +131,5 @@
     "lineup": null,
     "starters": null
   },
-  "updated": "2026-10-18T07:21:09.707Z"
+  "updated": "2026-10-18T12:08:23.707Z"
 }
