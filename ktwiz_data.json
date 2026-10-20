@@ -30,21 +30,21 @@
     {
       "rank": 3,
       "teamName": "KIA",
-      "games": 146,
-      "win": 81,
+      "games": 147,
+      "win": 82,
       "draw": 2,
       "lose": 63,
-      "wra": 0.563,
+      "wra": 0.566,
       "gameDiff": "0.0"
     },
     {
       "rank": 4,
       "teamName": "LG",
-      "games": 147,
+      "games": 148,
       "win": 79,
       "draw": 1,
-      "lose": 67,
-      "wra": 0.541,
+      "lose": 68,
+      "wra": 0.537,
       "gameDiff": "0.0"
     },
     {
@@ -116,14 +116,14 @@
       "stadium": "잠실",
       "away": "KIA",
       "home": "LG",
-      "as": 0,
-      "hs": 0,
-      "status": "경기전",
-      "code": "BEFORE",
+      "as": 13,
+      "hs": 1,
+      "status": "9회말",
+      "code": "RESULT",
       "ap": "시라카와",
       "hp": "카라스코",
-      "wp": "",
-      "lp": ""
+      "wp": "시라카와",
+      "lp": "카라스코"
     }
   ],
   "kt": {
@@ -131,5 +131,5 @@
     "lineup": null,
     "starters": null
   },
-  "updated": "2026-10-20T07:49:59.694Z"
+  "updated": "2026-10-20T13:45:30.308Z"
 }
