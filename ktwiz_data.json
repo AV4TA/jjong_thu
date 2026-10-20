@@ -108,28 +108,11 @@
       "gameDiff": "0.0"
     }
   ],
-  "games": [
-    {
-      "id": "33331020HTLG02026",
-      "date": "2026-10-20",
-      "time": "18:30",
-      "stadium": "잠실",
-      "away": "KIA",
-      "home": "LG",
-      "as": 13,
-      "hs": 1,
-      "status": "9회말",
-      "code": "RESULT",
-      "ap": "시라카와",
-      "hp": "카라스코",
-      "wp": "시라카와",
-      "lp": "카라스코"
-    }
-  ],
+  "games": [],
   "kt": {
     "gameId": null,
     "lineup": null,
     "starters": null
   },
-  "updated": "2026-10-20T13:58:39.420Z"
+  "updated": "2026-10-20T18:47:38.262Z"
 }
