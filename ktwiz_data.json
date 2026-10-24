@@ -108,11 +108,28 @@
       "gameDiff": "0.0"
     }
   ],
-  "games": [],
+  "games": [
+    {
+      "id": "55551025HTSS02026",
+      "date": "2026-10-25",
+      "time": "14:00",
+      "stadium": "대구",
+      "away": "KIA",
+      "home": "삼성",
+      "as": 0,
+      "hs": 0,
+      "status": "경기전",
+      "code": "BEFORE",
+      "ap": "네일",
+      "hp": "페덱",
+      "wp": "",
+      "lp": ""
+    }
+  ],
   "kt": {
     "gameId": null,
     "lineup": null,
     "starters": null
   },
-  "updated": "2026-10-24T13:00:25.314Z"
+  "updated": "2026-10-24T17:41:34.057Z"
 }
