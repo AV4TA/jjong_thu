@@ -115,7 +115,6 @@
     }
 
     /* 테마별 아이콘 색상 */
-    .item-beppu .app-icon-wrap { background: #fff3f5; color: #ff5e7e; }
     .item-map .app-icon-wrap { background: #e8f8f5; color: #00b894; }
     .item-place .app-icon-wrap { background: #fff4e6; color: #ff9f43; }
     .item-baseball .app-icon-wrap { background: #ffebee; color: #e74c3c; }
@@ -132,13 +131,12 @@
       border-radius: 8px;
       margin-top: 10px;
     }
-    .item-beppu .app-tag { background: #ffe8ee; color: #ff5e7e; }
     .item-map .app-tag { background: #e8f8f5; color: #00b894; }
     .item-place .app-tag { background: #fff4e6; color: #ff9f43; }
     .item-baseball .app-tag { background: #ffebee; color: #e74c3c; }
     .item-coupon .app-tag { background: #f0edff; color: #6c5ce7; }
 
-    /* 하단 추억 배너 (고베 여행 아카이브) 스타일 */
+    /* 하단 추억 배너 영역 */
     .memory-section {
       margin-top: 24px;
     }
@@ -315,7 +313,7 @@
       <div class="header-avatar">💖</div>
       <div class="header-texts">
         <h1>뚜❣️쫑</h1>
-        <p>Since 2020.10.31 (<span id="ddayText">D-Day</span>)</p>
+        <p>Since 2020.10.31 (D-Day)</p>
       </div>
     </div>
   </header>
@@ -328,17 +326,7 @@
     </div>
 
     <div class="app-grid">
-      <!-- 1. 벳푸 여행 (전국 지도 앞 첫 번째 위치) -->
-      <a href="beppu.html" class="app-item item-beppu">
-        <div class="app-icon-wrap">
-          <i class="fa-solid fa-hot-tub-person"></i>
-        </div>
-        <div class="app-name">벳푸 여행</div>
-        <div class="app-desc">11/2~4 벳푸 힐링</div>
-        <div class="app-tag" id="beppuCardTag">D-Day ♨️</div>
-      </a>
-
-      <!-- 2. 대한민국 여행 지도 -->
+      <!-- 1. 대한민국 여행 지도 -->
       <a href="map.html" class="app-item item-map">
         <div class="app-icon-wrap">
           <i class="fa-solid fa-map-location-dot"></i>
@@ -348,7 +336,7 @@
         <div class="app-tag">발자국 👣</div>
       </a>
 
-      <!-- 3. 주변 맛집 & 카페 -->
+      <!-- 2. 주변 맛집 & 카페 -->
       <a href="place.html" class="app-item item-place">
         <div class="app-icon-wrap">
           <i class="fa-solid fa-utensils"></i>
@@ -358,7 +346,7 @@
         <div class="app-tag">GPS 추천 ✨</div>
       </a>
 
-      <!-- 4. 데이트 룰렛 -->
+      <!-- 3. 데이트 룰렛 -->
       <a href="roulette.html" class="app-item item-roulette">
         <div class="app-icon-wrap" style="background: #fff8e1; color: #fbc531;">
           <i class="fa-solid fa-dice"></i>
@@ -368,7 +356,7 @@
         <div class="app-tag" style="background: #fff8e1; color: #e1b12c;">복불복 🎯</div>
       </a>
 
-      <!-- 5. 야구 직관 일기 -->
+      <!-- 4. 야구 직관 일기 -->
       <a href="baseball.html" class="app-item item-baseball">
         <div class="app-icon-wrap">
           <i class="fa-solid fa-baseball-bat-ball"></i>
@@ -378,7 +366,7 @@
         <div class="app-tag">승리요정 🔥</div>
       </a>
 
-      <!-- 6. 기프티콘 보관함 -->
+      <!-- 5. 기프티콘 보관함 -->
       <a href="gifticon.html" class="app-item item-coupon">
         <div class="app-icon-wrap">
           <i class="fa-solid fa-ticket"></i>
@@ -389,12 +377,30 @@
       </a>
     </div>
 
-    <!-- 하단 추억 아카이브 (고베 여행 등) -->
+    <!-- 하단 추억 아카이브 (여행 추억 모음) -->
     <div class="memory-section">
       <div class="section-title">
         <i class="fa-solid fa-box-archive"></i>
         <span>지난 여행 추억</span>
       </div>
+
+      <!-- 벳푸 여행 배너 (아래로 이동) -->
+      <a href="beppu.html" class="memory-banner">
+        <div class="memory-left">
+          <div class="memory-icon" style="background: #fff3f5; color: #ff5e7e;">
+            <i class="fa-solid fa-hot-tub-person"></i>
+          </div>
+          <div class="memory-info">
+            <h3>벳푸 여행 추억 ♨️</h3>
+            <p>11/2~4 벳푸 힐링 일정 및 기록 보기</p>
+          </div>
+        </div>
+        <div class="memory-arrow">
+          <i class="fa-solid fa-chevron-right"></i>
+        </div>
+      </a>
+
+      <!-- 고베 여행 배너 -->
       <a href="kobe.html" class="memory-banner">
         <div class="memory-left">
           <div class="memory-icon">
@@ -415,33 +421,6 @@
   <script>
     const PIN_HASH = "b988f01b00e31c69c6ba78ae1b0a88ffae26d705c7423eec7fa6d38e2d46e9df";
     let enteredPin = "";
-
-    // 벳푸 여행(11월 2일)까지 남은 D-day 계산 함수 (날짜에 맞춰 자동 갱신)
-    function calculateDDay() {
-      const targetDate = new Date('2026-11-02');
-      const today = new Date();
-      targetDate.setHours(0,0,0,0);
-      today.setHours(0,0,0,0);
-      
-      const diff = Math.ceil((targetDate - today) / (1000 * 60 * 60 * 24));
-      
-      // 1. 상단 헤더 D-day 텍스트 갱신
-      const headerEl = document.getElementById('ddayText');
-      if (headerEl) {
-        if (diff > 0) headerEl.innerText = `벳푸 D-${diff}`;
-        else if (diff === 0) headerEl.innerText = `벳푸 D-Day! ♨️`;
-        else headerEl.innerText = `벳푸 D+${Math.abs(diff)}`;
-      }
-
-      // 2. 벳푸 앱 카드 태그 텍스트 갱신
-      const cardTagEl = document.getElementById('beppuCardTag');
-      if (cardTagEl) {
-        if (diff > 0) cardTagEl.innerText = `D-${diff} ♨️`;
-        else if (diff === 0) cardTagEl.innerText = `D-Day! 🔥`;
-        else cardTagEl.innerText = `여행 완료 ✨`;
-      }
-    }
-    calculateDDay();
 
     async function sha256(str) {
       if (window.crypto && crypto.subtle) {
