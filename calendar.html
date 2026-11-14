@@ -124,9 +124,8 @@
       gap: 3px;
     }
     
-    /* Z폴드 화면에서도 찌그러지지 않고 넉넉한 공간 확보 */
     .cal-day {
-      min-height: 80px;
+      min-height: 84px;
       background: #fafbfc;
       border-radius: 10px;
       padding: 4px 2px;
@@ -153,7 +152,6 @@
     .cal-day:nth-child(7n+1) .day-num { color: #ff4757; }
     .cal-day:nth-child(7n) .day-num { color: #2e86de; }
 
-    /* 일정 뱃지 깔끔하게 정렬 */
     .day-events-preview {
       width: 100%;
       display: flex;
@@ -161,7 +159,7 @@
       gap: 2px;
     }
     .event-badge-mini {
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       font-weight: 700;
       padding: 2px 4px;
       border-radius: 4px;
@@ -382,14 +380,37 @@
       });
     });
 
+    // 💡 대한민국 주요 공휴일 자동 내장 데이터 (크리스마스, 신정 등)
+    const holidays = {
+      "2026-12-25": { title: "성탄절 (크리스마스)", color: "#ff5e7e" },
+      "2027-01-01": { title: "신정", color: "#ff5e7e" }
+    };
+
     eventCollection.onSnapshot((snapshot) => {
       eventsMap = {};
+      
+      // 사용자 입력 데이터 로드
       snapshot.forEach(doc => {
         const data = doc.data();
         const date = data.date;
         if (!eventsMap[date]) eventsMap[date] = [];
         eventsMap[date].push({ id: doc.id, ...data });
       });
+
+      // 공휴일 자동 병합 (DB에 없어도 화면에 자동 표시)
+      for (let hDate in holidays) {
+        if (!eventsMap[hDate]) eventsMap[hDate] = [];
+        // 중복 추가 방지 체크
+        if (!eventsMap[hDate].some(e => e.title === holidays[hDate].title)) {
+          eventsMap[hDate].unshift({
+            id: 'holiday_' + hDate,
+            title: holidays[hDate].title,
+            desc: '공휴일',
+            color: holidays[hDate].color,
+            isHoliday: true
+          });
+        }
+      }
 
       if (syncDot) syncDot.className = 'sync-dot online';
       if (syncText) syncText.innerText = '실시간 동기화 완료';
@@ -493,7 +514,7 @@
 
       const dayEvents = eventsMap[dateStr] || [];
       if (dayEvents.length === 0) {
-        listEl.innerHTML = `<div style="text-align:center; padding: 16px 0; color:#a4b0be; font-size:0.85rem; font-weight:600;">등록된 일정이 없습니다. 우측 하단이나 아래 버튼으로 추가해보세요!</div>`;
+        listEl.innerHTML = `<div style="text-align:center; padding: 16px 0; color:#a4b0be; font-size:0.85rem; font-weight:600;">등록된 일정이 없습니다. 우측 상단이나 아래 버튼으로 추가해보세요!</div>`;
         return;
       }
 
@@ -503,7 +524,7 @@
             <h4>${ev.title}</h4>
             ${ev.desc ? `<p>${ev.desc}</p>` : ''}
           </div>
-          <button class="btn-del-event" onclick="deleteEvent('${ev.id}')"><i class="fa-solid fa-trash-can"></i></button>
+          ${ev.isHoliday ? '<span style="font-size:0.75rem; color:#ff5e7e; font-weight:700;">공휴일</span>' : `<button class="btn-del-event" onclick="deleteEvent('${ev.id}')"><i class="fa-solid fa-trash-can"></i></button>`}
         </div>
       `).join('');
     }
@@ -540,7 +561,7 @@
       if (syncDot) syncDot.className = 'sync-dot syncing';
       if (syncText) syncText.innerText = '저장 중...';
 
-      const docId = String(Date.now());
+      const docId = String(Date.now() + Math.random());
       eventCollection.doc(docId).set({
         date, title, desc, color: selectedColor, createdAt: Date.now()
       }).then(() => {
