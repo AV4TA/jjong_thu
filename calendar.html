@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>뚜❣️쫑 - 커플 캘린더 📅</title>
+
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#ff5e7e" />
+  
+  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Pink%20Heart.png" />
+  <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Pink%20Heart.png" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Firebase v9 SDK (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    :root {
+      --primary: #ff5e7e;
+      --primary-soft: #fff0f3;
+      --bg: #f4f6fb;
+      --card: #ffffff;
+      --text: #2d3436;
+      --text-sub: #8395a7;
+      --border: #edf2f7;
+      --shadow: 0 8px 20px rgba(255, 94, 126, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
+
+    /* Header */
+    .app-header {
+      background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+      color: white;
+      padding: 20px 18px;
+      border-radius: 0 0 28px 28px;
+      box-shadow: 0 6px 20px rgba(255, 117, 140, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .header-top { display: flex; justify-content: space-between; align-items: center; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .btn-home {
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      background: rgba(255, 255, 255, 0.25);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .header-title { font-size: 1.3rem; font-weight: 800; }
+
+    .container { max-width: 540px; margin: 0 auto; padding: 16px; }
+
+    .sync-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+      justify-content: flex-end;
+    }
+    .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #a4b0be; }
+    .sync-dot.online { background: #2ed573; box-shadow: 0 0 8px #2ed573; }
+    .sync-dot.syncing { background: #ffa502; }
+
+    /* 캘린더 본체 카드 */
+    .calendar-card {
+      background: white;
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .cal-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .cal-nav h2 { font-size: 1.2rem; font-weight: 800; color: var(--text); }
+    .cal-nav-btns { display: flex; gap: 6px; }
+    .cal-nav-btn {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border: none;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+    }
+
+    .cal-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--text-sub);
+      margin-bottom: 10px;
+    }
+    .cal-weekdays div:first-child { color: #ff4757; } /* 일요일 빨간색 */
+    .cal-weekdays div:last-child { color: #2e86de; }  /* 토요일 파란색 */
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .cal-day {
+      aspect-ratio: 1 / 1.1;
+      background: #fafbfc;
+      border-radius: 12px;
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+    }
+    .cal-day:hover { background: #f0edff; }
+    .cal-day.other-month { opacity: 0.3; }
+    .cal-day.today { border-color: var(--primary); background: var(--primary-soft); }
+    .cal-day.selected { background: #ffe3e8; border-color: var(--primary); }
+
+    .day-num {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .cal-day:nth-child(7n+1) .day-num { color: #ff4757; }
+    .cal-day:nth-child(7n) .day-num { color: #2e86de; }
+
+    /* 일정 도트 및 뱃지 */
+    .day-events-preview {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow: hidden;
+      max-height: 44px;
+    }
+    .event-badge-mini {
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 4px;
+      background: var(--primary);
+      color: white;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: left;
+    }
+
+    /* 선택된 날짜 상세 일정 영역 */
+    .day-detail-card {
+      background: white;
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .detail-date-title { font-size: 1rem; font-weight: 800; color: var(--primary); }
+    
+    .event-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .event-item {
+      background: #f8f9fe;
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid var(--border);
+    }
+    .event-info h4 { font-size: 0.92rem; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+    .event-info p { font-size: 0.75rem; color: var(--text-sub); }
+    .btn-del-event { background: none; border: none; color: #a4b0be; cursor: pointer; font-size: 0.85rem; padding: 4px; }
+    .btn-del-event:hover { color: #ff4757; }
+
+    /* FAB 버튼 */
+    .fab {
+      position: fixed;
+      right: 20px;
+      bottom: 24px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 8px 20px rgba(255, 94, 126, 0.4);
+      cursor: pointer;
+      border: none;
+      z-index: 50;
+      transition: transform 0.2s;
+    }
+    .fab:active { transform: scale(0.92); }
+
+    /* 모달 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-content { background: white; border-radius: 24px; width: 100%; max-width: 400px; padding: 24px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 0.88rem; font-weight: 700; margin-bottom: 6px; color: #333; }
+    .form-control { width: 100%; padding: 11px 14px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 0.95rem; outline: none; }
+    .form-control:focus { border-color: var(--primary); }
+    .btn { flex: 1; padding: 13px; border-radius: 12px; border: none; font-size: 0.95rem; font-weight: 800; cursor: pointer; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: #f1f2f6; color: #57606f; }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-top">
+      <div class="header-left">
+        <a href="index.html" class="btn-home" title="홈으로"><i class="fa-solid fa-house"></i></a>
+        <div>
+          <div class="header-title">커플 캘린더 📅</div>
+          <p style="font-size: 0.82rem; opacity: 0.95; margin-top: 2px;">둘만의 일정 실시간 공유</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="sync-status">
+      <div class="sync-dot" id="syncDot"></div>
+      <span id="syncStatusText">서버 연결 중...</span>
+    </div>
+
+    <!-- 달력 카드 -->
+    <div class="calendar-card">
+      <div class="cal-nav">
+        <h2 id="calMonthTitle">2026년 11월</h2>
+        <div class="cal-nav-btns">
+          <button class="cal-nav-btn" onclick="changeMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+          <button class="cal-nav-btn" onclick="goToday()">오늘</button>
+          <button class="cal-nav-btn" onclick="changeMonth(1)"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+      </div>
+
+      <div class="cal-weekdays">
+        <div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
+      </div>
+
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+
+    <!-- 선택한 날짜 일정 상세 -->
+    <div class="day-detail-card">
+      <div class="detail-header">
+        <div class="detail-date-title" id="selectedDateTitle">날짜를 선택해주세요</div>
+        <button class="btn-primary" style="padding: 6px 12px; font-size: 0.78rem; border-radius: 8px;" onclick="openAddModalWithDate()">+ 일정 추가</button>
+      </div>
+      <div class="event-list" id="selectedDayEventList">
+        <div style="text-align:center; padding: 20px 0; color:#a4b0be; font-size:0.85rem; font-weight:600;">날짜를 누르면 일정을 확인할 수 있어요!</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="fab" onclick="openAddModal()"><i class="fa-solid fa-plus"></i></button>
+
+  <!-- 일정 추가 모달 -->
+  <div class="modal-overlay" id="addModal">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 16px;">새 일정 추가하기 🗓️</h3>
+      <div class="form-group">
+        <label>날짜</label>
+        <input type="date" class="form-control" id="eventDate">
+      </div>
+      <div class="form-group">
+        <label>일정 제목</label>
+        <input type="text" class="form-control" id="eventTitle" placeholder="예: 1주년 기념 데이트, 벳푸 여행">
+      </div>
+      <div class="form-group">
+        <label>시간 / 메모 (선택)</label>
+        <input type="text" class="form-control" id="eventDesc" placeholder="예: 저녁 7시 강남역 맛집">
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button class="btn btn-secondary" onclick="closeModal()">취소</button>
+        <button class="btn btn-primary" onclick="saveEvent()">저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
+      authDomain: "kobe-couple-app.firebaseapp.com",
+      projectId: "kobe-couple-app",
+      storageBucket: "kobe-couple-app.firebasestorage.app",
+      messagingSenderId: "755701956140",
+      appId: "1:755701956140:web:ea39d7d1e00bd83ade1b89"
+    };
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const eventCollection = db.collection("couple_space").doc("data").collection("couple_calendar");
+
+    let eventsMap = {}; // { 'YYYY-MM-DD': [{ id, title, desc }] }
+    let currentDate = new Date();
+    let selectedDateStr = "";
+
+    const syncDot = document.getElementById('syncDot');
+    const syncText = document.getElementById('syncStatusText');
+
+    // 실시간 동기화
+    eventCollection.onSnapshot((snapshot) => {
+      eventsMap = {};
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const date = data.date;
+        if (!eventsMap[date]) eventsMap[date] = [];
+        eventsMap[date].push({ id: doc.id, ...data });
+      });
+
+      if (syncDot) syncDot.className = 'sync-dot online';
+      if (syncText) syncText.innerText = '실시간 동기화 완료';
+      
+      renderCalendar();
+      if (selectedDateStr) renderSelectedDayEvents(selectedDateStr);
+    }, error => {
+      console.error(error);
+      if (syncDot) syncDot.className = 'sync-dot';
+      if (syncText) syncText.innerText = '연결 오류';
+    });
+
+    function renderCalendar() {
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+
+      document.getElementById('calMonthTitle').innerText = `${year}년 ${month + 1}월`;
+
+      const firstDayIndex = new Date(year, month, 1).getDay();
+      const lastDay = new Date(year, month + 1, 0).getDate();
+      const prevLastDay = new Date(year, month, 0).getDate();
+
+      const grid = document.getElementById('calGrid');
+      grid.innerHTML = '';
+
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      // 이전 달 날짜들
+      for (let i = firstDayIndex; i > 0; i--) {
+        const dNum = prevLastDay - i + 1;
+        const prevMonth = month === 0 ? 11 : month - 1;
+        const prevYear = month === 0 ? year - 1 : year;
+        const dateStr = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}-${String(dNum).padStart(2, '0')}`;
+        grid.appendChild(createDayCell(dNum, dateStr, true));
+      }
+
+      // 이번 달 날짜들
+      for (let i = 1; i <= lastDay; i++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+        const cell = createDayCell(i, dateStr, false, dateStr === todayStr);
+        grid.appendChild(cell);
+      }
+
+      // 다음 달 남은 칸 채우기
+      const totalCells = grid.children.length;
+      const nextDaysCount = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+      for (let i = 1; i <= nextDaysCount; i++) {
+        const nextMonth = month === 11 ? 0 : month + 1;
+        const nextYear = month === 11 ? year + 1 : year;
+        const dateStr = `${nextYear}-${String(nextMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+        grid.appendChild(createDayCell(i, dateStr, true));
+      }
+
+      // 기본 오늘 날짜 선택
+      if (!selectedDateStr) {
+        selectedDateStr = todayStr;
+      }
+      renderSelectedDayEvents(selectedDateStr);
+    }
+
+    function createDayCell(dayNum, dateStr, isOtherMonth, isToday = false) {
+      const cell = document.createElement('div');
+      cell.className = `cal-day ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''} ${selectedDateStr === dateStr ? 'selected' : ''}`;
+      cell.onclick = () => selectDate(dateStr);
+
+      const numSpan = document.createElement('span');
+      numSpan.className = 'day-num';
+      numSpan.innerText = dayNum;
+      cell.appendChild(numSpan);
+
+      const preview = document.createElement('div');
+      preview.className = 'day-events-preview';
+      
+      if (eventsMap[dateStr]) {
+        eventsMap[dateStr].forEach(ev => {
+          const badge = document.createElement('div');
+          badge.className = 'event-badge-mini';
+          badge.innerText = ev.title;
+          preview.appendChild(badge);
+        });
+      }
+      cell.appendChild(preview);
+      return cell;
+    }
+
+    function selectDate(dateStr) {
+      selectedDateStr = dateStr;
+      renderCalendar();
+      renderSelectedDayEvents(dateStr);
+    }
+
+    function renderSelectedDayEvents(dateStr) {
+      const titleEl = document.getElementById('selectedDateTitle');
+      const listEl = document.getElementById('selectedDayEventList');
+
+      const parts = dateStr.split('-');
+      titleEl.innerText = `${parts[0]}년 ${parseInt(parts[1])}월 ${parseInt(parts[2])}일 일정`;
+
+      const dayEvents = eventsMap[dateStr] || [];
+      if (dayEvents.length === 0) {
+        listEl.innerHTML = `<div style="text-align:center; padding: 20px 0; color:#a4b0be; font-size:0.85rem; font-weight:600;">등록된 일정이 없습니다. 우측 상단이나 아래 버튼으로 추가해보세요!</div>`;
+        return;
+      }
+
+      listEl.innerHTML = dayEvents.map(ev => `
+        <div class="event-item">
+          <div class="event-info">
+            <h4>${ev.title}</h4>
+            ${ev.desc ? `<p>${ev.desc}</p>` : ''}
+          </div>
+          <button class="btn-del-event" onclick="deleteEvent('${ev.id}')"><i class="fa-solid fa-trash-can"></i></button>
+        </div>
+      `).join('');
+    }
+
+    function changeMonth(diff) {
+      currentDate.setMonth(currentDate.getMonth() + diff);
+      renderCalendar();
+    }
+
+    function goToday() {
+      currentDate = new Date();
+      selectedDateStr = currentDate.toISOString().split('T')[0];
+      renderCalendar();
+    }
+
+    function openAddModal() {
+      document.getElementById('eventDate').value = selectedDateStr || new Date().toISOString().split('T')[0];
+      document.getElementById('eventTitle').value = '';
+      document.getElementById('eventDesc').value = '';
+      document.getElementById('addModal').classList.add('active');
+    }
+
+    function openAddModalWithDate() {
+      openAddModal();
+    }
+
+    function closeModal() {
+      document.getElementById('addModal').classList.remove('active');
+    }
+
+    function saveEvent() {
+      const date = document.getElementById('eventDate').value;
+      const title = document.getElementById('eventTitle').value.trim();
+      const desc = document.getElementById('eventDesc').value.trim();
+
+      if (!date || !title) return alert('날짜와 일정 제목을 입력해주세요!');
+
+      if (syncDot) syncDot.className = 'sync-dot syncing';
+      if (syncText) syncText.innerText = '저장 중...';
+
+      const docId = String(Date.now());
+      eventCollection.doc(docId).set({
+        date, title, desc, createdAt: Date.now()
+      }).then(() => {
+        closeModal();
+      }).catch(err => {
+        console.error(err);
+        alert('저장 실패: ' + err.message);
+      });
+    }
+
+    function deleteEvent(id) {
+      if (confirm('이 일정을 삭제하시겠습니까?')) {
+        eventCollection.doc(id).delete();
+      }
+    }
+  </script>
+</body>
+</html>
