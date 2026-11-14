@@ -68,17 +68,27 @@
     .sync-status {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.82rem;
-      color: var(--text-sub);
+      justify-content: space-between;
       margin-bottom: 12px;
-      justify-content: flex-end;
     }
+    .sync-left { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--text-sub); }
     .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #a4b0be; }
     .sync-dot.online { background: #2ed573; box-shadow: 0 0 8px #2ed573; }
     .sync-dot.syncing { background: #ffa502; }
 
-    /* 캘린더 본체 카드 (Z폴드 8 펼침/접힘 대응 유연한 높이) */
+    /* 모바일 일괄 등록 버튼 */
+    .btn-batch {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border: 1.5px solid #ffccd5;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* 캘린더 본체 카드 */
     .calendar-card {
       background: white;
       border-radius: 24px;
@@ -127,7 +137,6 @@
       gap: 4px;
     }
     
-    /* Z폴드 화면비율 대응: 칸이 깨지지 않도록 min-height 적용 */
     .cal-day {
       min-height: 72px;
       background: #fafbfc;
@@ -155,7 +164,6 @@
     .cal-day:nth-child(7n+1) .day-num { color: #ff4757; }
     .cal-day:nth-child(7n) .day-num { color: #2e86de; }
 
-    /* 일정 뱃지 컨테이너 (스크롤 방지 및 말줄임 처리) */
     .day-events-preview {
       width: 100%;
       display: flex;
@@ -203,7 +211,7 @@
       justify-content: space-between;
       align-items: center;
       border: 1px solid var(--border);
-      border-left-width: 5px; /* 색상 바 표시 */
+      border-left-width: 5px;
     }
     .event-info h4 { font-size: 0.92rem; font-weight: 800; color: var(--text); margin-bottom: 2px; }
     .event-info p { font-size: 0.75rem; color: var(--text-sub); }
@@ -250,12 +258,7 @@
     .form-control { width: 100%; padding: 11px 14px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 0.95rem; outline: none; }
     .form-control:focus { border-color: var(--primary); }
 
-    /* 색상 선택 팔레트 */
-    .color-picker {
-      display: flex;
-      gap: 10px;
-      margin-top: 6px;
-    }
+    .color-picker { display: flex; gap: 10px; margin-top: 6px; }
     .color-chip {
       width: 28px; height: 28px;
       border-radius: 50%;
@@ -263,10 +266,7 @@
       border: 2px solid transparent;
       transition: transform 0.15s;
     }
-    .color-chip.selected {
-      border-color: #2d3436;
-      transform: scale(1.15);
-    }
+    .color-chip.selected { border-color: #2d3436; transform: scale(1.15); }
 
     .btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-size: 0.95rem; font-weight: 800; cursor: pointer; }
     .btn-primary { background: var(--primary); color: white; }
@@ -289,8 +289,12 @@
 
   <div class="container">
     <div class="sync-status">
-      <div class="sync-dot" id="syncDot"></div>
-      <span id="syncStatusText">서버 연결 중...</span>
+      <div class="sync-left">
+        <div class="sync-dot" id="syncDot"></div>
+        <span id="syncStatusText">서버 연결 중...</span>
+      </div>
+      <!-- 모바일 원클릭 일괄 등록 버튼 -->
+      <button class="btn-batch" onclick="batchUploadEvents()">✨ 타임트리 일정 한번에 가져오기</button>
     </div>
 
     <!-- 달력 카드 -->
@@ -381,7 +385,6 @@
     const syncDot = document.getElementById('syncDot');
     const syncText = document.getElementById('syncStatusText');
 
-    // 로컬 시간 기준으로 YYYY-MM-DD 문자열을 안전하게 만드는 함수 (날짜 밀림 방지)
     function getFormattedDate(dateObj) {
       const year = dateObj.getFullYear();
       const month = String(dateObj.getMonth() + 1).padStart(2, '0');
@@ -389,7 +392,6 @@
       return `${year}-${month}-${day}`;
     }
 
-    // 색상 선택 이벤트
     document.querySelectorAll('.color-chip').forEach(chip => {
       chip.addEventListener('click', () => {
         document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('selected'));
@@ -398,7 +400,6 @@
       });
     });
 
-    // 실시간 동기화
     eventCollection.onSnapshot((snapshot) => {
       eventsMap = {};
       snapshot.forEach(doc => {
@@ -434,7 +435,6 @@
 
       const todayStr = getFormattedDate(new Date());
 
-      // 이전 달 날짜들
       for (let i = firstDayIndex; i > 0; i--) {
         const dNum = prevLastDay - i + 1;
         const prevMonth = month === 0 ? 11 : month - 1;
@@ -443,14 +443,12 @@
         grid.appendChild(createDayCell(dNum, dateStr, true));
       }
 
-      // 이번 달 날짜들
       for (let i = 1; i <= lastDay; i++) {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
         const cell = createDayCell(i, dateStr, false, dateStr === todayStr);
         grid.appendChild(cell);
       }
 
-      // 다음 달 남은 칸 채우기
       const totalCells = grid.children.length;
       const nextDaysCount = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
       for (let i = 1; i <= nextDaysCount; i++) {
@@ -477,7 +475,6 @@
       preview.className = 'day-events-preview';
       
       if (eventsMap[dateStr]) {
-        // Z폴드 화면 공간에 따라 최대 2개만 표시하고 나머지는 생략하여 줄바꿈 깨짐 방지
         const maxDisplay = 2;
         eventsMap[dateStr].slice(0, maxDisplay).forEach(ev => {
           const badge = document.createElement('div');
@@ -576,6 +573,61 @@
       if (confirm('이 일정을 삭제하시겠습니까?')) {
         eventCollection.doc(id).delete();
       }
+    }
+
+    // 모바일 원클릭 일괄 등록 함수
+    async function batchUploadEvents() {
+      const eventsToUpload = [
+        {date: "2026-11-02", title: "오이타 여행", desc: "생일 기념 여행", color: "#ff5e7e"},
+        {date: "2026-11-03", title: "오이타 여행", desc: "생일 기념 여행", color: "#ff5e7e"},
+        {date: "2026-11-04", title: "오이타 여행", desc: "생일 기념 여행", color: "#ff5e7e"},
+        {date: "2026-11-08", title: "야간", desc: "근무", color: "#2e86de"},
+        {date: "2026-11-11", title: "야간", desc: "근무", color: "#2e86de"},
+        {date: "2026-11-14", title: "야간", desc: "근무", color: "#2e86de"},
+        {date: "2026-11-17", title: "야간", desc: "근무", color: "#2e86de"},
+        {date: "2026-11-18", title: "조책임 술", desc: "모임", color: "#ff9f43"},
+        {date: "2026-11-20", title: "뚜 청모", desc: "OMCL 강주, 상견", color: "#ff5e7e"},
+        {date: "2026-11-21", title: "뚜 캠핑", desc: "커플 캠핑", color: "#10ac84"},
+        {date: "2026-11-22", title: "뚜 캠핑", desc: "커플 캠핑", color: "#10ac84"},
+        {date: "2026-11-24", title: "송별회 / 야간", desc: "근무 및 모임", color: "#ff9f43"},
+        {date: "2026-11-27", title: "야간", desc: "근무", color: "#2e86de"},
+        {date: "2026-11-28", title: "현푸평 / 수연 결혼식", desc: "상견", color: "#ff5e7e"},
+        {date: "2026-11-29", title: "현푸평 / 삼치리", desc: "일정", color: "#10ac84"},
+        {date: "2026-11-30", title: "야간", desc: "근무", color: "#2e86de"},
+        {date: "2026-12-01", title: "야간", desc: "근무", color: "#2e86de"},
+        {date: "2026-12-03", title: "야간", desc: "근무", color: "#2e86de"},
+        {date: "2026-12-06", title: "주간 일정", desc: "주간", color: "#ff9f43"},
+        {date: "2026-12-07", title: "주간 일정", desc: "주간", color: "#ff9f43"},
+        {date: "2026-12-08", title: "주간 일정", desc: "주간", color: "#ff9f43"},
+        {date: "2026-12-09", title: "주간 일정", desc: "주간", color: "#ff9f43"},
+        {date: "2026-12-10", title: "야간", desc: "근무", color: "#2e86de"},
+        {date: "2026-12-12", title: "수연 결혼식", desc: "강주", color: "#ff9f43"},
+        {date: "2026-12-13", title: "야간", desc: "근무", color: "#2e86de"},
+        {date: "2026-12-16", title: "야간", desc: "근무", color: "#2e86de"},
+        {date: "2026-12-19", title: "야간", desc: "근무", color: "#2e86de"},
+        {date: "2026-12-22", title: "주간 일정", desc: "주간", color: "#ff9f43"},
+        {date: "2026-12-23", title: "주간 일정", desc: "주간", color: "#ff9f43"},
+        {date: "2026-12-24", title: "크리스마스 이브 / 쫑 휴가", desc: "휴가 및 데이트", color: "#ff5e7e"},
+        {date: "2026-12-25", title: "성탄절", desc: "크리스마스", color: "#ff5e7e"},
+        {date: "2026-12-26", title: "야간", desc: "근무", color: "#2e86de"},
+        {date: "2026-12-29", title: "야간", desc: "근무", color: "#2e86de"},
+        {date: "2026-12-31", title: "새해 전날", desc: "연말", color: "#ff5e7e"},
+        {date: "2027-01-01", title: "신정 / 야간", desc: "새해 및 근무", color: "#ff5e7e"}
+      ];
+
+      if (!confirm("타임트리 11~12월 일정을 한 번에 등록하시겠습니까?")) return;
+
+      for (let ev of eventsToUpload) {
+        const id = String(Date.now() + Math.random());
+        await eventCollection.doc(id).set({
+          date: ev.date,
+          title: ev.title,
+          desc: ev.desc,
+          color: ev.color,
+          createdAt: Date.now()
+        });
+      }
+      alert("모든 일정이 캘린더에 성공적으로 등록되었습니다! ✨");
     }
   </script>
 </body>
