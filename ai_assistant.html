@@ -170,7 +170,7 @@
   <div class="chat-container" id="chatContainer">
     <div class="chat-bubble ai">
       안녕! 나는 뚜❣️쫑 커플의 전용 AI 비서야. 💖<br>
-      "오늘 우리 일정 뭐야?"라고 물어보거나, "오늘 야구 직관했는데 졌어"라고 말해주면 해당 기록을 직관 일기에 척척 반영해 줄게!
+      "오늘 우리 일정 뭐야?"라고 물어보거나, "오늘 야구 직관했는데 졌어"라고 말해주면 오늘 날짜 기준으로 직관 일기에 척척 반영해 줄게!
     </div>
   </div>
 
@@ -271,11 +271,14 @@
         });
         appendMessage(responseHTML, 'ai');
       } 
-      // [기능 2] 야구 직관 관련 기록 (baseball_games 컬렉션에 저장)
+      // [기능 2] 야구 직관 관련 기록 (실제 오늘 날짜로 `baseball_games`에 저장)
       else if (lowerQ.includes('직관') || lowerQ.includes('야구') || lowerQ.includes('졌어') || lowerQ.includes('이겼어')) {
-        // 오늘 날짜 기본 지정 (예: 2027시즌 모의 테스트용 또는 실제 오늘 날짜)
-        // 현재 시각 기준 (2026년 또는 2027년 스케줄 대응)
-        const todayStr = "2027-04-01"; // 또는 new Date().toISOString().split('T')[0];
+        // 💡 실제 기기의 오늘 날짜를 자동으로 가져옴 (YYYY-MM-DD 형식)
+        const todayObj = new Date();
+        const year = todayObj.getFullYear();
+        const month = String(todayObj.getMonth() + 1).padStart(2, '0');
+        const day = String(todayObj.getDate()).padStart(2, '0');
+        const todayStr = `${year}-${month}-${day}`;
         
         let resultType = 'lose';
         let resultMsg = "패배 ㅠㅠ 아쉽지만 다음엔 꼭 이길 거예요!";
