@@ -63,7 +63,7 @@
     }
     .header-title { font-size: 1.3rem; font-weight: 800; }
 
-    .container { max-width: 540px; margin: 0 auto; padding: 16px; }
+    .container { max-width: 600px; margin: 0 auto; padding: 16px; }
 
     .sync-status {
       display: flex;
@@ -78,11 +78,11 @@
     .sync-dot.online { background: #2ed573; box-shadow: 0 0 8px #2ed573; }
     .sync-dot.syncing { background: #ffa502; }
 
-    /* 캘린더 본체 카드 */
+    /* 캘린더 본체 카드 (Z폴드 8 펼침/접힘 대응 유연한 높이) */
     .calendar-card {
       background: white;
       border-radius: 24px;
-      padding: 20px;
+      padding: 18px 14px;
       box-shadow: var(--shadow);
       border: 1px solid var(--border);
       margin-bottom: 16px;
@@ -92,17 +92,18 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
+      padding: 0 4px;
     }
-    .cal-nav h2 { font-size: 1.2rem; font-weight: 800; color: var(--text); }
+    .cal-nav h2 { font-size: 1.15rem; font-weight: 800; color: var(--text); }
     .cal-nav-btns { display: flex; gap: 6px; }
     .cal-nav-btn {
       background: var(--primary-soft);
       color: var(--primary);
       border: none;
-      width: 36px; height: 36px;
+      width: 34px; height: 34px;
       border-radius: 50%;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       font-weight: 800;
@@ -112,24 +113,26 @@
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       text-align: center;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 800;
       color: var(--text-sub);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
-    .cal-weekdays div:first-child { color: #ff4757; } /* 일요일 빨간색 */
-    .cal-weekdays div:last-child { color: #2e86de; }  /* 토요일 파란색 */
+    .cal-weekdays div:first-child { color: #ff4757; }
+    .cal-weekdays div:last-child { color: #2e86de; }
 
     .cal-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 4px;
     }
+    
+    /* Z폴드 화면비율 대응: 칸이 깨지지 않도록 min-height 적용 */
     .cal-day {
-      aspect-ratio: 1 / 1.1;
+      min-height: 72px;
       background: #fafbfc;
-      border-radius: 12px;
-      padding: 4px;
+      border-radius: 10px;
+      padding: 4px 2px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -144,34 +147,33 @@
     .cal-day.selected { background: #ffe3e8; border-color: var(--primary); }
 
     .day-num {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 700;
       color: var(--text);
-      margin-bottom: 2px;
+      margin-bottom: 3px;
     }
     .cal-day:nth-child(7n+1) .day-num { color: #ff4757; }
     .cal-day:nth-child(7n) .day-num { color: #2e86de; }
 
-    /* 일정 도트 및 뱃지 */
+    /* 일정 뱃지 컨테이너 (스크롤 방지 및 말줄임 처리) */
     .day-events-preview {
       width: 100%;
       display: flex;
       flex-direction: column;
       gap: 2px;
       overflow: hidden;
-      max-height: 44px;
     }
     .event-badge-mini {
-      font-size: 0.62rem;
+      font-size: 0.6rem;
       font-weight: 700;
-      padding: 1px 4px;
+      padding: 2px 4px;
       border-radius: 4px;
-      background: var(--primary);
       color: white;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       text-align: left;
+      width: 100%;
     }
 
     /* 선택된 날짜 상세 일정 영역 */
@@ -190,9 +192,9 @@
       padding-bottom: 8px;
       border-bottom: 1px solid var(--border);
     }
-    .detail-date-title { font-size: 1rem; font-weight: 800; color: var(--primary); }
+    .detail-date-title { font-size: 0.98rem; font-weight: 800; color: var(--primary); }
     
-    .event-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .event-list { display: flex; flex-direction: column; gap: 8px; }
     .event-item {
       background: #f8f9fe;
       border-radius: 12px;
@@ -201,6 +203,7 @@
       justify-content: space-between;
       align-items: center;
       border: 1px solid var(--border);
+      border-left-width: 5px; /* 색상 바 표시 */
     }
     .event-info h4 { font-size: 0.92rem; font-weight: 800; color: var(--text); margin-bottom: 2px; }
     .event-info p { font-size: 0.75rem; color: var(--text-sub); }
@@ -212,20 +215,19 @@
       position: fixed;
       right: 20px;
       bottom: 24px;
-      width: 58px;
-      height: 58px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       background: var(--primary);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       box-shadow: 0 8px 20px rgba(255, 94, 126, 0.4);
       cursor: pointer;
       border: none;
       z-index: 50;
-      transition: transform 0.2s;
     }
     .fab:active { transform: scale(0.92); }
 
@@ -242,12 +244,31 @@
       padding: 16px;
     }
     .modal-overlay.active { display: flex; }
-    .modal-content { background: white; border-radius: 24px; width: 100%; max-width: 400px; padding: 24px; }
+    .modal-content { background: white; border-radius: 24px; width: 100%; max-width: 380px; padding: 22px; }
     .form-group { margin-bottom: 14px; }
-    .form-group label { display: block; font-size: 0.88rem; font-weight: 700; margin-bottom: 6px; color: #333; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; color: #333; }
     .form-control { width: 100%; padding: 11px 14px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 0.95rem; outline: none; }
     .form-control:focus { border-color: var(--primary); }
-    .btn { flex: 1; padding: 13px; border-radius: 12px; border: none; font-size: 0.95rem; font-weight: 800; cursor: pointer; }
+
+    /* 색상 선택 팔레트 */
+    .color-picker {
+      display: flex;
+      gap: 10px;
+      margin-top: 6px;
+    }
+    .color-chip {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.15s;
+    }
+    .color-chip.selected {
+      border-color: #2d3436;
+      transform: scale(1.15);
+    }
+
+    .btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-size: 0.95rem; font-weight: 800; cursor: pointer; }
     .btn-primary { background: var(--primary); color: white; }
     .btn-secondary { background: #f1f2f6; color: #57606f; }
   </style>
@@ -260,7 +281,7 @@
         <a href="index.html" class="btn-home" title="홈으로"><i class="fa-solid fa-house"></i></a>
         <div>
           <div class="header-title">커플 캘린더 📅</div>
-          <p style="font-size: 0.82rem; opacity: 0.95; margin-top: 2px;">둘만의 일정 실시간 공유</p>
+          <p style="font-size: 0.8rem; opacity: 0.95; margin-top: 2px;">둘만의 일정 실시간 공유</p>
         </div>
       </div>
     </div>
@@ -294,10 +315,10 @@
     <div class="day-detail-card">
       <div class="detail-header">
         <div class="detail-date-title" id="selectedDateTitle">날짜를 선택해주세요</div>
-        <button class="btn-primary" style="padding: 6px 12px; font-size: 0.78rem; border-radius: 8px;" onclick="openAddModalWithDate()">+ 일정 추가</button>
+        <button class="btn-primary" style="padding: 6px 12px; font-size: 0.78rem; border-radius: 8px;" onclick="openAddModal()">+ 일정 추가</button>
       </div>
       <div class="event-list" id="selectedDayEventList">
-        <div style="text-align:center; padding: 20px 0; color:#a4b0be; font-size:0.85rem; font-weight:600;">날짜를 누르면 일정을 확인할 수 있어요!</div>
+        <div style="text-align:center; padding: 16px 0; color:#a4b0be; font-size:0.85rem; font-weight:600;">날짜를 누르면 일정을 확인할 수 있어요!</div>
       </div>
     </div>
   </div>
@@ -307,21 +328,31 @@
   <!-- 일정 추가 모달 -->
   <div class="modal-overlay" id="addModal">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 16px;">새 일정 추가하기 🗓️</h3>
+      <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 14px;">새 일정 추가하기 🗓️</h3>
       <div class="form-group">
         <label>날짜</label>
         <input type="date" class="form-control" id="eventDate">
       </div>
       <div class="form-group">
         <label>일정 제목</label>
-        <input type="text" class="form-control" id="eventTitle" placeholder="예: 1주년 기념 데이트, 벳푸 여행">
+        <input type="text" class="form-control" id="eventTitle" placeholder="예: 1주년 기념 데이트">
       </div>
       <div class="form-group">
         <label>시간 / 메모 (선택)</label>
         <input type="text" class="form-control" id="eventDesc" placeholder="예: 저녁 7시 강남역 맛집">
       </div>
+      <div class="form-group">
+        <label>일정 색상</label>
+        <div class="color-picker" id="colorPicker">
+          <div class="color-chip selected" style="background: #ff5e7e;" data-color="#ff5e7e"></div>
+          <div class="color-chip" style="background: #2e86de;" data-color="#2e86de"></div>
+          <div class="color-chip" style="background: #10ac84;" data-color="#10ac84"></div>
+          <div class="color-chip" style="background: #ff9f43;" data-color="#ff9f43"></div>
+          <div class="color-chip" style="background: #5f27cd;" data-color="#5f27cd"></div>
+        </div>
+      </div>
 
-      <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <div style="display: flex; gap: 10px; margin-top: 18px;">
         <button class="btn btn-secondary" onclick="closeModal()">취소</button>
         <button class="btn btn-primary" onclick="saveEvent()">저장하기</button>
       </div>
@@ -342,12 +373,30 @@
     const db = firebase.firestore();
     const eventCollection = db.collection("couple_space").doc("data").collection("couple_calendar");
 
-    let eventsMap = {}; // { 'YYYY-MM-DD': [{ id, title, desc }] }
+    let eventsMap = {}; 
     let currentDate = new Date();
-    let selectedDateStr = "";
+    let selectedDateStr = getFormattedDate(new Date());
+    let selectedColor = "#ff5e7e";
 
     const syncDot = document.getElementById('syncDot');
     const syncText = document.getElementById('syncStatusText');
+
+    // 로컬 시간 기준으로 YYYY-MM-DD 문자열을 안전하게 만드는 함수 (날짜 밀림 방지)
+    function getFormattedDate(dateObj) {
+      const year = dateObj.getFullYear();
+      const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const day = String(dateObj.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    // 색상 선택 이벤트
+    document.querySelectorAll('.color-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('selected'));
+        chip.classList.add('selected');
+        selectedColor = chip.getAttribute('data-color');
+      });
+    });
 
     // 실시간 동기화
     eventCollection.onSnapshot((snapshot) => {
@@ -383,7 +432,7 @@
       const grid = document.getElementById('calGrid');
       grid.innerHTML = '';
 
-      const todayStr = new Date().toISOString().split('T')[0];
+      const todayStr = getFormattedDate(new Date());
 
       // 이전 달 날짜들
       for (let i = firstDayIndex; i > 0; i--) {
@@ -411,10 +460,6 @@
         grid.appendChild(createDayCell(i, dateStr, true));
       }
 
-      // 기본 오늘 날짜 선택
-      if (!selectedDateStr) {
-        selectedDateStr = todayStr;
-      }
       renderSelectedDayEvents(selectedDateStr);
     }
 
@@ -432,12 +477,23 @@
       preview.className = 'day-events-preview';
       
       if (eventsMap[dateStr]) {
-        eventsMap[dateStr].forEach(ev => {
+        // Z폴드 화면 공간에 따라 최대 2개만 표시하고 나머지는 생략하여 줄바꿈 깨짐 방지
+        const maxDisplay = 2;
+        eventsMap[dateStr].slice(0, maxDisplay).forEach(ev => {
           const badge = document.createElement('div');
           badge.className = 'event-badge-mini';
+          badge.style.backgroundColor = ev.color || '#ff5e7e';
           badge.innerText = ev.title;
           preview.appendChild(badge);
         });
+        if (eventsMap[dateStr].length > maxDisplay) {
+          const moreBadge = document.createElement('div');
+          moreBadge.style.fontSize = '0.55rem';
+          moreBadge.style.color = '#8395a7';
+          moreBadge.style.textAlign = 'center';
+          moreBadge.innerText = `+${eventsMap[dateStr].length - maxDisplay}`;
+          preview.appendChild(moreBadge);
+        }
       }
       cell.appendChild(preview);
       return cell;
@@ -458,12 +514,12 @@
 
       const dayEvents = eventsMap[dateStr] || [];
       if (dayEvents.length === 0) {
-        listEl.innerHTML = `<div style="text-align:center; padding: 20px 0; color:#a4b0be; font-size:0.85rem; font-weight:600;">등록된 일정이 없습니다. 우측 상단이나 아래 버튼으로 추가해보세요!</div>`;
+        listEl.innerHTML = `<div style="text-align:center; padding: 16px 0; color:#a4b0be; font-size:0.85rem; font-weight:600;">등록된 일정이 없습니다. 우측 상단이나 아래 버튼으로 추가해보세요!</div>`;
         return;
       }
 
       listEl.innerHTML = dayEvents.map(ev => `
-        <div class="event-item">
+        <div class="event-item" style="border-left-color: ${ev.color || '#ff5e7e'};">
           <div class="event-info">
             <h4>${ev.title}</h4>
             ${ev.desc ? `<p>${ev.desc}</p>` : ''}
@@ -480,19 +536,15 @@
 
     function goToday() {
       currentDate = new Date();
-      selectedDateStr = currentDate.toISOString().split('T')[0];
+      selectedDateStr = getFormattedDate(currentDate);
       renderCalendar();
     }
 
     function openAddModal() {
-      document.getElementById('eventDate').value = selectedDateStr || new Date().toISOString().split('T')[0];
+      document.getElementById('eventDate').value = selectedDateStr || getFormattedDate(new Date());
       document.getElementById('eventTitle').value = '';
       document.getElementById('eventDesc').value = '';
       document.getElementById('addModal').classList.add('active');
-    }
-
-    function openAddModalWithDate() {
-      openAddModal();
     }
 
     function closeModal() {
@@ -511,7 +563,7 @@
 
       const docId = String(Date.now());
       eventCollection.doc(docId).set({
-        date, title, desc, createdAt: Date.now()
+        date, title, desc, color: selectedColor, createdAt: Date.now()
       }).then(() => {
         closeModal();
       }).catch(err => {
