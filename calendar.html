@@ -149,7 +149,8 @@
       color: var(--text);
       margin-bottom: 3px;
     }
-    .cal-day:nth-child(7n+1) .day-num { color: #ff4757; }
+    /* 일요일이거나 공휴일인 경우 날짜 숫자를 빨간색으로 */
+    .cal-day:nth-child(7n+1) .day-num, .cal-day.is-holiday .day-num { color: #ff4757; }
     .cal-day:nth-child(7n) .day-num { color: #2e86de; }
 
     .day-events-preview {
@@ -380,16 +381,36 @@
       });
     });
 
-    // 💡 대한민국 주요 공휴일 자동 내장 데이터 (크리스마스, 신정 등)
-    const holidays = {
-      "2026-12-25": { title: "성탄절 (크리스마스)", color: "#ff5e7e" },
-      "2027-01-01": { title: "신정", color: "#ff5e7e" }
+    // 💡 대한민국 주요 양력 법정 공휴일 자동 생성 함수 (매년 자동 계산)
+    function getHolidaysForYear(year) {
+      return {
+        [`${year}-01-01`]: "신정",
+        [`${year}-03-01`]: "삼일절",
+        [`${year}-05-05`]: "어린이날",
+        [`${year}-06-06`]: "현충일",
+        [`${year}-08-15`]: "광복절",
+        [`${year}-10-03`]: "개천절",
+        [`${year}-10-09`]: "한글날",
+        [`${year}-12-25`]: "성탄절 (크리스마스)"
+      };
+    }
+
+    // 추가로 2026/2027 주요 음력 공휴일(설날, 부처님오신날, 추석 등) 수동 병합 데이터
+    const specialHolidays = {
+      // 2026년 음력 휴일 및 대체공휴일
+      "2026-02-16": "설날 연휴", "2026-02-17": "설날", "2026-02-18": "설날 연휴",
+      "2026-05-24": "부처님오신날", "2026-05-25": "대체공휴일",
+      "2026-09-24": "추석 연휴", "2026-09-25": "추석", "2026-09-26": "추석 연휴",
+      // 2027년 음력 휴일 및 대체공휴일
+      "2027-02-06": "설날 연휴", "2027-02-07": "설날", "2027-02-08": "설날 연휴",
+      "2027-05-13": "부처님오신날",
+      "2027-09-14": "추석 연휴", "2027-09-15": "추석", "2027-09-16": "추석 연휴"
     };
 
     eventCollection.onSnapshot((snapshot) => {
       eventsMap = {};
       
-      // 사용자 입력 데이터 로드
+      // 1. 사용자 입력 데이터 로드
       snapshot.forEach(doc => {
         const data = doc.data();
         const date = data.date;
@@ -397,16 +418,33 @@
         eventsMap[date].push({ id: doc.id, ...data });
       });
 
-      // 공휴일 자동 병합 (DB에 없어도 화면에 자동 표시)
-      for (let hDate in holidays) {
-        if (!eventsMap[hDate]) eventsMap[hDate] = [];
-        // 중복 추가 방지 체크
-        if (!eventsMap[hDate].some(e => e.title === holidays[hDate].title)) {
-          eventsMap[hDate].unshift({
-            id: 'holiday_' + hDate,
-            title: holidays[hDate].title,
-            desc: '공휴일',
-            color: holidays[hDate].color,
+      // 2. 현재 조회 중인 연도들의 공휴일 자동 주입
+      const currentYear = currentDate.getFullYear();
+      [currentYear - 1, currentYear, currentYear + 1].forEach(y => {
+        const yearHolidays = getHolidaysForYear(y);
+        for (let hDate in yearHolidays) {
+          if (!eventsMap[hDate]) eventsMap[hDate] = [];
+          if (!eventsMap[hDate].some(e => e.isHoliday)) {
+            eventsMap[hDate].unshift({
+              id: 'holiday_' + hDate,
+              title: yearHolidays[hDate],
+              desc: '법정 공휴일',
+              color: '#ff4757',
+              isHoliday: true
+            });
+          }
+        }
+      });
+
+      // 3. 음력 및 특수 공휴일 주입
+      for (let sDate in specialHolidays) {
+        if (!eventsMap[sDate]) eventsMap[sDate] = [];
+        if (!eventsMap[sDate].some(e => e.title === specialHolidays[sDate])) {
+          eventsMap[sDate].unshift({
+            id: 'sholiday_' + sDate,
+            title: specialHolidays[sDate],
+            desc: '법정 공휴일',
+            color: '#ff4757',
             isHoliday: true
           });
         }
@@ -466,7 +504,10 @@
 
     function createDayCell(dayNum, dateStr, isOtherMonth, isToday = false) {
       const cell = document.createElement('div');
-      cell.className = `cal-day ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''} ${selectedDateStr === dateStr ? 'selected' : ''}`;
+      
+      // 공휴일 여부 체크해서 클래스 추가
+      const hasHoliday = eventsMap[dateStr] && eventsMap[dateStr].some(e => e.isHoliday);
+      cell.className = `cal-day ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''} ${hasHoliday ? 'is-holiday' : ''} ${selectedDateStr === dateStr ? 'selected' : ''}`;
       cell.onclick = () => selectDate(dateStr);
 
       const numSpan = document.createElement('span');
@@ -524,7 +565,7 @@
             <h4>${ev.title}</h4>
             ${ev.desc ? `<p>${ev.desc}</p>` : ''}
           </div>
-          ${ev.isHoliday ? '<span style="font-size:0.75rem; color:#ff5e7e; font-weight:700;">공휴일</span>' : `<button class="btn-del-event" onclick="deleteEvent('${ev.id}')"><i class="fa-solid fa-trash-can"></i></button>`}
+          ${ev.isHoliday ? '<span style="font-size:0.75rem; color:#ff4757; font-weight:700;">공휴일</span>' : `<button class="btn-del-event" onclick="deleteEvent('${ev.id}')"><i class="fa-solid fa-trash-can"></i></button>`}
         </div>
       `).join('');
     }
@@ -553,7 +594,7 @@
 
     function saveEvent() {
       const date = document.getElementById('eventDate').value;
-      const title = document.getElementById('eventTitle').value.trim();
+      const title = document.getElementById('eventTitle'].value.trim();
       const desc = document.getElementById('eventDesc').value.trim();
 
       if (!date || !title) return alert('날짜와 일정 제목을 입력해주세요!');
