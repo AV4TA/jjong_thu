@@ -168,8 +168,8 @@
 
   <div class="chat-container" id="chatContainer">
     <div class="chat-bubble ai">
-      안녕! 모바일에서도 편하게 말해줘. 💖<br>
-      일정 조회, 일정 등록, 야구 직관 기록까지 척척 해줄게!
+      안녕! 모바일에서도 완벽하게 연동되는 AI 비서야. 💖<br>
+      일정 등록이나 오늘 야구 직관 결과를 편하게 말해줘!
     </div>
   </div>
 
@@ -185,7 +185,6 @@
   </div>
 
   <script>
-    // 💡 전달해주신 API Key
     const GEMINI_API_KEY = "AQ.Ab8RN6J3ixPpQ06Y5vYdyBbLMY3GBjzZlg9cZXpiqE0SKy3gKQ";
 
     const firebaseConfig = {
@@ -210,6 +209,30 @@
       allEvents = [];
       snapshot.forEach(doc => allEvents.push({ id: doc.id, ...doc.data() }));
     });
+
+    let serverBaseballData = {};
+    async function loadBaseballJson() {
+      try {
+        const res = await fetch('./baseball.json?t=' + Date.now());
+        if (res.ok) {
+          serverBaseballData = await res.json();
+        }
+      } catch(e) { console.warn("baseball.json 로드 대기", e); }
+    }
+    loadBaseballJson();
+
+    const teamFullMap = {
+      'LG': 'LG 트윈스', 'SSG': 'SSG 랜더스', '두산': '두산 베어스', 'KIA': 'KIA 타이거즈',
+      '삼성': '삼성 라이온즈', '롯데': '롯데 자이언츠', '한화': '한화 이글스', 'NC': 'NC 다이노스', '키움': '키움 히어로즈', 'KT': 'kt wiz'
+    };
+
+    function normalizeTeam(name) {
+      if (!name) return '상대팀';
+      for (const [k, v] of Object.entries(teamFullMap)) {
+        if (name.includes(k)) return v;
+      }
+      return name;
+    }
 
     function appendMessage(text, sender) {
       const bubble = document.createElement('div');
@@ -257,8 +280,8 @@
              {"type": "add_baseball", "result": "win 또는 lose", "message": "직관 기록 완료 안내 메시지"}
         `;
 
-        // 모바일 브라우저 표준 fetch 통신 (에러 방지 최적화)
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        // 💡 최신 권장 모델 (gemini-3.8-flash) 적용 완료
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${GEMINI_API_KEY}`;
         const response = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -268,7 +291,7 @@
         });
 
         const data = await response.json();
-        lastBubble.remove(); // "생각 중..." 삭제
+        lastBubble.remove();
 
         if (data.error) {
           throw new Error(data.error.message || 'API 통신 오류');
@@ -300,15 +323,20 @@
           appendMessage(jsonRes.message || "일정이 캘린더에 쏙 등록되었어! ✨", 'ai');
         } 
         else if (jsonRes.type === 'add_baseball') {
+          let matchInfo = serverBaseballData.schedule && serverBaseballData.schedule[todayStr];
+          let opponent = matchInfo ? normalizeTeam(matchInfo.opponent) : "kt wiz 공식 경기";
+          let stadium = matchInfo ? matchInfo.stadium : "수원 위즈파크 (홈)";
+          let score = matchInfo ? matchInfo.score : (jsonRes.result === 'win' ? "KT 승" : "KT 패");
+
           await baseballCol.doc(String(Date.now())).set({
             date: todayStr,
-            opponent: "LG 트윈스",
+            opponent: opponent,
             result: jsonRes.result,
-            score: jsonRes.result === 'win' ? "KT 5 : 3 승" : "KT 2 : 4 패",
-            stadium: "수원 위즈파크 (홈)",
+            score: score,
+            stadium: stadium,
             createdAt: Date.now()
           });
-          appendMessage(jsonRes.message || "야구 직관 결과가 [야구 직관 페이지]에 안전하게 기록되었어! ⚾", 'ai');
+          appendMessage(`오늘(${todayStr}) ${opponent}전 직관 결과가 [야구 직관 페이지]에 안전하게 기록되었어! ⚾`, 'ai');
         }
 
       } catch (err) {
