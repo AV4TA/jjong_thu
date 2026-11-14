@@ -211,11 +211,11 @@
       gap: 2px;
     }
     
-    /* 타임트리 스타일 긴 막대 바 */
+    /* 💡 타임트리 스타일 완벽 연동형 막대 바 디자인 */
     .event-badge-bar {
       font-size: 0.58rem;
       font-weight: 700;
-      padding: 2px 5px;
+      padding: 3px 4px;
       color: #2d3436 !important;
       white-space: nowrap;
       overflow: hidden;
@@ -224,9 +224,13 @@
       width: 100%;
       margin-bottom: 1px;
     }
-    .event-badge-bar.start { border-radius: 4px 0 0 4px; padding-left: 6px; }
-    .event-badge-bar.end { border-radius: 0 4px 4px 0; }
-    .event-badge-bar.middle { border-radius: 0; }
+    /* 시작일: 왼쪽만 둥글게 */
+    .event-badge-bar.start { border-radius: 4px 0 0 4px; margin-left: 2px; width: calc(100% - 2px); }
+    /* 종료일: 오른쪽만 둥글게 */
+    .event-badge-bar.end { border-radius: 0 4px 4px 0; margin-right: 2px; width: calc(100% - 2px); }
+    /* 중간일: 네모 반듯하게 양옆 꽉 채움 */
+    .event-badge-bar.middle { border-radius: 0; margin-left: -2px; margin-right: -2px; width: calc(100% + 4px); padding-left: 6px; }
+    /* 단일일: 사방 둥글게 */
     .event-badge-bar.single { border-radius: 4px; }
 
     /* 선택된 날짜 상세 일정 영역 */
@@ -598,8 +602,13 @@
               const dateStr = `${y}-${String(mo + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
               const autoShift = getAutoShiftForDate(dateStr);
               if (autoShift) {
-                // 💡 핵심: 사용자가 해당 날짜에 수동으로 휴가 등의 일정을 등록했다면 자동 근무 패턴을 아예 추가하지 않음
-                const hasUserOverride = rawEvents.some(e => e.manualOverride && e.startDate <= dateStr && e.endDate >= dateStr);
+                const targetTime = new Date(dateStr).setHours(0,0,0,0);
+                const hasUserOverride = rawEvents.some(e => {
+                  if (!e.manualOverride) return false;
+                  const startTime = new Date(e.startDate || e.date).setHours(0,0,0,0);
+                  const endTime = new Date(e.endDate || e.startDate || e.date).setHours(0,0,0,0);
+                  return targetTime >= startTime && targetTime <= endTime;
+                });
                 
                 if (!hasUserOverride) {
                   rawEvents.push({
@@ -673,10 +682,11 @@
     function createDayCell(dayNum, dateStr, isOtherMonth, isToday = false) {
       const cell = document.createElement('div');
       
+      const targetTime = new Date(dateStr).setHours(0,0,0,0);
       const dayEvents = rawEvents.filter(ev => {
-        const start = ev.startDate || ev.date;
-        const end = ev.endDate || ev.startDate || ev.date;
-        return dateStr >= start && dateStr <= end;
+        const start = new Date(ev.startDate || ev.date).setHours(0,0,0,0);
+        const end = new Date(ev.endDate || ev.startDate || ev.date).setHours(0,0,0,0);
+        return targetTime >= start && targetTime <= end;
       });
 
       const hasHoliday = currentTab === 'couple' && dayEvents.some(e => e.isHoliday);
@@ -694,13 +704,16 @@
       
       const maxDisplay = 2;
       dayEvents.slice(0, maxDisplay).forEach(ev => {
-        const start = ev.startDate || ev.date;
-        const end = ev.endDate || ev.startDate || ev.date;
+        const rawStart = ev.startDate || ev.date;
+        const rawEnd = ev.endDate || ev.startDate || ev.date;
+        
+        const startTime = new Date(rawStart).setHours(0,0,0,0);
+        const endTime = new Date(rawEnd).setHours(0,0,0,0);
         
         let posClass = 'single';
-        if (start !== end) {
-          if (dateStr === start) posClass = 'start';
-          else if (dateStr === end) posClass = 'end';
+        if (startTime !== endTime) {
+          if (targetTime === startTime) posClass = 'start';
+          else if (targetTime === endTime) posClass = 'end';
           else posClass = 'middle';
         }
 
@@ -737,10 +750,11 @@
       const parts = dateStr.split('-');
       titleEl.innerText = `${parts[0]}년 ${parseInt(parts[1])}월 ${parseInt(parts[2])}일 일정`;
 
+      const targetTime = new Date(dateStr).setHours(0,0,0,0);
       const dayEvents = rawEvents.filter(ev => {
-        const start = ev.startDate || ev.date;
-        const end = ev.endDate || ev.startDate || ev.date;
-        return dateStr >= start && dateStr <= end;
+        const start = new Date(ev.startDate || ev.date).setHours(0,0,0,0);
+        const end = new Date(ev.endDate || ev.startDate || ev.date).setHours(0,0,0,0);
+        return targetTime >= start && targetTime <= end;
       });
 
       if (dayEvents.length === 0) {
@@ -751,7 +765,7 @@
       listEl.innerHTML = dayEvents.map(ev => `
         <div class="event-item" style="border-left-color: ${ev.color || '#ff859b'};">
           <div class="event-info">
-            <h4 style="color: #2d3436;">${ev.title} ${ev.startDate !== ev.endDate ? `(${ev.startDate} ~ ${ev.endDate})` : ''}</h4>
+            <h4 style="color: #2d3436;">${ev.title} ${ev.startDate && ev.endDate && ev.startDate !== ev.endDate ? `(${ev.startDate} ~ ${ev.endDate})` : ''}</h4>
             ${ev.desc ? `<p>${ev.desc}</p>` : ''}
           </div>
           ${ev.isHoliday ? '<span style="font-size:0.75rem; color:#ff6b81; font-weight:700;">공휴일</span>' : `<button class="btn-del-event" onclick="deleteEvent('${ev.id}')"><i class="fa-solid fa-trash-can"></i></button>`}
