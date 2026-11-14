@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>뚜❣️쫑 - 커플 캘린더 📅</title>
+  <title>뚜❣️쫑 - 캘린더 & 근무표 📅</title>
 
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -39,14 +39,14 @@
     .app-header {
       background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
       color: white;
-      padding: 20px 18px;
+      padding: 20px 18px 12px 18px;
       border-radius: 0 0 28px 28px;
       box-shadow: 0 6px 20px rgba(255, 117, 140, 0.3);
       position: sticky;
       top: 0;
       z-index: 10;
     }
-    .header-top { display: flex; justify-content: space-between; align-items: center; }
+    .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .header-left { display: flex; align-items: center; gap: 12px; }
     .btn-home {
       color: white;
@@ -58,7 +58,34 @@
       display: flex; align-items: center; justify-content: center;
       backdrop-filter: blur(4px);
     }
-    .header-title { font-size: 1.3rem; font-weight: 800; }
+    .header-title { font-size: 1.25rem; font-weight: 800; }
+
+    /* 탭 네비게이션 */
+    .tab-nav {
+      display: flex;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 14px;
+      padding: 3px;
+      gap: 3px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 8px;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.8);
+      background: transparent;
+      border: none;
+      border-radius: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: white;
+      color: var(--primary);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
 
     .container { max-width: 600px; margin: 0 auto; padding: 16px; }
 
@@ -149,7 +176,7 @@
       color: var(--text);
       margin-bottom: 3px;
     }
-    .cal-day:nth-child(7n+1) .day-num { color: #ff4757; }
+    .cal-day:nth-child(7n+1) .day-num, .cal-day.is-holiday .day-num { color: #ff4757; }
     .cal-day:nth-child(7n) .day-num { color: #2e86de; }
 
     .day-events-preview {
@@ -263,11 +290,13 @@
     <div class="header-top">
       <div class="header-left">
         <a href="index.html" class="btn-home" title="홈으로"><i class="fa-solid fa-house"></i></a>
-        <div>
-          <div class="header-title">커플 캘린더 📅</div>
-          <p style="font-size: 0.8rem; opacity: 0.95; margin-top: 2px;">둘만의 일정 실시간 공유</p>
-        </div>
+        <div class="header-title" id="mainHeaderTitle">커플 캘린더 📅</div>
       </div>
+    </div>
+    <!-- 탭 전환 메뉴 -->
+    <div class="tab-nav">
+      <button class="tab-btn active" id="tabCouple" onclick="switchTab('couple')">❤️ 커플 캘린더</button>
+      <button class="tab-btn" id="tabWork" onclick="switchTab('work')">쫑 근무표 🌙</button>
     </div>
   </header>
 
@@ -312,13 +341,13 @@
   <!-- 일정 추가 모달 -->
   <div class="modal-overlay" id="addModal">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 14px;">새 일정 추가하기 🗓️</h3>
+      <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 14px;" id="modalTitleText">새 일정 추가하기 🗓️</h3>
       <div class="form-group">
         <label>날짜</label>
         <input type="date" class="form-control" id="eventDate">
       </div>
       <div class="form-group">
-        <label>일정 제목</label>
+        <label id="titleLabel">일정 제목</label>
         <input type="text" class="form-control" id="eventTitle" placeholder="예: 1주년 기념 데이트">
       </div>
       <div class="form-group">
@@ -328,11 +357,11 @@
       <div class="form-group">
         <label>일정 색상</label>
         <div class="color-picker" id="colorPicker">
-          <div class="color-chip selected" style="background: #ff5e7e;" data-color="#ff5e7e"></div>
-          <div class="color-chip" style="background: #2e86de;" data-color="#2e86de"></div>
-          <div class="color-chip" style="background: #10ac84;" data-color="#10ac84"></div>
-          <div class="color-chip" style="background: #ff9f43;" data-color="#ff9f43"></div>
-          <div class="color-chip" style="background: #5f27cd;" data-color="#5f27cd"></div>
+          <div class="color-chip selected" style="background: #ff5e7e;" data-color="#ff5e7e" onclick="selectChip(this, '#ff5e7e')"></div>
+          <div class="color-chip" style="background: #2e86de;" data-color="#2e86de" onclick="selectChip(this, '#2e86de')"></div>
+          <div class="color-chip" style="background: #10ac84;" data-color="#10ac84" onclick="selectChip(this, '#10ac84')"></div>
+          <div class="color-chip" style="background: #ff9f43;" data-color="#ff9f43" onclick="selectChip(this, '#ff9f43')"></div>
+          <div class="color-chip" style="background: #5f27cd;" data-color="#5f27cd" onclick="selectChip(this, '#5f27cd')"></div>
         </div>
       </div>
 
@@ -355,8 +384,12 @@
 
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    const eventCollection = db.collection("couple_space").doc("data").collection("couple_calendar");
 
+    // 두 개의 컬렉션 분리 (커플 공유 캘린더 vs 내 근무표)
+    const coupleCol = db.collection("couple_space").doc("data").collection("couple_calendar");
+    const workCol = db.collection("couple_space").doc("data").collection("jong_work_schedule");
+
+    let currentTab = 'couple'; // 'couple' 또는 'work'
     let eventsMap = {}; 
     let currentDate = new Date();
     let selectedDateStr = getFormattedDate(new Date());
@@ -372,34 +405,150 @@
       return `${year}-${month}-${day}`;
     }
 
-    document.querySelectorAll('.color-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('selected'));
-        chip.classList.add('selected');
-        selectedColor = chip.getAttribute('data-color');
-      });
-    });
+    function selectChip(el, color) {
+      document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedColor = color;
+    }
 
-    // 💡 군더더기 없는 초고속 실시간 동기화
-    eventCollection.onSnapshot((snapshot) => {
-      eventsMap = {};
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const date = data.date;
-        if (!eventsMap[date]) eventsMap[date] = [];
-        eventsMap[date].push({ id: doc.id, ...data });
-      });
-
-      if (syncDot) syncDot.className = 'sync-dot online';
-      if (syncText) syncText.innerText = '실시간 동기화 완료';
+    // 탭 전환 함수
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById('tabCouple').className = `tab-btn ${tab === 'couple' ? 'active' : ''}`;
+      document.getElementById('tabWork').className = `tab-btn ${tab === 'work' ? 'active' : ''}`;
       
-      renderCalendar();
-      if (selectedDateStr) renderSelectedDayEvents(selectedDateStr);
-    }, error => {
-      console.error(error);
-      if (syncDot) syncDot.className = 'sync-dot';
-      if (syncText) syncText.innerText = '연결 오류';
-    });
+      if (tab === 'couple') {
+        document.getElementById('mainHeaderTitle').innerText = "커플 캘린더 📅";
+        document.documentElement.style.setProperty('--primary', '#ff5e7e');
+        document.documentElement.style.setProperty('--primary-soft', '#fff0f3');
+      } else {
+        document.getElementById('mainHeaderTitle').innerText = "쫑 근무표 🌙";
+        document.documentElement.style.setProperty('--primary', '#2e86de');
+        document.documentElement.style.setProperty('--primary-soft', '#eef5ff');
+      }
+      loadEvents();
+    }
+
+    // 💡 알려주신 교대 패턴 계산기 (주주주주 야휴비 야휴비 야휴비 야휴비 총 16일 주기)
+    // 기준일: 2026년 11월 1일이 패턴의 첫 날(주간)이라고 가정
+    const patternAnchorDate = new Date(2026, 10, 1); // 2026-11-01
+    const shiftPattern = [
+      { title: "주간", color: "#ff9f43" },
+      { title: "주간", color: "#ff9f43" },
+      { title: "주간", color: "#ff9f43" },
+      { title: "주간", color: "#ff9f43" },
+      { title: "야간", color: "#2e86de" },
+      { title: "휴무", color: "#10ac84" },
+      { title: "비번", color: "#8395a7" },
+      { title: "야간", color: "#2e86de" },
+      { title: "휴무", color: "#10ac84" },
+      { title: "비번", color: "#8395a7" },
+      { title: "야간", color: "#2e86de" },
+      { title: "휴무", color: "#10ac84" },
+      { title: "비번", color: "#8395a7" },
+      { title: "야간", color: "#2e86de" },
+      { title: "휴무", color: "#10ac84" },
+      { title: "비번", color: "#8395a7" }
+    ];
+
+    function getAutoShiftForDate(dateStr) {
+      if (currentTab !== 'work') return null;
+      const targetDate = new Date(dateStr);
+      const diffTime = targetDate - patternAnchorDate;
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      if (diffDays < 0) return null; // 기준일 이전은 수동 입력 우선
+      const patternIndex = diffDays % shiftPattern.length;
+      return shiftPattern[patternIndex];
+    }
+
+    // 법정 공휴일 데이터
+    const officialHolidays = {
+      "2026-01-01": "신정", "2026-02-16": "설날 연휴", "2026-02-17": "설날", "2026-02-18": "설날 연휴",
+      "2026-03-01": "삼일절", "2026-03-02": "대체공휴일", "2026-05-05": "어린이날",
+      "2026-05-24": "부처님오신날", "2026-05-25": "대체공휴일", "2026-06-03": "지방선거",
+      "2026-06-06": "현충일", "2026-08-15": "광복절", "2026-08-17": "대체공휴일",
+      "2026-09-24": "추석 연휴", "2026-09-25": "추석", "2026-09-26": "추석 연휴",
+      "2026-10-03": "개천절", "2026-10-05": "대체공휴일", "2026-10-09": "한글날", "2026-12-25": "성탄절",
+      "2027-01-01": "신정", "2027-02-06": "설날 연휴", "2027-02-07": "설날", "2027-02-08": "설날 연휴",
+      "2027-03-01": "삼일절", "2027-05-05": "어린이날", "2027-05-13": "부처님오신날",
+      "2027-06-06": "현충일", "2027-08-15": "광복절", "2027-08-16": "대체공휴일",
+      "2027-09-14": "추석 연휴", "2027-09-15": "추석", "2027-09-16": "추석 연휴",
+      "2027-10-03": "개천절", "2027-10-04": "대체공휴일", "2027-10-09": "한글날", "2027-10-11": "대체공휴일", "2027-12-25": "성탄절"
+    };
+
+    let unsubscribe = null;
+
+    function loadEvents() {
+      if (unsubscribe) unsubscribe();
+      const activeCol = (currentTab === 'couple') ? coupleCol : workCol;
+
+      syncDot.className = 'sync-dot syncing';
+      syncText.innerText = '동기화 중...';
+
+      unsubscribe = activeCol.onSnapshot((snapshot) => {
+        eventsMap = {};
+        
+        // 1. 사용자 데이터 로드
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const date = data.date;
+          if (!eventsMap[date]) eventsMap[date] = [];
+          eventsMap[date].push({ id: doc.id, ...data });
+        });
+
+        // 2. 커플 캘린더일 때만 공휴일 자동 주입
+        if (currentTab === 'couple') {
+          for (let hDate in officialHolidays) {
+            if (!eventsMap[hDate]) eventsMap[hDate] = [];
+            if (!eventsMap[hDate].some(e => e.isHoliday)) {
+              eventsMap[hDate].unshift({
+                id: 'holiday_' + hDate,
+                title: officialHolidays[hDate],
+                desc: '법정 공휴일',
+                color: '#ff4757',
+                isHoliday: true
+              });
+            }
+          }
+        }
+
+        // 3. 근무표 탭일 때 자동 패턴 주입 (수동 오버라이드가 없는 날에만 적용)
+        if (currentTab === 'work') {
+          // 현재 달력에 보이는 날짜 범위 내에서 오토 패턴 채우기
+          const year = currentDate.getFullYear();
+          const month = currentDate.getMonth();
+          const lastDay = new Date(year, month + 1, 0).getDate();
+          
+          for (let i = 1; i <= lastDay; i++) {
+            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+            const autoShift = getAutoShiftForDate(dateStr);
+            if (autoShift) {
+              if (!eventsMap[dateStr]) eventsMap[dateStr] = [];
+              // 사용자가 수동으로 변경/추가한 기록이 없다면 자동 패턴 표시
+              if (!eventsMap[dateStr].some(e => e.isAutoShift || e.manualOverride)) {
+                eventsMap[dateStr].unshift({
+                  id: 'auto_' + dateStr,
+                  title: autoShift.title,
+                  desc: '교대 근무 패턴',
+                  color: autoShift.color,
+                  isAutoShift: true
+                });
+              }
+            }
+          }
+        }
+
+        syncDot.className = 'sync-dot online';
+        syncText.innerText = '실시간 동기화 완료';
+        
+        renderCalendar();
+        if (selectedDateStr) renderSelectedDayEvents(selectedDateStr);
+      }, error => {
+        console.error(error);
+        syncDot.className = 'sync-dot';
+        syncText.innerText = '연결 오류';
+      });
+    }
 
     function renderCalendar() {
       const year = currentDate.getFullYear();
@@ -444,7 +593,9 @@
 
     function createDayCell(dayNum, dateStr, isOtherMonth, isToday = false) {
       const cell = document.createElement('div');
-      cell.className = `cal-day ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''} ${selectedDateStr === dateStr ? 'selected' : ''}`;
+      const hasHoliday = currentTab === 'couple' && eventsMap[dateStr] && eventsMap[dateStr].some(e => e.isHoliday);
+      
+      cell.className = `cal-day ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''} ${hasHoliday ? 'is-holiday' : ''} ${selectedDateStr === dateStr ? 'selected' : ''}`;
       cell.onclick = () => selectDate(dateStr);
 
       const numSpan = document.createElement('span');
@@ -492,7 +643,7 @@
 
       const dayEvents = eventsMap[dateStr] || [];
       if (dayEvents.length === 0) {
-        listEl.innerHTML = `<div style="text-align:center; padding: 16px 0; color:#a4b0be; font-size:0.85rem; font-weight:600;">등록된 일정이 없습니다. 우측 하단이나 아래 버튼으로 추가해보세요!</div>`;
+        listEl.innerHTML = `<div style="text-align:center; padding: 16px 0; color:#a4b0be; font-size:0.85rem; font-weight:600;">등록된 일정이 없습니다. 우측 상단이나 아래 버튼으로 추가해보세요!</div>`;
         return;
       }
 
@@ -502,7 +653,7 @@
             <h4>${ev.title}</h4>
             ${ev.desc ? `<p>${ev.desc}</p>` : ''}
           </div>
-          <button class="btn-del-event" onclick="deleteEvent('${ev.id}')"><i class="fa-solid fa-trash-can"></i></button>
+          ${ev.isHoliday ? '<span style="font-size:0.75rem; color:#ff4757; font-weight:700;">공휴일</span>' : `<button class="btn-del-event" onclick="deleteEvent('${ev.id}')"><i class="fa-solid fa-trash-can"></i></button>`}
         </div>
       `).join('');
     }
@@ -522,6 +673,17 @@
       document.getElementById('eventDate').value = selectedDateStr || getFormattedDate(new Date());
       document.getElementById('eventTitle').value = '';
       document.getElementById('eventDesc').value = '';
+      
+      if (currentTab === 'work') {
+        document.getElementById('modalTitleText').innerText = "근무표 수정/추가 🌙";
+        document.getElementById('titleLabel').label = "근무 종류 (예: 주간, 야간, 휴가)";
+        document.getElementById('eventTitle').placeholder = "예: 평일 휴가 또는 교대 근무";
+      } else {
+        document.getElementById('modalTitleText').innerText = "새 일정 추가하기 🗓️";
+        document.getElementById('titleLabel').innerText = "일정 제목";
+        document.getElementById('eventTitle').placeholder = "예: 1주년 기념 데이트";
+      }
+      
       document.getElementById('addModal').classList.add('active');
     }
 
@@ -534,14 +696,16 @@
       const title = document.getElementById('eventTitle').value.trim();
       const desc = document.getElementById('eventDesc').value.trim();
 
-      if (!date || !title) return alert('날짜와 일정 제목을 입력해주세요!');
+      if (!date || !title) return alert('날짜와 제목을 입력해주세요!');
 
-      if (syncDot) syncDot.className = 'sync-dot syncing';
-      if (syncText) syncText.innerText = '저장 중...';
+      syncDot.className = 'sync-dot syncing';
+      syncText.innerText = '저장 중...';
 
+      const activeCol = (currentTab === 'couple') ? coupleCol : workCol;
       const docId = String(Date.now() + Math.random());
-      eventCollection.doc(docId).set({
-        date, title, desc, color: selectedColor, createdAt: Date.now()
+      
+      activeCol.doc(docId).set({
+        date, title, desc, color: selectedColor, manualOverride: true, createdAt: Date.now()
       }).then(() => {
         closeModal();
       }).catch(err => {
@@ -551,10 +715,23 @@
     }
 
     function deleteEvent(id) {
-      if (confirm('이 일정을 삭제하시겠습니까?')) {
-        eventCollection.doc(id).delete();
+      if (confirm('이 항목을 삭제하시겠습니까?')) {
+        const activeCol = (currentTab === 'couple') ? coupleCol : workCol;
+        // 자동 생성된 패턴 항목을 지우려 할 때의 처리
+        if (id.startsWith('auto_')) {
+          // 해당 날짜에 수동 오버라이드 빈 값을 넣어 자동 패턴을 숨김 처리
+          const dateStr = id.replace('auto_', '');
+          activeCol.add({
+            date: dateStr, title: "휴무/오프", desc: "근무 변경", color: "#8395a7", manualOverride: true, createdAt: Date.now()
+          });
+          return;
+        }
+        activeCol.doc(id).delete();
       }
     }
+
+    // 초기 실행
+    loadEvents();
   </script>
 </body>
 </html>
