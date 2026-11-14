@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>뚜❣️쫑 - 커플 AI 비서 🤖</title>
+  <title>뚜❣️쫑 - 비서 찬차니 🤖</title>
 
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -16,6 +16,15 @@
   <!-- Firebase v9 SDK (Compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <!-- Google Gen AI SDK (Gemini API) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "@google/genai": "https://esm.run/@google/genai"
+      }
+    }
+  </script>
 
   <style>
     :root {
@@ -162,32 +171,34 @@
     <a href="index.html" class="btn-home" title="메인으로"><i class="fa-solid fa-house"></i></a>
     <div>
       <div class="header-title">뚜❣️쫑 AI 비서 🤖</div>
-      <div class="header-sub">두 분의 캘린더와 직관 일기를 관리해드려요!</div>
+      <div class="header-sub">Gemini API 기반 스마트 커플 비서</div>
     </div>
   </header>
 
-  <!-- 채팅 대화 내용 영역 -->
   <div class="chat-container" id="chatContainer">
     <div class="chat-bubble ai">
       안녕! 나는 뚜❣️쫑 커플의 전용 AI 비서야. 💖<br>
-      "오늘 우리 일정 뭐야?"라고 물어보거나, "오늘 야구 직관했는데 졌어"라고 말해주면 오늘 날짜 기준으로 직관 일기에 척척 반영해 줄게!
+      캘린더 일정 조회, 일정 등록, 야구 직관 기록까지 자연스럽게 말해줘!
     </div>
   </div>
 
-  <!-- 빠른 추천 질문 칩 -->
   <div class="chips-area">
-    <div class="chip" onclick="sendQuickMessage('우리 이번 주 일정 뭐야?')">📅 이번 주 일정 조회</div>
-    <div class="chip" onclick="sendQuickMessage('오늘 직관했는데 졌어')">⚾ 야구 직관 (패배) 기록</div>
-    <div class="chip" onclick="sendQuickMessage('오늘 직관해서 이겼어')">⚾ 야구 직관 (승리) 기록</div>
+    <div class="chip" onclick="sendQuickMessage('우리 이번 주 일정 알려줘')">📅 이번 주 일정 조회</div>
+    <div class="chip" onclick="sendQuickMessage('오늘 야구 직관했는데 이겼어!')">⚾ 야구 직관 (승리) 기록</div>
+    <div class="chip" onclick="sendQuickMessage('다음 주 금요일에 데이트 일정 추가해줘')">🗓️ 일정 등록 테스트</div>
   </div>
 
-  <!-- 메시지 입력창 -->
   <div class="chat-input-area">
-    <input type="text" class="chat-input" id="chatInput" placeholder="메시지를 입력해보세요..." onkeypress="if(event.key==='Enter') handleSend()">
+    <input type="text" class="chat-input" id="chatInput" placeholder="무엇을 도와드릴까요?" onkeypress="if(event.key==='Enter') handleSend()">
     <button class="btn-send" onclick="handleSend()"><i class="fa-solid fa-paper-plane"></i></button>
   </div>
 
-  <script>
+  <script type="module">
+    import { GoogleGenAI, Type } from "@google/genai";
+
+    // 💡 전달해주신 API Key 반영 완료
+    const ai = new GoogleGenAI({ apiKey: "AQ.Ab8RN6J3ixPpQ06Y5vYdyBbLMY3GBjzZlg9cZXpiqE0SKy3gKQ" });
+
     const firebaseConfig = {
       apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
       authDomain: "kobe-couple-app.firebaseapp.com",
@@ -206,28 +217,12 @@
     const chatInput = document.getElementById('chatInput');
 
     let allEvents = [];
-    let serverBaseballData = {};
-
-    // 1. 캘린더 데이터 실시간 로드
     coupleCol.onSnapshot(snapshot => {
       allEvents = [];
-      snapshot.forEach(doc => {
-        allEvents.push({ id: doc.id, ...doc.data() });
-      });
+      snapshot.forEach(doc => allEvents.push({ id: doc.id, ...doc.data() }));
     });
 
-    // 2. 직관 및 야구 데이터 (baseball.json) 로드
-    async function loadBaseballJson() {
-      try {
-        const res = await fetch('./baseball.json?t=' + Date.now());
-        if (res.ok) {
-          serverBaseballData = await res.json();
-        }
-      } catch(e) { console.warn("baseball.json 로드 대기", e); }
-    }
-    loadBaseballJson();
-
-    function appendMessage(text, sender) {
+    window.appendMessage = function(text, sender) {
       const bubble = document.createElement('div');
       bubble.className = `chat-bubble ${sender}`;
       bubble.innerHTML = text.replace(/\n/g, '<br>');
@@ -235,80 +230,91 @@
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    function sendQuickMessage(text) {
+    window.sendQuickMessage = function(text) {
       chatInput.value = text;
-      handleSend();
+      window.handleSend();
     }
 
-    async function handleSend() {
+    window.handleSend = async function() {
       const text = chatInput.value.trim();
       if (!text) return;
 
-      appendMessage(text, 'user');
+      window.appendMessage(text, 'user');
       chatInput.value = '';
 
-      setTimeout(() => {
-        generateAIResponse(text);
-      }, 500);
-    }
+      window.appendMessage("생각 중...", 'ai');
+      const lastBubble = chatContainer.lastChild;
 
-    function generateAIResponse(query) {
-      const lowerQ = query.toLowerCase();
-
-      // [기능 1] 일정 조회 관련
-      if (lowerQ.includes('일정') || lowerQ.includes('뭐야') || lowerQ.includes('알려줘')) {
-        if (allEvents.length === 0) {
-          appendMessage("현재 등록된 커플 일정이 없어요! 캘린더에서 일정을 추가해 보세요.", 'ai');
-          return;
-        }
-
-        allEvents.sort((a, b) => (a.startDate || '').localeCompare(b.startDate || ''));
-        
-        let responseHTML = "현재 등록된 주요 일정들이야! 📌<br><br>";
-        allEvents.slice(0, 5).forEach(ev => {
-          const dateStr = ev.startDate === ev.endDate ? ev.startDate : `${ev.startDate} ~ ${ev.endDate}`;
-          responseHTML += `• <b>${ev.title}</b> (${dateStr})<br>`;
-        });
-        appendMessage(responseHTML, 'ai');
-      } 
-      // [기능 2] 야구 직관 관련 기록 (실제 오늘 날짜로 `baseball_games`에 저장)
-      else if (lowerQ.includes('직관') || lowerQ.includes('야구') || lowerQ.includes('졌어') || lowerQ.includes('이겼어')) {
-        // 💡 실제 기기의 오늘 날짜를 자동으로 가져옴 (YYYY-MM-DD 형식)
+      try {
         const todayObj = new Date();
         const year = todayObj.getFullYear();
         const month = String(todayObj.getMonth() + 1).padStart(2, '0');
         const day = String(todayObj.getDate()).padStart(2, '0');
         const todayStr = `${year}-${month}-${day}`;
-        
-        let resultType = 'lose';
-        let resultMsg = "패배 ㅠㅠ 아쉽지만 다음엔 꼭 이길 거예요!";
-        if (lowerQ.includes('이겼') || lowerQ.includes('승리')) {
-          resultType = 'win';
-          resultMsg = "승리! 🧚 역시 승리요정 최고예요!";
+
+        const prompt = `
+          너는 커플 캘린더와 야구 직관 기록을 관리하는 스마트 AI 비서야.
+          현재 날짜는 ${todayStr} 이고, 등록된 일정 데이터는 다음과 같아:
+          ${JSON.stringify(allEvents)}
+
+          사용자의 메시지: "${text}"
+
+          사용자의 요청을 분석하여 다음 중 하나의 JSON 형태로만 답변해줘 (마크다운 백틱 없이 순수 JSON 또는 일반 텍스트):
+          1. 일정을 조회하거나 일반 대화인 경우:
+             {"type": "chat", "message": "사용자에게 보낼 친근한 답변"}
+          2. 커플 캘린더에 일정을 등록해달라는 경우:
+             {"type": "add_calendar", "startDate": "YYYY-MM-DD", "endDate": "YYYY-MM-DD", "title": "일정제목", "message": "등록 완료 안내 메시지"}
+          3. 야구 직관 결과를 기록해달라는 경우 (이겼어/졌어 등):
+             {"type": "add_baseball", "result": "win 또는 lose", "message": "직관 기록 완료 안내 메시지"}
+        `;
+
+        const response = await ai.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents: prompt,
+        });
+
+        const rawText = response.text.trim();
+        lastBubble.remove(); // "생각 중..." 삭제
+
+        let jsonRes;
+        try {
+          const cleanJsonStr = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+          jsonRes = JSON.parse(cleanJsonStr);
+        } catch (e) {
+          window.appendMessage(rawText, 'ai');
+          return;
         }
 
-        // baseball.json 스케줄에서 오늘 날짜 정보 매칭 시도
-        let matchInfo = serverBaseballData.schedule && serverBaseballData.schedule[todayStr];
-        let opponent = matchInfo ? matchInfo.opponent : "LG 트윈스";
-        let score = matchInfo ? matchInfo.score : "KT 3 : 4 " + (resultType === 'win' ? '승' : '패');
-        let stadium = matchInfo ? matchInfo.stadium : "수원 위즈파크 (홈)";
+        if (jsonRes.type === 'chat') {
+          window.appendMessage(jsonRes.message, 'ai');
+        } 
+        else if (jsonRes.type === 'add_calendar') {
+          await coupleCol.add({
+            startDate: jsonRes.startDate,
+            endDate: jsonRes.endDate || jsonRes.startDate,
+            title: jsonRes.title,
+            color: "#ff859b",
+            manualOverride: true,
+            createdAt: Date.now()
+          });
+          window.appendMessage(jsonRes.message || "일정이 캘린더에 쏙 등록되었어! ✨", 'ai');
+        } 
+        else if (jsonRes.type === 'add_baseball') {
+          await baseballCol.doc(String(Date.now())).set({
+            date: todayStr,
+            opponent: "LG 트윈스",
+            result: jsonRes.result,
+            score: jsonRes.result === 'win' ? "KT 5 : 3 승" : "KT 2 : 4 패",
+            stadium: "수원 위즈파크 (홈)",
+            createdAt: Date.now()
+          });
+          window.appendMessage(jsonRes.message || "야구 직관 결과가 [야구 직관 페이지]에 안전하게 기록되었어! ⚾", 'ai');
+        }
 
-        baseballCol.doc(String(Date.now())).set({
-          date: todayStr,
-          opponent: opponent,
-          result: resultType,
-          score: score,
-          stadium: stadium,
-          createdAt: Date.now()
-        }).then(() => {
-          appendMessage(`오늘(${todayStr}) 야구 직관 결과(${resultType === 'win' ? '승리' : '패배'})를 <b>[야구 직관 페이지]</b>에 쏙 저장해 뒀어! ⚾<br>${resultMsg}`, 'ai');
-        }).catch(err => {
-          appendMessage("직관 기록 저장 중 오류가 발생했어 ㅠㅠ 다시 시도해줘!", 'ai');
-        });
-      }
-      // [기능 3] 일반 대화
-      else {
-        appendMessage("헤헤, 우리 커플 캘린더나 야구 직관 기록에 대해 궁금한 점이 있으면 언제든 편하게 물어봐줘! 💕", 'ai');
+      } catch (err) {
+        console.error(err);
+        lastBubble.remove();
+        window.appendMessage("앗, AI 비서와 통신하는 중에 오류가 발생했어 ㅠㅠ 다시 시도해줘!", 'ai');
       }
     }
   </script>
