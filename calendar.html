@@ -211,7 +211,7 @@
       gap: 2px;
     }
     
-    /* 💡 타임트리 스타일 완벽 연동형 막대 바 디자인 */
+    /* 💡 타임트리 스타일 완벽 연결형 막대 바 디자인 (줄바꿈 자동 대응) */
     .event-badge-bar {
       font-size: 0.58rem;
       font-weight: 700;
@@ -224,13 +224,9 @@
       width: 100%;
       margin-bottom: 1px;
     }
-    /* 시작일: 왼쪽만 둥글게 */
-    .event-badge-bar.start { border-radius: 4px 0 0 4px; margin-left: 2px; width: calc(100% - 2px); }
-    /* 종료일: 오른쪽만 둥글게 */
-    .event-badge-bar.end { border-radius: 0 4px 4px 0; margin-right: 2px; width: calc(100% - 2px); }
-    /* 중간일: 네모 반듯하게 양옆 꽉 채움 */
-    .event-badge-bar.middle { border-radius: 0; margin-left: -2px; margin-right: -2px; width: calc(100% + 4px); padding-left: 6px; }
-    /* 단일일: 사방 둥글게 */
+    .event-badge-bar.start { border-radius: 4px 2px 2px 4px; margin-left: 2px; width: calc(100% - 2px); }
+    .event-badge-bar.end { border-radius: 2px 4px 4px 2px; margin-right: 2px; width: calc(100% - 2px); }
+    .event-badge-bar.middle { border-radius: 2px; margin-left: -2px; margin-right: -2px; width: calc(100% + 4px); padding-left: 5px; }
     .event-badge-bar.single { border-radius: 4px; }
 
     /* 선택된 날짜 상세 일정 영역 */
@@ -658,12 +654,14 @@
         const prevMonth = month === 0 ? 11 : month - 1;
         const prevYear = month === 0 ? year - 1 : year;
         const dateStr = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}-${String(dNum).padStart(2, '0')}`;
-        grid.appendChild(createDayCell(dNum, dateStr, true));
+        const dayOfWeek = new Date(dateStr).getDay();
+        grid.appendChild(createDayCell(dNum, dateStr, true, false, dayOfWeek));
       }
 
       for (let i = 1; i <= lastDay; i++) {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-        const cell = createDayCell(i, dateStr, false, dateStr === todayStr);
+        const dayOfWeek = new Date(dateStr).getDay();
+        const cell = createDayCell(i, dateStr, false, dateStr === todayStr, dayOfWeek);
         grid.appendChild(cell);
       }
 
@@ -673,13 +671,14 @@
         const nextMonth = month === 11 ? 0 : month + 1;
         const nextYear = month === 11 ? year + 1 : year;
         const dateStr = `${nextYear}-${String(nextMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-        grid.appendChild(createDayCell(i, dateStr, true));
+        const dayOfWeek = new Date(dateStr).getDay();
+        grid.appendChild(createDayCell(i, dateStr, true, false, dayOfWeek));
       }
 
       renderSelectedDayEvents(selectedDateStr);
     }
 
-    function createDayCell(dayNum, dateStr, isOtherMonth, isToday = false) {
+    function createDayCell(dayNum, dateStr, isOtherMonth, isToday = false, dayOfWeek = 0) {
       const cell = document.createElement('div');
       
       const targetTime = new Date(dateStr).setHours(0,0,0,0);
@@ -712,9 +711,19 @@
         
         let posClass = 'single';
         if (startTime !== endTime) {
-          if (targetTime === startTime) posClass = 'start';
-          else if (targetTime === endTime) posClass = 'end';
-          else posClass = 'middle';
+          if (targetTime === startTime) {
+            posClass = 'start';
+          } else if (targetTime === endTime) {
+            posClass = 'end';
+          } else if (dayOfWeek === 0) {
+            // 일요일(새로운 주의 시작)에 걸리면 시각적으로 시작 모서리 적용
+            posClass = 'start';
+          } else if (dayOfWeek === 6) {
+            // 토요일(주의 끝)에 걸리면 시각적으로 끝 모서리 적용
+            posClass = 'end';
+          } else {
+            posClass = 'middle';
+          }
         }
 
         const badge = document.createElement('div');
