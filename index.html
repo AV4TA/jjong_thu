@@ -635,4 +635,13 @@
         const dotsContainer = document.getElementById("pinDotsContainer");
         dotsContainer.classList.add("shake");
         if (navigator.vibrate) navigator.vibrate(200);
-        setTimeout(() => { dotsContainer.classList.remove("shake"); handleClear(); }, 400
+        setTimeout(() => { dotsContainer.classList.remove("shake"); handleClear(); }, 400);
+      }
+    }
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
+</body>
+</html>
