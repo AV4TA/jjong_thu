@@ -22,6 +22,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+  <!-- Firebase v9 SDK (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
   <style>
     :root {
       --primary: #ff5e7e;
@@ -49,6 +53,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
+      position: relative;
     }
     .header-user-info { display: flex; flex-direction: column; align-items: center; gap: 8px; }
     .header-avatar {
@@ -64,6 +69,22 @@
     .header-texts h1 { font-size: 1.4rem; font-weight: 800; }
     .header-texts p { font-size: 0.8rem; opacity: 0.9; margin-top: 2px; }
 
+    /* 알림 권한 허용 버튼 */
+    .btn-push-auth {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(255, 255, 255, 0.25);
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+    }
+
     /* 컨테이너 */
     .container { max-width: 480px; margin: 0 auto; padding: 24px 16px; }
 
@@ -77,6 +98,23 @@
       gap: 6px;
       padding-left: 4px;
     }
+
+    /* 💌 오늘의 한 줄 편지 카드 */
+    .letter-card {
+      background: linear-gradient(135deg, #fff0f3 0%, #ffffff 100%);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 1.5px solid #ffccd5;
+      margin-bottom: 24px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .letter-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+    .letter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .letter-title { font-size: 0.95rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 6px; }
+    .letter-date { font-size: 0.75rem; color: var(--text-sub); font-weight: 600; }
+    .letter-content { font-size: 0.92rem; color: var(--text); line-height: 1.45; font-weight: 600; min-height: 40px; display: flex; align-items: center; }
 
     /* 어플리케이션 그리드 스타일 (2열 배치) */
     .app-grid {
@@ -119,6 +157,7 @@
     .item-place .app-icon-wrap { background: #fff4e6; color: #ff9f43; }
     .item-baseball .app-icon-wrap { background: #ffebee; color: #e74c3c; }
     .item-coupon .app-icon-wrap { background: #f0edff; color: #6c5ce7; }
+    .item-roulette .app-icon-wrap { background: #fff8e1; color: #fbc531; }
 
     .app-name { font-size: 1.05rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
     .app-desc { font-size: 0.75rem; color: var(--text-sub); line-height: 1.35; font-weight: 500; }
@@ -135,11 +174,10 @@
     .item-place .app-tag { background: #fff4e6; color: #ff9f43; }
     .item-baseball .app-tag { background: #ffebee; color: #e74c3c; }
     .item-coupon .app-tag { background: #f0edff; color: #6c5ce7; }
+    .item-roulette .app-tag { background: #fff8e1; color: #e1b12c; }
 
     /* 하단 추억 배너 영역 */
-    .memory-section {
-      margin-top: 24px;
-    }
+    .memory-section { margin-top: 24px; }
     .memory-banner {
       background: var(--card);
       border-radius: 18px;
@@ -157,11 +195,7 @@
     .memory-banner:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
     .memory-banner:active { transform: scale(0.98); }
     
-    .memory-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
+    .memory-left { display: flex; align-items: center; gap: 14px; }
     .memory-icon {
       width: 44px; height: 44px;
       border-radius: 14px;
@@ -172,21 +206,46 @@
       justify-content: center;
       font-size: 1.2rem;
     }
-    .memory-info h3 {
+    .memory-info h3 { font-size: 0.95rem; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+    .memory-info p { font-size: 0.75rem; color: var(--text-sub); font-weight: 500; }
+    .memory-arrow { color: var(--text-sub); font-size: 0.85rem; }
+
+    /* 모달 공통 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-content {
+      background: white;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 400px;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    .modal-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 14px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .form-control {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
       font-size: 0.95rem;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 2px;
+      outline: none;
+      resize: none;
+      font-family: inherit;
     }
-    .memory-info p {
-      font-size: 0.75rem;
-      color: var(--text-sub);
-      font-weight: 500;
-    }
-    .memory-arrow {
-      color: var(--text-sub);
-      font-size: 0.85rem;
-    }
+    .form-control:focus { border-color: var(--primary); }
+    .btn { flex: 1; padding: 13px; border-radius: 14px; border: none; font-weight: 800; cursor: pointer; font-size: 0.95rem; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: #f1f2f6; color: #57606f; }
 
     /* 🔒 PIN 잠금 화면 */
     .pin-overlay {
@@ -309,6 +368,7 @@
 
   <!-- 어플 스타일 상단 헤더 -->
   <header class="app-header">
+    <button class="btn-push-auth" onclick="requestNotificationPermission()"><i class="fa-solid fa-bell"></i> 알림 켜기</button>
     <div class="header-user-info">
       <div class="header-avatar">💖</div>
       <div class="header-texts">
@@ -318,8 +378,20 @@
     </div>
   </header>
 
-  <!-- 메인 어플 아이콘 그리드 영역 -->
+  <!-- 메인 컨테이너 영역 -->
   <div class="container">
+
+    <!-- 💌 오늘의 한 줄 편지 카드 -->
+    <div class="letter-card" onclick="openLetterModal()">
+      <div class="letter-header">
+        <div class="letter-title"><i class="fa-solid fa-envelope-open-text"></i> 오늘의 한 줄 편지</div>
+        <div class="letter-date" id="letterDateTxt">오늘</div>
+      </div>
+      <div class="letter-content" id="todayLetterText">
+        오늘 서로에게 남긴 따뜻한 한마디가 아직 없어요! 터치해서 남겨보세요 💌
+      </div>
+    </div>
+
     <div class="section-title">
       <i class="fa-solid fa-shapes"></i>
       <span>메뉴 어플리케이션</span>
@@ -328,9 +400,7 @@
     <div class="app-grid">
       <!-- 1. 대한민국 여행 지도 -->
       <a href="map.html" class="app-item item-map">
-        <div class="app-icon-wrap">
-          <i class="fa-solid fa-map-location-dot"></i>
-        </div>
+        <div class="app-icon-wrap"><i class="fa-solid fa-map-location-dot"></i></div>
         <div class="app-name">전국 지도</div>
         <div class="app-desc">우리의 발자국 색칠하기</div>
         <div class="app-tag">발자국 👣</div>
@@ -338,9 +408,7 @@
 
       <!-- 2. 주변 맛집 & 카페 -->
       <a href="place.html" class="app-item item-place">
-        <div class="app-icon-wrap">
-          <i class="fa-solid fa-utensils"></i>
-        </div>
+        <div class="app-icon-wrap"><i class="fa-solid fa-utensils"></i></div>
         <div class="app-name">맛집 & 카페</div>
         <div class="app-desc">내 주변 TOP 15 탐색</div>
         <div class="app-tag">GPS 추천 ✨</div>
@@ -348,19 +416,15 @@
 
       <!-- 3. 데이트 룰렛 -->
       <a href="roulette.html" class="app-item item-roulette">
-        <div class="app-icon-wrap" style="background: #fff8e1; color: #fbc531;">
-          <i class="fa-solid fa-dice"></i>
-        </div>
+        <div class="app-icon-wrap"><i class="fa-solid fa-dice"></i></div>
         <div class="app-name">데이트 룰렛</div>
         <div class="app-desc">오늘 내기는 누가 할까?</div>
-        <div class="app-tag" style="background: #fff8e1; color: #e1b12c;">복불복 🎯</div>
+        <div class="app-tag">복불복 🎯</div>
       </a>
 
       <!-- 4. 야구 직관 일기 -->
       <a href="baseball.html" class="app-item item-baseball">
-        <div class="app-icon-wrap">
-          <i class="fa-solid fa-baseball-bat-ball"></i>
-        </div>
+        <div class="app-icon-wrap"><i class="fa-solid fa-baseball-bat-ball"></i></div>
         <div class="app-name">야구 직관</div>
         <div class="app-desc">kt wiz 경기 기록 & 승률</div>
         <div class="app-tag">승리요정 🔥</div>
@@ -368,73 +432,150 @@
 
       <!-- 5. 기프티콘 보관함 -->
       <a href="gifticon.html" class="app-item item-coupon">
-        <div class="app-icon-wrap">
-          <i class="fa-solid fa-ticket"></i>
-        </div>
+        <div class="app-icon-wrap"><i class="fa-solid fa-ticket"></i></div>
         <div class="app-name">기프티콘</div>
         <div class="app-desc">우리 둘만의 쿠폰 보관함</div>
         <div class="app-tag">모바일 쿠폰 🎁</div>
       </a>
     </div>
 
-    <!-- 하단 추억 아카이브 (여행 추억 모음) -->
+    <!-- 하단 추억 아카이브 -->
     <div class="memory-section">
       <div class="section-title">
         <i class="fa-solid fa-box-archive"></i>
         <span>지난 여행 추억</span>
       </div>
 
-      <!-- 벳푸 여행 배너 (아래로 이동) -->
       <a href="beppu.html" class="memory-banner">
         <div class="memory-left">
-          <div class="memory-icon" style="background: #fff3f5; color: #ff5e7e;">
-            <i class="fa-solid fa-hot-tub-person"></i>
-          </div>
-          <div class="memory-info">
-            <h3>벳푸 여행 추억 ♨️</h3>
-            <p>11/2~4 벳푸 힐링 일정 및 기록 보기</p>
-          </div>
+          <div class="memory-icon" style="background: #fff3f5; color: #ff5e7e;"><i class="fa-solid fa-hot-tub-person"></i></div>
+          <div class="memory-info"><h3>벳푸 여행 추억 ♨️</h3><p>11/2~4 벳푸 힐링 일정 및 기록 보기</p></div>
         </div>
-        <div class="memory-arrow">
-          <i class="fa-solid fa-chevron-right"></i>
-        </div>
+        <div class="memory-arrow"><i class="fa-solid fa-chevron-right"></i></div>
       </a>
 
-      <!-- 고베 여행 배너 -->
       <a href="kobe.html" class="memory-banner">
         <div class="memory-left">
-          <div class="memory-icon">
-            <i class="fa-solid fa-plane"></i>
-          </div>
-          <div class="memory-info">
-            <h3>고베 여행 추억 🇯🇵</h3>
-            <p>다녀온 일정표 및 체크리스트 보기</p>
-          </div>
+          <div class="memory-icon"><i class="fa-solid fa-plane"></i></div>
+          <div class="memory-info"><h3>고베 여행 추억 🇯🇵</h3><p>다녀온 일정표 및 체크리스트 보기</p></div>
         </div>
-        <div class="memory-arrow">
-          <i class="fa-solid fa-chevron-right"></i>
-        </div>
+        <div class="memory-arrow"><i class="fa-solid fa-chevron-right"></i></div>
       </a>
     </div>
   </div>
 
+  <!-- 💌 편지 작성 모달 -->
+  <div class="modal-overlay" id="letterModal" onclick="closeLetterModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-title"><i class="fa-solid fa-heart" style="color:var(--primary);"></i> 오늘의 한 줄 편지</div>
+      <div style="margin-bottom: 14px;">
+        <textarea class="form-control" id="letterInput" rows="3" placeholder="오늘 서로에게 전하고 싶은 따뜻한 한마디를 남겨보세요!"></textarea>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn btn-secondary" onclick="closeLetterModal()">취소</button>
+        <button class="btn btn-primary" onclick="saveLetter()">남기기 ✨</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // 사귄 날짜 계산 및 표시 (2020년 10월 31일 기준)
+    // Firebase 설정
+    const firebaseConfig = {
+      apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
+      authDomain: "kobe-couple-app.firebaseapp.com",
+      projectId: "kobe-couple-app",
+      storageBucket: "kobe-couple-app.firebasestorage.app",
+      messagingSenderId: "755701956140",
+      appId: "1:755701956140:web:ea39d7d1e00bd83ade1b89"
+    };
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const letterDocRef = db.collection("couple_space").doc("data").collection("daily_letter").doc("latest");
+
+    // 사귄 날짜 계산 (D+일)
     (function calcDday() {
-      const startDate = new Date(2020, 9, 31); // 월은 0부터 시작하므로 9는 10월
+      const startDate = new Date(2020, 9, 31);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       startDate.setHours(0, 0, 0, 0);
-
-      const diffTime = today - startDate;
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1; // 첫날을 1일로 계산
-
-      const ddayTextEl = document.getElementById('ddayText');
-      if (ddayTextEl) {
-        ddayTextEl.innerText = `Since 2020.10.31 (D+${diffDays})`;
-      }
+      const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
+      const ddayEl = document.getElementById('ddayText');
+      if (ddayEl) ddayEl.innerText = `Since 2020.10.31 (D+${diffDays})`;
     })();
 
+    // 브라우저 푸시 알림 권한 요청
+    function requestNotificationPermission() {
+      if (!("Notification" in window)) {
+        return alert("이 브라우저는 알림 기능을 지원하지 않습니다.");
+      }
+      Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+          alert("알림이 허용되었습니다! 이제 상대방이 편지를 쓰면 알림이 와요 💌");
+        } else {
+          alert("알림 권한이 거부되었습니다.");
+        }
+      });
+    }
+
+    // 편지 데이터 실시간 감지 (Firestore)
+    let lastLetterText = "";
+    letterDocRef.onSnapshot(doc => {
+      if (doc.exists) {
+        const data = doc.data();
+        const text = data.text || "";
+        const dateStr = data.date || "";
+        
+        document.getElementById('letterDateTxt').innerText = dateStr || "오늘";
+        const textEl = document.getElementById('todayLetterText');
+
+        if (text) {
+          textEl.innerText = text;
+          textEl.style.color = "var(--text)";
+          
+          if (lastLetterText && lastLetterText !== text && Notification.permission === "granted") {
+            new Notification("💌 뚜❣️쫑 새로운 편지", {
+              body: text,
+              icon: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Pink%20Heart.png"
+            });
+          }
+          lastLetterText = text;
+        } else {
+          textEl.innerText = "오늘 서로에게 남긴 따뜻한 한마디가 아직 없어요! 터치해서 남겨보세요 💌";
+          textEl.style.color = "var(--text-sub)";
+        }
+      }
+    });
+
+    function openLetterModal() {
+      document.getElementById('letterModal').classList.add('active');
+    }
+    function closeLetterModal() {
+      document.getElementById('letterModal').classList.remove('active');
+      document.getElementById('letterInput').value = "";
+    }
+
+    // 편지 저장하기
+    function saveLetter() {
+      const text = document.getElementById('letterInput').value.trim();
+      if (!text) return alert('내용을 입력해주세요!');
+
+      const today = new Date();
+      const dateStr = `${today.getMonth() + 1}월 ${today.getDate()}일`;
+
+      letterDocRef.set({
+        text: text,
+        date: dateStr,
+        updatedAt: Date.now()
+      }).then(() => {
+        closeLetterModal();
+      }).catch(err => {
+        console.error(err);
+        alert("저장 중 오류가 발생했습니다.");
+      });
+    }
+
+    // 🔒 PIN 잠금 인증 로직
     const PIN_HASH = "b988f01b00e31c69c6ba78ae1b0a88ffae26d705c7423eec7fa6d38e2d46e9df";
     let enteredPin = "";
 
@@ -446,31 +587,22 @@
       return "";
     }
 
-    // 자동 로그인 및 세션 체크
     (function checkAuth() {
       const isAutoUnlocked = localStorage.getItem("ddo_jjong_auth_token") === PIN_HASH;
       const isSessionUnlocked = sessionStorage.getItem("ddo_jjong_unlocked") === "true";
-
       if (isAutoUnlocked || isSessionUnlocked) {
-        const lockEl = document.getElementById("pinLockScreen");
-        if (lockEl) lockEl.classList.add("hidden");
+        document.getElementById("pinLockScreen").classList.add("hidden");
       }
     })();
 
-    // 키패드 클릭/터치 이벤트 리스너 등록
     document.querySelectorAll('.pin-key').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         const key = btn.getAttribute('data-key');
         const action = btn.getAttribute('data-action');
-
-        if (key !== null) {
-          handleInput(key);
-        } else if (action === 'delete') {
-          handleDelete();
-        } else if (action === 'clear') {
-          handleClear();
-        }
+        if (key !== null) handleInput(key);
+        else if (action === 'delete') handleDelete();
+        else if (action === 'clear') handleClear();
       });
     });
 
@@ -478,62 +610,29 @@
       if (enteredPin.length >= 6) return;
       enteredPin += digit;
       updatePinDots();
-
-      if (enteredPin.length === 6) {
-        setTimeout(verifyPin, 100);
-      }
+      if (enteredPin.length === 6) setTimeout(verifyPin, 100);
     }
-
-    function handleDelete() {
-      if (enteredPin.length > 0) {
-        enteredPin = enteredPin.slice(0, -1);
-        updatePinDots();
-      }
-    }
-
-    function handleClear() {
-      enteredPin = "";
-      updatePinDots();
-    }
+    function handleDelete() { if (enteredPin.length > 0) { enteredPin = enteredPin.slice(0, -1); updatePinDots(); } }
+    function handleClear() { enteredPin = ""; updatePinDots(); }
 
     function updatePinDots() {
       const dots = document.querySelectorAll(".pin-dot");
       dots.forEach((dot, idx) => {
-        if (idx < enteredPin.length) {
-          dot.classList.add("filled");
-        } else {
-          dot.classList.remove("filled");
-        }
+        if (idx < enteredPin.length) dot.classList.add("filled");
+        else dot.classList.remove("filled");
       });
     }
 
     async function verifyPin() {
       const inputHash = await sha256(enteredPin);
-      
       if (inputHash === PIN_HASH || enteredPin === "100609") {
-        const isAuto = document.getElementById("chkAutoLogin").checked;
-        if (isAuto) {
+        if (document.getElementById("chkAutoLogin").checked) {
           localStorage.setItem("ddo_jjong_auth_token", PIN_HASH);
         }
         sessionStorage.setItem("ddo_jjong_unlocked", "true");
-
-        const lockEl = document.getElementById("pinLockScreen");
-        if (lockEl) lockEl.classList.add("hidden");
+        document.getElementById("pinLockScreen").classList.add("hidden");
       } else {
         const dotsContainer = document.getElementById("pinDotsContainer");
-        if (dotsContainer) dotsContainer.classList.add("shake");
+        dotsContainer.classList.add("shake");
         if (navigator.vibrate) navigator.vibrate(200);
-
-        setTimeout(() => {
-          if (dotsContainer) dotsContainer.classList.remove("shake");
-          handleClear();
-        }, 400);
-      }
-    }
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js');
-    }
-  </script>
-</body>
-</html>
+        setTimeout(() => { dotsContainer.classList.remove("shake"); handleClear(); }, 400
