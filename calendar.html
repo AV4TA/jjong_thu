@@ -89,7 +89,7 @@
 
     .container { max-width: 600px; margin: 0 auto; padding: 16px; }
 
-    /* 모바일 임시 자동 입력 버튼 박스 (커플 캘린더 탭에서만 보임) */
+    /* 모바일 전용 개별 일정 자동 추가 바 */
     .mobile-inject-bar {
       display: none;
       background: white;
@@ -236,7 +236,6 @@
       gap: 2px;
     }
     
-    /* 타임트리 스타일 완벽 연결형 막대 바 디자인 (글씨 검은색 고정) */
     .event-badge-bar {
       font-size: 0.58rem;
       font-weight: 700;
@@ -283,10 +282,16 @@
       border: 1px solid var(--border);
       border-left-width: 5px;
     }
+    .event-info { flex: 1; }
     .event-info h4 { font-size: 0.92rem; font-weight: 800; color: var(--text); margin-bottom: 2px; }
     .event-info p { font-size: 0.75rem; color: var(--text-sub); }
-    .btn-del-event { background: none; border: none; color: #a4b0be; cursor: pointer; font-size: 0.85rem; padding: 4px; }
-    .btn-del-event:hover { color: #ff6b81; }
+    
+    .event-actions { display: flex; gap: 4px; }
+    .btn-action { background: none; border: none; cursor: pointer; font-size: 0.85rem; padding: 6px; border-radius: 6px; }
+    .btn-edit-event { color: #0984e3; }
+    .btn-edit-event:hover { background: #eef9ff; }
+    .btn-del-event { color: #a4b0be; }
+    .btn-del-event:hover { color: #ff6b81; background: #fff0f3; }
 
     /* FAB 버튼 */
     .fab {
@@ -357,7 +362,7 @@
   </header>
 
   <div class="container">
-    <!-- 💡 모바일 전용 개별 일정 자동 추가 바 (커플 캘린더 탭에서만 표시됨) -->
+    <!-- 모바일 전용 개별 일정 자동 추가 바 -->
     <div class="mobile-inject-bar active" id="mobileInjectBar">
       <span>✨ 개별 일정 일괄 등록</span>
       <button class="btn-inject" onclick="injectDefaultEvents()">일정 한번에 넣기</button>
@@ -406,10 +411,13 @@
 
   <button class="fab" onclick="openAddModal()"><i class="fa-solid fa-plus"></i></button>
 
-  <!-- 일정 추가 모달 -->
+  <!-- 일정 추가/수정 모달 -->
   <div class="modal-overlay" id="addModal">
     <div class="modal-content" onclick="event.stopPropagation()">
       <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 14px;" id="modalTitleText">새 일정 추가하기 🗓️</h3>
+      <!-- 수정 시 사용하는 숨김 ID -->
+      <input type="hidden" id="editingEventId" value="">
+      
       <div class="form-group">
         <label>시작일</label>
         <input type="date" class="form-control" id="eventStartDate">
@@ -540,31 +548,41 @@
       loadEvents();
     }
 
-    // 💡 알려주신 확정 개별 일정 일괄 등록 함수 (모바일 버튼용)
+    const pastelColors = ["#ff859b", "#74b9ff", "#55efc4", "#ffeaa7", "#a29bfe", "#fab1a0", "#81ecec"];
+
     function injectDefaultEvents() {
-      if (!confirm('알려주신 11~12월 개별 일정들을 커플 캘린더에 일괄 등록하시겠습니까?')) return;
+      if (!confirm('알려주신 11~12월 개별 일정을 다양한 파스텔 색상으로 일괄 등록하시겠습니까?')) return;
 
       const defaultEvents = [
-        { startDate: "2026-11-02", endDate: "2026-11-02", title: "뚜 생일", desc: "", color: "#ff859b" },
-        { startDate: "2026-11-02", endDate: "2026-11-04", title: "오이타 여행", desc: "", color: "#ff859b" },
-        { startDate: "2026-11-18", endDate: "2026-11-18", title: "조책임 술", desc: "", color: "#ff859b" },
-        { startDate: "2026-11-20", endDate: "2026-11-20", title: "뚜 청모 (OMCL 강주, 상건)", desc: "", color: "#ff859b" },
-        { startDate: "2026-11-21", endDate: "2026-11-22", title: "뚜 캠핑", desc: "", color: "#ff859b" },
-        { startDate: "2026-11-24", endDate: "2026-11-24", title: "송별회", desc: "", color: "#ff859b" },
-        { startDate: "2026-11-28", endDate: "2026-11-28", title: "현뚜령 / 수연 결혼식 (상건)", desc: "", color: "#ff859b" },
-        { startDate: "2026-11-29", endDate: "2026-11-29", title: "현뚜령 / 삼치리", desc: "", color: "#ff859b" },
-        { startDate: "2026-12-12", endDate: "2026-12-12", title: "수연 결혼식 (강주)", desc: "", color: "#ff859b" }
+        { startDate: "2026-11-02", endDate: "2026-11-02", title: "뚜 생일" },
+        { startDate: "2026-11-02", endDate: "2026-11-04", title: "오이타 여행" },
+        { startDate: "2026-11-18", endDate: "2026-11-18", title: "조책임 술" },
+        { startDate: "2026-11-20", endDate: "2026-11-20", title: "뚜 청모 (OMCL 강주, 상건)" },
+        { startDate: "2026-11-21", endDate: "2026-11-22", title: "뚜 캠핑" },
+        { startDate: "2026-11-24", endDate: "2026-11-24", title: "송별회" },
+        { startDate: "2026-11-28", endDate: "2026-11-28", title: "현뚜령 / 수연 결혼식 (상건)" },
+        { startDate: "2026-11-29", endDate: "2026-11-29", title: "현뚜령 / 삼치리" },
+        { startDate: "2026-12-12", endDate: "2026-12-12", title: "수연 결혼식 (강주)" }
       ];
 
       syncDot.className = 'sync-dot syncing';
       syncText.innerText = '일정 등록 중...';
 
       let count = 0;
-      defaultEvents.forEach(ev => {
-        coupleCol.add({ ...ev, manualOverride: true, createdAt: Date.now() }).then(() => {
+      defaultEvents.forEach((ev, index) => {
+        const assignedColor = pastelColors[index % pastelColors.length];
+        coupleCol.add({ 
+          startDate: ev.startDate, 
+          endDate: ev.endDate, 
+          title: ev.title, 
+          desc: "", 
+          color: assignedColor, 
+          manualOverride: true, 
+          createdAt: Date.now() + index 
+        }).then(() => {
           count++;
           if (count === defaultEvents.length) {
-            alert('모든 개별 일정이 성공적으로 등록되었습니다! ✨');
+            alert('모든 개별 일정이 다양한 색상으로 성공적으로 등록되었습니다! ✨');
             loadEvents();
           }
         });
@@ -838,7 +856,12 @@
             <h4 style="color: #2d3436;">${ev.title} ${ev.startDate && ev.endDate && ev.startDate !== ev.endDate ? `(${ev.startDate} ~ ${ev.endDate})` : ''}</h4>
             ${ev.desc ? `<p>${ev.desc}</p>` : ''}
           </div>
-          ${ev.isHoliday ? '<span style="font-size:0.75rem; color:#ff6b81; font-weight:700;">공휴일</span>' : `<button class="btn-del-event" onclick="deleteEvent('${ev.id}')"><i class="fa-solid fa-trash-can"></i></button>`}
+          <div class="event-actions">
+            ${ev.isHoliday || ev.isAutoShift ? '<span style="font-size:0.75rem; color:#ff6b81; font-weight:700;">시스템</span>' : `
+              <button class="btn-action btn-edit-event" onclick='openEditModal(${JSON.stringify(ev)})' title="수정"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-action btn-del-event" onclick="deleteEvent('${ev.id}')" title="삭제"><i class="fa-solid fa-trash-can"></i></button>
+            `}
+          </div>
         </div>
       `).join('');
     }
@@ -855,20 +878,30 @@
     }
 
     function openAddModal() {
-      const todayStr = selectedDateStr || getFormattedDate(new Date());
-      document.getElementById('eventStartDate').value = todayStr;
-      document.getElementById('eventEndDate').value = todayStr;
+      document.getElementById('editingEventId').value = '';
+      document.getElementById('modalTitleText').innerText = "새 일정 추가하기 🗓️";
+      document.getElementById('eventStartDate').value = selectedDateStr || getFormattedDate(new Date());
+      document.getElementById('eventEndDate').value = selectedDateStr || getFormattedDate(new Date());
       document.getElementById('eventTitle').value = '';
       document.getElementById('eventDesc').value = '';
+      document.getElementById('addModal').classList.add('active');
+    }
+
+    // 💡 기존 일정 수정 모달 열기
+    function openEditModal(ev) {
+      document.getElementById('editingEventId').value = ev.id;
+      document.getElementById('modalTitleText').innerText = "일정 수정하기 ✏️";
+      document.getElementById('eventStartDate').value = ev.startDate || ev.date;
+      document.getElementById('eventEndDate').value = ev.endDate || ev.startDate || ev.date;
+      document.getElementById('eventTitle').value = ev.title;
+      document.getElementById('eventDesc').value = ev.desc || '';
       
-      if (currentTab === 'work') {
-        document.getElementById('modalTitleText').innerText = "근무표 휴가/변경 등록 🌙";
-        document.getElementById('titleLabel').innerText = "내용 (예: 평일 휴가, 연차)";
-        document.getElementById('eventTitle').placeholder = "예: 평일 휴가";
-      } else {
-        document.getElementById('modalTitleText').innerText = "새 일정 추가하기 🗓️";
-        document.getElementById('titleLabel').innerText = "일정 제목";
-        document.getElementById('eventTitle').placeholder = "예: 오이타 여행";
+      if (ev.color) {
+        selectedColor = ev.color;
+        document.querySelectorAll('.color-chip').forEach(c => {
+          if (c.getAttribute('data-color') === ev.color) c.classList.add('selected');
+          else c.classList.remove('selected');
+        });
       }
       
       document.getElementById('addModal').classList.add('active');
@@ -906,6 +939,7 @@
     }
 
     function saveEvent() {
+      const editingId = document.getElementById('editingEventId').value;
       const startDate = document.getElementById('eventStartDate').value;
       const endDate = document.getElementById('eventEndDate').value || startDate;
       const title = document.getElementById('eventTitle').value.trim();
@@ -918,16 +952,28 @@
       syncText.innerText = '저장 중...';
 
       const activeCol = (currentTab === 'couple') ? coupleCol : workCol;
-      const docId = String(Date.now() + Math.random());
-      
-      activeCol.doc(docId).set({
-        startDate, endDate, title, desc, color: selectedColor, manualOverride: true, createdAt: Date.now()
-      }).then(() => {
-        closeModal();
-      }).catch(err => {
-        console.error(err);
-        alert('저장 실패: ' + err.message);
-      });
+
+      if (editingId) {
+        // 기존 일정 업데이트
+        activeCol.doc(editingId).update({
+          startDate, endDate, title, desc, color: selectedColor
+        }).then(() => {
+          closeModal();
+          loadEvents();
+        }).catch(err => {
+          alert('수정 실패: ' + err.message);
+        });
+      } else {
+        // 새 일정 추가
+        const docId = String(Date.now() + Math.random());
+        activeCol.doc(docId).set({
+          startDate, endDate, title, desc, color: selectedColor, manualOverride: true, createdAt: Date.now()
+        }).then(() => {
+          closeModal();
+        }).catch(err => {
+          alert('저장 실패: ' + err.message);
+        });
+      }
     }
 
     function deleteEvent(id) {
