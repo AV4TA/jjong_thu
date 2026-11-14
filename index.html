@@ -106,6 +106,7 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 14px;
+      margin-bottom: 16px;
     }
 
     .app-item {
@@ -160,6 +161,40 @@
     .item-baseball .app-tag { background: #ffebee; color: #e74c3c; }
     .item-coupon .app-tag { background: #f0edff; color: #6c5ce7; }
     .item-roulette .app-tag { background: #fff8e1; color: #e1b12c; }
+
+    /* 🤖 AI 비서 전용 풀폭 배너 스타일 */
+    .ai-banner {
+      background: linear-gradient(135deg, #fff0f3 0%, #ffffff 100%);
+      border-radius: 20px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      border: 1.5px solid #ffccd5;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      margin-bottom: 24px;
+    }
+    .ai-banner:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+    .ai-banner:active { transform: scale(0.98); }
+    
+    .ai-left { display: flex; align-items: center; gap: 14px; }
+    .ai-icon {
+      width: 48px; height: 48px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #ff758c 0%, #ff5e7e 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: 0 4px 12px rgba(255, 94, 126, 0.3);
+    }
+    .ai-info h3 { font-size: 1.02rem; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+    .ai-info p { font-size: 0.78rem; color: var(--text-sub); font-weight: 500; }
+    .ai-arrow { color: var(--primary); font-size: 0.9rem; font-weight: 800; }
 
     /* 하단 추억 배너 영역 */
     .memory-section { margin-top: 24px; }
@@ -473,13 +508,25 @@
       </div>
     </div>
 
+    <!-- 🤖 뚜쫑 AI 비서 배너 (풀폭 가로형) -->
+    <a href="ai_assistant.html" class="ai-banner">
+      <div class="ai-left">
+        <div class="ai-icon"><i class="fa-solid fa-robot"></i></div>
+        <div class="ai-info">
+          <h3>뚜❣️쫑 AI 비서 🤖</h3>
+          <p>말로 편하게 물어보면 일정을 확인하고 등록해줘요!</p>
+        </div>
+      </div>
+      <div class="ai-arrow">대화하기 <i class="fa-solid fa-chevron-right"></i></div>
+    </a>
+
     <div class="section-title">
       <i class="fa-solid fa-shapes"></i>
       <span>메뉴 어플리케이션</span>
     </div>
 
     <div class="app-grid">
-            <!-- 커플 캘린더 -->
+      <!-- 커플 캘린더 -->
       <a href="calendar.html" class="app-item" style="border: 1px solid #ffd32a;">
         <div class="app-icon-wrap" style="background: #fff8e1; color: #fbc531;">
           <i class="fa-solid fa-calendar-days"></i>
