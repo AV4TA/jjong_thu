@@ -8,7 +8,7 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="theme-color" content="#ff5e7e" />
+  <meta name="theme-color" content="#ff859b" />
   
   <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Pink%20Heart.png" />
   <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Pink%20Heart.png" />
@@ -22,14 +22,14 @@
 
   <style>
     :root {
-      --primary: #ff5e7e;
-      --primary-soft: #fff0f3;
-      --bg: #f4f6fb;
+      --primary: #ff859b;
+      --primary-soft: #fff2f4;
+      --bg: #f8f9fc;
       --card: #ffffff;
       --text: #2d3436;
       --text-sub: #8395a7;
       --border: #edf2f7;
-      --shadow: 0 8px 20px rgba(255, 94, 126, 0.08);
+      --shadow: 0 8px 20px rgba(255, 133, 155, 0.06);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -37,11 +37,11 @@
 
     /* 상단 헤더 */
     .app-header {
-      background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+      background: linear-gradient(135deg, #ffa6b6 0%, #ff859b 100%);
       color: white;
       padding: 20px 18px 12px 18px;
       border-radius: 0 0 28px 28px;
-      box-shadow: 0 6px 20px rgba(255, 117, 140, 0.3);
+      box-shadow: 0 6px 20px rgba(255, 133, 155, 0.2);
       position: sticky;
       top: 0;
       z-index: 10;
@@ -63,7 +63,7 @@
     /* 탭 네비게이션 */
     .tab-nav {
       display: flex;
-      background: rgba(0, 0, 0, 0.1);
+      background: rgba(0, 0, 0, 0.08);
       border-radius: 14px;
       padding: 3px;
       gap: 3px;
@@ -74,7 +74,7 @@
       text-align: center;
       font-size: 0.85rem;
       font-weight: 700;
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255, 255, 255, 0.85);
       background: transparent;
       border: none;
       border-radius: 11px;
@@ -84,12 +84,12 @@
     .tab-btn.active {
       background: white;
       color: var(--primary);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
 
     .container { max-width: 600px; margin: 0 auto; padding: 16px; }
 
-    /* 근무표 설정 패널 (근무표 탭에서만 표시) */
+    /* 근무표 설정 바 */
     .work-settings-bar {
       display: none;
       background: white;
@@ -167,8 +167,8 @@
       color: var(--text-sub);
       margin-bottom: 8px;
     }
-    .cal-weekdays div:first-child { color: #ff4757; }
-    .cal-weekdays div:last-child { color: #2e86de; }
+    .cal-weekdays div:first-child { color: #ff6b81; }
+    .cal-weekdays div:last-child { color: #54a0ff; }
 
     .cal-grid {
       display: grid;
@@ -190,10 +190,10 @@
       transition: all 0.15s;
       overflow: hidden;
     }
-    .cal-day:hover { background: #f0edff; }
+    .cal-day:hover { background: #fdf2f4; }
     .cal-day.other-month { opacity: 0.3; }
     .cal-day.today { border-color: var(--primary); background: var(--primary-soft); }
-    .cal-day.selected { background: #ffe3e8; border-color: var(--primary); }
+    .cal-day.selected { background: #ffe6eb; border-color: var(--primary); }
 
     .day-num {
       font-size: 0.82rem;
@@ -201,8 +201,8 @@
       color: var(--text);
       margin-bottom: 3px;
     }
-    .cal-day:nth-child(7n+1) .day-num, .cal-day.is-holiday .day-num { color: #ff4757; }
-    .cal-day:nth-child(7n) .day-num { color: #2e86de; }
+    .cal-day:nth-child(7n+1) .day-num, .cal-day.is-holiday .day-num { color: #ff6b81; }
+    .cal-day:nth-child(7n) .day-num { color: #54a0ff; }
 
     .day-events-preview {
       width: 100%;
@@ -255,7 +255,7 @@
     .event-info h4 { font-size: 0.92rem; font-weight: 800; color: var(--text); margin-bottom: 2px; }
     .event-info p { font-size: 0.75rem; color: var(--text-sub); }
     .btn-del-event { background: none; border: none; color: #a4b0be; cursor: pointer; font-size: 0.85rem; padding: 4px; }
-    .btn-del-event:hover { color: #ff4757; }
+    .btn-del-event:hover { color: #ff6b81; }
 
     /* FAB 버튼 */
     .fab {
@@ -268,7 +268,7 @@
       color: white;
       display: flex; align-items: center; justify-content: center;
       font-size: 1.4rem;
-      box-shadow: 0 8px 20px rgba(255, 94, 126, 0.4);
+      box-shadow: 0 8px 20px rgba(255, 133, 155, 0.35);
       cursor: pointer;
       border: none;
       z-index: 50;
@@ -280,7 +280,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.5);
       backdrop-filter: blur(4px);
       z-index: 999;
       align-items: center;
@@ -379,20 +379,20 @@
       </div>
       <div class="form-group">
         <label id="titleLabel">일정 제목</label>
-        <input type="text" class="form-control" id="eventTitle" placeholder="예: 1주년 기념 데이트">
+        <input type="text" class="form-control" id="eventTitle" placeholder="예: 평일 휴가">
       </div>
       <div class="form-group">
         <label>시간 / 메모 (선택)</label>
-        <input type="text" class="form-control" id="eventDesc" placeholder="예: 저녁 7시 강남역 맛집">
+        <input type="text" class="form-control" id="eventDesc" placeholder="예: 연차 사용">
       </div>
       <div class="form-group">
-        <label>일정 색상</label>
+        <label>일정 색상 (파스텔 톤)</label>
         <div class="color-picker" id="colorPicker">
-          <div class="color-chip selected" style="background: #ff5e7e;" data-color="#ff5e7e" onclick="selectChip(this, '#ff5e7e')"></div>
-          <div class="color-chip" style="background: #2e86de;" data-color="#2e86de" onclick="selectChip(this, '#2e86de')"></div>
-          <div class="color-chip" style="background: #10ac84;" data-color="#10ac84" onclick="selectChip(this, '#10ac84')"></div>
-          <div class="color-chip" style="background: #ff9f43;" data-color="#ff9f43" onclick="selectChip(this, '#ff9f43')"></div>
-          <div class="color-chip" style="background: #5f27cd;" data-color="#5f27cd" onclick="selectChip(this, '#5f27cd')"></div>
+          <div class="color-chip selected" style="background: #ff859b;" data-color="#ff859b" onclick="selectChip(this, '#ff859b')"></div>
+          <div class="color-chip" style="background: #74b9ff;" data-color="#74b9ff" onclick="selectChip(this, '#74b9ff')"></div>
+          <div class="color-chip" style="background: #55efc4;" data-color="#55efc4" onclick="selectChip(this, '#55efc4')"></div>
+          <div class="color-chip" style="background: #ffeaa7;" data-color="#ffeaa7" onclick="selectChip(this, '#ffeaa7')"></div>
+          <div class="color-chip" style="background: #a29bfe;" data-color="#a29bfe" onclick="selectChip(this, '#a29bfe')"></div>
         </div>
       </div>
 
@@ -414,22 +414,22 @@
       <div class="form-group">
         <label>해당 날짜의 근무 (패턴의 몇 번째 날?)</label>
         <select class="form-control" id="settingsAnchorIndex">
-          <option value="0">1일차 : 주간</option>
-          <option value="1">2일차 : 주간</option>
-          <option value="2">3일차 : 주간</option>
-          <option value="3">4일차 : 주간</option>
+          <option value="0">1일차 : 주간 (4일 묶음)</option>
+          <option value="1">2일차 : 주간 (4일 묶음)</option>
+          <option value="2">3일차 : 주간 (4일 묶음)</option>
+          <option value="3">4일차 : 주간 (4일 묶음)</option>
           <option value="4">5일차 : 야간</option>
           <option value="5">6일차 : 휴무</option>
-          <option value="6">7일차 : 비번</option>
+          <option value="6">7일차 : 휴무</option>
           <option value="7">8일차 : 야간</option>
           <option value="8">9일차 : 휴무</option>
-          <option value="9">10일차 : 비번</option>
+          <option value="9">10일차 : 휴무</option>
           <option value="10">11일차 : 야간</option>
           <option value="11">12일차 : 휴무</option>
-          <option value="12">13일차 : 비번</option>
+          <option value="12">13일차 : 휴무</option>
           <option value="13">14일차 : 야간</option>
           <option value="14">15일차 : 휴무</option>
-          <option value="15">16일차 : 비번</option>
+          <option value="15">16일차 : 휴무</option>
         </select>
       </div>
       <div style="display: flex; gap: 10px; margin-top: 18px;">
@@ -459,9 +459,8 @@
     let eventsMap = {}; 
     let currentDate = new Date();
     let selectedDateStr = getFormattedDate(new Date());
-    let selectedColor = "#ff5e7e";
+    let selectedColor = "#ff859b";
 
-    // 💡 로컬스토리지에서 사용자 지정 근무 패턴 기준 불러오기 (기본값: 2026-11-01 이 0번째 주간)
     let patternAnchorDate = localStorage.getItem('jong_anchor_date') ? new Date(localStorage.getItem('jong_anchor_date')) : new Date(2026, 10, 1);
     let patternAnchorIndex = localStorage.getItem('jong_anchor_index') ? parseInt(localStorage.getItem('jong_anchor_index')) : 0;
 
@@ -489,34 +488,34 @@
       
       if (tab === 'couple') {
         document.getElementById('mainHeaderTitle').innerText = "커플 캘린더 📅";
-        document.documentElement.style.setProperty('--primary', '#ff5e7e');
-        document.documentElement.style.setProperty('--primary-soft', '#fff0f3');
+        document.documentElement.style.setProperty('--primary', '#ff859b');
+        document.documentElement.style.setProperty('--primary-soft', '#fff2f4');
       } else {
         document.getElementById('mainHeaderTitle').innerText = "쫑 근무표 🌙";
-        document.documentElement.style.setProperty('--primary', '#2e86de');
-        document.documentElement.style.setProperty('--primary-soft', '#eef5ff');
+        document.documentElement.style.setProperty('--primary', '#74b9ff');
+        document.documentElement.style.setProperty('--primary-soft', '#eef9ff');
       }
       loadEvents();
     }
 
-    // 💡 알려주신 16일 주기 교대 패턴 (주주주주 야휴비 야휴비 야휴비 야휴비)
+    // 💡 주간 4일 연달아 묶기 & 비번을 휴무로 통일한 연한 파스텔톤 패턴
     const shiftPattern = [
-      { title: "주간", color: "#ff9f43" },
-      { title: "주간", color: "#ff9f43" },
-      { title: "주간", color: "#ff9f43" },
-      { title: "주간", color: "#ff9f43" },
-      { title: "야간", color: "#2e86de" },
-      { title: "휴무", color: "#10ac84" },
-      { title: "비번", color: "#8395a7" },
-      { title: "야간", color: "#2e86de" },
-      { title: "휴무", color: "#10ac84" },
-      { title: "비번", color: "#8395a7" },
-      { title: "야간", color: "#2e86de" },
-      { title: "휴무", color: "#10ac84" },
-      { title: "비번", color: "#8395a7" },
-      { title: "야간", color: "#2e86de" },
-      { title: "휴무", color: "#10ac84" },
-      { title: "비번", color: "#8395a7" }
+      { title: "주간(1/4)", color: "#ffeaa7", textColor: "#d63031" },
+      { title: "주간(2/4)", color: "#ffeaa7", textColor: "#d63031" },
+      { title: "주간(3/4)", color: "#ffeaa7", textColor: "#d63031" },
+      { title: "주간(4/4)", color: "#ffeaa7", textColor: "#d63031" },
+      { title: "야간", color: "#74b9ff" },
+      { title: "휴무", color: "#55efc4" },
+      { title: "휴무", color: "#55efc4" },
+      { title: "야간", color: "#74b9ff" },
+      { title: "휴무", color: "#55efc4" },
+      { title: "휴무", color: "#55efc4" },
+      { title: "야간", color: "#74b9ff" },
+      { title: "휴무", color: "#55efc4" },
+      { title: "휴무", color: "#55efc4" },
+      { title: "야간", color: "#74b9ff" },
+      { title: "휴무", color: "#55efc4" },
+      { title: "휴무", color: "#55efc4" }
     ];
 
     function getAutoShiftForDate(dateStr) {
@@ -574,7 +573,7 @@
                 id: 'holiday_' + hDate,
                 title: officialHolidays[hDate],
                 desc: '법정 공휴일',
-                color: '#ff4757',
+                color: '#ff6b81',
                 isHoliday: true
               });
             }
@@ -596,7 +595,11 @@
               const autoShift = getAutoShiftForDate(dateStr);
               if (autoShift) {
                 if (!eventsMap[dateStr]) eventsMap[dateStr] = [];
-                if (!eventsMap[dateStr].some(e => e.isAutoShift || e.manualOverride)) {
+                
+                // 사용자가 해당 날짜에 수동으로 휴가나 다른 일정을 등록했다면 자동 패턴을 숨기고 사용자 지정 일정을 우선 표시
+                const hasUserOverride = eventsMap[dateStr].some(e => e.manualOverride);
+                
+                if (!hasUserOverride && !eventsMap[dateStr].some(e => e.isAutoShift)) {
                   eventsMap[dateStr].unshift({
                     id: 'auto_' + dateStr,
                     title: autoShift.title,
@@ -679,20 +682,25 @@
       preview.className = 'day-events-preview';
       
       if (eventsMap[dateStr]) {
+        // 수동 오버라이드가 있으면 자동 패턴 배지는 숨기고 사용자 일정만 보여줌
+        const hasOverride = eventsMap[dateStr].some(e => e.manualOverride);
+        const displayEvents = hasOverride ? eventsMap[dateStr].filter(e => e.manualOverride) : eventsMap[dateStr];
+
         const maxDisplay = 2;
-        eventsMap[dateStr].slice(0, maxDisplay).forEach(ev => {
+        displayEvents.slice(0, maxDisplay).forEach(ev => {
           const badge = document.createElement('div');
           badge.className = 'event-badge-mini';
-          badge.style.backgroundColor = ev.color || '#ff5e7e';
+          badge.style.backgroundColor = ev.color || '#ff859b';
+          badge.style.color = ev.textColor || '#ffffff';
           badge.innerText = ev.title;
           preview.appendChild(badge);
         });
-        if (eventsMap[dateStr].length > maxDisplay) {
+        if (displayEvents.length > maxDisplay) {
           const moreBadge = document.createElement('div');
           moreBadge.style.fontSize = '0.55rem';
           moreBadge.style.color = '#8395a7';
           moreBadge.style.textAlign = 'center';
-          moreBadge.innerText = `+${eventsMap[dateStr].length - maxDisplay}`;
+          moreBadge.innerText = `+${displayEvents.length - maxDisplay}`;
           preview.appendChild(moreBadge);
         }
       }
@@ -714,18 +722,21 @@
       titleEl.innerText = `${parts[0]}년 ${parseInt(parts[1])}월 ${parseInt(parts[2])}일 일정`;
 
       const dayEvents = eventsMap[dateStr] || [];
-      if (dayEvents.length === 0) {
+      const hasOverride = dayEvents.some(e => e.manualOverride);
+      const displayEvents = hasOverride ? dayEvents.filter(e => e.manualOverride) : dayEvents;
+
+      if (displayEvents.length === 0) {
         listEl.innerHTML = `<div style="text-align:center; padding: 16px 0; color:#a4b0be; font-size:0.85rem; font-weight:600;">등록된 일정이 없습니다. 우측 하단이나 아래 버튼으로 추가해보세요!</div>`;
         return;
       }
 
-      listEl.innerHTML = dayEvents.map(ev => `
-        <div class="event-item" style="border-left-color: ${ev.color || '#ff5e7e'};">
+      listEl.innerHTML = displayEvents.map(ev => `
+        <div class="event-item" style="border-left-color: ${ev.color || '#ff859b'};">
           <div class="event-info">
             <h4>${ev.title}</h4>
             ${ev.desc ? `<p>${ev.desc}</p>` : ''}
           </div>
-          ${ev.isHoliday ? '<span style="font-size:0.75rem; color:#ff4757; font-weight:700;">공휴일</span>' : `<button class="btn-del-event" onclick="deleteEvent('${ev.id}', '${dateStr}')"><i class="fa-solid fa-trash-can"></i></button>`}
+          ${ev.isHoliday ? '<span style="font-size:0.75rem; color:#ff6b81; font-weight:700;">공휴일</span>' : `<button class="btn-del-event" onclick="deleteEvent('${ev.id}')"><i class="fa-solid fa-trash-can"></i></button>`}
         </div>
       `).join('');
     }
@@ -747,13 +758,13 @@
       document.getElementById('eventDesc').value = '';
       
       if (currentTab === 'work') {
-        document.getElementById('modalTitleText').innerText = "근무표 수정/추가 🌙";
-        document.getElementById('titleLabel').innerText = "근무 종류 (예: 휴가, 근무교대)";
-        document.getElementById('eventTitle').placeholder = "예: 평일 휴가 또는 야간 교대";
+        document.getElementById('modalTitleText').innerText = "근무표 휴가/변경 등록 🌙";
+        document.getElementById('titleLabel').innerText = "내용 (예: 평일 휴가, 야간 교대)";
+        document.getElementById('eventTitle').placeholder = "예: 평일 휴가";
       } else {
         document.getElementById('modalTitleText').innerText = "새 일정 추가하기 🗓️";
         document.getElementById('titleLabel').innerText = "일정 제목";
-        document.getElementById('eventTitle').placeholder = "예: 1주년 기념 데이트";
+        document.getElementById('eventTitle').placeholder = "예: 데이트";
       }
       
       document.getElementById('addModal').classList.add('active');
@@ -813,16 +824,9 @@
       });
     }
 
-    function deleteEvent(id, dateStr) {
-      if (confirm('이 항목을 변경/삭제하시겠습니까?')) {
+    function deleteEvent(id) {
+      if (confirm('이 항목을 삭제하시겠습니까?')) {
         const activeCol = (currentTab === 'couple') ? coupleCol : workCol;
-        if (id.startsWith('auto_')) {
-          activeCol.add({
-            date: dateStr, title: "휴무/변경", desc: "근무 조정", color: "#8395a7", manualOverride: true, createdAt: Date.now()
-          });
-          loadEvents();
-          return;
-        }
         activeCol.doc(id).delete();
       }
     }
