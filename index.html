@@ -94,28 +94,12 @@
       cursor: pointer;
       transition: all 0.2s;
       position: relative;
-      overflow: hidden;
     }
     .letter-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
     .letter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .letter-title { font-size: 0.95rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 6px; }
     .letter-date { font-size: 0.75rem; color: var(--text-sub); font-weight: 600; }
     .letter-content { font-size: 0.92rem; color: var(--text); line-height: 1.45; font-weight: 600; min-height: 40px; display: flex; align-items: center; }
-
-    /* 새로운 편지 도착 알림 배지 */
-    .new-badge {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: var(--primary);
-      color: white;
-      font-size: 0.7rem;
-      font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 10px;
-      animation: bounce 1s infinite alternate;
-    }
-    @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-3px); } }
 
     /* 어플리케이션 그리드 스타일 (2열 배치) */
     .app-grid {
@@ -248,6 +232,88 @@
     .btn-primary { background: var(--primary); color: white; }
     .btn-secondary { background: #f1f2f6; color: #57606f; }
 
+    /* 💌 편지봉투 오픈 팝업 스타일 */
+    .letter-popup-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+      z-index: 99999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .letter-popup-overlay.active { display: flex; }
+
+    .envelope-box {
+      background: #fff;
+      width: 100%;
+      max-width: 360px;
+      border-radius: 28px;
+      padding: 30px 24px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+      position: relative;
+      animation: popUp 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popUp {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .envelope-icon {
+      font-size: 4rem;
+      color: var(--primary);
+      margin-bottom: 14px;
+      animation: floatHeart 1.5s infinite alternate ease-in-out;
+    }
+    @keyframes floatHeart {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-8px); }
+    }
+
+    .envelope-title { font-size: 1.3rem; font-weight: 900; color: var(--text); margin-bottom: 8px; }
+    .envelope-sub { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 20px; font-weight: 600; }
+
+    /* 편지지가 펼쳐지는 박스 */
+    .letter-paper {
+      background: #fffbf0;
+      border: 1.5px dashed #ffccd5;
+      border-radius: 18px;
+      padding: 20px;
+      font-size: 1rem;
+      color: #2d3436;
+      font-weight: 700;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      max-height: 180px;
+      overflow-y: auto;
+      text-align: left;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.03);
+      display: none; /* 처음에 봉투 상태일땐 숨김 */
+      animation: unfold 0.4s ease-out forwards;
+    }
+    @keyframes unfold {
+      0% { transform: scaleY(0); opacity: 0; }
+      100% { transform: scaleY(1); opacity: 1; }
+    }
+
+    .btn-open-letter {
+      background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+      color: white;
+      width: 100%;
+      padding: 14px;
+      border-radius: 16px;
+      border: none;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(255, 94, 126, 0.3);
+      transition: transform 0.1s;
+    }
+    .btn-open-letter:active { transform: scale(0.96); }
+
     /* 🔒 PIN 잠금 화면 */
     .pin-overlay {
       position: fixed;
@@ -331,7 +397,7 @@
 </head>
 <body>
 
-  <!-- 🔒 핀 잠금 오버레이 -->
+  <!-- 🔒 핀 잠금 화면 -->
   <div id="pinLockScreen" class="pin-overlay">
     <div class="pin-badge">❤️</div>
     <div class="pin-title">뚜쫑 비밀 공간</div>
@@ -367,6 +433,22 @@
     </div>
   </div>
 
+  <!-- 💌 앱 진입 시 뜨는 편지봉투 오픈 팝업 -->
+  <div class="letter-popup-overlay" id="letterPopupOverlay">
+    <div class="envelope-box" onclick="event.stopPropagation()">
+      <div class="envelope-icon" id="envelopeIcon"><i class="fa-solid fa-envelope-open-text"></i></div>
+      <div class="envelope-title" id="popupTitle">오늘의 편지가 도착했어요 💌</div>
+      <div class="envelope-sub" id="popupSub">봉투를 터치해서 열어보세요!</div>
+
+      <!-- 펼쳐지는 편지 내용 -->
+      <div class="letter-paper" id="popupLetterText">
+        편지 내용 로딩 중...
+      </div>
+
+      <button class="btn-open-letter" id="popupActionBtn" onclick="handlePopupAction()">편지 열어보기 💖</button>
+    </div>
+  </div>
+
   <!-- 어플 스타일 상단 헤더 -->
   <header class="app-header">
     <div class="header-user-info">
@@ -383,7 +465,6 @@
 
     <!-- 💌 오늘의 한 줄 편지 카드 -->
     <div class="letter-card" onclick="openLetterModal()">
-      <div id="newLetterBadge" class="new-badge" style="display: none;">NEW ✨</div>
       <div class="letter-header">
         <div class="letter-title"><i class="fa-solid fa-envelope-open-text"></i> 오늘의 한 줄 편지</div>
         <div class="letter-date" id="letterDateTxt">오늘</div>
@@ -468,7 +549,7 @@
   <!-- 💌 편지 작성 모달 -->
   <div class="modal-overlay" id="letterModal" onclick="closeLetterModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <div class="modal-title"><i class="fa-solid fa-heart" style="color:var(--primary);"></i> 오늘의 한 줄 편지</div>
+      <div class="modal-title"><i class="fa-solid fa-heart" style="color:var(--primary);"></i> 오늘의 한 줄 편지 수정하기</div>
       <div style="margin-bottom: 14px;">
         <textarea class="form-control" id="letterInput" rows="3" placeholder="오늘 서로에게 전하고 싶은 따뜻한 한마디를 남겨보세요!"></textarea>
       </div>
@@ -505,42 +586,60 @@
       if (ddayEl) ddayEl.innerText = `Since 2020.10.31 (D+${diffDays})`;
     })();
 
-    // 편지 데이터 실시간 감지 (Firestore) -> 인앱 실시간 배지 & 텍스트 갱신
-    let isInitialLoad = true;
+    let globalLetterText = "";
+    let isEnvelopeOpened = false;
+
+    // 편지 데이터 실시간 감지
     letterDocRef.onSnapshot(doc => {
       if (doc.exists) {
         const data = doc.data();
-        const text = data.text || "";
+        globalLetterText = data.text || "";
         const dateStr = data.date || "";
         
         document.getElementById('letterDateTxt').innerText = dateStr || "오늘";
         const textEl = document.getElementById('todayLetterText');
-        const badgeEl = document.getElementById('newLetterBadge');
 
-        if (text) {
-          textEl.innerText = text;
+        if (globalLetterText) {
+          textEl.innerText = globalLetterText;
           textEl.style.color = "var(--text)";
-          
-          // 처음 로딩될 때가 아니고, 새로운 편지 내용이 감지되면 NEW 배지 띄우기
-          if (!isInitialLoad) {
-            badgeEl.style.display = "block";
-          }
-          isInitialLoad = false;
         } else {
           textEl.innerText = "오늘 서로에게 남긴 따뜻한 한마디가 아직 없어요! 터치해서 남겨보세요 💌";
           textEl.style.color = "var(--text-sub)";
-          badgeEl.style.display = "none";
-          isInitialLoad = false;
         }
       }
     });
 
-    function openLetterModal() {
-      document.getElementById('letterModal').classList.add('active');
-      // 편지 카드를 누르면 NEW 배지 숨기기
-      document.getElementById('newLetterBadge').style.display = "none";
+    // 💌 봉투 팝업 열기/닫기 애니메이션 제어
+    function showLetterPopupIfAvailable() {
+      // 오늘 편지가 있을 때만 잠금 해제 직후 팝업 띄우기
+      if (globalLetterText) {
+        document.getElementById('popupLetterText').innerText = globalLetterText;
+        document.getElementById('letterPopupOverlay').classList.add('active');
+      }
     }
 
+    function handlePopupAction() {
+      const paper = document.getElementById('popupLetterText');
+      const btn = document.getElementById('popupActionBtn');
+      const icon = document.getElementById('envelopeIcon');
+      const sub = document.getElementById('popupSub');
+
+      if (!isEnvelopeOpened) {
+        // 편지 열기 애니메이션 실행
+        paper.style.display = "block";
+        icon.innerHTML = '<i class="fa-solid fa-heart" style="color:var(--primary);"></i>';
+        sub.innerText = "상대방이 남긴 오늘의 편지예요 💕";
+        btn.innerText = "확인했어요 닫기 ✨";
+        isEnvelopeOpened = true;
+      } else {
+        // 팝업 닫기
+        document.getElementById('letterPopupOverlay').classList.remove('active');
+      }
+    }
+
+    function openLetterModal() {
+      document.getElementById('letterModal').classList.add('active');
+    }
     function closeLetterModal() {
       document.getElementById('letterModal').classList.remove('active');
       document.getElementById('letterInput').value = "";
@@ -560,6 +659,7 @@
         updatedAt: Date.now()
       }).then(() => {
         closeLetterModal();
+        alert("오늘의 편지가 등록되었습니다! 💌");
       }).catch(err => {
         console.error(err);
         alert("저장 중 오류가 발생했습니다.");
@@ -583,6 +683,7 @@
       const isSessionUnlocked = sessionStorage.getItem("ddo_jjong_unlocked") === "true";
       if (isAutoUnlocked || isSessionUnlocked) {
         document.getElementById("pinLockScreen").classList.add("hidden");
+        setTimeout(showLetterPopupIfAvailable, 400); // 잠금 해제 후 팝업 띄우기
       }
     })();
 
@@ -622,6 +723,7 @@
         }
         sessionStorage.setItem("ddo_jjong_unlocked", "true");
         document.getElementById("pinLockScreen").classList.add("hidden");
+        setTimeout(showLetterPopupIfAvailable, 400); // PIN 맞추고 들어올 때 팝업 띄우기
       } else {
         const dotsContainer = document.getElementById("pinDotsContainer");
         dotsContainer.classList.add("shake");
