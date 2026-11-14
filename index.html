@@ -583,25 +583,26 @@
       if (ddayEl) ddayEl.innerText = `Since 2020.10.31 (D+${diffDays})`;
     })();
 
-    let hasShownPopup = false;
+    let globalLetterText = "";
+    let hasCheckedTodayLetter = false;
 
-    // 실시간 데이터 감지 및 팝업 자동 띄우기
+    // 실시간 데이터 감지
     letterDocRef.onSnapshot(doc => {
       if (doc.exists) {
         const data = doc.data();
-        const text = data.text || "";
+        globalLetterText = data.text || "";
         const dateStr = data.date || "";
         
         document.getElementById('letterDateTxt').innerText = dateStr || "오늘";
         const textEl = document.getElementById('todayLetterText');
 
-        if (text) {
-          textEl.innerText = text;
+        if (globalLetterText) {
+          textEl.innerText = globalLetterText;
           textEl.style.color = "var(--text)";
 
-          // 아직 팝업을 안 띄웠고, 편지 내용이 존재한다면 암호 해제 직후 또는 데이터 로드 시 팝업 띄우기
-          if (!hasShownPopup && document.getElementById("pinLockScreen").classList.contains("hidden")) {
-            triggerLetterPopup(text);
+          // 오늘 아직 이 편지를 확인하지 않았다면 팝업 띄우기
+          if (!hasCheckedTodayLetter && document.getElementById("pinLockScreen").classList.contains("hidden")) {
+            checkAndShowPopup(dateStr);
           }
         } else {
           textEl.innerText = "오늘 서로에게 남긴 따뜻한 한마디가 아직 없어요! 터치해서 남겨보세요 💌";
@@ -610,18 +611,23 @@
       }
     });
 
-    function triggerLetterPopup(text) {
-      hasShownPopup = true;
-      document.getElementById('popupLetterText').innerText = text;
-      
-      // 상태 초기화 (봉투 닫힌 상태)
-      isEnvelopeOpened = false;
-      document.getElementById('popupLetterText').style.display = "none";
-      document.getElementById('envelopeIcon').innerHTML = '<i class="fa-solid fa-envelope-open-text"></i>';
-      document.getElementById('popupSub').innerText = "봉투를 터치해서 열어보세요!";
-      document.getElementById('popupActionBtn').innerText = "편지 열어보기 💖";
+    function checkAndShowPopup(dateStr) {
+      const todayKey = `read_letter_${dateStr}`;
+      const alreadyRead = localStorage.getItem(todayKey);
 
-      document.getElementById('letterPopupOverlay').classList.add('active');
+      // 오늘 날짜 기준으로 아직 안 읽었을 때만 팝업 실행
+      if (!alreadyRead && globalLetterText) {
+        hasCheckedTodayLetter = true;
+        document.getElementById('popupLetterText').innerText = globalLetterText;
+        
+        isEnvelopeOpened = false;
+        document.getElementById('popupLetterText').style.display = "none";
+        document.getElementById('envelopeIcon').innerHTML = '<i class="fa-solid fa-envelope-open-text"></i>';
+        document.getElementById('popupSub').innerText = "봉투를 터치해서 열어보세요!";
+        document.getElementById('popupActionBtn').innerText = "편지 열어보기 💖";
+
+        document.getElementById('letterPopupOverlay').classList.add('active');
+      }
     }
 
     let isEnvelopeOpened = false;
@@ -637,6 +643,11 @@
         sub.innerText = "상대방이 남긴 오늘의 편지예요 💕";
         btn.innerText = "확인했어요 닫기 ✨";
         isEnvelopeOpened = true;
+
+        // 오늘 읽은 기록을 저장하여 오늘 하루 동안은 다시 안 뜨게 설정
+        const today = new Date();
+        const dateStr = `${today.getMonth() + 1}월 ${today.getDate()}일`;
+        localStorage.setItem(`read_letter_${dateStr}`, "true");
       } else {
         document.getElementById('letterPopupOverlay').classList.remove('active');
       }
@@ -656,6 +667,9 @@
 
       const today = new Date();
       const dateStr = `${today.getMonth() + 1}월 ${today.getDate()}일`;
+
+      // 내가 새로 편지를 쓰면 오늘 안 읽은 상태로 초기화 (상대방이 볼 수 있게)
+      localStorage.removeItem(`read_letter_${dateStr}`);
 
       letterDocRef.set({
         text: text,
@@ -726,6 +740,11 @@
         }
         sessionStorage.setItem("ddo_jjong_unlocked", "true");
         document.getElementById("pinLockScreen").classList.add("hidden");
+        
+        // 잠금 풀리고 들어올 때 오늘 안 읽었다면 팝업 체크
+        const today = new Date();
+        const dateStr = `${today.getMonth() + 1}월 ${today.getDate()}일`;
+        checkAndShowPopup(dateStr);
       } else {
         const dotsContainer = document.getElementById("pinDotsContainer");
         dotsContainer.classList.add("shake");
