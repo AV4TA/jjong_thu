@@ -69,22 +69,6 @@
     .header-texts h1 { font-size: 1.4rem; font-weight: 800; }
     .header-texts p { font-size: 0.8rem; opacity: 0.9; margin-top: 2px; }
 
-    /* 알림 권한 허용 버튼 */
-    .btn-push-auth {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: rgba(255, 255, 255, 0.25);
-      border: none;
-      color: white;
-      padding: 6px 10px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-      backdrop-filter: blur(4px);
-    }
-
     /* 컨테이너 */
     .container { max-width: 480px; margin: 0 auto; padding: 24px 16px; }
 
@@ -109,12 +93,29 @@
       margin-bottom: 24px;
       cursor: pointer;
       transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
     }
     .letter-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
     .letter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .letter-title { font-size: 0.95rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 6px; }
     .letter-date { font-size: 0.75rem; color: var(--text-sub); font-weight: 600; }
     .letter-content { font-size: 0.92rem; color: var(--text); line-height: 1.45; font-weight: 600; min-height: 40px; display: flex; align-items: center; }
+
+    /* 새로운 편지 도착 알림 배지 */
+    .new-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: var(--primary);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 10px;
+      animation: bounce 1s infinite alternate;
+    }
+    @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-3px); } }
 
     /* 어플리케이션 그리드 스타일 (2열 배치) */
     .app-grid {
@@ -368,7 +369,6 @@
 
   <!-- 어플 스타일 상단 헤더 -->
   <header class="app-header">
-    <button class="btn-push-auth" onclick="requestNotificationPermission()"><i class="fa-solid fa-bell"></i> 알림 켜기</button>
     <div class="header-user-info">
       <div class="header-avatar">💖</div>
       <div class="header-texts">
@@ -383,6 +383,7 @@
 
     <!-- 💌 오늘의 한 줄 편지 카드 -->
     <div class="letter-card" onclick="openLetterModal()">
+      <div id="newLetterBadge" class="new-badge" style="display: none;">NEW ✨</div>
       <div class="letter-header">
         <div class="letter-title"><i class="fa-solid fa-envelope-open-text"></i> 오늘의 한 줄 편지</div>
         <div class="letter-date" id="letterDateTxt">오늘</div>
@@ -504,22 +505,8 @@
       if (ddayEl) ddayEl.innerText = `Since 2020.10.31 (D+${diffDays})`;
     })();
 
-    // 브라우저 푸시 알림 권한 요청
-    function requestNotificationPermission() {
-      if (!("Notification" in window)) {
-        return alert("이 브라우저는 알림 기능을 지원하지 않습니다.");
-      }
-      Notification.requestPermission().then(permission => {
-        if (permission === "granted") {
-          alert("알림이 허용되었습니다! 이제 상대방이 편지를 쓰면 알림이 와요 💌");
-        } else {
-          alert("알림 권한이 거부되었습니다.");
-        }
-      });
-    }
-
-    // 편지 데이터 실시간 감지 (Firestore)
-    let lastLetterText = "";
+    // 편지 데이터 실시간 감지 (Firestore) -> 인앱 실시간 배지 & 텍스트 갱신
+    let isInitialLoad = true;
     letterDocRef.onSnapshot(doc => {
       if (doc.exists) {
         const data = doc.data();
@@ -528,28 +515,32 @@
         
         document.getElementById('letterDateTxt').innerText = dateStr || "오늘";
         const textEl = document.getElementById('todayLetterText');
+        const badgeEl = document.getElementById('newLetterBadge');
 
         if (text) {
           textEl.innerText = text;
           textEl.style.color = "var(--text)";
           
-          if (lastLetterText && lastLetterText !== text && Notification.permission === "granted") {
-            new Notification("💌 뚜❣️쫑 새로운 편지", {
-              body: text,
-              icon: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Pink%20Heart.png"
-            });
+          // 처음 로딩될 때가 아니고, 새로운 편지 내용이 감지되면 NEW 배지 띄우기
+          if (!isInitialLoad) {
+            badgeEl.style.display = "block";
           }
-          lastLetterText = text;
+          isInitialLoad = false;
         } else {
           textEl.innerText = "오늘 서로에게 남긴 따뜻한 한마디가 아직 없어요! 터치해서 남겨보세요 💌";
           textEl.style.color = "var(--text-sub)";
+          badgeEl.style.display = "none";
+          isInitialLoad = false;
         }
       }
     });
 
     function openLetterModal() {
       document.getElementById('letterModal').classList.add('active');
+      // 편지 카드를 누르면 NEW 배지 숨기기
+      document.getElementById('newLetterBadge').style.display = "none";
     }
+
     function closeLetterModal() {
       document.getElementById('letterModal').classList.remove('active');
       document.getElementById('letterInput').value = "";
