@@ -210,19 +210,24 @@
       flex-direction: column;
       gap: 2px;
     }
-    /* 글씨 색상 검은색 고정 */
-    .event-badge-mini {
+    
+    /* 타임트리 스타일의 긴 바 형태 뱃지 */
+    .event-badge-bar {
       font-size: 0.58rem;
       font-weight: 700;
-      padding: 2px 4px;
-      border-radius: 4px;
+      padding: 2px 5px;
       color: #2d3436 !important;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       text-align: left;
       width: 100%;
+      margin-bottom: 1px;
     }
+    .event-badge-bar.start { border-radius: 4px 0 0 4px; padding-left: 6px; }
+    .event-badge-bar.end { border-radius: 0 4px 4px 0; }
+    .event-badge-bar.middle { border-radius: 0; }
+    .event-badge-bar.single { border-radius: 4px; }
 
     /* 선택된 날짜 상세 일정 영역 */
     .day-detail-card {
@@ -370,17 +375,21 @@
 
   <button class="fab" onclick="openAddModal()"><i class="fa-solid fa-plus"></i></button>
 
-  <!-- 일정 추가 모달 -->
+  <!-- 일정 추가 모달 (시작일/종료일 지원) -->
   <div class="modal-overlay" id="addModal">
     <div class="modal-content" onclick="event.stopPropagation()">
       <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 14px;" id="modalTitleText">새 일정 추가하기 🗓️</h3>
       <div class="form-group">
-        <label>날짜</label>
-        <input type="date" class="form-control" id="eventDate">
+        <label>시작일</label>
+        <input type="date" class="form-control" id="eventStartDate">
+      </div>
+      <div class="form-group">
+        <label>종료일 (연속 일정일 경우)</label>
+        <input type="date" class="form-control" id="eventEndDate">
       </div>
       <div class="form-group">
         <label id="titleLabel">일정 제목</label>
-        <input type="text" class="form-control" id="eventTitle" placeholder="예: 평일 휴가">
+        <input type="text" class="form-control" id="eventTitle" placeholder="예: 오이타 여행 / 평일 휴가">
       </div>
       <div class="form-group">
         <label>시간 / 메모 (선택)</label>
@@ -415,10 +424,10 @@
       <div class="form-group">
         <label>해당 날짜의 근무 (패턴의 몇 번째 날?)</label>
         <select class="form-control" id="settingsAnchorIndex">
-          <option value="0">1일차 : 주간(1/4)</option>
-          <option value="1">2일차 : 주간(2/4)</option>
-          <option value="2">3일차 : 주간(3/4)</option>
-          <option value="3">4일차 : 주간(4/4)</option>
+          <option value="0">1일차 : 주간</option>
+          <option value="1">2일차 : 주간</option>
+          <option value="2">3일차 : 주간</option>
+          <option value="3">4일차 : 주간</option>
           <option value="4">5일차 : 야간</option>
           <option value="5">6일차 : 휴무</option>
           <option value="6">7일차 : 휴무</option>
@@ -457,7 +466,7 @@
     const workCol = db.collection("couple_space").doc("data").collection("jong_work_schedule");
 
     let currentTab = 'couple'; 
-    let eventsMap = {}; 
+    let rawEvents = []; 
     let currentDate = new Date();
     let selectedDateStr = getFormattedDate(new Date());
     let selectedColor = "#ff859b";
@@ -499,12 +508,11 @@
       loadEvents();
     }
 
-    // 파스텔 톤 근무 패턴 (비번 통합 휴무, 글씨는 검은색 고정)
     const shiftPattern = [
-      { title: "주간(1/4)", color: "#ffeaa7" },
-      { title: "주간(2/4)", color: "#ffeaa7" },
-      { title: "주간(3/4)", color: "#ffeaa7" },
-      { title: "주간(4/4)", color: "#ffeaa7" },
+      { title: "주간", color: "#ffeaa7" },
+      { title: "주간", color: "#ffeaa7" },
+      { title: "주간", color: "#ffeaa7" },
+      { title: "주간", color: "#ffeaa7" },
       { title: "야간", color: "#74b9ff" },
       { title: "휴무", color: "#55efc4" },
       { title: "휴무", color: "#55efc4" },
@@ -557,27 +565,23 @@
       syncText.innerText = '동기화 중...';
 
       unsubscribe = activeCol.onSnapshot((snapshot) => {
-        eventsMap = {};
-        
+        rawEvents = [];
         snapshot.forEach(doc => {
-          const data = doc.data();
-          const date = data.date;
-          if (!eventsMap[date]) eventsMap[date] = [];
-          eventsMap[date].push({ id: doc.id, ...data });
+          rawEvents.push({ id: doc.id, ...doc.data() });
         });
 
+        // 공휴일 및 자동 패턴 병합
         if (currentTab === 'couple') {
           for (let hDate in officialHolidays) {
-            if (!eventsMap[hDate]) eventsMap[hDate] = [];
-            if (!eventsMap[hDate].some(e => e.isHoliday)) {
-              eventsMap[hDate].unshift({
-                id: 'holiday_' + hDate,
-                title: officialHolidays[hDate],
-                desc: '법정 공휴일',
-                color: '#ff6b81',
-                isHoliday: true
-              });
-            }
+            rawEvents.push({
+              id: 'holiday_' + hDate,
+              startDate: hDate,
+              endDate: hDate,
+              title: officialHolidays[hDate],
+              desc: '법정 공휴일',
+              color: '#ff6b81',
+              isHoliday: true
+            });
           }
         }
 
@@ -595,13 +599,13 @@
               const dateStr = `${y}-${String(mo + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
               const autoShift = getAutoShiftForDate(dateStr);
               if (autoShift) {
-                if (!eventsMap[dateStr]) eventsMap[dateStr] = [];
-                
-                const hasUserOverride = eventsMap[dateStr].some(e => e.manualOverride);
-                
-                if (!hasUserOverride && !eventsMap[dateStr].some(e => e.isAutoShift)) {
-                  eventsMap[dateStr].unshift({
+                // 사용자가 해당 날짜에 수동으로 휴가/변경을 넣었는지 확인
+                const hasOverride = rawEvents.some(e => e.manualOverride && e.startDate <= dateStr && e.endDate >= dateStr);
+                if (!hasOverride) {
+                  rawEvents.push({
                     id: 'auto_' + dateStr,
+                    startDate: dateStr,
+                    endDate: dateStr,
                     title: autoShift.title,
                     desc: '교대 근무 패턴',
                     color: autoShift.color,
@@ -668,7 +672,15 @@
 
     function createDayCell(dayNum, dateStr, isOtherMonth, isToday = false) {
       const cell = document.createElement('div');
-      const hasHoliday = currentTab === 'couple' && eventsMap[dateStr] && eventsMap[dateStr].some(e => e.isHoliday);
+      
+      // 해당 날짜에 걸치는 이벤트 필터링
+      const dayEvents = rawEvents.filter(ev => {
+        const start = ev.startDate || ev.date;
+        const end = ev.endDate || ev.startDate || ev.date;
+        return dateStr >= start && dateStr <= end;
+      });
+
+      const hasHoliday = currentTab === 'couple' && dayEvents.some(e => e.isHoliday);
       
       cell.className = `cal-day ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''} ${hasHoliday ? 'is-holiday' : ''} ${selectedDateStr === dateStr ? 'selected' : ''}`;
       cell.onclick = () => selectDate(dateStr);
@@ -681,27 +693,34 @@
       const preview = document.createElement('div');
       preview.className = 'day-events-preview';
       
-      if (eventsMap[dateStr]) {
-        const hasOverride = eventsMap[dateStr].some(e => e.manualOverride);
-        const displayEvents = hasOverride ? eventsMap[dateStr].filter(e => e.manualOverride) : eventsMap[dateStr];
-
-        const maxDisplay = 2;
-        displayEvents.slice(0, maxDisplay).forEach(ev => {
-          const badge = document.createElement('div');
-          badge.className = 'event-badge-mini';
-          badge.style.backgroundColor = ev.color || '#ff859b';
-          badge.innerText = ev.title;
-          preview.appendChild(badge);
-        });
-        if (displayEvents.length > maxDisplay) {
-          const moreBadge = document.createElement('div');
-          moreBadge.style.fontSize = '0.55rem';
-          moreBadge.style.color = '#8395a7';
-          moreBadge.style.textAlign = 'center';
-          moreBadge.innerText = `+${displayEvents.length - maxDisplay}`;
-          preview.appendChild(moreBadge);
+      const maxDisplay = 2;
+      dayEvents.slice(0, maxDisplay).forEach(ev => {
+        const start = ev.startDate || ev.date;
+        const end = ev.endDate || ev.startDate || ev.date;
+        
+        let posClass = 'single';
+        if (start !== end) {
+          if (dateStr === start) posClass = 'start';
+          else if (dateStr === end) posClass = 'end';
+          else posClass = 'middle';
         }
+
+        const badge = document.createElement('div');
+        badge.className = `event-badge-bar ${posClass}`;
+        badge.style.backgroundColor = ev.color || '#ff859b';
+        badge.innerText = ev.title;
+        preview.appendChild(badge);
+      });
+
+      if (dayEvents.length > maxDisplay) {
+        const moreBadge = document.createElement('div');
+        moreBadge.style.fontSize = '0.55rem';
+        moreBadge.style.color = '#8395a7';
+        moreBadge.style.textAlign = 'center';
+        moreBadge.innerText = `+${dayEvents.length - maxDisplay}`;
+        preview.appendChild(moreBadge);
       }
+
       cell.appendChild(preview);
       return cell;
     }
@@ -719,19 +738,21 @@
       const parts = dateStr.split('-');
       titleEl.innerText = `${parts[0]}년 ${parseInt(parts[1])}월 ${parseInt(parts[2])}일 일정`;
 
-      const dayEvents = eventsMap[dateStr] || [];
-      const hasOverride = dayEvents.some(e => e.manualOverride);
-      const displayEvents = hasOverride ? dayEvents.filter(e => e.manualOverride) : dayEvents;
+      const dayEvents = rawEvents.filter(ev => {
+        const start = ev.startDate || ev.date;
+        const end = ev.endDate || ev.startDate || ev.date;
+        return dateStr >= start && dateStr <= end;
+      });
 
-      if (displayEvents.length === 0) {
+      if (dayEvents.length === 0) {
         listEl.innerHTML = `<div style="text-align:center; padding: 16px 0; color:#a4b0be; font-size:0.85rem; font-weight:600;">등록된 일정이 없습니다. 우측 하단이나 아래 버튼으로 추가해보세요!</div>`;
         return;
       }
 
-      listEl.innerHTML = displayEvents.map(ev => `
+      listEl.innerHTML = dayEvents.map(ev => `
         <div class="event-item" style="border-left-color: ${ev.color || '#ff859b'};">
           <div class="event-info">
-            <h4 style="color: #2d3436;">${ev.title}</h4>
+            <h4 style="color: #2d3436;">${ev.title} ${ev.startDate !== ev.endDate ? `(${ev.startDate} ~ ${ev.endDate})` : ''}</h4>
             ${ev.desc ? `<p>${ev.desc}</p>` : ''}
           </div>
           ${ev.isHoliday ? '<span style="font-size:0.75rem; color:#ff6b81; font-weight:700;">공휴일</span>' : `<button class="btn-del-event" onclick="deleteEvent('${ev.id}')"><i class="fa-solid fa-trash-can"></i></button>`}
@@ -751,18 +772,20 @@
     }
 
     function openAddModal() {
-      document.getElementById('eventDate').value = selectedDateStr || getFormattedDate(new Date());
+      const todayStr = selectedDateStr || getFormattedDate(new Date());
+      document.getElementById('eventStartDate').value = todayStr;
+      document.getElementById('eventEndDate').value = todayStr;
       document.getElementById('eventTitle').value = '';
       document.getElementById('eventDesc').value = '';
       
       if (currentTab === 'work') {
         document.getElementById('modalTitleText').innerText = "근무표 휴가/변경 등록 🌙";
-        document.getElementById('titleLabel').innerText = "내용 (예: 평일 휴가, 야간 교대)";
+        document.getElementById('titleLabel').innerText = "내용 (예: 평일 휴가, 연차)";
         document.getElementById('eventTitle').placeholder = "예: 평일 휴가";
       } else {
         document.getElementById('modalTitleText').innerText = "새 일정 추가하기 🗓️";
         document.getElementById('titleLabel').innerText = "일정 제목";
-        document.getElementById('eventTitle').placeholder = "예: 데이트";
+        document.getElementById('eventTitle').placeholder = "예: 오이타 여행";
       }
       
       document.getElementById('addModal').classList.add('active');
@@ -800,11 +823,13 @@
     }
 
     function saveEvent() {
-      const date = document.getElementById('eventDate').value;
+      const startDate = document.getElementById('eventStartDate').value;
+      const endDate = document.getElementById('eventEndDate').value || startDate;
       const title = document.getElementById('eventTitle').value.trim();
       const desc = document.getElementById('eventDesc').value.trim();
 
-      if (!date || !title) return alert('날짜와 제목을 입력해주세요!');
+      if (!startDate || !title) return alert('시작일과 제목을 입력해주세요!');
+      if (startDate > endDate) return alert('종료일이 시작일보다 빠를 수 없습니다!');
 
       syncDot.className = 'sync-dot syncing';
       syncText.innerText = '저장 중...';
@@ -813,7 +838,7 @@
       const docId = String(Date.now() + Math.random());
       
       activeCol.doc(docId).set({
-        date, title, desc, color: selectedColor, manualOverride: true, createdAt: Date.now()
+        startDate, endDate, title, desc, color: selectedColor, manualOverride: true, createdAt: Date.now()
       }).then(() => {
         closeModal();
       }).catch(err => {
@@ -823,6 +848,9 @@
     }
 
     function deleteEvent(id) {
+      if (id.startsWith('holiday_') || id.startsWith('auto_')) {
+        return alert('자동 생성된 항목은 삭제할 수 없습니다.');
+      }
       if (confirm('이 항목을 삭제하시겠습니까?')) {
         const activeCol = (currentTab === 'couple') ? coupleCol : workCol;
         activeCol.doc(id).delete();
