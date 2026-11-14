@@ -211,7 +211,7 @@
       gap: 2px;
     }
     
-    /* 💡 타임트리 스타일 완벽 연결형 막대 바 디자인 (줄바꿈 자동 대응) */
+    /* 💡 타임트리 스타일 완벽 연결형 막대 바 디자인 (글씨 검은색 고정) */
     .event-badge-bar {
       font-size: 0.58rem;
       font-weight: 700;
@@ -716,10 +716,8 @@
           } else if (targetTime === endTime) {
             posClass = 'end';
           } else if (dayOfWeek === 0) {
-            // 일요일(새로운 주의 시작)에 걸리면 시각적으로 시작 모서리 적용
             posClass = 'start';
           } else if (dayOfWeek === 6) {
-            // 토요일(주의 끝)에 걸리면 시각적으로 끝 모서리 적용
             posClass = 'end';
           } else {
             posClass = 'middle';
