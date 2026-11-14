@@ -344,8 +344,8 @@
     }
     .gift-view-img-box {
       width: 100%;
-      height: 65vh;
-      max-height: 520px;
+      height: 60vh;
+      max-height: 480px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -387,12 +387,37 @@
       gap: 8px;
     }
     .btn-download-img:active { background: var(--primary); color: white; }
+    
+    /* 확대 모달 내 사용 완료 버튼 스타일 */
+    .btn-modal-use-toggle {
+      width: 100%;
+      padding: 11px;
+      border-radius: 12px;
+      background: #f1f2f6;
+      color: #57606f;
+      border: 1px solid var(--border);
+      font-size: 0.92rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-modal-use-toggle.is-used {
+      background: #2ed573;
+      color: white;
+      border-color: #2ed573;
+    }
+
     .zoom-tip {
       font-size: 0.8rem;
       color: #8395a7;
       display: flex;
       align-items: center;
       gap: 5px;
+      margin-top: 2px;
     }
   </style>
 </head>
@@ -494,8 +519,13 @@
         <img id="enlargedImg" src="" alt="바코드 확대">
       </div>
       <div class="gift-view-actions">
+        <!-- 이미지 저장 버튼 -->
         <button class="btn-download-img" onclick="downloadCurrentGiftImage()">
           <i class="fa-solid fa-download"></i> 기프티콘 이미지 저장하기
+        </button>
+        <!-- 사용 완료 토글 버튼 추가 -->
+        <button class="btn-modal-use-toggle" id="modalUseToggleBtn" onclick="toggleCurrentGiftUse()">
+          <i class="fa-solid fa-check"></i> <span id="modalUseToggleText">사용 완료하기</span>
         </button>
         <div class="zoom-tip"><i class="fa-solid fa-magnifying-glass-plus"></i> 손가락으로 자유롭게 확대/이동 가능</div>
       </div>
@@ -537,6 +567,16 @@
       gifticons = list;
       if (syncDot) syncDot.className = 'sync-dot online';
       if (syncText) syncText.innerText = '실시간 동기화 완료';
+      
+      // 모달이 열려있는 상태에서 실시간 데이터가 갱신될 경우 버튼 상태도 동기화
+      if (currentViewingGift) {
+        const updated = gifticons.find(i => i.id === currentViewingGift.id);
+        if (updated) {
+          currentViewingGift = updated;
+          updateModalUseButtonState(updated.isUsed);
+        }
+      }
+
       renderGifticons();
     }, error => {
       console.error("Firestore sync error:", error);
@@ -680,6 +720,26 @@
       }
     }
 
+    // 모달 안에서 바로 사용 완료 토글하기
+    function toggleCurrentGiftUse() {
+      if (!currentViewingGift) return;
+      toggleGiftUse(currentViewingGift.id);
+    }
+
+    function updateModalUseButtonState(isUsed) {
+      const btn = document.getElementById('modalUseToggleBtn');
+      const text = document.getElementById('modalUseToggleText');
+      if (!btn || !text) return;
+
+      if (isUsed) {
+        btn.classList.add('is-used');
+        text.innerText = '사용 완료됨 (취소하기)';
+      } else {
+        btn.classList.remove('is-used');
+        text.innerText = '사용 완료하기';
+      }
+    }
+
     function softDeleteGifticon(id) {
       if (confirm('이 기프티콘을 휴지통으로 이동할까요?')) {
         setSyncStatus(true);
@@ -747,6 +807,7 @@
         if (fullImg) {
           const img = document.getElementById('enlargedImg');
           img.src = fullImg;
+          updateModalUseButtonState(target.isUsed);
           document.getElementById('imgViewModal').classList.add('active');
           setTimeout(() => {
             initPanzoom();
@@ -809,7 +870,6 @@
       editingExistingThumb = null;
     }
 
-    // ★ 한층 더 고도화된 전처리 (이진화 및 임계값 처리 강화)
     function preprocessImageForOCR(file, callback) {
       const reader = new FileReader();
       reader.onload = function(e) {
@@ -819,7 +879,7 @@
           let width = img.width;
           let height = img.height;
           
-          const maxDim = 1400; // 해상도 조금 더 상향
+          const maxDim = 1400;
           if (width > height && width > maxDim) {
             height = Math.round((height * maxDim) / width);
             width = maxDim;
@@ -840,16 +900,12 @@
             let r = data[i];
             let g = data[i + 1];
             let b = data[i + 2];
-            
-            // 그레이스케일 변환
             let v = 0.299 * r + 0.587 * g + 0.114 * b;
-            
-            // 이진화(Thresholding): 배경을 날리고 글씨를 선명하게 돋보이게 함
             v = v < 140 ? 0 : 255; 
 
-            data[i] = v;     // R
-            data[i + 1] = v; // G
-            data[i + 2] = v; // B
+            data[i] = v;     
+            data[i + 1] = v; 
+            data[i + 2] = v; 
           }
           ctx.putImageData(imgData, 0, 0);
           callback(canvas.toDataURL('image/jpeg', 0.95));
@@ -895,24 +951,22 @@
       });
     }
 
-    // ★ 정규식 및 파싱 로직 대폭 고도화
     function extractGifticonInfo(rawText) {
       const text = rawText.replace(/\r/g, '');
       const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
 
-      // 1. 유효기간(날짜) 패턴 다변화 탐지 (YYYY.MM.DD, YYYY년 MM월 DD일, YY.MM.DD 등)
       const dateRegexes = [
         /(202[0-9]|203[0-9])[\.\-\/\s년]\s*([0-1]?[0-9])[\.\-\/\s월]\s*([0-3]?[0-9])/g,
-        /([2-3][0-9])[\.\-\/\s년]\s*([0-1]?[0-9])[\.\-\/\s월]\s*([0-3]?[0-9])/g // 26.12.31 형태
+        /([2-3][0-9])[\.\-\/\s년]\s*([0-1]?[0-9])[\.\-\/\s월]\s*([0-3]?[0-9])/g
       ];
 
       let foundDateStr = '';
       for (let reg of dateRegexes) {
         const matches = [...text.matchAll(reg)];
         if (matches.length > 0) {
-          const lastMatch = matches[matches.length - 1]; // 보통 유효기간은 하단에 있으므로 마지막 매치 선호
+          const lastMatch = matches[matches.length - 1];
           let year = lastMatch[1];
-          if (year.length === 2) year = '20' + year; // YY를 YYYY로 변환
+          if (year.length === 2) year = '20' + year;
           const month = lastMatch[2].padStart(2, '0');
           const day = lastMatch[3].padStart(2, '0');
           foundDateStr = `${year}-${month}-${day}`;
@@ -923,7 +977,6 @@
         document.getElementById('giftDueDate').value = foundDateStr;
       }
 
-      // 2. 브랜드 자동 인식 사전 확장
       const brands = [
         '스타벅스', 'Starbucks', '투썸플레이스', '투썸', '메가커피', '메가MGC커피', '컴포즈커피', '컴포즈', 
         '배스킨라빈스', '배라', 'BHC', 'BBQ', '교촌치킨', '교촌', '올리브영', 'CU', 'GS25', '세븐일레븐', 
@@ -931,7 +984,6 @@
       ];
       for (let b of brands) {
         if (text.includes(b)) {
-          // '배라'나 '메가' 등 줄임말은 정식 명칭으로 보정 가능
           let brandName = b;
           if (b === '배라') brandName = '배스킨라빈스';
           if (b === '메가') brandName = '메가커피';
@@ -940,7 +992,6 @@
         }
       }
 
-      // 3. 상품명 지능형 추출 (불필요한 문구 대폭 필터링)
       const ignoreWords = [
         '교환권', '모바일', '쿠폰', '바코드', '유효기간', '주문번호', '발행처', '원', 'kakao', '카카오톡', 
         '사용처', '고객센터', '잔액', '환불', '가능', '주의사항', '포인트', '적립', '증정', '결제', '기간'
@@ -948,17 +999,13 @@
 
       let bestCandidate = '';
       for (let line of lines) {
-        // 날짜, 숫자만 있는 줄, 너무 짧거나 긴 줄 제외
         if (/(202[0-9]|203[0-9])/.test(line) || /^\d+$/.test(line.replace(/[-\s]/g, '')) || line.length < 2 || line.length > 40) continue;
-        
-        // 제외 단어가 포함된 문장 건너뛰기
         if (ignoreWords.some(w => line.includes(w))) continue;
 
-        // 특수문자 및 기호 정제
         const cleaned = line.replace(/[^\w\sㄱ-ㅎㅏ-ㅣ가-힣+()&]/g, '').trim();
         if (cleaned.length >= 2) {
           bestCandidate = cleaned;
-          break; // 가장 먼저 조건에 맞는 유효 라인을 상품명으로 선택
+          break;
         }
       }
 
