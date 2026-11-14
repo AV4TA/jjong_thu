@@ -313,7 +313,7 @@
       <div class="header-avatar">💖</div>
       <div class="header-texts">
         <h1>뚜❣️쫑</h1>
-        <p>Since 2020.10.31 (D-Day)</p>
+        <p id="ddayText">Since 2020.10.31 (D-Day)</p>
       </div>
     </div>
   </header>
@@ -419,6 +419,22 @@
   </div>
 
   <script>
+    // 사귄 날짜 계산 및 표시 (2020년 10월 31일 기준)
+    (function calcDday() {
+      const startDate = new Date(2020, 9, 31); // 월은 0부터 시작하므로 9는 10월
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      startDate.setHours(0, 0, 0, 0);
+
+      const diffTime = today - startDate;
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1; // 첫날을 1일로 계산
+
+      const ddayTextEl = document.getElementById('ddayText');
+      if (ddayTextEl) {
+        ddayTextEl.innerText = `Since 2020.10.31 (D+${diffDays})`;
+      }
+    })();
+
     const PIN_HASH = "b988f01b00e31c69c6ba78ae1b0a88ffae26d705c7423eec7fa6d38e2d46e9df";
     let enteredPin = "";
 
