@@ -210,12 +210,13 @@
       flex-direction: column;
       gap: 2px;
     }
+    /* 글씨 색상 검은색 고정 */
     .event-badge-mini {
       font-size: 0.58rem;
       font-weight: 700;
       padding: 2px 4px;
       border-radius: 4px;
-      color: white;
+      color: #2d3436 !important;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -414,10 +415,10 @@
       <div class="form-group">
         <label>해당 날짜의 근무 (패턴의 몇 번째 날?)</label>
         <select class="form-control" id="settingsAnchorIndex">
-          <option value="0">1일차 : 주간 (4일 묶음)</option>
-          <option value="1">2일차 : 주간 (4일 묶음)</option>
-          <option value="2">3일차 : 주간 (4일 묶음)</option>
-          <option value="3">4일차 : 주간 (4일 묶음)</option>
+          <option value="0">1일차 : 주간(1/4)</option>
+          <option value="1">2일차 : 주간(2/4)</option>
+          <option value="2">3일차 : 주간(3/4)</option>
+          <option value="3">4일차 : 주간(4/4)</option>
           <option value="4">5일차 : 야간</option>
           <option value="5">6일차 : 휴무</option>
           <option value="6">7일차 : 휴무</option>
@@ -498,12 +499,12 @@
       loadEvents();
     }
 
-    // 💡 주간 4일 연달아 묶기 & 비번을 휴무로 통일한 연한 파스텔톤 패턴
+    // 파스텔 톤 근무 패턴 (비번 통합 휴무, 글씨는 검은색 고정)
     const shiftPattern = [
-      { title: "주간(1/4)", color: "#ffeaa7", textColor: "#d63031" },
-      { title: "주간(2/4)", color: "#ffeaa7", textColor: "#d63031" },
-      { title: "주간(3/4)", color: "#ffeaa7", textColor: "#d63031" },
-      { title: "주간(4/4)", color: "#ffeaa7", textColor: "#d63031" },
+      { title: "주간(1/4)", color: "#ffeaa7" },
+      { title: "주간(2/4)", color: "#ffeaa7" },
+      { title: "주간(3/4)", color: "#ffeaa7" },
+      { title: "주간(4/4)", color: "#ffeaa7" },
       { title: "야간", color: "#74b9ff" },
       { title: "휴무", color: "#55efc4" },
       { title: "휴무", color: "#55efc4" },
@@ -596,7 +597,6 @@
               if (autoShift) {
                 if (!eventsMap[dateStr]) eventsMap[dateStr] = [];
                 
-                // 사용자가 해당 날짜에 수동으로 휴가나 다른 일정을 등록했다면 자동 패턴을 숨기고 사용자 지정 일정을 우선 표시
                 const hasUserOverride = eventsMap[dateStr].some(e => e.manualOverride);
                 
                 if (!hasUserOverride && !eventsMap[dateStr].some(e => e.isAutoShift)) {
@@ -682,7 +682,6 @@
       preview.className = 'day-events-preview';
       
       if (eventsMap[dateStr]) {
-        // 수동 오버라이드가 있으면 자동 패턴 배지는 숨기고 사용자 일정만 보여줌
         const hasOverride = eventsMap[dateStr].some(e => e.manualOverride);
         const displayEvents = hasOverride ? eventsMap[dateStr].filter(e => e.manualOverride) : eventsMap[dateStr];
 
@@ -691,7 +690,6 @@
           const badge = document.createElement('div');
           badge.className = 'event-badge-mini';
           badge.style.backgroundColor = ev.color || '#ff859b';
-          badge.style.color = ev.textColor || '#ffffff';
           badge.innerText = ev.title;
           preview.appendChild(badge);
         });
@@ -733,7 +731,7 @@
       listEl.innerHTML = displayEvents.map(ev => `
         <div class="event-item" style="border-left-color: ${ev.color || '#ff859b'};">
           <div class="event-info">
-            <h4>${ev.title}</h4>
+            <h4 style="color: #2d3436;">${ev.title}</h4>
             ${ev.desc ? `<p>${ev.desc}</p>` : ''}
           </div>
           ${ev.isHoliday ? '<span style="font-size:0.75rem; color:#ff6b81; font-weight:700;">공휴일</span>' : `<button class="btn-del-event" onclick="deleteEvent('${ev.id}')"><i class="fa-solid fa-trash-can"></i></button>`}
