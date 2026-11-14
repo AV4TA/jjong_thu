@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>뚜❣️쫑 - 비서 찬차니 🤖</title>
+  <title>뚜❣️쫑 - 진짜 AI 비서 🤖</title>
 
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -16,15 +16,6 @@
   <!-- Firebase v9 SDK (Compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-  <!-- Google Gen AI SDK (Gemini API) -->
-  <script type="importmap">
-    {
-      "imports": {
-        "@google/genai": "https://esm.run/@google/genai"
-      }
-    }
-  </script>
 
   <style>
     :root {
@@ -177,8 +168,8 @@
 
   <div class="chat-container" id="chatContainer">
     <div class="chat-bubble ai">
-      안녕! 나는 뚜❣️쫑 커플의 전용 AI 비서야. 💖<br>
-      캘린더 일정 조회, 일정 등록, 야구 직관 기록까지 자연스럽게 말해줘!
+      안녕! 모바일에서도 편하게 말해줘. 💖<br>
+      일정 조회, 일정 등록, 야구 직관 기록까지 척척 해줄게!
     </div>
   </div>
 
@@ -193,11 +184,9 @@
     <button class="btn-send" onclick="handleSend()"><i class="fa-solid fa-paper-plane"></i></button>
   </div>
 
-  <script type="module">
-    import { GoogleGenAI, Type } from "@google/genai";
-
-    // 💡 전달해주신 API Key 반영 완료
-    const ai = new GoogleGenAI({ apiKey: "AQ.Ab8RN6J3ixPpQ06Y5vYdyBbLMY3GBjzZlg9cZXpiqE0SKy3gKQ" });
+  <script>
+    // 💡 전달해주신 API Key
+    const GEMINI_API_KEY = "AQ.Ab8RN6J3ixPpQ06Y5vYdyBbLMY3GBjzZlg9cZXpiqE0SKy3gKQ";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
@@ -222,7 +211,7 @@
       snapshot.forEach(doc => allEvents.push({ id: doc.id, ...doc.data() }));
     });
 
-    window.appendMessage = function(text, sender) {
+    function appendMessage(text, sender) {
       const bubble = document.createElement('div');
       bubble.className = `chat-bubble ${sender}`;
       bubble.innerHTML = text.replace(/\n/g, '<br>');
@@ -230,19 +219,19 @@
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    window.sendQuickMessage = function(text) {
+    function sendQuickMessage(text) {
       chatInput.value = text;
-      window.handleSend();
+      handleSend();
     }
 
-    window.handleSend = async function() {
+    async function handleSend() {
       const text = chatInput.value.trim();
       if (!text) return;
 
-      window.appendMessage(text, 'user');
+      appendMessage(text, 'user');
       chatInput.value = '';
 
-      window.appendMessage("생각 중...", 'ai');
+      appendMessage("생각 중...", 'ai');
       const lastBubble = chatContainer.lastChild;
 
       try {
@@ -268,25 +257,36 @@
              {"type": "add_baseball", "result": "win 또는 lose", "message": "직관 기록 완료 안내 메시지"}
         `;
 
-        const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash',
-          contents: prompt,
+        // 모바일 브라우저 표준 fetch 통신 (에러 방지 최적화)
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }]
+          })
         });
 
-        const rawText = response.text.trim();
+        const data = await response.json();
         lastBubble.remove(); // "생각 중..." 삭제
+
+        if (data.error) {
+          throw new Error(data.error.message || 'API 통신 오류');
+        }
+
+        const rawText = data.candidates[0].content.parts[0].text.trim();
 
         let jsonRes;
         try {
           const cleanJsonStr = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
           jsonRes = JSON.parse(cleanJsonStr);
         } catch (e) {
-          window.appendMessage(rawText, 'ai');
+          appendMessage(rawText, 'ai');
           return;
         }
 
         if (jsonRes.type === 'chat') {
-          window.appendMessage(jsonRes.message, 'ai');
+          appendMessage(jsonRes.message, 'ai');
         } 
         else if (jsonRes.type === 'add_calendar') {
           await coupleCol.add({
@@ -297,7 +297,7 @@
             manualOverride: true,
             createdAt: Date.now()
           });
-          window.appendMessage(jsonRes.message || "일정이 캘린더에 쏙 등록되었어! ✨", 'ai');
+          appendMessage(jsonRes.message || "일정이 캘린더에 쏙 등록되었어! ✨", 'ai');
         } 
         else if (jsonRes.type === 'add_baseball') {
           await baseballCol.doc(String(Date.now())).set({
@@ -308,13 +308,13 @@
             stadium: "수원 위즈파크 (홈)",
             createdAt: Date.now()
           });
-          window.appendMessage(jsonRes.message || "야구 직관 결과가 [야구 직관 페이지]에 안전하게 기록되었어! ⚾", 'ai');
+          appendMessage(jsonRes.message || "야구 직관 결과가 [야구 직관 페이지]에 안전하게 기록되었어! ⚾", 'ai');
         }
 
       } catch (err) {
         console.error(err);
         lastBubble.remove();
-        window.appendMessage("앗, AI 비서와 통신하는 중에 오류가 발생했어 ㅠㅠ 다시 시도해줘!", 'ai');
+        appendMessage(`앗, 통신 중 오류가 발생했어: ${err.message}`, 'ai');
       }
     }
   </script>
