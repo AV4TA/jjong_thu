@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>뚜❣️쫑 - 커플 AI 비서 🤖</title>
+
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#ff859b" />
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Firebase v9 SDK (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    :root {
+      --primary: #ff859b;
+      --primary-soft: #fff2f4;
+      --bg: #f8f9fc;
+      --card: #ffffff;
+      --text: #2d3436;
+      --text-sub: #8395a7;
+      --border: #edf2f7;
+      --shadow: 0 8px 20px rgba(255, 133, 155, 0.06);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
+
+    /* 상단 헤더 */
+    .app-header {
+      background: linear-gradient(135deg, #ffa6b6 0%, #ff859b 100%);
+      color: white;
+      padding: 20px 18px 16px 18px;
+      border-radius: 0 0 28px 28px;
+      box-shadow: 0 6px 20px rgba(255, 133, 155, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .btn-home {
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      background: rgba(255, 255, 255, 0.25);
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .header-title { font-size: 1.2rem; font-weight: 800; }
+    .header-sub { font-size: 0.75rem; opacity: 0.9; margin-top: 2px; }
+
+    /* 채팅 영역 */
+    .chat-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .chat-bubble {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 0.92rem;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+    .chat-bubble.ai {
+      background: white;
+      color: var(--text);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .chat-bubble.user {
+      background: var(--primary);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+      box-shadow: 0 4px 12px rgba(255, 133, 155, 0.2);
+    }
+
+    /* 하단 입력 영역 */
+    .chat-input-area {
+      background: white;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
+      flex-shrink: 0;
+    }
+    .chat-input {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      outline: none;
+      font-size: 0.95rem;
+    }
+    .chat-input:focus { border-color: var(--primary); }
+    .btn-send {
+      background: var(--primary);
+      color: white;
+      border: none;
+      width: 46px; height: 46px;
+      border-radius: 14px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 12px rgba(255, 133, 155, 0.3);
+    }
+    .btn-send:active { transform: scale(0.95); }
+
+    /* 추천 질문 칩 */
+    .chips-area {
+      display: flex;
+      gap: 6px;
+      padding: 8px 16px;
+      overflow-x: auto;
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
+      flex-shrink: 0;
+      scrollbar-width: none;
+    }
+    .chips-area::-webkit-scrollbar { display: none; }
+    .chip {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      white-space: nowrap;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+    .chip:active { background: var(--primary-soft); color: var(--primary); border-color: var(--primary); }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <a href="calendar.html" class="btn-home" title="캘린더로"><i class="fa-solid fa-calendar-days"></i></a>
+    <div>
+      <div class="header-title">뚜❣️쫑 AI 비서 🤖</div>
+      <div class="header-sub">두 분의 캘린더와 일정을 관리해드려요!</div>
+    </div>
+  </header>
+
+  <!-- 채팅 대화 내용 영역 -->
+  <div class="chat-container" id="chatContainer">
+    <div class="chat-bubble ai">
+      안녕! 나는 뚜❣️쫑 커플의 전용 AI 비서야. 💖<br>
+      "오늘 우리 일정 뭐야?"라고 물어보거나, "12월 25일에 데이트 등록해줘"처럼 말해주면 캘린더에 척척 반영해 줄게!
+    </div>
+  </div>
+
+  <!-- 빠른 추천 질문 칩 -->
+  <div class="chips-area">
+    <div class="chip" onclick="sendQuickMessage('이번 주 우리 일정 뭐야?')">📅 이번 주 일정 조회</div>
+    <div class="chip" onclick="sendQuickMessage('다음 주 일정 알려줘')">🗓️ 다음 주 일정 조회</div>
+    <div class="chip" onclick="sendQuickMessage('오늘 직관했는데 졌어...')">⚾ 야구 직관 기록</div>
+  </div>
+
+  <!-- 메시지 입력창 -->
+  <div class="chat-input-area">
+    <input type="text" class="chat-input" id="chatInput" placeholder="메시지를 입력해보세요..." onkeypress="if(event.key==='Enter') handleSend()">
+    <button class="btn-send" onclick="handleSend()"><i class="fa-solid fa-paper-plane"></i></button>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDOh1DpHEKe2RNaJC028ZMFQnGlKsvlvys",
+      authDomain: "kobe-couple-app.firebaseapp.com",
+      projectId: "kobe-couple-app",
+      storageBucket: "kobe-couple-app.firebasestorage.app",
+      messagingSenderId: "755701956140",
+      appId: "1:755701956140:web:ea39d7d1e00bd83ade1b89"
+    };
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const coupleCol = db.collection("couple_space").doc("data").collection("couple_calendar");
+
+    const chatContainer = document.getElementById('chatContainer');
+    const chatInput = document.getElementById('chatInput');
+
+    let allEvents = [];
+
+    // 파이어베이스에서 실시간 데이터 로드
+    coupleCol.onSnapshot(snapshot => {
+      allEvents = [];
+      snapshot.forEach(doc => {
+        allEvents.push({ id: doc.id, ...doc.data() });
+      });
+    });
+
+    function appendMessage(text, sender) {
+      const bubble = document.createElement('div');
+      bubble.className = `chat-bubble ${sender}`;
+      bubble.innerHTML = text.replace(/\n/g, '<br>');
+      chatContainer.appendChild(bubble);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function sendQuickMessage(text) {
+      chatInput.value = text;
+      handleSend();
+    }
+
+    async function handleSend() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+
+      appendMessage(text, 'user');
+      chatInput.value = '';
+
+      // AI 응답 생성 로직 (간단한 키워드 분석 및 파이어베이스 연동)
+      setTimeout(() => {
+        generateAIResponse(text);
+      }, 500);
+    }
+
+    function generateAIResponse(query) {
+      const lowerQ = query.toLowerCase();
+
+      // 1. 일정 조회 관련
+      if (lowerQ.includes('일정') || lowerQ.includes('뭐야') || lowerQ.includes('알려줘')) {
+        if (allEvents.length === 0) {
+          appendMessage("현재 등록된 커플 일정이 없어요! 캘린더에서 일정을 추가해 보세요.", 'ai');
+          return;
+        }
+
+        // 날짜순 정렬
+        allEvents.sort((a, b) => (a.startDate || '').localeCompare(b.startDate || ''));
+        
+        let responseHTML = "현재 등록된 주요 일정들이야! 📌<br><br>";
+        allEvents.slice(0, 5).forEach(ev => {
+          const dateStr = ev.startDate === ev.endDate ? ev.startDate : `${ev.startDate} ~ ${ev.endDate}`;
+          responseHTML += `• <b>${ev.title}</b> (${dateStr})<br>`;
+        });
+        appendMessage(responseHTML, 'ai');
+      } 
+      // 2. 직관 기록 / 감정 표현 관련
+      else if (lowerQ.includes('직관') || lowerQ.includes('야구') || lowerQ.includes('졌어') || lowerQ.includes('이겼어')) {
+        const today = new Date().toISOString().split('T')[0];
+        const title = lowerQ.includes('졌어') ? "⚾ 야구 직관 (패배 ㅠㅠ)" : "⚾ 야구 직관 (승리!)";
+        
+        coupleCol.add({
+          startDate: today,
+          endDate: today,
+          title: title,
+          desc: query,
+          color: "#74b9ff",
+          manualOverride: true,
+          createdAt: Date.now()
+        }).then(() => {
+          appendMessage(`오늘(${today}) 기록을 캘린더에 쏙 저장해 뒀어! 다음엔 꼭 이길 거야 힘내자 파이팅! 💪💙`, 'ai');
+        });
+      }
+      // 3. 일정 등록 관련 (간단한 파싱 예시)
+      else if (lowerQ.includes('등록') || lowerQ.includes('추가해') || lowerQ.includes('해줘')) {
+        appendMessage("일정 등록은 아직 날짜와 제목을 분석하는 중이야! 우측 하단의 `+` 버튼을 눌러서 직접 기간 일정으로 등록하면 캘린더에 바로 예쁘게 반영된단다! ✨", 'ai');
+      } 
+      // 4. 일반 대화
+      else {
+        appendMessage("헤헤, 우리 캘린더에 대해 궁금한 점이 있거나 '오늘 일정 뭐야?'라고 물어보면 언제든 대답해 줄 수 있어! 💕", 'ai');
+      }
+    }
+  </script>
+</body>
+</html>
