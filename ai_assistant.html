@@ -280,10 +280,10 @@
              {"type": "add_baseball", "result": "win 또는 lose", "message": "직관 기록 완료 안내 메시지"}
         `;
 
-        // 💡 최신 권장 모델 (gemini-3.8-flash) 적용
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${GEMINI_API_KEY}`;
+        // 💡 가장 안정적이고 과부하 없는 gemini-1.5-flash 모델 적용
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
         
-        let response = await fetch(url, {
+        const response = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -291,21 +291,7 @@
           })
         });
 
-        let data = await response.json();
-
-        // 트래픽 과부하시 자동 재시도(Retry) 안전장치
-        if (data.error && data.error.code === 429) {
-          await new Promise(r => setTimeout(r, 1500));
-          response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }] }]
-            })
-          });
-          data = await response.json();
-        }
-
+        const data = await response.json();
         lastBubble.remove();
 
         if (data.error) {
