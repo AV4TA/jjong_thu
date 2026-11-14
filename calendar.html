@@ -89,6 +89,31 @@
 
     .container { max-width: 600px; margin: 0 auto; padding: 16px; }
 
+    /* 모바일 임시 자동 입력 버튼 박스 (커플 캘린더 탭에서만 보임) */
+    .mobile-inject-bar {
+      display: none;
+      background: white;
+      border-radius: 16px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      justify-content: space-between;
+      align-items: center;
+    }
+    .mobile-inject-bar.active { display: flex; }
+    .mobile-inject-bar span { font-size: 0.82rem; font-weight: 700; color: var(--text); }
+    .btn-inject {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 7px 12px;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
     /* 근무표 설정 바 */
     .work-settings-bar {
       display: none;
@@ -211,7 +236,7 @@
       gap: 2px;
     }
     
-    /* 💡 타임트리 스타일 완벽 연결형 막대 바 디자인 (글씨 검은색 고정) */
+    /* 타임트리 스타일 완벽 연결형 막대 바 디자인 (글씨 검은색 고정) */
     .event-badge-bar {
       font-size: 0.58rem;
       font-weight: 700;
@@ -332,6 +357,12 @@
   </header>
 
   <div class="container">
+    <!-- 💡 모바일 전용 개별 일정 자동 추가 바 (커플 캘린더 탭에서만 표시됨) -->
+    <div class="mobile-inject-bar active" id="mobileInjectBar">
+      <span>✨ 개별 일정 일괄 등록</span>
+      <button class="btn-inject" onclick="injectDefaultEvents()">일정 한번에 넣기</button>
+    </div>
+
     <!-- 근무표 설정 바 -->
     <div class="work-settings-bar" id="workSettingsBar">
       <span>⚙️ 근무 패턴 기준일 설정됨</span>
@@ -495,6 +526,7 @@
       document.getElementById('tabCouple').className = `tab-btn ${tab === 'couple' ? 'active' : ''}`;
       document.getElementById('tabWork').className = `tab-btn ${tab === 'work' ? 'active' : ''}`;
       document.getElementById('workSettingsBar').className = `work-settings-bar ${tab === 'work' ? 'active' : ''}`;
+      document.getElementById('mobileInjectBar').className = `mobile-inject-bar ${tab === 'couple' ? 'active' : ''}`;
       
       if (tab === 'couple') {
         document.getElementById('mainHeaderTitle').innerText = "커플 캘린더 📅";
@@ -506,6 +538,37 @@
         document.documentElement.style.setProperty('--primary-soft', '#eef9ff');
       }
       loadEvents();
+    }
+
+    // 💡 알려주신 확정 개별 일정 일괄 등록 함수 (모바일 버튼용)
+    function injectDefaultEvents() {
+      if (!confirm('알려주신 11~12월 개별 일정들을 커플 캘린더에 일괄 등록하시겠습니까?')) return;
+
+      const defaultEvents = [
+        { startDate: "2026-11-02", endDate: "2026-11-02", title: "뚜 생일", desc: "", color: "#ff859b" },
+        { startDate: "2026-11-02", endDate: "2026-11-04", title: "오이타 여행", desc: "", color: "#ff859b" },
+        { startDate: "2026-11-18", endDate: "2026-11-18", title: "조책임 술", desc: "", color: "#ff859b" },
+        { startDate: "2026-11-20", endDate: "2026-11-20", title: "뚜 청모 (OMCL 강주, 상건)", desc: "", color: "#ff859b" },
+        { startDate: "2026-11-21", endDate: "2026-11-22", title: "뚜 캠핑", desc: "", color: "#ff859b" },
+        { startDate: "2026-11-24", endDate: "2026-11-24", title: "송별회", desc: "", color: "#ff859b" },
+        { startDate: "2026-11-28", endDate: "2026-11-28", title: "현뚜령 / 수연 결혼식 (상건)", desc: "", color: "#ff859b" },
+        { startDate: "2026-11-29", endDate: "2026-11-29", title: "현뚜령 / 삼치리", desc: "", color: "#ff859b" },
+        { startDate: "2026-12-12", endDate: "2026-12-12", title: "수연 결혼식 (강주)", desc: "", color: "#ff859b" }
+      ];
+
+      syncDot.className = 'sync-dot syncing';
+      syncText.innerText = '일정 등록 중...';
+
+      let count = 0;
+      defaultEvents.forEach(ev => {
+        coupleCol.add({ ...ev, manualOverride: true, createdAt: Date.now() }).then(() => {
+          count++;
+          if (count === defaultEvents.length) {
+            alert('모든 개별 일정이 성공적으로 등록되었습니다! ✨');
+            loadEvents();
+          }
+        });
+      });
     }
 
     const shiftPattern = [
