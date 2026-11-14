@@ -168,7 +168,7 @@
 
   <div class="chat-container" id="chatContainer">
     <div class="chat-bubble ai">
-      안녕! 모바일에서도 완벽하게 연동되는 AI 비서야. 💖<br>
+      안녕! 모바일 연동 완료된 AI 비서야. 💖<br>
       일정 등록이나 오늘 야구 직관 결과를 편하게 말해줘!
     </div>
   </div>
@@ -280,8 +280,8 @@
              {"type": "add_baseball", "result": "win 또는 lose", "message": "직관 기록 완료 안내 메시지"}
         `;
 
-        // 💡 가장 안정적이고 과부하 없는 gemini-1.5-flash 모델 적용
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        // 💡 가장 호환성이 뛰어난 gemini-2.5-flash 모델 및 표준 엔드포인트 적용
+        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
         
         const response = await fetch(url, {
           method: 'POST',
